@@ -6,6 +6,10 @@ import { ChakraProvider } from "@chakra-ui/react";
 function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider theme={theme}>
+      <Head>
+        <title>Hermes DeFi</title>
+      </Head>
+
       {/* online fonts */}
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
