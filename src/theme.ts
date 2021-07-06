@@ -40,7 +40,7 @@ const theme = extendTheme({
   components: {
     Button: {
       variants: {
-        primary: {
+        primaryOutline: {
           fontWeight: 600,
           color: "primary.500",
           rounded: "2xl",
