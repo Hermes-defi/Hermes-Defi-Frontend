@@ -26,11 +26,11 @@ function MyApp({ Component, pageProps }) {
           /* latin */
           @font-face {
             font-family: 'Momcake';
-            src: url('./fonts/Momcake-Bold.eot');
-            src: url('./fonts/Momcake-Bold.eot?#iefix') format('embedded-opentype'),
-                url('./fonts/Momcake-Bold.woff2') format('woff2'),
-                url('./fonts/Momcake-Bold.woff') format('woff'),
-                url('./fonts/Momcake-Bold.ttf') format('truetype');
+            src: url('/fonts/Momcake-Bold.eot');
+            src: url('/fonts/Momcake-Bold.eot?#iefix') format('embedded-opentype'),
+                url('/fonts/Momcake-Bold.woff2') format('woff2'),
+                url('/fonts/Momcake-Bold.woff') format('woff'),
+                url('/fonts/Momcake-Bold.ttf') format('truetype');
             font-weight: bold;
             font-style: normal;
             font-display: swap;

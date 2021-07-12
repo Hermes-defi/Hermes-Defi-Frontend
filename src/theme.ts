@@ -47,6 +47,12 @@ const theme = extendTheme({
           borderWidth: { base: 1, md: 3 },
           borderColor: "primary.400",
         },
+
+        primary: {
+          fontWeight: 600,
+          color: "white",
+          bgColor: "primary.400",
+        },
       },
     },
   },
