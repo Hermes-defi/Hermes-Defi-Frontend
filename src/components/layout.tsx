@@ -2,12 +2,10 @@ import React from "react";
 import {
   Badge,
   Box,
-  Button,
   Collapse,
   Container,
   Flex,
   Heading,
-  HStack,
   Icon,
   IconButton,
   Image,
@@ -21,11 +19,11 @@ import {
   PopoverTrigger,
   Stack,
   Text,
-  useBreakpointValue,
   useColorModeValue,
   useDisclosure,
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { WalletModal } from "./wallet-modal";
 
 interface NavItem {
   label: string;
@@ -397,14 +395,7 @@ const Navigation = () => {
 
         {/* connect wallet */}
         <Stack ml={4} flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
-          <Button
-            display={{ base: "inline-flex" }}
-            size={useBreakpointValue({ base: "sm", md: "md" })}
-            variant="primary"
-            href="#"
-          >
-            Connect Wallet
-          </Button>
+          <WalletModal />
         </Stack>
       </Flex>
 
@@ -445,10 +436,6 @@ const Navigation = () => {
           </Stack>
         </ModalContent>
       </Modal>
-      {/* 
-      <Collapse in={isOpen} animateOpacity>
-        
-      </Collapse> */}
     </Box>
   );
 };
