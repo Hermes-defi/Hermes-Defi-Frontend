@@ -1,2 +1,2 @@
-# frontend
-Front-end website for using our contracts
+# Front-emd
+Front-end website for using Hermes contracts through a graphical interface
