@@ -43,7 +43,7 @@ const Page: React.FC = () => {
         </HStack>
 
         <Container align="center" maxWidth="container.lg">
-          <SimpleGrid spacing="40px" alignItems="center" columns={3}>
+          <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
             {[0, 1, 2, 3, 4].map((i) => (
               <Box key={i} px={8} py={4} boxShadow="lg" rounded="3xl" bg="#B38E5A" color="white">
                 <HStack mb={5} spacing={6}>

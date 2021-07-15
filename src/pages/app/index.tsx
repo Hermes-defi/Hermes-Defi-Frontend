@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Stack,
   Text,
+  useBreakpointValue,
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
@@ -27,12 +28,12 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        <Box bg="white" rounded="2xl" boxShadow="base" px={10} py={6}>
+        <Box bg="white" rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color="gray.600" fontSize="xl">
             Farms and Pools
           </Heading>
 
-          <SimpleGrid templateColumns="1fr 1fr 2fr" spacing={10}>
+          <SimpleGrid templateColumns={{ base: "1fr", md: "1fr 1fr 2fr" }} spacing={[5, 10]}>
             <Stack mt={10} align="stretch" spacing={10}>
               <Stack spacing={4} align="center" direction="row">
                 <Image src="/hermes-logo-1.png" boxSize={12} />
@@ -68,7 +69,7 @@ const Page: React.FC = () => {
 
             <Box />
 
-            <Stack spacing={14} direction="row">
+            <Stack spacing={[5, 14]} direction={{ base: "column", md: "row" }}>
               <Stack
                 boxShadow="xl"
                 rounded="3xl"
@@ -77,26 +78,26 @@ const Page: React.FC = () => {
                 justify="space-between"
                 px={8}
                 py={7}
-                pr={28}
+                pr={[14, 28]}
               >
                 <div>
-                  <Center mb={3} rounded="2xl" bg="white" p={3}>
+                  <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
                     <Icon color="secondary.500" boxSize={8} as={GiFarmTractor} />
                   </Center>
 
-                  <Text fontSize={"sm"} fontWeight="700">
+                  <Text fontSize={["lg", "sm"]} fontWeight={["500"]}>
                     In Farms
                   </Text>
                 </div>
 
                 <Box>
-                  <Text fontSize={"sm"} fontWeight="700">
+                  <Text fontSize={["xl", "sm"]} fontWeight="700">
                     Earn Upto
                   </Text>
-                  <Text fontWeight="900" fontSize="2xl">
-                    99.9%
+                  <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
+                    99.9%{" "}
                   </Text>
-                  <Text fontSize="2xl" fontFamily="heading">
+                  <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
                     APR
                   </Text>
                 </Box>
@@ -110,26 +111,26 @@ const Page: React.FC = () => {
                 justify="space-between"
                 px={8}
                 py={7}
-                pr={28}
+                pr={[14, 28]}
               >
                 <div>
-                  <Center mb={3} rounded="2xl" bg="white" p={3}>
-                    <Icon color="#B38E5A" boxSize={8} as={RiWaterFlashFill} />
+                  <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
+                    <Icon color="secondary.500" boxSize={8} as={RiWaterFlashFill} />
                   </Center>
 
-                  <Text fontSize={"sm"} fontWeight="700">
+                  <Text fontSize={["lg", "sm"]} fontWeight={["500", "700"]}>
                     In Pools
                   </Text>
                 </div>
 
                 <Box>
-                  <Text fontSize={"sm"} fontWeight="700">
-                    Stake
+                  <Text fontSize={["xl", "sm"]} fontWeight="700">
+                    Earn Upto
                   </Text>
-                  <Text fontWeight="900" fontSize="2xl">
-                    99.9%
+                  <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
+                    99.9%{" "}
                   </Text>
-                  <Text fontSize="2xl" fontFamily="heading">
+                  <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
                     APR
                   </Text>
                 </Box>
@@ -138,14 +139,14 @@ const Page: React.FC = () => {
           </SimpleGrid>
         </Box>
 
-        <Box bg="white" rounded="2xl" boxShadow="base" px={10} py={6}>
+        <Box bg="white" rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color="gray.600" fontSize="xl">
             IRIS stats
           </Heading>
 
-          <SimpleGrid templateColumns="1fr 2fr" spacing={10}>
-            <SimpleGrid columns={2} mt={10} spacing="30px">
-              <Box w="auto" h="auto" align="center">
+          <Stack mt={[6, 0]} direction={["column-reverse", "row"]} spacing={10}>
+            <SimpleGrid columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
+              <Box align={["left", "center"]}>
                 <Text fontSize="lg" fontWeight="700">
                   $21,803,359
                 </Text>
@@ -154,7 +155,7 @@ const Page: React.FC = () => {
                 </Heading>
               </Box>
 
-              <Box align="center">
+              <Box align={["left", "center"]}>
                 <Text fontSize="lg" fontWeight="700">
                   $21,803,359
                 </Text>
@@ -163,7 +164,7 @@ const Page: React.FC = () => {
                 </Heading>
               </Box>
 
-              <Box align="center">
+              <Box align={["left", "center"]}>
                 <Text fontSize="lg" fontWeight="700">
                   0.8
                 </Text>
@@ -172,7 +173,7 @@ const Page: React.FC = () => {
                 </Heading>
               </Box>
 
-              <Box align="center">
+              <Box align={["left", "center"]}>
                 <Text fontSize="lg" fontWeight="700">
                   2,463,180
                 </Text>
@@ -181,7 +182,7 @@ const Page: React.FC = () => {
                 </Heading>
               </Box>
 
-              <Box align="center">
+              <Box align={["left", "center"]}>
                 <Text fontSize="lg" fontWeight="700">
                   2,463,180
                 </Text>
@@ -190,7 +191,7 @@ const Page: React.FC = () => {
                 </Heading>
               </Box>
 
-              <Box align="center">
+              <Box align={["left", "center"]}>
                 <Text fontSize="lg" fontWeight="700">
                   2,463,180
                 </Text>
@@ -200,10 +201,16 @@ const Page: React.FC = () => {
               </Box>
             </SimpleGrid>
 
-            <Box>
-              <Stack mb={10} align="center" justify="space-between" direction="row">
+            <Box flex="1">
+              <Stack
+                mb={10}
+                align={["flex-start", "center"]}
+                justify="space-between"
+                direction={["column", "row"]}
+                spacing={[6, 0]}
+              >
                 <div>
-                  <Heading mb={2} color="gray.600" fontSize="xl">
+                  <Heading mb={[0, 2]} color="gray.600" fontSize="xl">
                     Total Value Locked
                   </Heading>
                   <Text fontSize="3xl" fontWeight="700">
@@ -211,8 +218,8 @@ const Page: React.FC = () => {
                   </Text>
                 </div>
 
-                <Stack spacing={10} direction="row">
-                  <Box align="center">
+                <Stack spacing={[5, 10]} direction="row">
+                  <Box align={["left", "center"]}>
                     <Heading mb={1} color="gray.600" fontSize="xl">
                       Farms
                     </Heading>
@@ -221,7 +228,7 @@ const Page: React.FC = () => {
                     </Text>
                   </Box>
 
-                  <Box align="center">
+                  <Box align={["left", "center"]}>
                     <Heading mb={1} color="gray.600" fontSize="xl">
                       Pools
                     </Heading>
@@ -233,7 +240,12 @@ const Page: React.FC = () => {
               </Stack>
 
               <Box>
-                <LineChart width={750} height={300} data={data}>
+                <LineChart
+                  width={useBreakpointValue({ base: 340, md: 800 })}
+                  height={useBreakpointValue({ base: 200, md: 300 })}
+                  style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
+                  data={data}
+                >
                   <Line type="monotone" dataKey="uv" stroke="#8884d8" />
                   <CartesianGrid stroke="#ccc" />
                   <XAxis dataKey="name" />
@@ -242,7 +254,7 @@ const Page: React.FC = () => {
                 </LineChart>
               </Box>
             </Box>
-          </SimpleGrid>
+          </Stack>
         </Box>
       </Stack>
     </AppLayout>
