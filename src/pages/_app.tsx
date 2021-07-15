@@ -1,10 +1,16 @@
 import React from "react";
 import theme from "theme";
 import Head from "next/head";
+import dynamic from "next/dynamic";
 import * as ethers from "ethers";
 import { Global } from "@emotion/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "@web3-react/core";
+import { Web3ReactManager } from "components/web3-manager";
+
+const Web3ReactProviderDefault = dynamic(() => import("components/web3-network"), {
+  ssr: false,
+});
 
 function getLibrary(provider: any): ethers.providers.Web3Provider {
   const library = new ethers.providers.Web3Provider(provider);
@@ -12,9 +18,9 @@ function getLibrary(provider: any): ethers.providers.Web3Provider {
   return library;
 }
 
-function MyApp({ Component, pageProps }) {
+function GlobalHead() {
   return (
-    <ChakraProvider theme={theme}>
+    <>
       <Head>
         <title>Hermes DeFi</title>
       </Head>
@@ -44,11 +50,23 @@ function MyApp({ Component, pageProps }) {
             font-style: normal;
             font-display: swap;
           }
-      `}
+        `}
       />
+    </>
+  );
+}
+
+function MyApp({ Component, pageProps }) {
+  return (
+    <ChakraProvider theme={theme}>
+      <GlobalHead />
 
       <Web3ReactProvider getLibrary={getLibrary}>
-        <Component {...pageProps} />
+        <Web3ReactProviderDefault getLibrary={getLibrary}>
+          <Web3ReactManager>
+            <Component {...pageProps} />
+          </Web3ReactManager>
+        </Web3ReactProviderDefault>
       </Web3ReactProvider>
     </ChakraProvider>
   );

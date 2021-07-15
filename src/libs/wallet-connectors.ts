@@ -6,7 +6,7 @@ import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 // CONSTANTS
 const RPC_URLS: { [chainId: number]: string } = {
   137: "https://rpc-mainnet.matic.network",
-  80001: "https://rpc-mumbai.matic.today",
+  80001: "https://polygon-mumbai.infura.io/v3/93518d8fd18e494899c057da3bd5a35d",
 };
 
 // CONNECTORS

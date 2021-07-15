@@ -19,7 +19,7 @@ import {
 } from "@chakra-ui/react";
 import { providers } from "ethers";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import { injected, SUPPORTED_WALLETS } from "libs/wallet";
+import { injected, SUPPORTED_WALLETS } from "libs/wallet-connectors";
 
 const Option: React.FC<any> = ({ name, description, href, iconURL, ...props }) => {
   if (href) {
