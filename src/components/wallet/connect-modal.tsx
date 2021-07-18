@@ -18,7 +18,7 @@ import {
 import { providers } from "ethers";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { injected, SUPPORTED_WALLETS } from "wallet/connectors";
-import { switchNetwork } from "wallet";
+import { switchNetwork } from "wallet/utils";
 
 const Option: React.FC<any> = ({ name, description, href, iconURL, ...props }) => {
   if (href) {
@@ -121,7 +121,7 @@ export const ConnectModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
       console.log(`[ConnectModal] Account activated`, connector);
     } catch (error) {
       if (connector === injected && error instanceof UnsupportedChainIdError) {
-        switchNetwork(global.ethereum)
+        switchNetwork()
           .then(() => {
             activate(injected, undefined, true).then(props.onClose);
           })

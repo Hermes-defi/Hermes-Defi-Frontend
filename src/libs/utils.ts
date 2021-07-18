@@ -4,3 +4,12 @@ export function truncateAddress(address: string, length: number): string {
     address.length
   )}`;
 }
+
+export function displayNumber(number: number): string {
+  const value = new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(
+    number
+  );
+
+  // hack to remove the "US" in front of the number
+  return value.replace(/^US/, "");
+}

@@ -1,79 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { injected, RPC_URLS } from "./connectors";
+import { injected } from "./connectors";
 import { providers } from "ethers";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-
-const isProd = process.env.NODE_ENV === "production";
-const RPC_INFO = {
-  137: {
-    chainName: "Matic Network",
-    nativeCurrency: {
-      name: "MATIC",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: [
-      "https://rpc-mainnet.matic.network",
-      "https://rpc-mainnet.maticvigil.com",
-      "https://rpc-mainnet.matic.quiknode.pro",
-      "https://matic-mainnet.chainstacklabs.com",
-      "https://matic-mainnet-full-rpc.bwarelabs.com",
-      "https://matic-mainnet-archive-rpc.bwarelabs.com",
-    ],
-    blockExplorerUrls: [
-      "https://polygon-explorer-mumbai.chainstacklabs.com/",
-      "https://explorer-mumbai.maticvigil.com/",
-      "https://mumbai-explorer.matic.today/",
-      "https://backup-mumbai-explorer.matic.today/",
-      "https://polygonscan.com/",
-    ],
-  },
-
-  80001: {
-    chainName: "Mumbai",
-    nativeCurrency: {
-      name: "MATIC",
-      symbol: "MATIC",
-      decimals: 18,
-    },
-    rpcUrls: [
-      "https://rpc-mumbai.matic.today",
-      "https://matic-mumbai.chainstacklabs.com",
-      "https://matic-testnet-archive-rpc.bwarelabs.com",
-    ],
-    blockExplorerUrls: [
-      "https://polygon-explorer-mainnet.chainstacklabs.com/",
-      "https://explorer-mainnet.maticvigil.com/",
-      "https://explorer.matic.network/",
-      "https://backup-explorer.matic.network/",
-      "https://polygonscan.com/",
-    ],
-  },
-};
-
-export async function switchNetwork(ethereum: any) {
-  try {
-    await ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [
-        { chainId: isProd ? `0x${Number(137).toString(16)}` : `0x${Number(80001).toString(16)}` },
-      ],
-    });
-  } catch (error) {
-    // This error code indicates that the chain has not been added to MetaMask.
-    if (error.code === 4902) {
-      await ethereum.request({
-        method: "wallet_addEthereumChain",
-        params: [
-          {
-            chainId: isProd ? `0x${Number(137).toString(16)}` : `0x${Number(80001).toString(16)}`,
-            ...RPC_INFO[isProd ? 137 : 80001],
-          },
-        ],
-      });
-    }
-  }
-}
+import { switchNetwork } from "./utils";
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React();
@@ -111,7 +40,7 @@ export function useInactiveListener(suppress: boolean = false) {
       const handleChainChanged = () => {
         activate(injected, undefined, true).catch((error) => {
           if (error instanceof UnsupportedChainIdError) {
-            switchNetwork(ethereum)
+            switchNetwork()
               .then(() => {
                 activate(injected, undefined, true);
               })
@@ -128,7 +57,7 @@ export function useInactiveListener(suppress: boolean = false) {
         if (accounts.length > 0) {
           activate(injected, undefined, true).catch((error) => {
             if (error instanceof UnsupportedChainIdError) {
-              switchNetwork(ethereum)
+              switchNetwork()
                 .then(() => {
                   activate(injected, undefined, true);
                 })

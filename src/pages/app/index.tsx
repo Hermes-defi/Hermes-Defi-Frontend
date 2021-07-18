@@ -7,6 +7,7 @@ import {
   Heading,
   Icon,
   Image,
+  Link,
   SimpleGrid,
   Stack,
   Text,
@@ -15,6 +16,9 @@ import {
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { addTokenToWallet } from "wallet/utils";
+import { defaultContracts } from "hooks/useContract";
+import { displayNumber } from "libs/utils";
 
 const data = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
@@ -37,7 +41,12 @@ const Page: React.FC = () => {
             <Stack mt={10} align="stretch" spacing={10}>
               <Stack spacing={4} align="center" direction="row">
                 <Image src="/hermes-logo-1.png" boxSize={12} />
-                <Button bg="secondary.200" _hover={{ bg: "secondary.100" }} size="sm">
+                <Button
+                  onClick={() => addTokenToWallet(defaultContracts.irisToken.address, "IRIS")}
+                  bg="secondary.200"
+                  _hover={{ bg: "secondary.100" }}
+                  size="sm"
+                >
                   + Add IRIS to Wallet
                 </Button>
               </Stack>
@@ -45,7 +54,7 @@ const Page: React.FC = () => {
               <Stack direction="row" spacing={10}>
                 <Box align="center">
                   <Text mb={2} fontWeight="700" fontSize="2xl">
-                    $0.00
+                    {displayNumber(0)}
                   </Text>
                   <Text fontSize={"sm"} color="gray.600">
                     IRIS to harvest
@@ -54,7 +63,7 @@ const Page: React.FC = () => {
 
                 <Box align="center">
                   <Text mb={2} fontWeight="700" fontSize="2xl">
-                    $0.00
+                    {displayNumber(0)}
                   </Text>
                   <Text fontSize={"sm"} color="gray.600">
                     IRIS in wallet
@@ -79,6 +88,9 @@ const Page: React.FC = () => {
                 px={8}
                 py={7}
                 pr={[14, 28]}
+                as={Link}
+                href="/app/farms"
+                textDecoration="none!important"
               >
                 <div>
                   <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
@@ -112,6 +124,9 @@ const Page: React.FC = () => {
                 px={8}
                 py={7}
                 pr={[14, 28]}
+                as={Link}
+                href="/app/pools"
+                textDecoration="none!important"
               >
                 <div>
                   <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
