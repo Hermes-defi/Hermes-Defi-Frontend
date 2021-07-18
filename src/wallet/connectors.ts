@@ -4,7 +4,8 @@ import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
 
 // CONSTANTS
-const RPC_URLS: { [chainId: number]: string } = {
+const isProd = process.env.NODE_ENV === "production";
+export const RPC_URLS: { [chainId: number]: string } = {
   137: "https://rpc-mainnet.matic.network",
   80001: "https://polygon-mumbai.infura.io/v3/93518d8fd18e494899c057da3bd5a35d",
 };
@@ -12,7 +13,7 @@ const RPC_URLS: { [chainId: number]: string } = {
 // CONNECTORS
 export const network = new NetworkConnector({
   urls: RPC_URLS,
-  defaultChainId: 80001,
+  defaultChainId: isProd ? 137 : 80001,
 });
 
 export const injected = new InjectedConnector({

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Flex, Spinner, Text } from "@chakra-ui/react";
 import { useWeb3React } from "@web3-react/core";
 import { providers } from "ethers";
-import { useEagerConnect, useInactiveListener } from "hooks/connector";
-import { network } from "libs/wallet-connectors";
+import { useEagerConnect, useInactiveListener } from "wallet";
+import { network } from "wallet/connectors";
 
 export function Web3ReactManager(props: { children?: React.ReactElement }) {
   const { active } = useWeb3React<providers.Web3Provider>();
