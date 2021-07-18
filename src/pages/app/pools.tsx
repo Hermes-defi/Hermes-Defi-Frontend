@@ -5,21 +5,25 @@ import {
   Box,
   Button,
   Container,
+  Flex,
   FormControl,
   FormLabel,
   Heading,
   HStack,
-  Image,
   Link,
   SimpleGrid,
+  Spinner,
   Stack,
   StackDivider,
   Switch,
   Text,
 } from "@chakra-ui/react";
 import { FiLock } from "react-icons/fi";
+import { useGetPools } from "hooks/farms";
 
 const Page: React.FC = () => {
+  const { fetching, pools } = useGetPools();
+
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>
@@ -32,34 +36,53 @@ const Page: React.FC = () => {
           </FormControl>
 
           <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
-            <Button color="gray.500" variant="link">
+            <Button color="gray.800" variant="link">
               <Heading fontSize="xl">Active</Heading>
             </Button>
 
-            <Button color="gray.800" variant="link">
+            <Button color="gray.500" variant="link">
               <Heading fontSize="xl">Inactive</Heading>
             </Button>
           </HStack>
         </HStack>
 
         <Container align="center" maxWidth="container.lg">
+          {fetching && (
+            <Flex mt={16} align="center" justify="center">
+              <Spinner size="xl" />
+            </Flex>
+          )}
+
           <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
-            {[0, 1, 2, 3, 4].map((i) => (
-              <Box key={i} px={8} py={4} boxShadow="lg" rounded="3xl" bg="#B38E5A" color="white">
+            {pools.map((pool) => (
+              <Box
+                key={pool.pid}
+                px={8}
+                py={4}
+                boxShadow="lg"
+                rounded="3xl"
+                bg="#B38E5A"
+                color="white"
+              >
                 <HStack mb={5} spacing={6}>
-                  <Heading>IRIS</Heading>
+                  <Heading>{pool.token}</Heading>
                 </HStack>
 
                 <HStack mb={8} spacing={4}>
-                  <Badge px={2} rounded="lg" colorScheme="gray">
-                    50x
-                  </Badge>
-                  <Badge px={2} rounded="lg" colorScheme="green">
-                    No Fees
-                  </Badge>
-                  <Badge px={2} rounded="lg" colorScheme="red">
+                  {pool.multiplier && (
+                    <Badge px={2} rounded="lg" colorScheme="gray">
+                      {pool.multiplier}x
+                    </Badge>
+                  )}
+
+                  {!pool.depositFees && (
+                    <Badge px={2} rounded="lg" colorScheme="green">
+                      No Fees
+                    </Badge>
+                  )}
+                  {/* <Badge px={2} rounded="lg" colorScheme="red">
                     Community
-                  </Badge>
+                  </Badge> */}
                 </HStack>
 
                 <Stack mb={8}>
@@ -68,7 +91,7 @@ const Page: React.FC = () => {
                       APY
                     </Text>
                     <Text fontWeight="700" fontSize="sm">
-                      1,717.27%
+                      {pool.apy}%
                     </Text>
                   </Stack>
 
@@ -77,7 +100,7 @@ const Page: React.FC = () => {
                       APR
                     </Text>
                     <Text fontWeight="700" fontSize="sm">
-                      290.65%
+                      {pool.apr}%
                     </Text>
                   </Stack>
 
@@ -86,7 +109,7 @@ const Page: React.FC = () => {
                       Earn
                     </Text>
                     <Text fontWeight="700" fontSize="sm">
-                      IRIS
+                      {pool.earn}
                     </Text>
                   </Stack>
 
@@ -95,25 +118,25 @@ const Page: React.FC = () => {
                       Deposit Fee
                     </Text>
                     <Text fontWeight="700" fontSize="sm">
-                      0%
+                      {pool.depositFees}%
                     </Text>
                   </Stack>
 
                   <Stack direction="row" justify="space-between">
                     <Text fontWeight="900" fontSize="sm">
-                      IRIS Earned ~$0.00
+                      IRIS Earned
                     </Text>
                     <Text fontWeight="700" fontSize="sm">
-                      0
+                      {pool.irisEarned}
                     </Text>
                   </Stack>
 
                   <Stack direction="row" justify="space-between">
                     <Text fontWeight="900" fontSize="sm">
-                      IRIS Staked ~$0.00
+                      IRIS Staked
                     </Text>
                     <Text fontWeight="700" fontSize="sm">
-                      0
+                      {pool.irisStaked}
                     </Text>
                   </Stack>
                 </Stack>
@@ -150,7 +173,7 @@ const Page: React.FC = () => {
                         Total Liquidity
                       </Text>
                       <Text fontWeight="700" fontSize="sm">
-                        $4,763,463
+                        ${pool.totalLiquidity}
                       </Text>
                     </Stack>
 
@@ -159,12 +182,12 @@ const Page: React.FC = () => {
                         My Liquidity
                       </Text>
                       <Text fontWeight="700" fontSize="sm">
-                        $0
+                        ${pool.userLiquidity}
                       </Text>
                     </Stack>
                   </Stack>
 
-                  <Link textDecoration="underline" href="#" fontWeight="700" fontSize="sm">
+                  <Link href="/" textDecoration="underline" fontWeight="700" fontSize="sm">
                     View on Matic
                   </Link>
                 </Box>

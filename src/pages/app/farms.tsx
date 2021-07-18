@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { AppLayout } from "components/layout";
 import {
   Badge,
@@ -18,8 +18,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FiLock } from "react-icons/fi";
+import { useGetFarms } from "hooks/farms";
 
 const Page: React.FC = () => {
+  useGetFarms();
+
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>

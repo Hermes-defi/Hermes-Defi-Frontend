@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback } from "react";
 
 import { Contract, providers, utils, constants } from "ethers";
 import { useWeb3React } from "@web3-react/core";
@@ -7,7 +7,12 @@ import IrisTokenABI from "abis/IrisToken.json";
 import MasterChefABI from "abis/MasterChef.json";
 import ReferralABI from "abis/Referral.json";
 
-const contracts = {
+export type ContractInfo = {
+  address: string;
+  abi: any;
+};
+
+export const defaultContracts = {
   referral: {
     address: "0x61dc8EAc3Ba928961F7Aa93e0d85CC74B0d74De1",
     abi: ReferralABI,
@@ -22,31 +27,33 @@ const contracts = {
   },
 };
 
-export enum ContractTypes {
-  IRIS_TOKEN = "irisToken",
-  MASTER_CHEF = "masterChef",
-  REFERRAL = "referral",
-}
+export function useGetContract(useNetwork?: boolean) {
+  const { library, account } = useWeb3React<providers.Web3Provider>(
+    useNetwork ? "web3-network" : undefined
+  );
 
-export function useContract(contract: ContractTypes) {
-  const { library, account } = useWeb3React<providers.Web3Provider>();
+  return useCallback(
+    (contractInfo: ContractInfo) => {
+      if (!library) {
+        console.log("[useContract][error] Library is not ready");
+        return null;
+      }
 
-  return useMemo(() => {
-    if (!library) return null;
+      const address = contractInfo.address;
+      const abi = contractInfo.abi;
 
-    const address = contracts[contract].address;
-    const abi = contracts[contract].abi;
+      if (!utils.isAddress(address) || address === constants.AddressZero) {
+        console.error(`[useContract][error] Invalid 'address' parameter '${address}'.`);
+        return null;
+      }
 
-    if (!utils.isAddress(address) || address === constants.AddressZero) {
-      console.error(`[useContract][error] Invalid 'address' parameter '${address}'.`);
-      return null;
-    }
+      let provider: providers.Web3Provider | providers.JsonRpcSigner = library;
+      if (account) {
+        provider = library.getSigner(account).connectUnchecked();
+      }
 
-    let provider: providers.Web3Provider | providers.JsonRpcSigner = library;
-    if (account) {
-      provider = library.getSigner(account).connectUnchecked();
-    }
-
-    return new Contract(address, abi, provider);
-  }, [account, library]);
+      return new Contract(address, abi, provider);
+    },
+    [account, library]
+  );
 }

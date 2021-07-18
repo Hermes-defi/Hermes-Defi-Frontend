@@ -115,7 +115,7 @@ const Page: React.FC = () => {
               >
                 <div>
                   <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
-                    <Icon color="secondary.500" boxSize={8} as={RiWaterFlashFill} />
+                    <Icon color="#B38E5A" boxSize={8} as={RiWaterFlashFill} />
                   </Center>
 
                   <Text fontSize={["lg", "sm"]} fontWeight={["500", "700"]}>

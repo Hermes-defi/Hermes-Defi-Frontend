@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { WalletModal } from "./wallet-modal";
+import { Global } from "@emotion/react";
 
 interface NavItem {
   label: string;
@@ -442,7 +443,15 @@ const Navigation = () => {
 
 export const AppLayout: React.FC = ({ children }) => {
   return (
-    <Box bg="gray.50">
+    <Box>
+      <Global
+        styles={{
+          body: {
+            background: "#F7FAFC",
+          },
+        }}
+      />
+
       <Container maxW="container.xl">
         <Navigation />
         {children}
