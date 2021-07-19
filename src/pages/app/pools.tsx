@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AppLayout } from "components/layout";
 import {
-  Badge,
-  Box,
   Button,
   Container,
   Flex,
@@ -10,19 +8,27 @@ import {
   FormLabel,
   Heading,
   HStack,
-  Link,
   SimpleGrid,
   Spinner,
   Stack,
   StackDivider,
   Switch,
-  Text,
 } from "@chakra-ui/react";
-import { FiLock } from "react-icons/fi";
-import { useGetPools } from "hooks/farms";
+import { usePoolsState, useFetchPoolInfoCb, PoolsContext, usePoolInfo } from "hooks/pools";
+import { PoolCard } from "components/pool-card";
 
-const Page: React.FC = () => {
-  const { fetching, pools } = useGetPools();
+const PageBody: React.FC = () => {
+  const { state, dispatch } = usePoolInfo();
+
+  const [fetching, setFetching] = useState(false);
+  const fetchPoolInfo = useFetchPoolInfoCb();
+
+  useEffect(() => {
+    if (fetching) return;
+
+    setFetching(true);
+    fetchPoolInfo().finally(() => setFetching(false));
+  }, []);
 
   return (
     <AppLayout>
@@ -54,149 +60,23 @@ const Page: React.FC = () => {
           )}
 
           <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
-            {pools.map((pool) => (
-              <Box
-                key={pool.pid}
-                px={8}
-                py={4}
-                boxShadow="lg"
-                rounded="3xl"
-                bg="#B38E5A"
-                color="white"
-              >
-                <HStack mb={5} spacing={6}>
-                  <Heading>{pool.token}</Heading>
-                </HStack>
-
-                <HStack mb={8} spacing={4}>
-                  {pool.multiplier && (
-                    <Badge px={2} rounded="lg" colorScheme="gray">
-                      {pool.multiplier}x
-                    </Badge>
-                  )}
-
-                  {!pool.depositFees && (
-                    <Badge px={2} rounded="lg" colorScheme="green">
-                      No Fees
-                    </Badge>
-                  )}
-                  {/* <Badge px={2} rounded="lg" colorScheme="red">
-                    Community
-                  </Badge> */}
-                </HStack>
-
-                <Stack mb={8}>
-                  <Stack direction="row" justify="space-between">
-                    <Text fontWeight="900" fontSize="sm">
-                      APY
-                    </Text>
-                    <Text fontWeight="700" fontSize="sm">
-                      {pool.apy}%
-                    </Text>
-                  </Stack>
-
-                  <Stack direction="row" justify="space-between">
-                    <Text fontWeight="900" fontSize="sm">
-                      APR
-                    </Text>
-                    <Text fontWeight="700" fontSize="sm">
-                      {pool.apr}%
-                    </Text>
-                  </Stack>
-
-                  <Stack direction="row" justify="space-between">
-                    <Text fontWeight="900" fontSize="sm">
-                      Earn
-                    </Text>
-                    <Text fontWeight="700" fontSize="sm">
-                      {pool.earn}
-                    </Text>
-                  </Stack>
-
-                  <Stack direction="row" justify="space-between">
-                    <Text fontWeight="900" fontSize="sm">
-                      Deposit Fee
-                    </Text>
-                    <Text fontWeight="700" fontSize="sm">
-                      {pool.depositFees}%
-                    </Text>
-                  </Stack>
-
-                  <Stack direction="row" justify="space-between">
-                    <Text fontWeight="900" fontSize="sm">
-                      IRIS Earned
-                    </Text>
-                    <Text fontWeight="700" fontSize="sm">
-                      {pool.irisEarned}
-                    </Text>
-                  </Stack>
-
-                  <Stack direction="row" justify="space-between">
-                    <Text fontWeight="900" fontSize="sm">
-                      IRIS Staked
-                    </Text>
-                    <Text fontWeight="700" fontSize="sm">
-                      {pool.irisStaked}
-                    </Text>
-                  </Stack>
-                </Stack>
-
-                <Stack mb={8} align="center">
-                  <Button isFullWidth rightIcon={<FiLock />} colorScheme="primary">
-                    Lock
-                  </Button>
-                  <Button isFullWidth bg="gray.700" _hover={{ bg: "gray.600" }}>
-                    Harvest
-                  </Button>
-                  <Button isFullWidth bg="gray.700" _hover={{ bg: "gray.600" }}>
-                    Compound
-                  </Button>
-                </Stack>
-
-                <Box align="left">
-                  <Heading mb={3} fontSize="xl">
-                    Details
-                  </Heading>
-
-                  <Stack mb={5}>
-                    <Stack direction="row" justify="space-between">
-                      <Text fontWeight="700" fontSize="sm">
-                        Deposit
-                      </Text>
-                      <Text fontWeight="700" fontSize="sm">
-                        IRIS
-                      </Text>
-                    </Stack>
-
-                    <Stack direction="row" justify="space-between">
-                      <Text fontWeight="700" fontSize="sm">
-                        Total Liquidity
-                      </Text>
-                      <Text fontWeight="700" fontSize="sm">
-                        ${pool.totalLiquidity}
-                      </Text>
-                    </Stack>
-
-                    <Stack direction="row" justify="space-between">
-                      <Text fontWeight="700" fontSize="sm">
-                        My Liquidity
-                      </Text>
-                      <Text fontWeight="700" fontSize="sm">
-                        ${pool.userLiquidity}
-                      </Text>
-                    </Stack>
-                  </Stack>
-
-                  <Link href="/" textDecoration="underline" fontWeight="700" fontSize="sm">
-                    View on Matic
-                  </Link>
-                </Box>
-              </Box>
+            {state.pools.map((pool) => (
+              <PoolCard pool={pool} key={pool.pid} />
             ))}
           </SimpleGrid>
         </Container>
       </Stack>
     </AppLayout>
+  );
+};
+
+const Page = () => {
+  const value = usePoolsState("pools");
+
+  return (
+    <PoolsContext.Provider value={value}>
+      <PageBody />
+    </PoolsContext.Provider>
   );
 };
 

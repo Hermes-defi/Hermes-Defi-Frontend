@@ -18,7 +18,7 @@ import { RiWaterFlashFill } from "react-icons/ri";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { addTokenToWallet } from "wallet/utils";
 import { defaultContracts } from "hooks/useContract";
-import { displayNumber } from "libs/utils";
+import { displayCurrency } from "libs/utils";
 
 const data = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
@@ -54,7 +54,7 @@ const Page: React.FC = () => {
               <Stack direction="row" spacing={10}>
                 <Box align="center">
                   <Text mb={2} fontWeight="700" fontSize="2xl">
-                    {displayNumber(0)}
+                    {displayCurrency(0)}
                   </Text>
                   <Text fontSize={"sm"} color="gray.600">
                     IRIS to harvest
@@ -63,7 +63,7 @@ const Page: React.FC = () => {
 
                 <Box align="center">
                   <Text mb={2} fontWeight="700" fontSize="2xl">
-                    {displayNumber(0)}
+                    {displayCurrency(0)}
                   </Text>
                   <Text fontSize={"sm"} color="gray.600">
                     IRIS in wallet

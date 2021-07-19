@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 
 import { Contract, providers, utils, constants } from "ethers";
-import { useWeb3React } from "@web3-react/core";
+import { useActiveWeb3React } from "wallet";
 
 import IrisTokenABI from "abis/IrisToken.json";
 import MasterChefABI from "abis/MasterChef.json";
@@ -27,10 +27,8 @@ export const defaultContracts = {
   },
 };
 
-export function useGetContract(useNetwork?: boolean) {
-  const { library, account } = useWeb3React<providers.Web3Provider>(
-    useNetwork ? "web3-network" : undefined
-  );
+export function useGetContract() {
+  const { library, account } = useActiveWeb3React();
 
   return useCallback(
     (contractInfo: ContractInfo) => {

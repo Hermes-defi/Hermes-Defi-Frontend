@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { injected } from "./connectors";
 import { providers } from "ethers";
-import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
-import { switchNetwork } from "./utils";
+import { useWeb3React } from "@web3-react/core";
+import { Web3ReactContextInterface } from "@web3-react/core/dist/types";
+
+export function useActiveWeb3React(): Web3ReactContextInterface<providers.Web3Provider> {
+  const context = useWeb3React<providers.Web3Provider>();
+  const contextNetwork = useWeb3React<providers.Web3Provider>("web3-network");
+  return context.active ? context : contextNetwork;
+}
 
 export function useEagerConnect() {
   const { activate, active } = useWeb3React();
@@ -10,9 +16,11 @@ export function useEagerConnect() {
   const [tried, setTried] = useState(false);
 
   useEffect(() => {
+    console.log("[useEagerConnect] trying to activate");
     injected.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
-        activate(injected, undefined, true).catch(() => {
+        activate(injected, undefined, true).catch((error) => {
+          console.error("Failed to eagerly activate", error);
           setTried(true);
         });
       } else {
@@ -39,16 +47,6 @@ export function useInactiveListener(suppress: boolean = false) {
     if (ethereum && ethereum.on && !active && !error && !suppress) {
       const handleChainChanged = () => {
         activate(injected, undefined, true).catch((error) => {
-          if (error instanceof UnsupportedChainIdError) {
-            switchNetwork()
-              .then(() => {
-                activate(injected, undefined, true);
-              })
-              .catch((error) => {
-                console.error("Failed to activate after chain changed", error);
-              });
-          }
-
           console.error("Failed to activate after chain changed", error);
         });
       };
@@ -56,16 +54,6 @@ export function useInactiveListener(suppress: boolean = false) {
       const handleAccountsChanged = (accounts: string[]) => {
         if (accounts.length > 0) {
           activate(injected, undefined, true).catch((error) => {
-            if (error instanceof UnsupportedChainIdError) {
-              switchNetwork()
-                .then(() => {
-                  activate(injected, undefined, true);
-                })
-                .catch((error) => {
-                  console.error("Failed to activate after accounts changed", error);
-                });
-            }
-
             console.error("Failed to activate after accounts changed", error);
           });
         }
