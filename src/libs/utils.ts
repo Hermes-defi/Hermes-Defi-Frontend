@@ -5,11 +5,15 @@ export function truncateAddress(address: string, length: number): string {
   )}`;
 }
 
-export function displayCurrency(number: number | string): string {
-  const value = new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(
-    number as number
-  );
+export function displayCurrency(number: number | string, isToken?: boolean): string {
+  const value = new Intl.NumberFormat(
+    undefined,
+    !isToken && {
+      style: "currency",
+      currency: "USD",
+    }
+  ).format(number as number);
 
   // hack to remove the "US" in front of the number
-  return value.replace(/^US/, "");
+  return isToken ? value : value.replace(/^US/, "");
 }

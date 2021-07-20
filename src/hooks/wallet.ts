@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { Contract, providers, utils, constants } from "ethers";
 import { useActiveWeb3React } from "wallet";
@@ -6,6 +6,9 @@ import { useActiveWeb3React } from "wallet";
 import IrisTokenABI from "abis/IrisToken.json";
 import MasterChefABI from "abis/MasterChef.json";
 import ReferralABI from "abis/Referral.json";
+import { getTokenBalance } from "web3-functions";
+
+import ERC20ABI from "abis/ERC20.json";
 
 export type ContractInfo = {
   address: string;
@@ -54,4 +57,19 @@ export function useGetContract() {
     },
     [account, library]
   );
+}
+
+export function useTokenBalance(tokenAddress: string) {
+  const [balance, setBalance] = useState(null);
+  const { account } = useActiveWeb3React();
+  const getContract = useGetContract();
+
+  useEffect(() => {
+    if (!account) return null;
+
+    const tokenContract = getContract({ address: tokenAddress, abi: ERC20ABI });
+    getTokenBalance(tokenContract, account).then((balance) => setBalance(balance));
+  }, [account]);
+
+  return balance;
 }

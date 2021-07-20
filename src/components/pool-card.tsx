@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   HStack,
@@ -9,13 +9,17 @@ import {
   Link,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import { FiUnlock } from "react-icons/fi";
-import { PoolInfo, useApprovePoolCb, usePoolInfo } from "hooks/pools";
 import { useActiveWeb3React } from "wallet";
 import { displayCurrency } from "libs/utils";
 import { WalletModal } from "components/wallet/modal";
 import { DepositModal } from "components/modals/deposit-modal";
+import { PoolInfo } from "web3-functions";
+import { usePoolInfo } from "hooks/pools-reducer";
+import { useGetContract } from "hooks/wallet";
+import { useApprovePool } from "hooks/pools";
 
 const UnlockButton = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -31,7 +35,7 @@ const UnlockButton = () => {
 };
 
 const ApproveButton: React.FC<{ pid: number }> = ({ pid }) => {
-  const { requestingApproval, approve } = useApprovePoolCb();
+  const { requestingApproval, approve } = useApprovePool();
 
   return (
     <Button
@@ -55,7 +59,7 @@ const DepositButton: React.FC<{ pid: number }> = ({ pid }) => {
         Deposit
       </Button>
 
-      <DepositModal pool={state.pools[pid]} isOpen={isOpen} onClose={onClose} />
+      <DepositModal pool={state[pid]} isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
@@ -95,7 +99,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             APY
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            {Math.trunc(pool.apy)}%
+            {Math.trunc(Number(pool.apy))}%
           </Text>
         </Stack>
 
@@ -104,7 +108,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             APR
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            {Math.trunc(pool.apr)}%
+            {Math.trunc(Number(pool.apr))}%
           </Text>
         </Stack>
 
@@ -137,10 +141,10 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
 
         <Stack direction="row" justify="space-between">
           <Text fontWeight="900" fontSize="sm">
-            IRIS Staked
+            {pool.token} Staked
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            {displayCurrency(pool.irisStaked)}
+            {displayCurrency(pool.irisStaked, true)}
           </Text>
         </Stack>
       </Stack>
@@ -150,7 +154,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
         {/* stake button */}
         {!account && <UnlockButton />}
         {account ? (
-          !pool.userApproved ? (
+          !pool.hasApprovedPool ? (
             <ApproveButton pid={pool.pid} />
           ) : (
             <DepositButton pid={pool.pid} />

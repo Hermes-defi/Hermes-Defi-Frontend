@@ -17,7 +17,7 @@ import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { addTokenToWallet } from "wallet/utils";
-import { defaultContracts } from "hooks/useContract";
+import { defaultContracts } from "hooks/wallet";
 import { displayCurrency } from "libs/utils";
 
 const data = [

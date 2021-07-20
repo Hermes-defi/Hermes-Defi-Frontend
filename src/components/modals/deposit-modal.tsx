@@ -9,18 +9,20 @@ import {
   Stack,
   Text,
   Button,
-  Link,
   Box,
   Input,
 } from "@chakra-ui/react";
-import { PoolInfo } from "hooks/pools";
 import { useActiveWeb3React } from "wallet";
+import { PoolInfo } from "web3-functions";
+import { useTokenBalance } from "hooks/wallet";
+import { useDepositIntoPool } from "hooks/pools";
 
 type Props = { isOpen: boolean; onClose: () => void; pool: PoolInfo };
 
 export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
-  const { connector } = useActiveWeb3React();
-  const [amount, setAmout] = useState("");
+  const { depositing, deposit } = useDepositIntoPool();
+  const balance = useTokenBalance(pool.lpAddress);
+  const [amount, setAmount] = useState("");
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -43,9 +45,11 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
               align="center"
             >
               <Box flex="1">
-                <Text mb={2} fontSize="xs">
-                  Balance: 0 {pool.token}
-                </Text>
+                {balance && (
+                  <Text mb={2} fontSize="xs">
+                    Balance: {balance} {pool.token}
+                  </Text>
+                )}
 
                 <Input
                   _focus={{ outline: "none" }}
@@ -59,18 +63,38 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
                   spellCheck={false}
                   value={amount}
                   type="number"
-                  onChange={(e) => setAmout(e.target.value)}
+                  disabled={depositing}
+                  onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
 
               <Box>
-                <Button size="sm" variant="outline" colorScheme="secondary">
+                <Button
+                  onClick={() => setAmount(balance)}
+                  size="sm"
+                  variant="outline"
+                  colorScheme="secondary"
+                  isDisabled={depositing}
+                >
                   Max
                 </Button>
               </Box>
             </Stack>
 
-            <Button fontSize="md" size="lg" variant="solid" colorScheme="accent" isFullWidth>
+            <Button
+              onClick={() =>
+                deposit(pool.pid, amount).then(() => {
+                  setAmount("");
+                  props.onClose();
+                })
+              }
+              isLoading={depositing}
+              fontSize="md"
+              size="lg"
+              variant="solid"
+              colorScheme="accent"
+              isFullWidth
+            >
               Deposit
             </Button>
           </Stack>
