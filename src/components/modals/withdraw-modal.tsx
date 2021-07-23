@@ -13,15 +13,13 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { PoolInfo } from "web3-functions";
-import { useTokenBalance } from "hooks/wallet";
-import { useDepositIntoPool } from "hooks/pools";
+import { useWithdraw } from "hooks/pools";
 import { displayCurrency } from "libs/utils";
 
 type Props = { isOpen: boolean; onClose: () => void; pool: PoolInfo };
 
-export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
-  const { depositing, deposit } = useDepositIntoPool();
-  const balance = useTokenBalance(pool.lpAddress);
+export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
+  const { withdrawing, withdraw } = useWithdraw();
   const [amount, setAmount] = useState("");
 
   return (
@@ -29,7 +27,7 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
       <ModalOverlay />
       <ModalContent rounded="2xl">
         <ModalCloseButton />
-        <ModalHeader fontSize="md">Stake {pool.token}</ModalHeader>
+        <ModalHeader fontSize="md">Unstake {pool.token}</ModalHeader>
 
         <ModalBody pb={6}>
           <Stack spacing={5}>
@@ -45,11 +43,9 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
               align="center"
             >
               <Box flex="1">
-                {balance && (
-                  <Text mb={2} fontSize="xs">
-                    Balance: {displayCurrency(balance, true)} {pool.token}
-                  </Text>
-                )}
+                <Text mb={2} fontSize="xs">
+                  Balance: {displayCurrency(pool.lpStaked, true)} {pool.token}
+                </Text>
 
                 <Input
                   _focus={{ outline: "none" }}
@@ -63,18 +59,18 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
                   spellCheck={false}
                   value={amount}
                   type="number"
-                  disabled={depositing}
+                  disabled={withdrawing}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
 
               <Box>
                 <Button
-                  onClick={() => setAmount(balance)}
+                  onClick={() => setAmount(pool.lpStaked)}
                   size="sm"
                   variant="outline"
                   colorScheme="secondary"
-                  isDisabled={depositing}
+                  isDisabled={withdrawing}
                 >
                   Max
                 </Button>
@@ -83,19 +79,19 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
 
             <Button
               onClick={() =>
-                deposit(pool.pid, amount).then(() => {
+                withdraw(pool.pid, amount).then(() => {
                   setAmount("");
                   props.onClose();
                 })
               }
-              isLoading={depositing}
+              isLoading={withdrawing}
               fontSize="md"
               size="lg"
               variant="solid"
               colorScheme="accent"
               isFullWidth
             >
-              Deposit
+              Unstake
             </Button>
           </Stack>
         </ModalBody>

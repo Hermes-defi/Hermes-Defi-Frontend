@@ -15,20 +15,18 @@ export type PoolInfo = {
   earn: string;
   depositFees: number;
   irisEarned: string; // requires user
-  irisStaked: string; // requires user
+  lpStaked: string; // requires user
   totalLiquidity: string;
-  userLiquidity: number; // requires user
+  userLiquidity: string; // requires user
   lpAddress: string;
 };
 
 // HELPER
 const BLOCKS_PER_YEAR = 15768000;
-async function calculateAPR(pool: any, contract: Contract) {
+async function calculateAPR_V1(pool: any, contract: Contract) {
   const amount = utils.parseEther("1");
   const depositFeesInPercent = BigNumber.from(pool.depositFeeBP / 100);
   const fees = amount.mul(depositFeesInPercent).div(100);
-
-  // console.log({ fees: utils.formatEther(fees) });
 
   const multiplier = BigNumber.from(BLOCKS_PER_YEAR);
   const allocPoint = pool.allocPoint as BigNumber;
@@ -43,12 +41,28 @@ async function calculateAPR(pool: any, contract: Contract) {
     .mul(amount)
     .div(totalAllocPoint);
 
+  console.log(interest.toString());
+
   const numberOfDays = BigNumber.from(365);
 
   const apr = fees.add(interest).div(amount).div(numberOfDays).mul(365).mul(100);
   const apy = BigNumber.from(1).add(apr.div(numberOfDays)).pow(numberOfDays).sub(1);
 
   return [apr, apy];
+}
+
+async function calculateAPR(pool: any, contract: any) {
+  const irisPerBlock = (await contract.irisPerBlock()) as BigNumber;
+  const totalAllocPoint = (await contract.totalAllocPoint()) as BigNumber;
+
+  const poolWeight = pool.allocPoint.div(totalAllocPoint);
+
+  const irisRewardPerBlock = irisPerBlock.mul(poolWeight).div(BigNumber.from(10).pow(18));
+
+  const irisRewardPerYear = irisRewardPerBlock.mul(BLOCKS_PER_YEAR);
+  console.log(irisRewardPerYear.toString());
+
+  return [0, 0];
 }
 
 // get individual farms
@@ -58,6 +72,7 @@ type GetPoolDataOptions = {
 };
 export async function getPool(pid: number, options: GetPoolDataOptions): Promise<PoolInfo> {
   const masterChefContract = options.getContract(defaultContracts.masterChef);
+  const irisContract = options.getContract(defaultContracts.irisToken);
   const pool = await masterChefContract.poolInfo(pid);
 
   // get basic pool info
@@ -67,12 +82,13 @@ export async function getPool(pid: number, options: GetPoolDataOptions): Promise
   const earn = "IRIS";
 
   // calculate apy and apr
-  let calculatedApr = await calculateAPR(pool, masterChefContract);
-  const apy = calculatedApr[0].toString();
-  const apr = calculatedApr[0].toString();
+  // let calculatedApr = await calculateAPR(pool, masterChefContract);
+  const apr = "0";
+  const apy = "0";
 
   // get lp info
   const lpContract = options.getContract({ address: pool.lpToken, abi: Erc20ABI });
+
   const symbol = await lpContract.symbol();
 
   const token = symbol;
@@ -83,19 +99,20 @@ export async function getPool(pid: number, options: GetPoolDataOptions): Promise
     await lpContract.balanceOf(defaultContracts.masterChef.address)
   );
 
-  const userLiquidity = 0;
+  let userLiquidity = "0";
 
   // get user staked info
   let irisEarned = "0";
-  let irisStaked = "0";
+  let lpStaked = "0";
   let hasStaked = false;
   let hasApprovedPool = false;
 
   // fetch user data
   if (options.account) {
-    const userInfo = await masterChefContract.userInfo(pid, options.account);
+    irisEarned = utils.formatEther(await masterChefContract.pendingIris(pid, options.account));
 
-    irisStaked = utils.formatEther(userInfo.amount);
+    const userInfo = await masterChefContract.userInfo(pid, options.account);
+    lpStaked = utils.formatEther(userInfo.amount);
     hasStaked = !(userInfo.amount as BigNumber).isZero();
 
     // get user permissions
@@ -104,6 +121,8 @@ export async function getPool(pid: number, options: GetPoolDataOptions): Promise
       options.account,
       masterChefContract.address
     );
+
+    userLiquidity = utils.formatEther(await lpContract.balanceOf(options.account));
 
     hasApprovedPool = !allowance.isZero();
   }
@@ -121,7 +140,7 @@ export async function getPool(pid: number, options: GetPoolDataOptions): Promise
     earn,
     depositFees,
     irisEarned,
-    irisStaked,
+    lpStaked,
     totalLiquidity,
     userLiquidity,
   };
@@ -159,5 +178,10 @@ export async function depositIntoPool(
   referral: string
 ) {
   const tx = await masterChef.deposit(pid, utils.parseEther(amount), referral);
+  await tx.wait();
+}
+
+export async function withdrawFromPool(masterChef: Contract, pid: number, amount: string) {
+  const tx = await masterChef.withdraw(pid, utils.parseEther(amount));
   await tx.wait();
 }

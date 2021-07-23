@@ -9,8 +9,6 @@ export const PoolsContext = createContext<{
 export const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any }) => {
   switch (actions.type) {
     case "ADD_POOLS": {
-      console.log(actions.payload);
-
       return actions.payload as PoolInfo[];
     }
 
@@ -24,7 +22,7 @@ export const poolsReducers = (state: PoolInfo[], actions: { type: string; payloa
       return pools;
     }
 
-    case "DEPOSIT_INTO_POOL": {
+    case "UPDATE_POOL": {
       const { data, pid } = actions.payload;
 
       // create a new copy of pools

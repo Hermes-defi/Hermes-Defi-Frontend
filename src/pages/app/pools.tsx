@@ -55,7 +55,6 @@ const Page: React.FC = () => {
     fetch();
   }, []);
 
-  console.log("Did you fucking rerender?", state);
   return (
     <PoolsContext.Provider value={{ state, dispatch }}>
       <AppLayout>

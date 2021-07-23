@@ -4,7 +4,7 @@ import { useActiveWeb3React } from "wallet";
 import { usePoolInfo } from "./pools-reducer";
 import { defaultContracts, useGetContract } from "./wallet";
 import Erc20ABI from "abis/ERC20.json";
-import { approveLpContract, depositIntoPool, getPool } from "web3-functions";
+import { approveLpContract, depositIntoPool, getPool, withdrawFromPool } from "web3-functions";
 import { constants } from "ethers";
 
 export function useApprovePool() {
@@ -74,14 +74,14 @@ export function useDepositIntoPool() {
 
         // fetch new pool data
         const newPoolInfo = await getPool(pid, { getContract, account });
-        dispatch({ type: "DEPOSIT_INTO_POOL", payload: { pid, data: newPoolInfo } });
+        dispatch({ type: "UPDATE_POOL", payload: { pid, data: newPoolInfo } });
       } catch (err) {
         console.error(`[useDepositIntoPool][error] general error - ${err.message}`, {
           err,
         });
 
         toast({
-          title: "Error approving token",
+          title: "Error depositing into pool",
           description: err.message,
           status: "error",
           position: "top-right",
@@ -97,4 +97,102 @@ export function useDepositIntoPool() {
   );
 
   return { deposit, depositing };
+}
+
+export function useHarvestRewards() {
+  const toast = useToast();
+
+  const { dispatch } = usePoolInfo();
+  const { account } = useActiveWeb3React();
+
+  const [harvesting, setHarvesting] = useState(false);
+  const getContract = useGetContract();
+
+  const harvest = useCallback(
+    async (pid: number) => {
+      try {
+        if (harvesting) return;
+        if (!account) throw new Error("No connected account");
+
+        setHarvesting(true);
+
+        const masterChefContract = getContract(defaultContracts.masterChef);
+
+        // deposit 0 into the pool since we only want to collect the rewards
+        await depositIntoPool(masterChefContract, pid, "0", constants.AddressZero);
+
+        // fetch new pool data
+        const newPoolInfo = await getPool(pid, { getContract, account });
+        dispatch({ type: "UPDATE_POOL", payload: { pid, data: newPoolInfo } });
+      } catch (err) {
+        console.error(`[useHarvestRewards][error] general error - ${err.message}`, {
+          err,
+        });
+
+        toast({
+          title: "Error harvesting rewards",
+          description: err.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+
+        return false;
+      } finally {
+        setHarvesting(false);
+      }
+    },
+    [account]
+  );
+
+  return { harvest, harvesting };
+}
+
+export function useWithdraw() {
+  const toast = useToast();
+
+  const { dispatch } = usePoolInfo();
+  const { account } = useActiveWeb3React();
+
+  const [withdrawing, setWithdrawing] = useState(false);
+  const getContract = useGetContract();
+
+  const withdraw = useCallback(
+    async (pid: number, amount: string) => {
+      try {
+        if (withdrawing) return;
+        if (!account) throw new Error("No connected account");
+
+        setWithdrawing(true);
+
+        const masterChefContract = getContract(defaultContracts.masterChef);
+
+        // deposit 0 into the pool since we only want to collect the rewards
+        await withdrawFromPool(masterChefContract, pid, amount);
+
+        // fetch new pool data
+        const newPoolInfo = await getPool(pid, { getContract, account });
+        dispatch({ type: "UPDATE_POOL", payload: { pid, data: newPoolInfo } });
+      } catch (err) {
+        console.error(`[useWithdraw][error] general error - ${err.message}`, {
+          err,
+        });
+
+        toast({
+          title: "Error withdrawing token",
+          description: err.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+
+        return false;
+      } finally {
+        setWithdrawing(false);
+      }
+    },
+    [account]
+  );
+
+  return { withdraw, withdrawing };
 }
