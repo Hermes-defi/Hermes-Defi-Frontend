@@ -1,4 +1,22 @@
 import React from "react";
+
+import { useActiveWeb3React } from "wallet";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  getFarmStats,
+  getIrisStat,
+  getIrisToHarvest,
+  getPoolPublicData,
+  harvestFromAll,
+} from "web3-functions";
+import { useERC20, useIrisToken, useMasterChef } from "hooks/contracts";
+import { addTokenToWallet } from "wallet/utils";
+import defaultContracts from "config/contracts";
+import { farmIds, poolIds } from "config/pools";
+
+import { utils } from "ethers";
+import { displayCurrency } from "libs/utils";
+
 import { AppLayout } from "components/layout";
 import {
   Box,
@@ -18,14 +36,6 @@ import {
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
-import { addTokenToWallet } from "wallet/utils";
-import { defaultContracts, useGetContract } from "hooks/wallet";
-import { displayCurrency } from "libs/utils";
-import { useActiveWeb3React } from "wallet";
-import { utils } from "ethers";
-import { getIrisStat, getIrisToHarvest, harvestFromAll } from "web3-functions";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { useIrisToken, useMasterChef } from "hooks/contracts";
 
 const data = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
@@ -53,12 +63,10 @@ function useIrisData() {
 
 function useHarvestAll() {
   const queryClient = useQueryClient();
-  const getContract = useGetContract();
+  const masterChef = useMasterChef();
   const toast = useToast();
 
-  const masterChefContract = getContract(defaultContracts.masterChef);
-
-  const harvestAll = useMutation(() => harvestFromAll(masterChefContract), {
+  const harvestAll = useMutation(() => harvestFromAll(masterChef), {
     onSuccess: () => {
       queryClient.invalidateQueries("irisInWallet");
       queryClient.invalidateQueries("irisToHarvest");
@@ -87,9 +95,38 @@ function useIrisStats() {
   return irisStats;
 }
 
+function useHermesStats() {
+  const getLpContract = useERC20();
+  const masterChef = useMasterChef();
+
+  const hermesStats = useQuery("hermesStats", async () => {
+    const farmLps = await Promise.all(
+      farmIds.map(async (pid) => {
+        const { lpAddress } = await getPoolPublicData(pid, masterChef);
+        return getLpContract(lpAddress);
+      })
+    );
+
+    const poolLps = await Promise.all(
+      poolIds.map(async (pid) => {
+        const { lpAddress } = await getPoolPublicData(pid, masterChef);
+        return getLpContract(lpAddress);
+      })
+    );
+
+    const resp = await getFarmStats(poolLps, farmLps);
+
+    return resp;
+  });
+
+  return hermesStats;
+}
+
 const Page: React.FC = () => {
   const irisStats = useIrisStats();
+  const hermesStats = useHermesStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
+
   const harvestAll = useHarvestAll();
 
   return (
@@ -313,9 +350,11 @@ const Page: React.FC = () => {
                   <Heading mb={[0, 2]} color="gray.600" fontSize="xl">
                     Total Value Locked
                   </Heading>
-                  <Text fontSize="3xl" fontWeight="700">
-                    $133,580,600.96
-                  </Text>
+                  <Skeleton isLoaded={!!hermesStats.data}>
+                    <Text fontSize="3xl" fontWeight="700">
+                      {displayCurrency(hermesStats.data?.tvl)}
+                    </Text>
+                  </Skeleton>
                 </div>
 
                 <Stack spacing={[5, 10]} direction="row">
@@ -323,18 +362,22 @@ const Page: React.FC = () => {
                     <Heading mb={1} color="gray.600" fontSize="xl">
                       Farms
                     </Heading>
-                    <Text fontSize="xl" fontWeight="700">
-                      $115,733,738
-                    </Text>
+                    <Skeleton isLoaded={!!hermesStats.data}>
+                      <Text fontSize="2xl" fontWeight="700">
+                        {displayCurrency(hermesStats.data?.totalValueInFarms)}
+                      </Text>
+                    </Skeleton>
                   </Box>
 
                   <Box align={["left", "center"]}>
                     <Heading mb={1} color="gray.600" fontSize="xl">
                       Pools
                     </Heading>
-                    <Text fontSize="xl" fontWeight="700">
-                      $115,733,738
-                    </Text>
+                    <Skeleton isLoaded={!!hermesStats.data}>
+                      <Text fontSize="2xl" fontWeight="700">
+                        {displayCurrency(hermesStats.data?.totalValueInPools)}
+                      </Text>
+                    </Skeleton>
                   </Box>
                 </Stack>
               </Stack>

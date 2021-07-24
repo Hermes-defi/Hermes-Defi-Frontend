@@ -81,10 +81,11 @@ export async function getPoolData(
 }
 
 export async function getIrisToHarvest(account: string, masterChefContract: Contract) {
-  const totalIrisToHarvest = [...farmIds, ...poolIds].reduce(async (total, pid) => {
+  const totalIrisToHarvest = [...farmIds, ...poolIds].reduce(async (_total, pid) => {
+    const total = await _total;
     const irisEarned = await masterChefContract.pendingIris(pid, account);
     return total.add(irisEarned);
-  }, BigNumber.from(0));
+  }, Promise.resolve(BigNumber.from(0)));
 
   return totalIrisToHarvest;
 }
@@ -105,6 +106,34 @@ export async function getIrisStat(irisContract: Contract) {
     totalBurned: utils.formatEther(totalBurned),
     circulatingSupply: utils.formatEther(circulatingSupply),
     marketCap: utils.formatEther(marketCap),
+  };
+}
+
+export async function getFarmStats(poolContracts: Contract[], farmContracts: Contract[]) {
+  // in this function we're assuming all tokens are worth 1$
+
+  const totalValueInPools: BigNumber = await poolContracts.reduce(async (_total, lpContract) => {
+    const tokenPrice = 1; // TODO: get real price
+
+    const total = await _total;
+    const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+    return total.add(totalLpStaked.mul(tokenPrice));
+  }, Promise.resolve(BigNumber.from(0)));
+
+  const totalValueInFarms: BigNumber = await farmContracts.reduce(async (_total, lpContract) => {
+    const tokenPrice = 1; // TODO: get real price
+
+    const total = await _total;
+    const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+    return total.add(totalLpStaked.mul(tokenPrice));
+  }, Promise.resolve(BigNumber.from(0)));
+
+  const tvl = totalValueInPools.add(totalValueInFarms);
+
+  return {
+    tvl: utils.formatEther(tvl),
+    totalValueInFarms: utils.formatEther(totalValueInFarms),
+    totalValueInPools: utils.formatEther(totalValueInPools),
   };
 }
 

@@ -154,7 +154,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   );
 };
 
-export const PoolCard: React.FC<{ pool: PoolInfo; actions: any }> = ({ pool }) => {
+export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   return (
     <Box px={8} py={4} boxShadow="lg" rounded="3xl" bg="accent.500" color="white">
       {/* pool name */}
