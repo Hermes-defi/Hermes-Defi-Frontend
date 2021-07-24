@@ -7,10 +7,13 @@ import { Global } from "@emotion/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3ReactManager } from "components/web3-manager";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const Web3ReactProviderDefault = dynamic(() => import("components/web3-network"), {
   ssr: false,
 });
+
+const queryClient = new QueryClient();
 
 function getLibrary(provider: any): ethers.providers.Web3Provider {
   const library = new ethers.providers.Web3Provider(provider);
@@ -61,13 +64,15 @@ function MyApp({ Component, pageProps }) {
     <ChakraProvider theme={theme}>
       <GlobalHead />
 
-      <Web3ReactProvider getLibrary={getLibrary}>
-        <Web3ReactProviderDefault getLibrary={getLibrary}>
-          <Web3ReactManager>
-            <Component {...pageProps} />
-          </Web3ReactManager>
-        </Web3ReactProviderDefault>
-      </Web3ReactProvider>
+      <QueryClientProvider client={queryClient}>
+        <Web3ReactProvider getLibrary={getLibrary}>
+          <Web3ReactProviderDefault getLibrary={getLibrary}>
+            <Web3ReactManager>
+              <Component {...pageProps} />
+            </Web3ReactManager>
+          </Web3ReactProviderDefault>
+        </Web3ReactProvider>
+      </QueryClientProvider>
     </ChakraProvider>
   );
 }

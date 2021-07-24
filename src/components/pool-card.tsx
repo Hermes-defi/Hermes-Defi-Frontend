@@ -60,20 +60,14 @@ const UnstakeButton: React.FC<any> = (props) => {
   );
 };
 
-const CompoundButton: React.FC<{ pid: number }> = ({ pid }) => {
-  return (
-    <Button isFullWidth bg="gray.700" _hover={{ bg: "gray.600" }}>
-      Compound
-    </Button>
-  );
-};
-
 const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   const { account } = useActiveWeb3React();
-  const { harvest, harvesting } = useHarvestRewards();
   const { requestingApproval, approve } = useApprovePool();
+
   // use deposit as compound
   const { depositing: compounding, deposit: compound } = useDepositIntoPool();
+  // use deposit as harvest
+  const { depositing: harvesting, deposit: harvest } = useDepositIntoPool();
 
   if (!account) {
     return <UnlockButton />;
@@ -142,7 +136,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
           <Stack direction="row">
             <Button
               isLoading={harvesting}
-              onClick={() => harvest(pool.pid)}
+              onClick={() => harvest(pool.pid, "0")}
               size="xs"
               bg="gray.700"
               _hover={{ bg: "gray.600" }}

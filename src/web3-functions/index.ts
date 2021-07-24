@@ -2,6 +2,10 @@ import Erc20ABI from "abis/ERC20.json";
 import { ContractInfo, defaultContracts } from "hooks/wallet";
 import { BigNumber, constants, Contract, utils } from "ethers";
 
+// CONFIG
+const farmIds = [];
+const poolIds = [0];
+
 // TYPES
 export type PoolInfo = {
   pid: number;
@@ -65,7 +69,7 @@ async function calculateAPR(pool: any, contract: any) {
   return [0, 0];
 }
 
-// get individual farms
+// QUERIES
 type GetPoolDataOptions = {
   getContract: (contractInfo: ContractInfo) => Contract;
   account?: string;
@@ -146,19 +150,30 @@ export async function getPool(pid: number, options: GetPoolDataOptions): Promise
   };
 }
 
-// get individual farms
 type GetPoolsDataOptions = GetPoolDataOptions & {
   poolType: "farms" | "pools";
 };
 export async function getPoolsData(options: GetPoolsDataOptions) {
-  const farmIds = [];
-  const poolIds = [0];
-
   return Promise.all(
     (options.poolType === "farms" ? farmIds : poolIds).map((pid) => getPool(pid, options))
   );
 }
 
+export async function getIrisToHarvest(
+  account: string,
+  getContract: (contractInfo: ContractInfo) => Contract
+) {
+  const masterChefContract = getContract(defaultContracts.masterChef);
+
+  const totalIrisToHarvest = [...farmIds, ...poolIds].reduce(async (total, pid) => {
+    const irisEarned = await masterChefContract.pendingIris(pid, account);
+    return total.add(irisEarned);
+  }, BigNumber.from(0));
+
+  return totalIrisToHarvest;
+}
+
+// ACTIONS
 export async function approveLpContract(lpContract: Contract) {
   const approveTx = await lpContract.approve(
     defaultContracts.masterChef.address,
@@ -184,4 +199,13 @@ export async function depositIntoPool(
 export async function withdrawFromPool(masterChef: Contract, pid: number, amount: string) {
   const tx = await masterChef.withdraw(pid, utils.parseEther(amount));
   await tx.wait();
+}
+
+export async function harvestFromAllFarms(masterChef: Contract) {
+  return Promise.all(
+    [...farmIds, ...poolIds].map(async (pid) => {
+      const tx = await masterChef.deposit(pid, utils.parseEther("0"), constants.AddressZero);
+      await tx.wait();
+    })
+  );
 }

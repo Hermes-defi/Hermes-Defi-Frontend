@@ -9,16 +9,22 @@ import {
   Image,
   Link,
   SimpleGrid,
+  Skeleton,
   Stack,
   Text,
   useBreakpointValue,
+  useToast,
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { addTokenToWallet } from "wallet/utils";
-import { defaultContracts } from "hooks/wallet";
+import { defaultContracts, useGetContract } from "hooks/wallet";
 import { displayCurrency } from "libs/utils";
+import { useActiveWeb3React } from "wallet";
+import { utils } from "ethers";
+import { getIrisToHarvest, harvestFromAllFarms } from "web3-functions";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const data = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
@@ -28,7 +34,53 @@ const data = [
   { name: "Page E", uv: 400, pv: 2000, amt: 2900 },
 ];
 
+function useIrisData() {
+  const { account } = useActiveWeb3React();
+  const getContract = useGetContract();
+
+  const irisContract = getContract(defaultContracts.irisToken);
+
+  const irisInWallet = useQuery("irisInWallet", async () => {
+    return account ? utils.formatEther(await irisContract.balanceOf(account)) : "0.00";
+  });
+
+  const irisToHarvest = useQuery("irisToHarvest", async () => {
+    return account ? utils.formatEther(await getIrisToHarvest(account, getContract)) : "0.00";
+  });
+
+  return { irisInWallet, irisToHarvest };
+}
+
+function useHarvestAll() {
+  const queryClient = useQueryClient();
+  const getContract = useGetContract();
+  const toast = useToast();
+
+  const masterChefContract = getContract(defaultContracts.masterChef);
+
+  const harvestAll = useMutation(() => harvestFromAllFarms(masterChefContract), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("irisInWallet");
+      queryClient.invalidateQueries("irisToHarvest");
+    },
+
+    onError: (e) => {
+      toast({
+        status: "error",
+        position: "top-right",
+        title: "Error harvesting IRIS",
+        description: e,
+      });
+    },
+  });
+
+  return harvestAll;
+}
+
 const Page: React.FC = () => {
+  const { irisInWallet, irisToHarvest } = useIrisData();
+  const harvestAll = useHarvestAll();
+
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
@@ -53,25 +105,35 @@ const Page: React.FC = () => {
 
               <Stack direction="row" spacing={10}>
                 <Box align="center">
-                  <Text mb={2} fontWeight="700" fontSize="2xl">
-                    {displayCurrency(0)}
-                  </Text>
+                  <Skeleton isLoaded={!irisToHarvest.isLoading}>
+                    <Text mb={2} fontWeight="700" fontSize="2xl">
+                      {displayCurrency(irisToHarvest.data, true)}
+                    </Text>
+                  </Skeleton>
+
                   <Text fontSize={"sm"} color="gray.600">
                     IRIS to harvest
                   </Text>
                 </Box>
 
                 <Box align="center">
-                  <Text mb={2} fontWeight="700" fontSize="2xl">
-                    {displayCurrency(0)}
-                  </Text>
+                  <Skeleton isLoaded={!irisInWallet.isLoading}>
+                    <Text mb={2} fontWeight="700" fontSize="2xl">
+                      {displayCurrency(irisInWallet.data, true)}
+                    </Text>
+                  </Skeleton>
                   <Text fontSize={"sm"} color="gray.600">
                     IRIS in wallet
                   </Text>
                 </Box>
               </Stack>
 
-              <Button variant="primary" fontSize="md">
+              <Button
+                isLoading={harvestAll.isLoading && !harvestAll.isSuccess}
+                onClick={() => harvestAll.mutate()}
+                variant="primary"
+                fontSize="md"
+              >
                 Harvest All
               </Button>
             </Stack>
@@ -172,7 +234,7 @@ const Page: React.FC = () => {
 
               <Box align={["left", "center"]}>
                 <Text fontSize="lg" fontWeight="700">
-                  $21,803,359
+                  1,000,000
                 </Text>
                 <Heading mt={1} color="gray.600" fontSize="lg">
                   Maximum Supply
@@ -181,7 +243,7 @@ const Page: React.FC = () => {
 
               <Box align={["left", "center"]}>
                 <Text fontSize="lg" fontWeight="700">
-                  0.8
+                  0.4
                 </Text>
                 <Heading mt={1} color="gray.600" fontSize="lg">
                   New IRIS/block
