@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React from "react";
 import { AppLayout } from "components/layout";
 import {
   Button,
@@ -16,47 +16,49 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { PoolCard } from "components/pool-card";
-import { getPoolsData, PoolInfo } from "web3-functions";
-import { PoolsContext, poolsReducers } from "hooks/pools-reducer";
-import { useGetContract } from "hooks/wallet";
+import { getPoolData } from "web3-functions";
 import { useActiveWeb3React } from "wallet";
+import { useQuery } from "react-query";
+import { useERC20, useMasterChef } from "hooks/contracts";
+import { poolIds, PoolInfo } from "config/pools";
+import { PoolsProvider, usePoolInfo } from "hooks/pools-reducer";
 
 const Page: React.FC = () => {
   const toast = useToast();
-  const getContract = useGetContract();
-  const [fetchingPools, setFetchingPools] = useState(false);
-  const [state, dispatch] = useReducer(poolsReducers, [] as PoolInfo[]);
+  const getLpContract = useERC20();
+  const masterChef = useMasterChef();
   const { account } = useActiveWeb3React();
+  const [state, dispatch] = usePoolInfo();
 
-  useEffect(() => {
-    async function fetch() {
-      setFetchingPools(true);
+  const poolQuery = useQuery(
+    ["pools", account],
 
-      try {
-        const data = await getPoolsData({
-          getContract,
-          account,
-          poolType: "pools",
-        });
+    async (): Promise<PoolInfo[]> => {
+      return Promise.all(
+        poolIds.map(async (pid) => {
+          return getPoolData(pid, account, masterChef, getLpContract);
+        })
+      );
+    },
 
+    {
+      onSuccess: (data) => {
         dispatch({ type: "ADD_POOLS", payload: data });
-      } catch (e) {
+      },
+
+      onError: (e) => {
         toast({
           status: "error",
-          title: "Error fetching pools",
-          description: e.message,
           position: "top-right",
+          title: "Error harvesting IRIS",
+          description: e,
         });
-      } finally {
-        setFetchingPools(false);
-      }
+      },
     }
-
-    fetch();
-  }, []);
+  );
 
   return (
-    <PoolsContext.Provider value={{ state, dispatch }}>
+    <PoolsProvider>
       <AppLayout>
         <Stack align="center" spacing={10} py={10}>
           <HStack spacing={14} align="center" justify="center">
@@ -79,7 +81,7 @@ const Page: React.FC = () => {
           </HStack>
 
           <Container align="center" maxWidth="container.lg">
-            {fetchingPools && (
+            {poolQuery.isLoading && (
               <Flex mt={16} align="center" justify="center">
                 <Spinner size="xl" />
               </Flex>
@@ -93,7 +95,7 @@ const Page: React.FC = () => {
           </Container>
         </Stack>
       </AppLayout>
-    </PoolsContext.Provider>
+    </PoolsProvider>
   );
 };
 

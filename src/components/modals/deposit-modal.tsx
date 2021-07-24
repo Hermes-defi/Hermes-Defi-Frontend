@@ -12,15 +12,15 @@ import {
   Box,
   Input,
 } from "@chakra-ui/react";
-import { PoolInfo } from "web3-functions";
 import { useTokenBalance } from "hooks/wallet";
-import { useDepositIntoPool } from "hooks/pools";
+import { useDepositIntoPool } from "hooks/pools-actions";
 import { displayCurrency } from "libs/utils";
+import { PoolInfo } from "config/pools";
 
 type Props = { isOpen: boolean; onClose: () => void; pool: PoolInfo };
 
 export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
-  const { depositing, deposit } = useDepositIntoPool();
+  const depositMutation = useDepositIntoPool();
   const balance = useTokenBalance(pool.lpAddress);
   const [amount, setAmount] = useState("");
 
@@ -29,7 +29,7 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
       <ModalOverlay />
       <ModalContent rounded="2xl">
         <ModalCloseButton />
-        <ModalHeader fontSize="md">Stake {pool.token}</ModalHeader>
+        <ModalHeader fontSize="md">Stake {pool.lpToken}</ModalHeader>
 
         <ModalBody pb={6}>
           <Stack spacing={5}>
@@ -47,7 +47,7 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
               <Box flex="1">
                 {balance && (
                   <Text mb={2} fontSize="xs">
-                    Balance: {displayCurrency(balance, true)} {pool.token}
+                    Balance: {displayCurrency(balance, true)} {pool.lpToken}
                   </Text>
                 )}
 
@@ -63,7 +63,7 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
                   spellCheck={false}
                   value={amount}
                   type="number"
-                  disabled={depositing}
+                  disabled={depositMutation.isLoading}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
@@ -74,7 +74,7 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
                   size="sm"
                   variant="outline"
                   colorScheme="secondary"
-                  isDisabled={depositing}
+                  isDisabled={depositMutation.isLoading}
                 >
                   Max
                 </Button>
@@ -83,12 +83,17 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
 
             <Button
               onClick={() =>
-                deposit(pool.pid, amount).then(() => {
-                  setAmount("");
-                  props.onClose();
-                })
+                depositMutation.mutate(
+                  { pid: pool.pid, amount },
+                  {
+                    onSuccess: () => {
+                      setAmount("");
+                      props.onClose();
+                    },
+                  }
+                )
               }
-              isLoading={depositing}
+              isLoading={depositMutation.isLoading}
               fontSize="md"
               size="lg"
               variant="solid"

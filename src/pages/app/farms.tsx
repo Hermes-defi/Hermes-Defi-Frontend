@@ -18,7 +18,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { FiLock } from "react-icons/fi";
-import { useGetFarms } from "hooks/pools";
+import { useGetFarms } from "hooks/pools-actions";
 
 const Page: React.FC = () => {
   useGetFarms();

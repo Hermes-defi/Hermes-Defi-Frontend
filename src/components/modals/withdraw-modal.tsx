@@ -12,14 +12,14 @@ import {
   Box,
   Input,
 } from "@chakra-ui/react";
-import { PoolInfo } from "web3-functions";
-import { useWithdraw } from "hooks/pools";
+import { useWithdraw } from "hooks/pools-actions";
 import { displayCurrency } from "libs/utils";
+import { PoolInfo } from "config/pools";
 
 type Props = { isOpen: boolean; onClose: () => void; pool: PoolInfo };
 
 export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
-  const { withdrawing, withdraw } = useWithdraw();
+  const withdrawMutation = useWithdraw();
   const [amount, setAmount] = useState("");
 
   return (
@@ -27,7 +27,7 @@ export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
       <ModalOverlay />
       <ModalContent rounded="2xl">
         <ModalCloseButton />
-        <ModalHeader fontSize="md">Unstake {pool.token}</ModalHeader>
+        <ModalHeader fontSize="md">Unstake {pool.lpToken}</ModalHeader>
 
         <ModalBody pb={6}>
           <Stack spacing={5}>
@@ -44,7 +44,7 @@ export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
             >
               <Box flex="1">
                 <Text mb={2} fontSize="xs">
-                  Balance: {displayCurrency(pool.lpStaked, true)} {pool.token}
+                  Balance: {displayCurrency(pool.lpStaked, true)} {pool.lpToken}
                 </Text>
 
                 <Input
@@ -59,7 +59,7 @@ export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
                   spellCheck={false}
                   value={amount}
                   type="number"
-                  disabled={withdrawing}
+                  disabled={withdrawMutation.isLoading}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
@@ -70,7 +70,7 @@ export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
                   size="sm"
                   variant="outline"
                   colorScheme="secondary"
-                  isDisabled={withdrawing}
+                  isDisabled={withdrawMutation.isLoading}
                 >
                   Max
                 </Button>
@@ -79,12 +79,17 @@ export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
 
             <Button
               onClick={() =>
-                withdraw(pool.pid, amount).then(() => {
-                  setAmount("");
-                  props.onClose();
-                })
+                withdrawMutation.mutate(
+                  { pid: pool.pid, amount },
+                  {
+                    onSuccess: () => {
+                      setAmount("");
+                      props.onClose();
+                    },
+                  }
+                )
               }
-              isLoading={withdrawing}
+              isLoading={withdrawMutation.isLoading}
               fontSize="md"
               size="lg"
               variant="solid"

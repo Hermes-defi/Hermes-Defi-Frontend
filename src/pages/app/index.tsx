@@ -23,8 +23,9 @@ import { defaultContracts, useGetContract } from "hooks/wallet";
 import { displayCurrency } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 import { utils } from "ethers";
-import { getIrisStat, getIrisToHarvest, harvestFromAllFarms } from "web3-functions";
+import { getIrisStat, getIrisToHarvest, harvestFromAll } from "web3-functions";
 import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useIrisToken, useMasterChef } from "hooks/contracts";
 
 const data = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
@@ -36,16 +37,15 @@ const data = [
 
 function useIrisData() {
   const { account } = useActiveWeb3React();
-  const getContract = useGetContract();
-
-  const irisContract = getContract(defaultContracts.irisToken);
+  const masterChef = useMasterChef();
+  const irisToken = useIrisToken();
 
   const irisInWallet = useQuery("irisInWallet", async () => {
-    return account ? utils.formatEther(await irisContract.balanceOf(account)) : "0.00";
+    return account ? utils.formatEther(await irisToken.balanceOf(account)) : "0.00";
   });
 
   const irisToHarvest = useQuery("irisToHarvest", async () => {
-    return account ? utils.formatEther(await getIrisToHarvest(account, getContract)) : "0.00";
+    return account ? utils.formatEther(await getIrisToHarvest(account, masterChef)) : "0.00";
   });
 
   return { irisInWallet, irisToHarvest };
@@ -58,7 +58,7 @@ function useHarvestAll() {
 
   const masterChefContract = getContract(defaultContracts.masterChef);
 
-  const harvestAll = useMutation(() => harvestFromAllFarms(masterChefContract), {
+  const harvestAll = useMutation(() => harvestFromAll(masterChefContract), {
     onSuccess: () => {
       queryClient.invalidateQueries("irisInWallet");
       queryClient.invalidateQueries("irisToHarvest");
@@ -78,10 +78,10 @@ function useHarvestAll() {
 }
 
 function useIrisStats() {
-  const getContract = useGetContract();
+  const irisContract = useIrisToken();
 
   const irisStats = useQuery("irisStats", async () => {
-    return getIrisStat(getContract);
+    return getIrisStat(irisContract);
   });
 
   return irisStats;

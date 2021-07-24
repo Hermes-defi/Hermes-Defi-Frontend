@@ -1,12 +1,7 @@
-import { Dispatch, useContext, createContext } from "react";
-import { PoolInfo } from "web3-functions";
+import { PoolInfo } from "config/pools";
+import { createReducerContext } from "react-use";
 
-export const PoolsContext = createContext<{
-  state: PoolInfo[];
-  dispatch: Dispatch<{ type: string; payload: any }>;
-}>({ state: [], dispatch: () => null });
-
-export const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any }) => {
+const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any }) => {
   switch (actions.type) {
     case "ADD_POOLS": {
       return actions.payload as PoolInfo[];
@@ -36,6 +31,7 @@ export const poolsReducers = (state: PoolInfo[], actions: { type: string; payloa
   return state;
 };
 
-export function usePoolInfo() {
-  return useContext(PoolsContext);
-}
+const reducerContext = createReducerContext(poolsReducers, []);
+
+export const usePoolInfo = reducerContext[0];
+export const PoolsProvider = reducerContext[1];

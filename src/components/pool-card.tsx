@@ -16,9 +16,8 @@ import { displayCurrency } from "libs/utils";
 import { WalletModal } from "components/wallet/modal";
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
-import { PoolInfo } from "web3-functions";
-import { usePoolInfo } from "hooks/pools-reducer";
-import { useApprovePool, useDepositIntoPool, useHarvestRewards } from "hooks/pools";
+import { useApprovePool, useDepositIntoPool } from "hooks/pools-actions";
+import { PoolInfo } from "config/pools";
 
 // Pool Actions
 const UnlockButton = () => {
@@ -34,40 +33,35 @@ const UnlockButton = () => {
   );
 };
 
-const DepositButton: React.FC<any> = (props) => {
+const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { state } = usePoolInfo();
 
   return (
     <>
       <Button onClick={onOpen} {...props} />
 
-      <DepositModal pool={state[props.pid]} isOpen={isOpen} onClose={onClose} />
+      <DepositModal pool={pool} isOpen={isOpen} onClose={onClose} {...modalProps} />
     </>
   );
 };
 
-const UnstakeButton: React.FC<any> = (props) => {
+const UnstakeButton: React.FC<any> = ({ pool, ...props }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { state } = usePoolInfo();
 
   return (
     <>
       <Button onClick={onOpen} {...props} />
 
-      <WithdrawModal pool={state[props.pid]} isOpen={isOpen} onClose={onClose} />
+      <WithdrawModal pool={pool} isOpen={isOpen} onClose={onClose} />
     </>
   );
 };
 
 const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   const { account } = useActiveWeb3React();
-  const { requestingApproval, approve } = useApprovePool();
-
-  // use deposit as compound
-  const { depositing: compounding, deposit: compound } = useDepositIntoPool();
-  // use deposit as harvest
-  const { depositing: harvesting, deposit: harvest } = useDepositIntoPool();
+  const approveMutation = useApprovePool();
+  const compoundMutation = useDepositIntoPool();
+  const harvestMutation = useDepositIntoPool();
 
   if (!account) {
     return <UnlockButton />;
@@ -77,7 +71,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
     <Stack spacing={4}>
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          {pool.token} Stacked
+          {pool.lpStaked} Stacked
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">
@@ -89,8 +83,8 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             {!pool.hasApprovedPool && (
               <Button
                 size="sm"
-                isLoading={requestingApproval}
-                onClick={() => approve(pool.pid)}
+                isLoading={approveMutation.isLoading}
+                onClick={() => approveMutation.mutate(pool.pid)}
                 bg="gray.700"
                 _hover={{ bg: "gray.600" }}
               >
@@ -101,12 +95,12 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             {pool.hasApprovedPool &&
               (Number(pool.lpStaked) > 0 ? (
                 <>
-                  <UnstakeButton pid={pool.pid} size="sm" bg="gray.700" _hover={{ bg: "gray.600" }}>
+                  <UnstakeButton pool={pool} size="sm" bg="gray.700" _hover={{ bg: "gray.600" }}>
                     -
                   </UnstakeButton>
 
                   <DepositButton
-                    pid={pool.pid}
+                    pid={pool}
                     size="sm"
                     bg="primary.600"
                     _hover={{ bg: "primary.500" }}
@@ -135,8 +129,8 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
 
           <Stack direction="row">
             <Button
-              isLoading={harvesting}
-              onClick={() => harvest(pool.pid, "0")}
+              isLoading={harvestMutation.isLoading}
+              onClick={() => harvestMutation.mutate({ pid: pool.pid, amount: "0" })}
               size="xs"
               bg="gray.700"
               _hover={{ bg: "gray.600" }}
@@ -145,8 +139,8 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             </Button>
 
             <Button
-              isLoading={compounding}
-              onClick={() => compound(pool.pid, pool.irisEarned)}
+              isLoading={compoundMutation.isLoading}
+              onClick={() => compoundMutation.mutate({ pid: pool.pid, amount: pool.irisEarned })}
               size="xs"
               bg="gray.700"
               _hover={{ bg: "gray.600" }}
@@ -160,12 +154,12 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   );
 };
 
-export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
+export const PoolCard: React.FC<{ pool: PoolInfo; actions: any }> = ({ pool }) => {
   return (
     <Box px={8} py={4} boxShadow="lg" rounded="3xl" bg="accent.500" color="white">
       {/* pool name */}
       <HStack mb={5} spacing={6}>
-        <Heading>{pool.token}</Heading>
+        <Heading>{pool.lpToken}</Heading>
       </HStack>
 
       {/* pool badges */}
@@ -181,6 +175,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             No Fees
           </Badge>
         )}
+
         {/* <Badge px={2} rounded="lg" colorScheme="red">
             Community
           </Badge> */}
@@ -204,7 +199,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             APR
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            {Math.trunc(Number(pool.apr))}%
+            {pool.apr}%
           </Text>
         </Stack>
 
@@ -213,7 +208,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             Earn
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            {pool.earn}
+            IRIS
           </Text>
         </Stack>
 
@@ -243,7 +238,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Deposit
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {pool.token}
+              {pool.lpToken}
             </Text>
           </Stack>
 
@@ -252,7 +247,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Total Liquidity
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {displayCurrency(pool.totalLiquidity, true)} {pool.token}
+              {displayCurrency(pool.totalStaked, true)} {pool.lpToken}
             </Text>
           </Stack>
         </Stack>
