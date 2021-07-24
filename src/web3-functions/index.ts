@@ -173,6 +173,27 @@ export async function getIrisToHarvest(
   return totalIrisToHarvest;
 }
 
+export async function getIrisStat(getContract: (contractInfo: ContractInfo) => Contract) {
+  const irisContract = getContract(defaultContracts.irisToken);
+
+  const irisPrice = 1;
+
+  const maximumSupply = 1_000_000;
+  const totalMinted = (await irisContract.totalSupply()) as BigNumber;
+  const totalBurned = (await irisContract.balanceOf(constants.AddressZero)) as BigNumber;
+
+  const circulatingSupply = totalMinted.sub(totalBurned);
+  const marketCap = circulatingSupply.mul(irisPrice);
+
+  return {
+    maximumSupply,
+    totalMinted: utils.formatEther(totalMinted),
+    totalBurned: utils.formatEther(totalBurned),
+    circulatingSupply: utils.formatEther(circulatingSupply),
+    marketCap: utils.formatEther(marketCap),
+  };
+}
+
 // ACTIONS
 export async function approveLpContract(lpContract: Contract) {
   const approveTx = await lpContract.approve(

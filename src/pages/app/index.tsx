@@ -23,7 +23,7 @@ import { defaultContracts, useGetContract } from "hooks/wallet";
 import { displayCurrency } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 import { utils } from "ethers";
-import { getIrisToHarvest, harvestFromAllFarms } from "web3-functions";
+import { getIrisStat, getIrisToHarvest, harvestFromAllFarms } from "web3-functions";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const data = [
@@ -77,7 +77,18 @@ function useHarvestAll() {
   return harvestAll;
 }
 
+function useIrisStats() {
+  const getContract = useGetContract();
+
+  const irisStats = useQuery("irisStats", async () => {
+    return getIrisStat(getContract);
+  });
+
+  return irisStats;
+}
+
 const Page: React.FC = () => {
+  const irisStats = useIrisStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
   const harvestAll = useHarvestAll();
 
@@ -105,7 +116,7 @@ const Page: React.FC = () => {
 
               <Stack direction="row" spacing={10}>
                 <Box align="center">
-                  <Skeleton isLoaded={!irisToHarvest.isLoading}>
+                  <Skeleton isLoaded={!!irisToHarvest.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">
                       {displayCurrency(irisToHarvest.data, true)}
                     </Text>
@@ -117,7 +128,7 @@ const Page: React.FC = () => {
                 </Box>
 
                 <Box align="center">
-                  <Skeleton isLoaded={!irisInWallet.isLoading}>
+                  <Skeleton isLoaded={!!irisInWallet.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">
                       {displayCurrency(irisInWallet.data, true)}
                     </Text>
@@ -224,54 +235,66 @@ const Page: React.FC = () => {
           <Stack mt={[6, 0]} direction={["column-reverse", "row"]} spacing={10}>
             <SimpleGrid columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
               <Box align={["left", "center"]}>
-                <Text fontSize="lg" fontWeight="700">
-                  $21,803,359
-                </Text>
+                <Skeleton isLoaded={!!irisStats.data}>
+                  <Text fontSize="lg" fontWeight="700">
+                    {displayCurrency(irisStats.data?.marketCap, true)}
+                  </Text>
+                </Skeleton>
                 <Heading mt={1} color="gray.600" fontSize="lg">
                   Market Cap
                 </Heading>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Text fontSize="lg" fontWeight="700">
-                  1,000,000
-                </Text>
+                <Skeleton isLoaded={!!irisStats.data}>
+                  <Text fontSize="lg" fontWeight="700">
+                    {displayCurrency(irisStats.data?.maximumSupply, true)}
+                  </Text>
+                </Skeleton>
                 <Heading mt={1} color="gray.600" fontSize="lg">
                   Maximum Supply
                 </Heading>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Text fontSize="lg" fontWeight="700">
-                  0.4
-                </Text>
+                <Skeleton isLoaded={!!irisStats.data}>
+                  <Text fontSize="lg" fontWeight="700">
+                    {displayCurrency("0.4", true)}
+                  </Text>
+                </Skeleton>
                 <Heading mt={1} color="gray.600" fontSize="lg">
                   New IRIS/block
                 </Heading>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Text fontSize="lg" fontWeight="700">
-                  2,463,180
-                </Text>
+                <Skeleton isLoaded={!!irisStats.data}>
+                  <Text fontSize="lg" fontWeight="700">
+                    {displayCurrency(irisStats.data?.totalMinted, true)}
+                  </Text>
+                </Skeleton>
                 <Heading mt={1} color="gray.600" fontSize="lg">
                   Total Minted
                 </Heading>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Text fontSize="lg" fontWeight="700">
-                  2,463,180
-                </Text>
+                <Skeleton isLoaded={!!irisStats.data}>
+                  <Text fontSize="lg" fontWeight="700">
+                    {displayCurrency(irisStats.data?.circulatingSupply, true)}
+                  </Text>
+                </Skeleton>
                 <Heading mt={1} color="gray.600" fontSize="lg">
                   Circulating Supply
                 </Heading>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Text fontSize="lg" fontWeight="700">
-                  2,463,180
-                </Text>
+                <Skeleton isLoaded={!!irisStats.data}>
+                  <Text fontSize="lg" fontWeight="700">
+                    {displayCurrency(irisStats.data?.totalBurned, true)}
+                  </Text>
+                </Skeleton>
                 <Heading mt={1} color="gray.600" fontSize="lg">
                   Total Burned
                 </Heading>
