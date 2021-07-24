@@ -1,6 +1,7 @@
 import Erc20ABI from "abis/ERC20.json";
 import { ContractInfo, defaultContracts } from "hooks/wallet";
 import { BigNumber, constants, Contract, utils } from "ethers";
+import { getPoolApr } from "./utils";
 
 // CONFIG
 const farmIds = [];
@@ -15,7 +16,7 @@ export type PoolInfo = {
   token: string;
   multiplier: string;
   apy: string;
-  apr: string;
+  apr: number;
   earn: string;
   depositFees: number;
   irisEarned: string; // requires user
@@ -24,50 +25,6 @@ export type PoolInfo = {
   userLiquidity: string; // requires user
   lpAddress: string;
 };
-
-// HELPER
-const BLOCKS_PER_YEAR = 15768000;
-async function calculateAPR_V1(pool: any, contract: Contract) {
-  const amount = utils.parseEther("1");
-  const depositFeesInPercent = BigNumber.from(pool.depositFeeBP / 100);
-  const fees = amount.mul(depositFeesInPercent).div(100);
-
-  const multiplier = BigNumber.from(BLOCKS_PER_YEAR);
-  const allocPoint = pool.allocPoint as BigNumber;
-  const accIrisPerShare = pool.accIrisPerShare as BigNumber;
-  const irisPerBlock = (await contract.irisPerBlock()) as BigNumber;
-  const totalAllocPoint = (await contract.totalAllocPoint()) as BigNumber;
-
-  const interest = multiplier
-    .mul(allocPoint)
-    .mul(accIrisPerShare)
-    .mul(irisPerBlock)
-    .mul(amount)
-    .div(totalAllocPoint);
-
-  console.log(interest.toString());
-
-  const numberOfDays = BigNumber.from(365);
-
-  const apr = fees.add(interest).div(amount).div(numberOfDays).mul(365).mul(100);
-  const apy = BigNumber.from(1).add(apr.div(numberOfDays)).pow(numberOfDays).sub(1);
-
-  return [apr, apy];
-}
-
-async function calculateAPR(pool: any, contract: any) {
-  const irisPerBlock = (await contract.irisPerBlock()) as BigNumber;
-  const totalAllocPoint = (await contract.totalAllocPoint()) as BigNumber;
-
-  const poolWeight = pool.allocPoint.div(totalAllocPoint);
-
-  const irisRewardPerBlock = irisPerBlock.mul(poolWeight).div(BigNumber.from(10).pow(18));
-
-  const irisRewardPerYear = irisRewardPerBlock.mul(BLOCKS_PER_YEAR);
-  console.log(irisRewardPerYear.toString());
-
-  return [0, 0];
-}
 
 // QUERIES
 type GetPoolDataOptions = {
@@ -85,11 +42,6 @@ export async function getPool(pid: number, options: GetPoolDataOptions): Promise
   const depositFees = BigNumber.from(pool.depositFeeBP).div(100).toNumber();
   const earn = "IRIS";
 
-  // calculate apy and apr
-  // let calculatedApr = await calculateAPR(pool, masterChefContract);
-  const apr = "0";
-  const apy = "0";
-
   // get lp info
   const lpContract = options.getContract({ address: pool.lpToken, abi: Erc20ABI });
 
@@ -99,11 +51,13 @@ export async function getPool(pid: number, options: GetPoolDataOptions): Promise
   const lpAddress = pool.lpToken;
 
   // calculate total Liquidity
-  const totalLiquidity = utils.formatEther(
-    await lpContract.balanceOf(defaultContracts.masterChef.address)
-  );
+  const totalLiquidity = await lpContract.balanceOf(defaultContracts.masterChef.address);
 
   let userLiquidity = "0";
+
+  // calculate apr
+  const apr = getPoolApr(1, 1, totalLiquidity, await masterChefContract.irisPerBlock());
+  const apy = "0";
 
   // get user staked info
   let irisEarned = "0";
@@ -145,7 +99,7 @@ export async function getPool(pid: number, options: GetPoolDataOptions): Promise
     depositFees,
     irisEarned,
     lpStaked,
-    totalLiquidity,
+    totalLiquidity: utils.formatEther(totalLiquidity),
     userLiquidity,
   };
 }

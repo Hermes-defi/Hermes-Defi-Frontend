@@ -188,7 +188,8 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
 
       {/* pool details */}
       <Stack mb={6}>
-        {/* <Stack direction="row" justify="space-between">
+        {/* 
+        <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
             APY
           </Text>
@@ -196,6 +197,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             {Math.trunc(Number(pool.apy))}%
           </Text>
         </Stack>
+        */}
 
         <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
@@ -204,7 +206,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
           <Text fontWeight="700" fontSize="sm">
             {Math.trunc(Number(pool.apr))}%
           </Text>
-        </Stack> */}
+        </Stack>
 
         <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
