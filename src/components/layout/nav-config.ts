@@ -9,82 +9,58 @@ export interface NavItem {
 export const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Home",
-    href: "/",
+    href: "/app",
   },
 
   {
     label: "Trade",
     children: [
       {
-        label: "Swap (SushiSwap)",
-        href: "#",
-      },
-      {
         label: "Swap (QuickSwap)",
-        href: "#",
-      },
-      {
-        label: "Swap (Dfyn)",
-        href: "#",
-      },
-      {
-        label: "LP (SushiSwap)",
-        href: "#",
+        href: "https://quickswap.exchange/#/swap",
+        isExternal: true,
       },
       {
         label: "LP (QuickSwap)",
-        href: "#",
-      },
-      {
-        label: "Lp (Dfyn)",
-        href: "#",
+        href: "https://quickswap.exchange/#/pool",
+        isExternal: true,
       },
     ],
   },
 
   {
     label: "Farms",
-    href: "/farms",
+    href: "/app/farms",
   },
+
   {
     label: "Pools",
-    href: "/pools",
+    href: "/app/pools",
   },
+
   {
     label: "Charts",
-    children: [
-      {
-        label: "Quick Chart",
-        href: "#",
-      },
-      {
-        label: "Dersino",
-        href: "#",
-      },
-    ],
+    href: "https://quickchart.app/",
+    isExternal: true,
   },
+
   {
     label: "Referals",
-    href: "/referals",
+    href: "/app/referals",
   },
+
   {
     label: "Media",
     children: [
       {
-        label: "Telegram",
-        href: "#",
-      },
-      {
         label: "Twitter",
-        href: "#",
-      },
-      {
-        label: "Discord",
-        href: "#",
+        href: "https://twitter.com/hermesdefi",
+        isExternal: true,
       },
       {
         label: "Medium",
-        href: "#",
+        href: "https://medium.com/@HermesDefi",
+        isExternal: true,
       },
     ],
   },
@@ -93,19 +69,23 @@ export const NAV_ITEMS: Array<NavItem> = [
     children: [
       {
         label: "Docs",
-        href: "#",
+        href: "https://hermes-defi.gitbook.io/hermes-finance/",
+        isExternal: true,
       },
       {
         label: "Github",
-        href: "#",
+        href: "https://github.com/Hermes-defi",
+        isExternal: true,
       },
       {
         label: "Audits",
-        href: "#",
+        href: "https://hermes-defi.gitbook.io/hermes-finance/security/audits",
+        isExternal: true,
       },
       {
         label: "Info",
-        href: "#",
+        href: "https://hermes-defi.gitbook.io/hermes-finance/get-it-touch/social-media-and-contact",
+        isExternal: true,
       },
     ],
   },

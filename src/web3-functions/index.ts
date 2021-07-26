@@ -137,12 +137,58 @@ export async function getFarmStats(poolContracts: Contract[], farmContracts: Con
   };
 }
 
+export async function getPresaleInfo(fenixContract: Contract, currentBlock: number) {
+  const fenixRemaining = await fenixContract.fenixRemaining();
+  const fenixPrice = await fenixContract.salePriceE35();
+  const maxFenix = await fenixContract.fenixMaximumSupply();
+  const maxFenixToPurchase = await fenixContract.maxFenixPurchase();
+
+  const presaleStartBlock = await fenixContract.startBlock();
+  const presaleEndBlock = await fenixContract.endBlock();
+
+  const timeToStartPresale = presaleStartBlock.sub(currentBlock).toNumber();
+  const timeToEndPresale = presaleEndBlock.sub(currentBlock).toNumber();
+
+  return {
+    fenixRemaining: utils.formatEther(fenixRemaining),
+    fenixPrice: utils.formatEther(fenixPrice),
+    maxFenix: utils.formatEther(maxFenix),
+    maxFenixToPurchase: utils.formatEther(maxFenixToPurchase),
+    presaleStartBlock: timeToStartPresale > 0 ? timeToStartPresale : 0,
+    presaleEndBlock: timeToEndPresale > 0 ? timeToEndPresale : 0,
+  };
+}
+
+export async function getRedeemInfo(
+  redeem: Contract,
+  fenix: Contract,
+  currentBlock: number,
+  address: string
+) {
+  const redeemStartBlock = await redeem.startBlock();
+  const timeToStartRedeem = redeemStartBlock.sub(currentBlock).toNumber();
+
+  const allowance: BigNumber = await fenix.allowance(address, defaultContracts.redeem.address);
+
+  console.log(allowance);
+
+  return {
+    blockToRedeem: timeToStartRedeem > 0 ? timeToStartRedeem : 0,
+    hasApprovedPool: !allowance.isZero(),
+  };
+}
+
 // ACTIONS
 export async function approveLpContract(lpContract: Contract) {
   const approveTx = await lpContract.approve(
     defaultContracts.masterChef.address,
     constants.MaxUint256
   );
+  await approveTx.wait();
+}
+
+export async function approveFenixContract(lpContract: Contract) {
+  const approveTx = await lpContract.approve(defaultContracts.redeem.address, constants.MaxUint256);
   await approveTx.wait();
 }
 
@@ -172,4 +218,14 @@ export async function harvestFromAll(masterChef: Contract) {
       await tx.wait();
     })
   );
+}
+
+export async function purchaseFenix(fenixContract: Contract, amount: string) {
+  const tx = await fenixContract.buyFenix({ value: utils.parseEther(amount) });
+  await tx.wait();
+}
+
+export async function swapFenix(redeemContract: Contract, amount: string) {
+  const tx = await redeemContract.swapFenixForIris(utils.parseEther(amount));
+  await tx.wait();
 }

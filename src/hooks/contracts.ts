@@ -47,6 +47,16 @@ export function useReferral() {
   return contract(defaultContracts.referral);
 }
 
+export function useFenix() {
+  const contract = useContract();
+  return contract(defaultContracts.fenixToken);
+}
+
+export function useRedeem() {
+  const contract = useContract();
+  return contract(defaultContracts.redeem);
+}
+
 export function useERC20() {
   const contract = useContract();
 

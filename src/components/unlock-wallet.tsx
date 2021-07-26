@@ -1,0 +1,17 @@
+import React from "react";
+import { Button, useDisclosure } from "@chakra-ui/react";
+import { WalletModal } from "components/wallet/modal";
+import { FiUnlock } from "react-icons/fi";
+
+export const UnlockButton = () => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  return (
+    <>
+      <Button isFullWidth onClick={onOpen} rightIcon={<FiUnlock />} colorScheme="primary">
+        Unlock
+      </Button>
+
+      <WalletModal isOpen={isOpen} onClose={onClose} />
+    </>
+  );
+};

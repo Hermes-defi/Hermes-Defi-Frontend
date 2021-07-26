@@ -72,12 +72,12 @@ function useHarvestAll() {
       queryClient.invalidateQueries("irisToHarvest");
     },
 
-    onError: (e) => {
+    onError: ({ message, data }) => {
       toast({
         status: "error",
         position: "top-right",
         title: "Error harvesting IRIS",
-        description: e,
+        description: data?.message || message,
       });
     },
   });

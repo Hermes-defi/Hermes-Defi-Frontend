@@ -46,12 +46,12 @@ const Page: React.FC = () => {
         dispatch({ type: "ADD_POOLS", payload: data });
       },
 
-      onError: (e) => {
+      onError: ({ message, data }) => {
         toast({
           status: "error",
           position: "top-right",
-          title: "Error harvesting IRIS",
-          description: e,
+          title: "Error fetching pools",
+          description: data?.message || message,
         });
       },
     }

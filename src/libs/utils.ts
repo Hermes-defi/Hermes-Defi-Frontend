@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export function truncateAddress(address: string, length: number): string {
   return `${address.substring(0, length + 2)}...${address.substring(
     address.length - length,
@@ -16,4 +18,8 @@ export function displayCurrency(number: number | string, isToken?: boolean): str
 
   // hack to remove the "US" in front of the number
   return isToken ? value : value.replace(/^US/, "");
+}
+
+export function blockToTimestamp(block: number) {
+  return dayjs().set("s", block * 2);
 }

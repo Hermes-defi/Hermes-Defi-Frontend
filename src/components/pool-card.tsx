@@ -10,29 +10,15 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { FiUnlock } from "react-icons/fi";
 import { useActiveWeb3React } from "wallet";
 import { displayCurrency } from "libs/utils";
-import { WalletModal } from "components/wallet/modal";
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
 import { useApprovePool, useDepositIntoPool } from "hooks/pools-actions";
 import { PoolInfo } from "config/pools";
+import { UnlockButton } from "./unlock-wallet";
 
 // Pool Actions
-const UnlockButton = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  return (
-    <>
-      <Button isFullWidth onClick={onOpen} rightIcon={<FiUnlock />} colorScheme="primary">
-        Unlock
-      </Button>
-
-      <WalletModal isOpen={isOpen} onClose={onClose} />
-    </>
-  );
-};
-
 const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 

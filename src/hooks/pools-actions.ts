@@ -27,14 +27,14 @@ export function useApprovePool() {
         dispatch({ type: "APPROVE_CONTRACT", payload: { approved: true, pid } });
       },
 
-      onError: (err) => {
-        console.error(`[useApprovePool][error] general error - ${err}`, {
-          err,
+      onError: ({ data }) => {
+        console.error(`[useApprovePool][error] general error `, {
+          data,
         });
 
         toast({
           title: "Error approving token",
-          description: err,
+          description: data?.message,
           status: "error",
           position: "top-right",
           isClosable: true,
@@ -67,14 +67,14 @@ export function useDepositIntoPool() {
         dispatch({ type: "UPDATE_POOL", payload: { pid, data } });
       },
 
-      onError: (err) => {
-        console.error(`[error] general error - ${err}`, {
-          err,
+      onError: ({ data }) => {
+        console.error(`[useDepositIntoPool][error] general error`, {
+          data,
         });
 
         toast({
           title: "Error depositing token",
-          description: err,
+          description: data?.message,
           status: "error",
           position: "top-right",
           isClosable: true,
@@ -107,14 +107,14 @@ export function useWithdraw() {
         dispatch({ type: "UPDATE_POOL", payload: { pid, data } });
       },
 
-      onError: (err) => {
-        console.error(`[error] general error - ${err}`, {
-          err,
+      onError: ({ data }) => {
+        console.error(`[useWithdraw][error] general error`, {
+          data,
         });
 
         toast({
           title: "Error withdrawing token",
-          description: err,
+          description: data?.message,
           status: "error",
           position: "top-right",
           isClosable: true,
