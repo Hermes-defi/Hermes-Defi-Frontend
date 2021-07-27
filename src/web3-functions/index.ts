@@ -178,6 +178,11 @@ export async function getRedeemInfo(
   };
 }
 
+export async function getReferralCount(referral: Contract, address: string) {
+  const referralCount = await referral.referralsCount(address);
+  return referralCount.toNumber();
+}
+
 // ACTIONS
 export async function approveLpContract(lpContract: Contract) {
   const approveTx = await lpContract.approve(

@@ -8,6 +8,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3ReactManager } from "components/web3-manager";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { useSetReferralCookie } from "hooks/referral";
 
 const Web3ReactProviderDefault = dynamic(() => import("components/web3-network"), {
   ssr: false,
@@ -60,6 +61,9 @@ function GlobalHead() {
 }
 
 function MyApp({ Component, pageProps }) {
+  // check for referral query and store it in cookie
+  useSetReferralCookie();
+
   return (
     <ChakraProvider theme={theme}>
       <GlobalHead />

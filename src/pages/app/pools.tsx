@@ -28,7 +28,6 @@ const Page: React.FC = () => {
   const getLpContract = useERC20();
   const masterChef = useMasterChef();
   const { account } = useActiveWeb3React();
-  const [state, dispatch] = usePoolInfo();
 
   const poolQuery = useQuery(
     ["pools", account],
@@ -42,10 +41,6 @@ const Page: React.FC = () => {
     },
 
     {
-      onSuccess: (data) => {
-        dispatch({ type: "ADD_POOLS", payload: data });
-      },
-
       onError: ({ message, data }) => {
         toast({
           status: "error",
@@ -58,7 +53,7 @@ const Page: React.FC = () => {
   );
 
   return (
-    <PoolsProvider>
+    <PoolsProvider initialState={poolQuery.data}>
       <AppLayout>
         <Stack align="center" spacing={10} py={10}>
           <HStack spacing={14} align="center" justify="center">
@@ -88,7 +83,7 @@ const Page: React.FC = () => {
             )}
 
             <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
-              {state.map((pool) => (
+              {poolQuery.data?.map((pool) => (
                 <PoolCard pool={pool} key={pool.pid} />
               ))}
             </SimpleGrid>

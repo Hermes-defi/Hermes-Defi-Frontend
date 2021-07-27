@@ -45,8 +45,8 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
 
   {
-    label: "Referals",
-    href: "/app/referals",
+    label: "Referrals",
+    href: "/app/referrals",
   },
 
   {

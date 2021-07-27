@@ -5,6 +5,7 @@ import { usePoolInfo } from "./pools-reducer";
 import { approveLpContract, depositIntoPool, getPoolData, withdrawFromPool } from "web3-functions";
 import { constants } from "ethers";
 import { useERC20, useMasterChef } from "./contracts";
+import { getReferralAddress } from "./referral";
 
 export function useApprovePool() {
   const { account } = useActiveWeb3React();
@@ -47,16 +48,20 @@ export function useApprovePool() {
 }
 
 export function useDepositIntoPool() {
-  const { account } = useActiveWeb3React();
-  const [_, dispatch] = usePoolInfo();
+  const toast = useToast();
+
   const getLpContract = useERC20();
   const masterChef = useMasterChef();
-  const toast = useToast();
+
+  const { account } = useActiveWeb3React();
+  const [_, dispatch] = usePoolInfo();
+
+  const referrer = getReferralAddress();
 
   const depositMutation = useMutation(
     async ({ pid, amount }: { pid: number; amount: string }) => {
       if (!account) throw new Error("No connected account");
-      await depositIntoPool(masterChef, pid, amount, constants.AddressZero);
+      await depositIntoPool(masterChef, pid, amount, referrer || constants.AddressZero);
 
       // fetch new pool data
       const data = await getPoolData(pid, account, masterChef, getLpContract);

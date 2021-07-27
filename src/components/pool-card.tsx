@@ -17,6 +17,7 @@ import { WithdrawModal } from "components/modals/withdraw-modal";
 import { useApprovePool, useDepositIntoPool } from "hooks/pools-actions";
 import { PoolInfo } from "config/pools";
 import { UnlockButton } from "./unlock-wallet";
+import { utils } from "ethers";
 
 // Pool Actions
 const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
@@ -57,7 +58,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
     <Stack spacing={4}>
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          {pool.lpStaked} Stacked
+          {displayCurrency(pool.lpStaked, true)} Stacked
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">
@@ -86,7 +87,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
                   </UnstakeButton>
 
                   <DepositButton
-                    pid={pool}
+                    pool={pool}
                     size="sm"
                     bg="primary.600"
                     _hover={{ bg: "primary.500" }}
@@ -233,7 +234,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Total Liquidity
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {displayCurrency(pool.totalStaked, true)} {pool.lpToken}
+              {displayCurrency(utils.formatEther(pool.totalStaked), true)} {pool.lpToken}
             </Text>
           </Stack>
         </Stack>

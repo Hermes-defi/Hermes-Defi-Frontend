@@ -10,6 +10,7 @@ import {
   Text,
   Button,
   Link,
+  useClipboard,
 } from "@chakra-ui/react";
 import { truncateAddress } from "libs/utils";
 import { FiCopy } from "react-icons/fi";
@@ -18,6 +19,7 @@ import { useWeb3React } from "@web3-react/core";
 
 export const AccountModal: React.FC<{ isOpen: boolean; onClose: () => void }> = (props) => {
   const { account, connector } = useWeb3React();
+  const { onCopy, hasCopied } = useClipboard(account);
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -47,8 +49,14 @@ export const AccountModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
             </Text>
 
             <Stack spacing={2} direction="row" align="center">
-              <Button color="gray.600" leftIcon={<FiCopy />} size="sm" variant="ghost">
-                Copy address
+              <Button
+                color="gray.600"
+                onClick={onCopy}
+                leftIcon={<FiCopy />}
+                size="sm"
+                variant="ghost"
+              >
+                {hasCopied ? "Copied" : "Copy address"}
               </Button>
 
               <Link isExternal color="gray.600" fontSize="sm">
