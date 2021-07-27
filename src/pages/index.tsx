@@ -1,10 +1,9 @@
 import React from "react";
 import Head from "next/head";
+import NextLink from "next/link";
 import {
-  Avatar,
   Box,
   Button,
-  Center,
   Collapse,
   Container,
   Flex,
@@ -27,6 +26,11 @@ import {
 import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { RiWaterFlashFill } from "react-icons/ri";
 import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
+import { farmIds, poolIds } from "config/pools";
+import { useERC20, useMasterChef } from "hooks/contracts";
+import { getPoolPublicData, getFarmStats } from "web3-functions";
+import { useQuery } from "react-query";
+import { displayCurrency } from "libs/utils";
 
 // NAVIGATION
 interface NavItem {
@@ -38,25 +42,20 @@ interface NavItem {
 }
 
 const NAV_ITEMS: Array<NavItem> = [
-  // {
-  //   label: "Find Work",
-  //   children: [
-  //     {
-  //       label: "Job Board",
-  //       subLabel: "Find your dream design job",
-  //       href: "#",
-  //     },
-  //     {
-  //       label: "Freelance Projects",
-  //       subLabel: "An exclusive list for contract work",
-  //       href: "#",
-  //     },
-  //   ],
-  // },
+  {
+    label: "Dapp Radar",
+    isExternal: true,
+    href: "https://dappradar.com/",
+  },
+  {
+    label: "Coingecko",
+    isExternal: true,
+    href: "https://www.coingecko.com",
+  },
   {
     label: "VFAT tools",
     isExternal: true,
-    href: "https://github.com",
+    href: "https://vfat.tools/",
   },
 ];
 
@@ -135,15 +134,19 @@ function Navigation() {
         {/* navigation body */}
         <Flex flex={1} align="center" justify={{ base: "center", md: "space-between" }}>
           {/* logo */}
-          <Stack direction="row" spacing={3}>
-            <Image boxSize="40px" src="/hermes-logo-1.png" alt="Hermes Logo" />
-            <Heading
-              textAlign={{ base: "center", md: "left" }}
-              color={useColorModeValue("gray.800", "white")}
-            >
-              Hermes
-            </Heading>
-          </Stack>
+          <NextLink href="/">
+            <a>
+              <Stack direction="row" spacing={3}>
+                <Image boxSize="40px" src="/hermes-logo-1.png" alt="Hermes Logo" />
+                <Heading
+                  textAlign={{ base: "center", md: "left" }}
+                  color={useColorModeValue("gray.800", "white")}
+                >
+                  Hermes
+                </Heading>
+              </Stack>
+            </a>
+          </NextLink>
 
           {/* desktop navigation */}
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
@@ -222,14 +225,17 @@ function Navigation() {
         </Flex>
 
         <Stack ml={4} flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
-          <Button
-            display={{ base: "inline-flex" }}
-            size={useBreakpointValue({ base: "sm", md: "md" })}
-            variant="primaryOutline"
-            href="#"
-          >
-            Enter App
-          </Button>
+          <NextLink href="/app" passHref>
+            <a>
+              <Button
+                display={{ base: "inline-flex" }}
+                size={useBreakpointValue({ base: "sm", md: "md" })}
+                variant="primaryOutline"
+              >
+                Enter App
+              </Button>
+            </a>
+          </NextLink>
         </Stack>
       </Flex>
 
@@ -264,12 +270,21 @@ function Header() {
         </Stack>
 
         <Stack direction="row" spacing={5} align="center" alignSelf="center" position="relative">
-          <Button isFullWidth variant="solid" colorScheme="primary" size="lg">
-            Enter App
-          </Button>
-          <Button isFullWidth variant="outline" colorScheme="secondary" size="lg">
-            Learn more
-          </Button>
+          <NextLink href="/app" passHref>
+            <a>
+              <Button isFullWidth variant="solid" colorScheme="primary" size="lg">
+                Enter App
+              </Button>
+            </a>
+          </NextLink>
+
+          <NextLink href="#stats" passHref>
+            <a>
+              <Button isFullWidth variant="outline" colorScheme="secondary" size="lg">
+                Learn more
+              </Button>
+            </a>
+          </NextLink>
         </Stack>
       </Stack>
     </Container>
@@ -277,9 +292,32 @@ function Header() {
 }
 
 // NUMBERS
-function DappStats() {
+const DappStats: React.FC<any> = ({ stats }) => {
+  const getLpContract = useERC20();
+  const masterChef = useMasterChef();
+
+  const hermesStats = useQuery("hermesStats", async () => {
+    const farmLps = await Promise.all(
+      farmIds.map(async (pid) => {
+        const { lpAddress } = await getPoolPublicData(pid, masterChef);
+        return getLpContract(lpAddress);
+      })
+    );
+
+    const poolLps = await Promise.all(
+      poolIds.map(async (pid) => {
+        const { lpAddress } = await getPoolPublicData(pid, masterChef);
+        return getLpContract(lpAddress);
+      })
+    );
+
+    const resp = await getFarmStats(poolLps, farmLps);
+
+    return resp;
+  });
+
   return (
-    <Stack justify="center" direction="row" spacing={14}>
+    <Stack id="stats" justify="center" direction="row" spacing={14}>
       <Box boxShadow="xl" px={16} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">$7.27</Heading>
         <Text color="gray.700" size="sm">
@@ -288,28 +326,32 @@ function DappStats() {
       </Box>
 
       <Box boxShadow="xl" px={16} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">$2.27b</Heading>
+        <Heading size="2xl">
+          ${displayCurrency(hermesStats.data?.totalValueInFarms || 0, true, true)}
+        </Heading>
         <Text color="gray.700" size="sm">
-          Total Liquidity
+          Total in Farms
         </Text>
       </Box>
 
       <Box boxShadow="xl" px={16} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">$90.5b</Heading>
+        <Heading size="2xl">
+          ${displayCurrency(hermesStats.data?.totalValueInPools || 0, true, true)}
+        </Heading>
         <Text color="gray.700" size="sm">
-          Total Volume
+          Total in Pools
         </Text>
       </Box>
 
       <Box boxShadow="xl" px={16} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">$95.6b</Heading>
+        <Heading size="2xl">${displayCurrency(hermesStats.data?.tvl || 0, true, true)}</Heading>
         <Text color="gray.700" size="sm">
           Total Value Locked
         </Text>
       </Box>
     </Stack>
   );
-}
+};
 
 // SERVICES
 function Services() {
@@ -406,9 +448,11 @@ function Security() {
         </Flex>
       </Stack>
 
-      <Button variant="outline" colorScheme="primary" size="lg">
-        More
-      </Button>
+      <Link isExternal href="https://hermes-defi.gitbook.io/hermes-finance/security/audits">
+        <Button variant="outline" colorScheme="primary" size="lg">
+          More
+        </Button>
+      </Link>
     </Stack>
   );
 }
@@ -428,9 +472,9 @@ function News() {
           data-height="400"
           data-dnt="true"
           data-theme="light"
-          href="https://twitter.com/reactjs?ref_src=twsrc%5Etfw"
+          href="https://twitter.com/hermesdefi?ref_src=twsrc%5Etfw"
         >
-          Tweets by reactjs
+          Tweets by HermesDefi
         </a>{" "}
         <Head>
           <script async src="https://platform.twitter.com/widgets.js" charSet="utf-8"></script>
@@ -476,11 +520,14 @@ function Footer() {
               Community
             </Text>
 
-            <Link href={"#"}>Twitter</Link>
-            <Link href={"#"}>Telegram</Link>
-            <Link href={"#"}>Discord</Link>
-            <Link href={"#"}>Medium</Link>
-            <Link href={"#"}>Announcement</Link>
+            <Link isExternal href="https://twitter.com/hermesdefi">
+              Twitter
+            </Link>
+            {/* <Link href={"#"}>Discord</Link> */}
+            <Link isExternal href="https://medium.com/@HermesDefi">
+              Medium
+            </Link>
+            {/* <Link href={"#"}>Announcement</Link> */}
           </Stack>
 
           <Stack align={"flex-start"}>
@@ -488,17 +535,22 @@ function Footer() {
               Project
             </Text>
 
-            <Link href={"#"}>Docs</Link>
-            <Link href={"#"}>Github</Link>
-            <Link href={"#"}>Audits</Link>
-            <Link href={"#"}>Roadmap</Link>
+            <Link isExternal href={"https://hermes-defi.gitbook.io/hermes-finance/"}>
+              Docs
+            </Link>
+            <Link isExternal href={"https://github.com/Hermes-defi"}>
+              Github
+            </Link>
+            <Link isExternal href={"https://hermes-defi.gitbook.io/hermes-finance/security/audits"}>
+              Audits
+            </Link>
           </Stack>
 
           <Stack align={"flex-start"}>
             <Text fontWeight={"500"} fontSize={"lg"} mb={2}>
               Contact
             </Text>
-            <Link href={"#"}>contact@hermesdefi.io</Link>
+            <Link href={"mailto:contact@hermesdefi.io"}>contact@hermesdefi.io</Link>
           </Stack>
         </SimpleGrid>
       </Container>

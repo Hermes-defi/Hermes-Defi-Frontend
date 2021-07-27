@@ -3598,6 +3598,11 @@ jest-worker@27.0.0-next.5:
     merge-stream "^2.0.0"
     supports-color "^8.0.0"
 
+js-abbreviation-number@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/js-abbreviation-number/-/js-abbreviation-number-1.2.0.tgz#e40d1c77ebd0b8b62acc66de0cc91448c36e4b93"
+  integrity sha512-VnpRotovWYN3468Jc8SijN5vYEnk2CcOIGEFz6OTUekDaFC56H4NztTkwi0AKDoHHtY41R6/K9ifOiH+1nvE2Q==
+
 js-cookie@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
