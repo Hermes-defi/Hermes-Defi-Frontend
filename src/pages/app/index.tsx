@@ -38,11 +38,10 @@ import { RiWaterFlashFill } from "react-icons/ri";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 
 const data = [
-  { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
-  { name: "Page B", uv: 200, pv: 2300, amt: 2800 },
-  { name: "Page C", uv: 600, pv: 2200, amt: 3200 },
-  { name: "Page D", uv: 800, pv: 2100, amt: 2300 },
-  { name: "Page E", uv: 400, pv: 2000, amt: 2900 },
+  { name: "JAN", tvl: 0 },
+  { name: "FEB", tvl: 0 },
+  { name: "MAR", tvl: 0 },
+  { name: "APR", tvl: 0 },
 ];
 
 function useIrisData() {
@@ -217,7 +216,7 @@ const Page: React.FC = () => {
                     Earn Upto
                   </Text>
                   <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                    99.9%{" "}
+                    N/A%{" "}
                   </Text>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
                     APR
@@ -253,7 +252,7 @@ const Page: React.FC = () => {
                     Earn Upto
                   </Text>
                   <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                    99.9%{" "}
+                    N/A%{" "}
                   </Text>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
                     APR
@@ -274,7 +273,8 @@ const Page: React.FC = () => {
               <Box align={["left", "center"]}>
                 <Skeleton isLoaded={!!irisStats.data}>
                   <Text fontSize="lg" fontWeight="700">
-                    {displayCurrency(irisStats.data?.marketCap, true)}
+                    {/* {displayCurrency(irisStats.data?.marketCap, true)} */}
+                    N/A
                   </Text>
                 </Skeleton>
                 <Heading mt={1} color="gray.600" fontSize="lg">
@@ -352,7 +352,8 @@ const Page: React.FC = () => {
                   </Heading>
                   <Skeleton isLoaded={!!hermesStats.data}>
                     <Text fontSize="3xl" fontWeight="700">
-                      {displayCurrency(hermesStats.data?.tvl)}
+                      {/* {displayCurrency(hermesStats.data?.tvl)} */}
+                      N/A
                     </Text>
                   </Skeleton>
                 </div>
@@ -364,7 +365,8 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!!hermesStats.data}>
                       <Text fontSize="2xl" fontWeight="700">
-                        {displayCurrency(hermesStats.data?.totalValueInFarms)}
+                        {/* {displayCurrency(hermesStats.data?.totalValueInFarms)} */}
+                        N/A
                       </Text>
                     </Skeleton>
                   </Box>
@@ -375,7 +377,8 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!!hermesStats.data}>
                       <Text fontSize="2xl" fontWeight="700">
-                        {displayCurrency(hermesStats.data?.totalValueInPools)}
+                        {/* {displayCurrency(hermesStats.data?.totalValueInPools)} */}
+                        N/A
                       </Text>
                     </Skeleton>
                   </Box>
@@ -389,7 +392,7 @@ const Page: React.FC = () => {
                   style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
                   data={data}
                 >
-                  <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+                  <Line type="monotone" dataKey="tvl" stroke="#8884d8" />
                   <CartesianGrid stroke="#ccc" />
                   <XAxis dataKey="name" />
                   <YAxis />

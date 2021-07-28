@@ -2,9 +2,9 @@ import { InjectedConnector } from "@web3-react/injected-connector";
 import { NetworkConnector } from "@web3-react/network-connector";
 import { WalletConnectConnector } from "@web3-react/walletconnect-connector";
 import { WalletLinkConnector } from "@web3-react/walletlink-connector";
+import { DEFAULT_CHAIN_ID } from "config/constants";
 
 // CONSTANTS
-const isProd = process.env.NODE_ENV === "production";
 export const RPC_URLS: { [chainId: number]: string } = {
   137: "https://rpc-mainnet.matic.network",
   80001: "https://polygon-mumbai.infura.io/v3/93518d8fd18e494899c057da3bd5a35d",
@@ -13,22 +13,22 @@ export const RPC_URLS: { [chainId: number]: string } = {
 // CONNECTORS
 export const network = new NetworkConnector({
   urls: RPC_URLS,
-  defaultChainId: isProd ? 137 : 80001,
+  defaultChainId: DEFAULT_CHAIN_ID,
 });
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [137, 80001],
+  supportedChainIds: [DEFAULT_CHAIN_ID],
 });
 
 export const walletconnect = new WalletConnectConnector({
-  supportedChainIds: [137, 80001],
+  supportedChainIds: [DEFAULT_CHAIN_ID],
   rpc: RPC_URLS,
   qrcode: true,
 });
 
 export const walletlink = new WalletLinkConnector({
-  url: RPC_URLS[80001],
-  appName: "Uniswap",
+  url: RPC_URLS[DEFAULT_CHAIN_ID],
+  appName: "HermesDefi",
 });
 
 interface WalletInfo {

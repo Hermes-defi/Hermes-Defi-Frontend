@@ -16,6 +16,8 @@ import { truncateAddress } from "libs/utils";
 import { FiCopy } from "react-icons/fi";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { useWeb3React } from "@web3-react/core";
+import { RPC_INFO } from "config/rpc-info";
+import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export const AccountModal: React.FC<{ isOpen: boolean; onClose: () => void }> = (props) => {
   const { account, connector } = useWeb3React();
@@ -59,7 +61,12 @@ export const AccountModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
                 {hasCopied ? "Copied" : "Copy address"}
               </Button>
 
-              <Link isExternal color="gray.600" fontSize="sm">
+              <Link
+                isExternal
+                href={`${RPC_INFO[DEFAULT_CHAIN_ID].blockExplorerUrls[0]}address/${account}`}
+                color="gray.600"
+                fontSize="sm"
+              >
                 <ExternalLinkIcon mx="2px" />
                 View on explorer
               </Link>

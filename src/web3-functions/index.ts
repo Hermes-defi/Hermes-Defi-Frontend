@@ -91,7 +91,7 @@ export async function getIrisToHarvest(account: string, masterChefContract: Cont
 }
 
 export async function getIrisStat(irisContract: Contract) {
-  const irisPrice = 1; // TODO: get real price
+  const irisPrice = 0; // TODO: get real price
 
   const maximumSupply = 1_000_000;
   const totalMinted = (await irisContract.totalSupply()) as BigNumber;
@@ -113,7 +113,7 @@ export async function getFarmStats(poolContracts: Contract[], farmContracts: Con
   // in this function we're assuming all tokens are worth 1$
 
   const totalValueInPools: BigNumber = await poolContracts.reduce(async (_total, lpContract) => {
-    const tokenPrice = 1; // TODO: get real price
+    const tokenPrice = 0; // TODO: get real price
 
     const total = await _total;
     const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
@@ -121,7 +121,7 @@ export async function getFarmStats(poolContracts: Contract[], farmContracts: Con
   }, Promise.resolve(BigNumber.from(0)));
 
   const totalValueInFarms: BigNumber = await farmContracts.reduce(async (_total, lpContract) => {
-    const tokenPrice = 1; // TODO: get real price
+    const tokenPrice = 0; // TODO: get real price
 
     const total = await _total;
     const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);

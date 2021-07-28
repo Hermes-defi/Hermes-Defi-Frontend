@@ -26,6 +26,7 @@ import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@ch
 import { Wallet } from "components/wallet";
 import { Global } from "@emotion/react";
 import { NavItem, NAV_ITEMS } from "./nav-config";
+import { displayCurrency } from "libs/utils";
 
 const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
@@ -121,7 +122,8 @@ const Navigation = () => {
             px={10}
             rounded="xl"
           >
-            $10.46
+            {/* TODO:: PRICE */}
+            {displayCurrency(0)}
           </Badge>
         </Flex>
 
