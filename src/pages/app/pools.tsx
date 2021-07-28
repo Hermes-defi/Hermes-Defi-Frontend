@@ -22,6 +22,18 @@ import { useQuery } from "react-query";
 import { useERC20, useMasterChef } from "hooks/contracts";
 import { poolIds, PoolInfo } from "config/pools";
 import { PoolsProvider, usePoolInfo } from "hooks/pools-reducer";
+import { useEffect } from "react";
+
+function Updater({ pools }: { pools?: PoolInfo[] }) {
+  const [_, dispatch] = usePoolInfo();
+
+  useEffect(() => {
+    if (pools && pools.length) {
+      dispatch({ type: "ADD_POOLS", payload: pools });
+    }
+  }, [pools]);
+  return null;
+}
 
 const Page: React.FC = () => {
   const toast = useToast();
@@ -53,7 +65,9 @@ const Page: React.FC = () => {
   );
 
   return (
-    <PoolsProvider initialState={poolQuery.data}>
+    <PoolsProvider>
+      <Updater pools={poolQuery.data} />
+
       <AppLayout>
         <Stack align="center" spacing={10} py={10}>
           <HStack spacing={14} align="center" justify="center">

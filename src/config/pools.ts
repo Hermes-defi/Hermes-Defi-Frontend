@@ -19,5 +19,5 @@ export type PoolInfo = {
   lpStaked: string; // requires user
 };
 
-export const poolIds = [0];
+export const poolIds = [1];
 export const farmIds = [];

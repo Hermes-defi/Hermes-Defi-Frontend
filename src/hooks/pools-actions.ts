@@ -16,7 +16,7 @@ export function useApprovePool() {
   const approveMutation = useMutation(
     async (pid: number) => {
       if (!account) throw new Error("No connected account");
-      const pool = state[pid];
+      const pool = state.find((p) => p.pid === pid);
       const lpContract = getLpContract(pool.lpAddress);
 
       await approveLpContract(lpContract);
@@ -61,6 +61,8 @@ export function useDepositIntoPool() {
   const depositMutation = useMutation(
     async ({ pid, amount }: { pid: number; amount: string }) => {
       if (!account) throw new Error("No connected account");
+
+      console.log(referrer);
       await depositIntoPool(masterChef, pid, amount, referrer || constants.AddressZero);
 
       // fetch new pool data

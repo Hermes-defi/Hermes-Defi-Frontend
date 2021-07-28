@@ -13,7 +13,7 @@ const Page: React.FC = () => {
   const { account } = useActiveWeb3React();
 
   const toast = useToast();
-  const link = `https://hermesdefi.io?ref=${account}`;
+  const link = `https://hermesdefi.io?ref=${account.replace(/^0x/, "")}`;
   const { onCopy, hasCopied } = useClipboard(link);
 
   const referalCount = useQuery(

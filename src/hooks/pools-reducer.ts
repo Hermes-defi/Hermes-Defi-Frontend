@@ -12,7 +12,8 @@ const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any 
 
       // create a new copy of pools
       const pools = [...state];
-      pools[pid].hasApprovedPool = approved;
+      const poolIdx = pools.findIndex((p) => p.pid === pid);
+      pools[poolIdx].hasApprovedPool = approved;
 
       return pools;
     }
@@ -22,7 +23,8 @@ const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any 
 
       // create a new copy of pools
       const pools = [...state];
-      pools[pid] = data;
+      const poolIdx = pools.findIndex((p) => p.pid === pid);
+      pools[poolIdx] = data;
 
       return pools;
     }
@@ -31,7 +33,7 @@ const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any 
   return state;
 };
 
-const reducerContext = createReducerContext(poolsReducers, []);
+const reducerContext = createReducerContext(poolsReducers, null);
 
 export const usePoolInfo = reducerContext[0];
 export const PoolsProvider = reducerContext[1];

@@ -17,15 +17,15 @@ export const erc20: (address: string) => ContractInfo = (address: string) => ({
 
 export default {
   referral: {
-    address: "0x61dc8EAc3Ba928961F7Aa93e0d85CC74B0d74De1",
+    address: "0x8295CCCA26e2e4396061515B0b72731BDf5796C1",
     abi: ReferralABI,
   },
   masterChef: {
-    address: "0x8e073613bfdABaFF868844C4fb392ebd60D969c2",
+    address: "0xA3dc6b430A90D61e7f1C7800d43Bd67b8a06D597",
     abi: MasterChefABI,
   },
   irisToken: {
-    address: "0x4F5d217290fbC41862cbd5ee57938d5a6E4012E4",
+    address: "0x5EB25908Abf8764CB101bE704d6Bb4a8d5254f72",
     abi: IrisTokenABI,
   },
   fenixToken: {

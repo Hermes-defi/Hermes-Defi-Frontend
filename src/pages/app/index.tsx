@@ -139,7 +139,7 @@ const Page: React.FC = () => {
 
           <SimpleGrid templateColumns={{ base: "1fr", md: "1fr 1fr 2fr" }} spacing={[5, 10]}>
             <Stack mt={10} align="stretch" spacing={10}>
-              <Stack spacing={4} align="center" direction="row">
+              <Stack spacing={4} justify={["center", ""]} align="center" direction="row">
                 <Image src="/hermes-logo-1.png" boxSize={12} />
                 <Button
                   onClick={() => addTokenToWallet(defaultContracts.irisToken.address, "IRIS")}
@@ -151,7 +151,7 @@ const Page: React.FC = () => {
                 </Button>
               </Stack>
 
-              <Stack direction="row" spacing={10}>
+              <Stack justify={["center", ""]} direction="row" spacing={10}>
                 <Box align="center">
                   <Skeleton isLoaded={!!irisToHarvest.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">

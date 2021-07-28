@@ -18,6 +18,7 @@ import { useApprovePool, useDepositIntoPool } from "hooks/pools-actions";
 import { PoolInfo } from "config/pools";
 import { UnlockButton } from "./unlock-wallet";
 import { utils } from "ethers";
+import { usePoolInfo } from "hooks/pools-reducer";
 
 // Pool Actions
 const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
@@ -96,8 +97,8 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
                   </DepositButton>
                 </>
               ) : (
-                <DepositButton pid={pool.pid} size="sm" bg="gray.700" _hover={{ bg: "gray.600" }}>
-                  stake
+                <DepositButton pool={pool} size="sm" bg="gray.700" _hover={{ bg: "gray.600" }}>
+                  Stake
                 </DepositButton>
               ))}
           </Stack>

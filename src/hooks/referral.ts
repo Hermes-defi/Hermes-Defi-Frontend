@@ -11,5 +11,5 @@ export function useSetReferralCookie() {
 }
 
 export function getReferralAddress() {
-  return Cookies.get("ref");
+  return Cookies.get("ref") ? `0x${Cookies.get("ref")}` : null;
 }
