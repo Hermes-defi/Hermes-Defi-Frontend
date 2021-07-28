@@ -1,7 +1,12 @@
 import { PoolInfo } from "config/pools";
-import { createReducerContext } from "react-use";
+import { useContext, createContext, Dispatch } from "react";
 
-const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any }) => {
+export const PoolsContext = createContext<[PoolInfo[], Dispatch<{ type: string; payload: any }>]>([
+  [],
+  () => null,
+]);
+
+export const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any }) => {
   switch (actions.type) {
     case "ADD_POOLS": {
       return actions.payload as PoolInfo[];
@@ -33,7 +38,6 @@ const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any 
   return state;
 };
 
-const reducerContext = createReducerContext(poolsReducers, null);
-
-export const usePoolInfo = reducerContext[0];
-export const PoolsProvider = reducerContext[1];
+export function usePoolInfo() {
+  return useContext(PoolsContext);
+}

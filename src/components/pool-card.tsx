@@ -59,7 +59,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
     <Stack spacing={4}>
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          {displayCurrency(pool.lpStaked, true)} Stacked
+          {displayCurrency(pool.lpStaked, true)} {pool.lpToken} Stacked
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">
@@ -171,23 +171,13 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
 
       {/* pool details */}
       <Stack mb={6}>
-        {/* 
-        <Stack direction="row" justify="space-between">
-          <Text fontWeight="600" fontSize="sm">
-            APY
-          </Text>
-          <Text fontWeight="700" fontSize="sm">
-            {Math.trunc(Number(pool.apy))}%
-          </Text>
-        </Stack>
-        */}
-
         <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
             APR
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            {pool.apr}%
+            {/* TODO:: price */}
+            N/A
           </Text>
         </Stack>
 

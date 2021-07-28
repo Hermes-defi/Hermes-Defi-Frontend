@@ -1,5 +1,15 @@
-import React from "react";
-import { AppLayout } from "components/layout";
+import React, { useReducer, useState } from "react";
+
+import { useActiveWeb3React } from "wallet";
+import { useQuery } from "react-query";
+import { useToggle } from "react-use";
+import { useERC20, useMasterChef } from "hooks/contracts";
+
+import { getPoolData } from "web3-functions";
+
+import { poolIds, PoolInfo } from "config/pools";
+import { PoolsContext, poolsReducers } from "hooks/pools-reducer";
+
 import {
   Button,
   Container,
@@ -16,30 +26,19 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { PoolCard } from "components/pool-card";
-import { getPoolData } from "web3-functions";
-import { useActiveWeb3React } from "wallet";
-import { useQuery } from "react-query";
-import { useERC20, useMasterChef } from "hooks/contracts";
-import { poolIds, PoolInfo } from "config/pools";
-import { PoolsProvider, usePoolInfo } from "hooks/pools-reducer";
-import { useEffect } from "react";
-
-function Updater({ pools }: { pools?: PoolInfo[] }) {
-  const [_, dispatch] = usePoolInfo();
-
-  useEffect(() => {
-    if (pools && pools.length) {
-      dispatch({ type: "ADD_POOLS", payload: pools });
-    }
-  }, [pools]);
-  return null;
-}
+import { AppLayout } from "components/layout";
 
 const Page: React.FC = () => {
   const toast = useToast();
   const getLpContract = useERC20();
   const masterChef = useMasterChef();
   const { account } = useActiveWeb3React();
+
+  // page display actions
+  const [stakedOnly, toggleStakedOnly] = useToggle(false);
+  const [active, toggleActive] = useToggle(false); // TODO: filter by active when we go live
+
+  const [state, dispatch] = useReducer(poolsReducers, [] as PoolInfo[]);
 
   const poolQuery = useQuery(
     ["pools", account],
@@ -53,6 +52,10 @@ const Page: React.FC = () => {
     },
 
     {
+      onSuccess: (data) => {
+        dispatch({ type: "ADD_POOLS", payload: data });
+      },
+
       onError: ({ message, data }) => {
         toast({
           status: "error",
@@ -64,26 +67,43 @@ const Page: React.FC = () => {
     }
   );
 
-  return (
-    <PoolsProvider>
-      <Updater pools={poolQuery.data} />
+  let pools = state
+    .filter((pool) => pool.active === active)
+    .filter((pool) => (stakedOnly ? pool.hasStaked === stakedOnly : true));
 
+  return (
+    <PoolsContext.Provider value={[state, dispatch]}>
       <AppLayout>
         <Stack align="center" spacing={10} py={10}>
           <HStack spacing={14} align="center" justify="center">
             <FormControl w="auto" display="flex" alignItems="center">
-              <Switch id="staked-only" mt={1} mb={0} mr={3} />
+              <Switch
+                isChecked={stakedOnly}
+                onChange={() => toggleStakedOnly()}
+                id="staked-only"
+                mt={1}
+                mb={0}
+                mr={3}
+              />
               <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
                 Stacked Only
               </FormLabel>
             </FormControl>
 
             <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
-              <Button color="gray.800" variant="link">
+              <Button
+                onClick={() => toggleActive()}
+                color={active ? "gray.800" : "gray.500"}
+                variant="link"
+              >
                 <Heading fontSize="xl">Active</Heading>
               </Button>
 
-              <Button color="gray.500" variant="link">
+              <Button
+                onClick={() => toggleActive()}
+                color={!active ? "gray.800" : "gray.500"}
+                variant="link"
+              >
                 <Heading fontSize="xl">Inactive</Heading>
               </Button>
             </HStack>
@@ -97,14 +117,14 @@ const Page: React.FC = () => {
             )}
 
             <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
-              {poolQuery.data?.map((pool) => (
+              {pools.map((pool) => (
                 <PoolCard pool={pool} key={pool.pid} />
               ))}
             </SimpleGrid>
           </Container>
         </Stack>
       </AppLayout>
-    </PoolsProvider>
+    </PoolsContext.Provider>
   );
 };
 
