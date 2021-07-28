@@ -292,7 +292,7 @@ function Header() {
 }
 
 // NUMBERS
-const DappStats: React.FC<any> = ({ stats }) => {
+const DappStats = () => {
   const getLpContract = useERC20();
   const masterChef = useMasterChef();
 
@@ -317,15 +317,15 @@ const DappStats: React.FC<any> = ({ stats }) => {
   });
 
   return (
-    <Stack id="stats" justify="center" direction="row" spacing={14}>
-      <Box boxShadow="xl" px={16} py={10} rounded="md" bg="secondary.200" align="center">
+    <SimpleGrid id="stats" columns={[2, 4]} spacing={[8, 14]}>
+      <Box boxShadow="xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">$7.27</Heading>
         <Text color="gray.700" size="sm">
           $IRIS Price
         </Text>
       </Box>
 
-      <Box boxShadow="xl" px={16} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
           ${displayCurrency(hermesStats.data?.totalValueInFarms || 0, true, true)}
         </Heading>
@@ -334,7 +334,7 @@ const DappStats: React.FC<any> = ({ stats }) => {
         </Text>
       </Box>
 
-      <Box boxShadow="xl" px={16} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
           ${displayCurrency(hermesStats.data?.totalValueInPools || 0, true, true)}
         </Heading>
@@ -343,13 +343,13 @@ const DappStats: React.FC<any> = ({ stats }) => {
         </Text>
       </Box>
 
-      <Box boxShadow="xl" px={16} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">${displayCurrency(hermesStats.data?.tvl || 0, true, true)}</Heading>
         <Text color="gray.700" size="sm">
           Total Value Locked
         </Text>
       </Box>
-    </Stack>
+    </SimpleGrid>
   );
 };
 
@@ -361,8 +361,8 @@ function Services() {
         Key Features
       </Heading>
 
-      <Stack alignItems="stretch" spacing={6} direction="row">
-        <Box rounded="sm" boxShadow="base" w="sm" py={12} px={8}>
+      <Stack alignItems="stretch" spacing={6} direction={["column", "row"]}>
+        <Box rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
           <Icon color="primary.600" as={GiFarmTractor} boxSize={16} />
 
           <Box mt={6}>
@@ -377,7 +377,7 @@ function Services() {
           </Box>
         </Box>
 
-        <Box rounded="sm" boxShadow="base" w="sm" py={12} px={8}>
+        <Box rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
           <Icon color="primary.600" as={RiWaterFlashFill} boxSize={16} />
 
           <Box mt={6}>
@@ -392,7 +392,7 @@ function Services() {
           </Box>
         </Box>
 
-        <Box rounded="sm" boxShadow="base" w="sm" py={12} px={8}>
+        <Box rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
           <Icon color="primary.600" as={GiMegaphone} boxSize={16} />
 
           <Box mt={6}>
@@ -416,7 +416,7 @@ function Security() {
         Security
       </Heading>
 
-      <Stack justify="center" direction="row" spacing={7}>
+      <Stack justify="center" direction={["column", "row"]} spacing={7}>
         <Flex
           maxW="250px"
           w="250px"
