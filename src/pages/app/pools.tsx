@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer } from "react";
 
 import { useActiveWeb3React } from "wallet";
 import { useQuery } from "react-query";
