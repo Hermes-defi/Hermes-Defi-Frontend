@@ -44,6 +44,7 @@ const PresaleCard = () => {
   const queryClient = useQueryClient();
   const fenixContract = useFenix();
   const currentBlock = useCurrentBlockNumber();
+  const { account } = useActiveWeb3React();
 
   const presaleInfo = useQuery(["presale-info", currentBlock], async () => {
     return getPresaleInfo(fenixContract, currentBlock);
@@ -52,9 +53,10 @@ const PresaleCard = () => {
   const purchaseFenixMutation = useMutation(
     (amount: string) => purchaseFenix(fenixContract, amount),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries("presale-info");
-        queryClient.invalidateQueries("redeem-info");
+      onSuccess: async () => {
+        await queryClient.invalidateQueries("presale-info");
+        await queryClient.invalidateQueries(["tokenBalance", account, fenixContract.address]);
+        onClose();
       },
 
       onError: ({ data, message }) => {
@@ -64,6 +66,7 @@ const PresaleCard = () => {
           title: "Error purchasing FENIX",
           description: data?.message || message,
         });
+        onClose();
       },
     }
   );
@@ -166,7 +169,7 @@ const PresaleCard = () => {
             isFullWidth
             onClick={onOpen}
             isDisabled={
-              !(presaleInfo.data?.presaleStartBlock > 0 && presaleInfo.data?.presaleEndBlock < 0)
+              presaleInfo.data?.presaleStartBlock > 0 || presaleInfo.data?.presaleEndBlock < 0
             }
             bg="gray.700"
             size="lg"
@@ -232,9 +235,9 @@ const RedeemCard = () => {
   );
 
   const swapFenixMutation = useMutation((amount: string) => swapFenix(redeemContract, amount), {
-    onSuccess: () => {
-      queryClient.invalidateQueries("presale-info");
-      queryClient.invalidateQueries("redeem-info");
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["tokenBalance", account, fenixContract.address]);
+      onClose();
     },
 
     onError: ({ data, message }) => {
@@ -260,7 +263,6 @@ const RedeemCard = () => {
         bg="accent.500"
         color="white"
       >
-        {/* pool name */}
         <Box>
           <HStack mb={6}>
             <Heading>Redeem IRIS</Heading>

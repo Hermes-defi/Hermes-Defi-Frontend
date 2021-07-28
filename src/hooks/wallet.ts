@@ -1,35 +1,32 @@
 import { utils } from "ethers";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { getTokenBalance } from "web3-functions";
 import { useERC20 } from "./contracts";
 
 export function useTokenBalance(tokenAddress: string) {
-  const [balance, setBalance] = useState(null);
   const { account } = useActiveWeb3React();
   const getERC20Contract = useERC20();
 
-  useEffect(() => {
+  const balance = useQuery(["tokenBalance", account, tokenAddress], async () => {
     if (!account) return null;
-
     const tokenContract = getERC20Contract(tokenAddress);
-    getTokenBalance(tokenContract, account).then((balance) => setBalance(balance));
-  }, [account]);
+    return getTokenBalance(tokenContract, account);
+  });
 
-  return balance;
+  return balance.data;
 }
 
 export function useBalance() {
   const { account, library } = useActiveWeb3React();
-  const [balance, setBalance] = useState(null);
 
-  useEffect(() => {
+  const balance = useQuery(["tokenBalance", account], async () => {
     if (!account) return null;
+    return library.getBalance(account);
+  });
 
-    library.getBalance(account).then((balance) => setBalance(utils.formatEther(balance)));
-  }, [account]);
-
-  return balance;
+  return balance.data ? utils.formatEther(balance.data) : null;
 }
 
 export function useCurrentBlockNumber() {

@@ -146,16 +146,16 @@ export async function getPresaleInfo(fenixContract: Contract, currentBlock: numb
   const presaleStartBlock = await fenixContract.startBlock();
   const presaleEndBlock = await fenixContract.endBlock();
 
-  const timeToStartPresale = presaleStartBlock.sub(currentBlock).toNumber();
-  const timeToEndPresale = presaleEndBlock.sub(currentBlock).toNumber();
+  const timeToStartPresale = presaleStartBlock.sub(currentBlock || 0).toNumber();
+  const timeToEndPresale = presaleEndBlock.sub(currentBlock || 0).toNumber();
 
   return {
     fenixRemaining: utils.formatEther(fenixRemaining),
-    fenixPrice: utils.formatEther(fenixPrice),
+    fenixPrice: utils.formatUnits(fenixPrice, 35),
     maxFenix: utils.formatEther(maxFenix),
     maxFenixToPurchase: utils.formatEther(maxFenixToPurchase),
-    presaleStartBlock: timeToStartPresale > 0 ? timeToStartPresale : 0,
-    presaleEndBlock: timeToEndPresale > 0 ? timeToEndPresale : 0,
+    presaleStartBlock: timeToStartPresale,
+    presaleEndBlock: timeToEndPresale,
   };
 }
 
@@ -166,14 +166,12 @@ export async function getRedeemInfo(
   address: string
 ) {
   const redeemStartBlock = await redeem.startBlock();
-  const timeToStartRedeem = redeemStartBlock.sub(currentBlock).toNumber();
+  const timeToStartRedeem = redeemStartBlock.sub(currentBlock || 0).toNumber();
 
   const allowance: BigNumber = await fenix.allowance(address, defaultContracts.redeem.address);
 
-  console.log(allowance);
-
   return {
-    blockToRedeem: timeToStartRedeem > 0 ? timeToStartRedeem : 0,
+    blockToRedeem: timeToStartRedeem,
     hasApprovedPool: !allowance.isZero(),
   };
 }
