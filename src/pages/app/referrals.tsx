@@ -37,19 +37,19 @@ const Page: React.FC = () => {
     <AppLayout>
       <Stack align="center" spacing={10} py={5}>
         <Container align="center" maxWidth="container.lg">
-          <Text fontSize="5xl" fontWeight="bold">
+          <Text fontSize={["2xl", "5xl"]} fontWeight="bold">
             Hermes referral program
           </Text>
 
           <Box rounded="xl" overflow="hidden" boxShadow="md" mt={5}>
-            <Box py={5} bg="gray.100">
-              <Text fontSize="lg">
+            <Box py={5} px={5} bg="gray.100">
+              <Text fontSize={["md", "lg"]}>
                 Share the referral link below to invite your friends and earn 1% of your friends
                 earnings.
               </Text>
             </Box>
 
-            <Box py={8}>
+            <Box py={8} px={8}>
               {account ? (
                 <>
                   <Text fontSize="lg" fontWeight="bold">
@@ -59,6 +59,7 @@ const Page: React.FC = () => {
                   <Text
                     mt={8}
                     py={2}
+                    px={5}
                     rounded="lg"
                     mx="auto!important"
                     bg="gray.200"
