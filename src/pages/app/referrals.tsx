@@ -19,6 +19,7 @@ const Page: React.FC = () => {
   const referalCount = useQuery(
     "referalCount",
     () => {
+      if (!account) return 0;
       return getReferralCount(referralContract, account);
     },
     {

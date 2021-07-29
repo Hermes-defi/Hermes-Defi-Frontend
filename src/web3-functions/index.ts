@@ -63,7 +63,16 @@ export async function getPoolData(
   const poolPublicData = await getPoolPublicData(pid, masterChef);
   const lpContract = getLpContract(poolPublicData.lpAddress);
   const poolLpData = await getPoolLpInfo(lpContract);
-  const poolUserData = await getPoolUserInfo(pid, masterChef, lpContract, account);
+
+  let poolUserData = {
+    hasStaked: false,
+    hasApprovedPool: false,
+    irisEarned: "0",
+    lpStaked: "0",
+  };
+  if (account) {
+    poolUserData = await getPoolUserInfo(pid, masterChef, lpContract, account);
+  }
 
   // fetch apy/apr
 
@@ -168,7 +177,10 @@ export async function getRedeemInfo(
   const redeemStartBlock = await redeem.startBlock();
   const timeToStartRedeem = redeemStartBlock.sub(currentBlock || 0).toNumber();
 
-  const allowance: BigNumber = await fenix.allowance(address, defaultContracts.redeem.address);
+  let allowance = BigNumber.from(0);
+  if (address) {
+    allowance = await fenix.allowance(address, defaultContracts.redeem.address);
+  }
 
   return {
     blockToRedeem: timeToStartRedeem,
