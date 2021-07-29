@@ -65,6 +65,7 @@ const PresaleCard = () => {
           position: "top-right",
           title: "Error purchasing FENIX",
           description: data?.message || message,
+          isClosable: true,
         });
         onClose();
       },
@@ -246,6 +247,7 @@ const RedeemCard = () => {
         position: "top-right",
         title: "Error swapping FENIX",
         description: data?.message || message,
+        isClosable: true,
       });
     },
   });

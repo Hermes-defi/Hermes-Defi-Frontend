@@ -62,6 +62,7 @@ const Page: React.FC = () => {
           position: "top-right",
           title: "Error fetching pools",
           description: data?.message || message,
+          isClosable: true,
         });
       },
     }

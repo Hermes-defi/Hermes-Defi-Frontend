@@ -13,7 +13,7 @@ const Page: React.FC = () => {
   const { account } = useActiveWeb3React();
 
   const toast = useToast();
-  const link = `https://hermesdefi.io?ref=${account.replace(/^0x/, "")}`;
+  const link = `https://hermesdefi.io?ref=${account?.replace(/^0x/, "")}`;
   const { onCopy, hasCopied } = useClipboard(link);
 
   const referalCount = useQuery(
@@ -26,8 +26,9 @@ const Page: React.FC = () => {
         toast({
           status: "error",
           position: "top-right",
-          title: "Error fetching pools",
+          title: "Error fetching referral detail",
           description: data?.message || message,
+          isClosable: true,
         });
       },
     }

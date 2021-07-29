@@ -77,6 +77,7 @@ function useHarvestAll() {
         position: "top-right",
         title: "Error harvesting IRIS",
         description: data?.message || message,
+        isClosable: true,
       });
     },
   });
