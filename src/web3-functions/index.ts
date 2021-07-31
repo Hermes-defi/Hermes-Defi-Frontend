@@ -1,14 +1,25 @@
 import defaultContracts from "config/contracts";
+import TOKENS from "config/tokens";
 import { BigNumber, constants, Contract, utils } from "ethers";
+import { Token, WETH, Fetcher, Route } from "quickswap-sdk";
 import { poolIds, farmIds } from "config/pools";
+import { DEFAULT_CHAIN_ID } from "config/constants";
 
 // QUERIES
+async function getTokenPrice(token: Token) {
+  const USDC = new Token(DEFAULT_CHAIN_ID, TOKENS.usdc.address, TOKENS.usdc.decimals);
+  const USDCWETHPair = await Fetcher.fetchPairData(USDC, WETH[DEFAULT_CHAIN_ID]);
+  const tokenUSDCPair = await Fetcher.fetchPairData(token, USDC);
 
-// -------- POOL STATS-------------
+  const route = new Route([USDCWETHPair, tokenUSDCPair], WETH[DEFAULT_CHAIN_ID]);
+
+  return route.midPrice.toSignificant(6);
+}
+
 export async function getPoolPublicData(pid: number, masterChef: Contract) {
   const poolInfo = await masterChef.poolInfo(pid);
 
-  const multiplier = poolInfo.allocPoint.div(100).toString();
+  const multiplier = poolInfo.allocPoint.toString();
   const active = multiplier !== "0";
   const depositFees = BigNumber.from(poolInfo.depositFeeBP).div(100).toNumber();
   const lpAddress = poolInfo.lpToken;
@@ -23,7 +34,13 @@ export async function getPoolPublicData(pid: number, masterChef: Contract) {
 
 export async function getPoolLpInfo(lpContract: Contract) {
   const symbol = await lpContract.symbol();
+  const decimals = await lpContract.decimals();
   const totalStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+
+  const token = new Token(DEFAULT_CHAIN_ID, lpContract.address, decimals);
+  const price = await getTokenPrice(token);
+
+  console.log(symbol, price);
 
   return { token: symbol, totalStaked };
 }

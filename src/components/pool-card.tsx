@@ -1,12 +1,11 @@
 import React from "react";
-
+import BigNumber from "bignumber.js";
 import { useActiveWeb3React } from "wallet";
 import { displayCurrency } from "libs/utils";
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
 import { useApprovePool, useDepositIntoPool } from "hooks/pools-actions";
 import { PoolInfo } from "config/pools";
-import { utils } from "ethers";
 
 import {
   Box,
@@ -24,6 +23,7 @@ import {
 import { AiOutlineCalculator } from "react-icons/ai";
 import { UnlockButton } from "./unlock-wallet";
 import { ROIModal } from "./modals/roi-modal";
+import { utils } from "ethers";
 
 // Pool Actions
 const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
@@ -202,7 +202,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             <APRCalculator />
             <Text fontWeight="700" fontSize="sm">
               {/* TODO:: price */}
-              N/A
+              {pool.apr ? `${pool.apr}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -256,7 +256,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Total Liquidity
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {displayCurrency(utils.formatEther(pool.totalStaked))}
+              {displayCurrency(new BigNumber(pool.totalStaked).times(pool.price).toNumber())}
             </Text>
           </Stack>
         </Stack>

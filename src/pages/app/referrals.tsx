@@ -46,7 +46,7 @@ const Page: React.FC = () => {
           <Box rounded="xl" overflow="hidden" boxShadow="md" mt={5}>
             <Box py={5} px={5} bg="gray.100">
               <Text fontSize={["md", "lg"]}>
-                Share the referral link below to invite your friends and earn 1% of your friends
+                Share the referral link below to invite your friends and earn 2% of your friends
                 earnings.
               </Text>
             </Box>

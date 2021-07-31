@@ -3,9 +3,6 @@ import React, { useReducer } from "react";
 import { useActiveWeb3React } from "wallet";
 import { useQuery } from "react-query";
 import { useToggle } from "react-use";
-import { useERC20, useMasterChef } from "hooks/contracts";
-
-import { getPoolData } from "web3-functions";
 
 import { poolIds, PoolInfo } from "config/pools";
 import { PoolsContext, poolsReducers } from "hooks/pools-reducer";
@@ -27,16 +24,16 @@ import {
 } from "@chakra-ui/react";
 import { PoolCard } from "components/pool-card";
 import { AppLayout } from "components/layout";
+import { useFetchPoolData } from "hooks/pool-queries";
 
 const Page: React.FC = () => {
   const toast = useToast();
-  const getLpContract = useERC20();
-  const masterChef = useMasterChef();
   const { account } = useActiveWeb3React();
+  const fetchPoolData = useFetchPoolData();
 
   // page display actions
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
-  const [active, toggleActive] = useToggle(false); // TODO: filter by active when we go live
+  const [active, toggleActive] = useToggle(true);
 
   const [state, dispatch] = useReducer(poolsReducers, [] as PoolInfo[]);
 
@@ -46,7 +43,7 @@ const Page: React.FC = () => {
     async (): Promise<PoolInfo[]> => {
       return Promise.all(
         poolIds.map(async (pid) => {
-          return getPoolData(pid, account, masterChef, getLpContract);
+          return fetchPoolData(pid);
         })
       );
     },

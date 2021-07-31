@@ -11,6 +11,8 @@ export type PoolInfo = {
   lpToken: string;
   lpAddress: string;
   totalStaked: string;
+  decimals: number;
+  price?: string;
   apy: string;
   apr: number;
 
@@ -22,7 +24,7 @@ export type PoolInfo = {
 };
 
 export const poolIds = {
-  137: [0,1,2,3,4,5,6,7],
+  137: [0, 1, 2, 3, 4, 5, 6, 7],
   80001: [1],
 }[DEFAULT_CHAIN_ID];
 

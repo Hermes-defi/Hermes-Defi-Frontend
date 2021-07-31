@@ -18,6 +18,7 @@
     "@web3-react/network-connector": "^6.1.9",
     "@web3-react/walletconnect-connector": "^6.2.0",
     "@web3-react/walletlink-connector": "^6.2.3",
+    "bignumber.js": "^9.0.1",
     "dayjs": "^1.10.6",
     "ethers": "^5.4.1",
     "framer-motion": "^4",

@@ -2,10 +2,11 @@ import { useToast } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { usePoolInfo } from "./pools-reducer";
-import { approveLpContract, depositIntoPool, getPoolData, withdrawFromPool } from "web3-functions";
+import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
 import { constants } from "ethers";
 import { useERC20, useMasterChef } from "./contracts";
 import { getReferralAddress } from "./referral";
+import { useFetchPoolData } from "./pool-queries";
 
 export function useApprovePool() {
   const { account } = useActiveWeb3React();
@@ -50,23 +51,22 @@ export function useApprovePool() {
 export function useDepositIntoPool() {
   const toast = useToast();
 
-  const getLpContract = useERC20();
   const masterChef = useMasterChef();
 
   const { account } = useActiveWeb3React();
   const [_, dispatch] = usePoolInfo();
 
   const referrer = getReferralAddress();
+  const getPoolData = useFetchPoolData();
 
   const depositMutation = useMutation(
     async ({ pid, amount }: { pid: number; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
-      console.log(referrer);
       await depositIntoPool(masterChef, pid, amount, referrer || constants.AddressZero);
 
       // fetch new pool data
-      const data = await getPoolData(pid, account, masterChef, getLpContract);
+      const data = await getPoolData(pid);
       return { data, pid };
     },
     {
@@ -96,7 +96,7 @@ export function useDepositIntoPool() {
 export function useWithdraw() {
   const { account } = useActiveWeb3React();
   const [_, dispatch] = usePoolInfo();
-  const getLpContract = useERC20();
+  const getPoolData = useFetchPoolData();
   const masterChef = useMasterChef();
   const toast = useToast();
 
@@ -106,7 +106,7 @@ export function useWithdraw() {
       await withdrawFromPool(masterChef, pid, amount);
 
       // fetch new pool data
-      const data = await getPoolData(pid, account, masterChef, getLpContract);
+      const data = await getPoolData(pid);
       return { data, pid };
     },
     {
