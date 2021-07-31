@@ -1,6 +1,13 @@
 import React from "react";
 import Head from "next/head";
 import NextLink from "next/link";
+
+import { farmIds, poolIds } from "config/pools";
+import { useERC20, useMasterChef } from "hooks/contracts";
+import { getPoolPublicData, getFarmStats } from "web3-functions";
+import { useQuery } from "react-query";
+import { displayCurrency } from "libs/utils";
+
 import {
   Box,
   Button,
@@ -23,19 +30,24 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
-import { RiWaterFlashFill } from "react-icons/ri";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  CloseIcon,
+  HamburgerIcon,
+  ExternalLinkIcon,
+} from "@chakra-ui/icons";
+import { RiWaterFlashFill, RiRoadMapFill, RiBookOpenFill } from "react-icons/ri";
 import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
-import { farmIds, poolIds } from "config/pools";
-import { useERC20, useMasterChef } from "hooks/contracts";
-import { getPoolPublicData, getFarmStats } from "web3-functions";
-import { useQuery } from "react-query";
-import { displayCurrency } from "libs/utils";
+import { AiOutlineAudit } from "react-icons/ai";
+import { MdEmail } from "react-icons/md";
+import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
 
 // NAVIGATION
 interface NavItem {
   label: string;
   isExternal?: boolean;
+  decorate?: boolean;
   subLabel?: string;
   children?: Array<NavItem>;
   href?: string;
@@ -43,23 +55,18 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: "Dapp Radar",
-    isExternal: true,
-    href: "https://dappradar.com/",
+    label: "Pre Sale",
+    href: "/app/pre-sale",
+    decorate: true,
   },
   {
-    label: "Coingecko",
+    label: "Info",
     isExternal: true,
-    href: "https://www.coingecko.com",
-  },
-  {
-    label: "VFAT tools",
-    isExternal: true,
-    href: "https://vfat.tools/",
+    href: "https://vfat.tools/polygon/hermes/",
   },
 ];
 
-const MobileNavItem = ({ label, children, href }: NavItem) => {
+const MobileNavItem = ({ label, children, href, isExternal }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -68,6 +75,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         py={2}
         as={Link}
         href={href ?? "#"}
+        isExternal={isExternal}
         justify={"space-between"}
         align={"center"}
         _hover={{
@@ -155,18 +163,29 @@ function Navigation() {
                 <Box key={navItem.label}>
                   <Popover trigger={"hover"} placement={"bottom-start"}>
                     <PopoverTrigger>
-                      <Link
+                      <Flex
                         p={2}
+                        as={Link}
                         href={navItem.href ?? "#"}
+                        align="center"
                         color={useColorModeValue("gray.600", "gray.200")}
                         isExternal={navItem.isExternal}
                         _hover={{
                           textDecoration: "none",
                           color: useColorModeValue("gray.800", "white"),
                         }}
+                        {...(navItem.decorate
+                          ? {
+                              color: "secondary.600",
+                              fontWeight: "bold",
+                            }
+                          : {})}
                       >
-                        {navItem.label}
-                      </Link>
+                        <span>{navItem.label}</span>
+                        {navItem.isExternal && (
+                          <ExternalLinkIcon mt="-1px" mx="4px" boxSize="14px" />
+                        )}
+                      </Flex>
                     </PopoverTrigger>
 
                     {navItem.children && (
@@ -278,10 +297,10 @@ function Header() {
             </a>
           </NextLink>
 
-          <NextLink href="#stats" passHref>
+          <NextLink href="https://hermes-defi.gitbook.io/hermes-finance/bonus/litepaper" passHref>
             <a>
               <Button isFullWidth variant="outline" colorScheme="secondary" size="lg">
-                Learn more
+                Lite Paper
               </Button>
             </a>
           </NextLink>
@@ -317,15 +336,15 @@ const DappStats = () => {
   });
 
   return (
-    <SimpleGrid id="stats" columns={[2, 4]} spacing={[8, 14]}>
-      <Box boxShadow="xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
+    <SimpleGrid columns={[2, 4]} spacing={[8, 14]}>
+      <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">$7.27</Heading>
         <Text color="gray.700" size="sm">
           $IRIS Price
         </Text>
       </Box>
 
-      <Box boxShadow="xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
           ${displayCurrency(hermesStats.data?.totalValueInFarms || 0, true, true)}
         </Heading>
@@ -334,7 +353,7 @@ const DappStats = () => {
         </Text>
       </Box>
 
-      <Box boxShadow="xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
           ${displayCurrency(hermesStats.data?.totalValueInPools || 0, true, true)}
         </Heading>
@@ -343,7 +362,7 @@ const DappStats = () => {
         </Text>
       </Box>
 
-      <Box boxShadow="xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">${displayCurrency(hermesStats.data?.tvl || 0, true, true)}</Heading>
         <Text color="gray.700" size="sm">
           Total Value Locked
@@ -362,7 +381,7 @@ function Services() {
       </Heading>
 
       <Stack alignItems="stretch" spacing={6} direction={["column", "row"]}>
-        <Box rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
+        <Box align="center" rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
           <Icon color="primary.600" as={GiFarmTractor} boxSize={16} />
 
           <Box mt={6}>
@@ -377,7 +396,7 @@ function Services() {
           </Box>
         </Box>
 
-        <Box rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
+        <Box align="center" rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
           <Icon color="primary.600" as={RiWaterFlashFill} boxSize={16} />
 
           <Box mt={6}>
@@ -392,7 +411,7 @@ function Services() {
           </Box>
         </Box>
 
-        <Box rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
+        <Box align="center" rounded="sm" boxShadow="base" w={["", "sm"]} py={12} px={8}>
           <Icon color="primary.600" as={GiMegaphone} boxSize={16} />
 
           <Box mt={6}>
@@ -418,6 +437,9 @@ function Security() {
 
       <Stack justify="center" direction={["column", "row"]} spacing={7}>
         <Flex
+          as={Link}
+          isExternal
+          href="https://hermes-defi.gitbook.io/hermes-finance/security/audits"
           maxW="250px"
           w="250px"
           bg="primary.500"
@@ -427,6 +449,7 @@ function Security() {
           p={6}
           align="center"
           textAlign="center"
+          textDecoration="none!important"
         >
           <Image src="./techrate.png" boxSize="50px" mr={5} />
           <Heading fontWeight="900" fontSize={"2xl"} fontFamily={"body"}>
@@ -435,6 +458,9 @@ function Security() {
         </Flex>
 
         <Flex
+          as={Link}
+          isExternal
+          href="https://hermes-defi.gitbook.io/hermes-finance/security/audits"
           maxW="250px"
           w="250px"
           bg="primary.500"
@@ -520,14 +546,38 @@ function Footer() {
               Community
             </Text>
 
-            <Link isExternal href="https://twitter.com/hermesdefi">
-              Twitter
-            </Link>
-            {/* <Link href={"#"}>Discord</Link> */}
-            <Link isExternal href="https://medium.com/@HermesDefi">
-              Medium
-            </Link>
-            {/* <Link href={"#"}>Announcement</Link> */}
+            <Stack
+              as={Link}
+              isExternal
+              href="https://twitter.com/hermesdefi"
+              direction="row"
+              align="center"
+            >
+              <Icon color="twitter.500" as={FaTwitter} />
+              <Text>Twitter</Text>
+            </Stack>
+
+            <Stack
+              as={Link}
+              isExternal
+              href="https://medium.com/@HermesDefi"
+              direction="row"
+              align="center"
+            >
+              <Icon color="gray.900" as={FaMedium} />
+              <Text>Medium</Text>
+            </Stack>
+
+            <Stack
+              as={Link}
+              isExternal
+              href="https://medium.com/@HermesDefi"
+              direction="row"
+              align="center"
+            >
+              <Icon color="telegram.500" as={FaTelegram} />
+              <Text>Telegram</Text>
+            </Stack>
           </Stack>
 
           <Stack align={"flex-start"}>
@@ -535,22 +585,66 @@ function Footer() {
               Project
             </Text>
 
-            <Link isExternal href={"https://hermes-defi.gitbook.io/hermes-finance/"}>
-              Docs
-            </Link>
-            <Link isExternal href={"https://github.com/Hermes-defi"}>
-              Github
-            </Link>
-            <Link isExternal href={"https://hermes-defi.gitbook.io/hermes-finance/security/audits"}>
-              Audits
-            </Link>
+            <Stack
+              as={Link}
+              isExternal
+              href="https://hermes-defi.gitbook.io/hermes-finance/"
+              direction="row"
+              align="center"
+            >
+              <Icon color="gray.700" as={RiBookOpenFill} />
+              <Text>Docs</Text>
+            </Stack>
+
+            <Stack
+              as={Link}
+              isExternal
+              href="https://github.com/Hermes-defi"
+              direction="row"
+              align="center"
+            >
+              <Icon color="gray.700" as={FaGithub} />
+              <Text>Github</Text>
+            </Stack>
+
+            <Stack
+              as={Link}
+              isExternal
+              href="https://hermes-defi.gitbook.io/hermes-finance/security/audits"
+              direction="row"
+              align="center"
+            >
+              <Icon color="gray.700" as={AiOutlineAudit} />
+              <Text>Audits</Text>
+            </Stack>
+
+            <Stack
+              as={Link}
+              isExternal
+              href="https://hermes-defi.gitbook.io/hermes-finance/products/roadmap"
+              direction="row"
+              align="center"
+            >
+              <Icon color="gray.700" as={RiRoadMapFill} />
+              <Text>Roadmap</Text>
+            </Stack>
           </Stack>
 
           <Stack align={"flex-start"}>
             <Text fontWeight={"500"} fontSize={"lg"} mb={2}>
               Contact
             </Text>
-            <Link href={"mailto:contact@hermesdefi.io"}>contact@hermesdefi.io</Link>
+
+            <Stack
+              as={Link}
+              isExternal
+              href="mailto:contact@hermesdefi.io"
+              direction="row"
+              align="center"
+            >
+              <Icon color="gray.700" as={MdEmail} />
+              <Text>contact@hermesdefi.io</Text>
+            </Stack>
           </Stack>
         </SimpleGrid>
       </Container>
@@ -562,7 +656,7 @@ const Page = () => {
   return (
     <>
       <Box
-        bgImage="linear-gradient(0deg, rgba(255,255,255,1) 15%, rgba(255,255,255,0.2) 58%, rgba(255,255,255,0.2) 93%), url('./bg-image-1.jpg')"
+        bgImage="linear-gradient(0deg, rgba(255,255,255,1) 7%, rgba(255,255,255,0.16) 28%, rgba(255,255,255,0.02) 39%), url('./bg-image-1.jpg')"
         bgPosition="center"
         bgRepeat="no-repeat"
       >
