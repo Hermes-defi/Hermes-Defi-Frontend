@@ -190,7 +190,7 @@ const Page: React.FC = () => {
 
             <Stack spacing={[5, 14]} direction={{ base: "column", md: "row" }}>
               <Stack
-                boxShadow="xl"
+                boxShadow="2xl"
                 rounded="3xl"
                 bg="secondary.500"
                 color="white"
@@ -226,7 +226,7 @@ const Page: React.FC = () => {
               </Stack>
 
               <Stack
-                boxShadow="xl"
+                boxShadow="2xl"
                 rounded="3xl"
                 bg="#B38E5A"
                 color="white"
@@ -272,83 +272,102 @@ const Page: React.FC = () => {
           <Stack mt={[6, 0]} direction={["column-reverse", "row"]} spacing={10}>
             <SimpleGrid columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
               <Box align={["left", "center"]}>
-                <Skeleton isLoaded={!!irisStats.data}>
-                  <Text fontSize="lg" fontWeight="700">
-                    {/* {displayCurrency(irisStats.data?.marketCap, true)} */}
-                    N/A
-                  </Text>
-                </Skeleton>
-                <Heading mt={1} color="gray.600" fontSize="lg">
-                  Market Cap
-                </Heading>
+                <Box pl={3} borderLeftWidth="3px" borderColor="red.400">
+                  <Skeleton isLoaded={!!irisStats.data}>
+                    <Text fontSize="lg" fontWeight="700">
+                      {/* {displayCurrency(irisStats.data?.marketCap, true)} */}
+                      N/A
+                    </Text>
+                  </Skeleton>
+                  <Heading mt={1} color="gray.600" fontSize="md">
+                    Market Cap
+                  </Heading>
+                </Box>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Skeleton isLoaded={!!irisStats.data}>
-                  <Text fontSize="lg" fontWeight="700">
-                    {displayCurrency(irisStats.data?.maximumSupply, true)}
-                  </Text>
-                </Skeleton>
-                <Heading mt={1} color="gray.600" fontSize="lg">
-                  Maximum Supply
-                </Heading>
+                <Box pl={3} borderLeftWidth="3px" borderColor="blue.400">
+                  <Skeleton isLoaded={!!irisStats.data}>
+                    <Text fontSize="lg" fontWeight="700">
+                      {displayCurrency(irisStats.data?.maximumSupply, true)}
+                    </Text>
+                  </Skeleton>
+                  <Heading mt={1} color="gray.600" fontSize="md">
+                    Maximum Supply
+                  </Heading>
+                </Box>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Skeleton isLoaded={!!irisStats.data}>
-                  <Text fontSize="lg" fontWeight="700">
-                    {displayCurrency("0.4", true)}
-                  </Text>
-                </Skeleton>
-                <Heading mt={1} color="gray.600" fontSize="lg">
-                  New IRIS/block
-                </Heading>
+                <Box pl={3} borderLeftWidth="3px" borderColor="yellow.400">
+                  <Skeleton isLoaded={!!irisStats.data}>
+                    <Text fontSize="lg" fontWeight="700">
+                      {displayCurrency("0.4", true)}
+                    </Text>
+                  </Skeleton>
+                  <Heading mt={1} color="gray.600" fontSize="md">
+                    New IRIS/block
+                  </Heading>
+                </Box>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Skeleton isLoaded={!!irisStats.data}>
-                  <Text fontSize="lg" fontWeight="700">
-                    {displayCurrency(irisStats.data?.totalMinted, true)}
-                  </Text>
-                </Skeleton>
-                <Heading mt={1} color="gray.600" fontSize="lg">
-                  Total Minted
-                </Heading>
+                <Box pl={3} borderLeftWidth="3px" borderColor="teal.400">
+                  <Skeleton isLoaded={!!irisStats.data}>
+                    <Text fontSize="lg" fontWeight="700">
+                      {displayCurrency(irisStats.data?.totalMinted, true)}
+                    </Text>
+                  </Skeleton>
+                  <Heading mt={1} color="gray.600" fontSize="md">
+                    Total Minted
+                  </Heading>
+                </Box>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Skeleton isLoaded={!!irisStats.data}>
-                  <Text fontSize="lg" fontWeight="700">
-                    {displayCurrency(irisStats.data?.circulatingSupply, true)}
-                  </Text>
-                </Skeleton>
-                <Heading mt={1} color="gray.600" fontSize="lg">
-                  Circulating Supply
-                </Heading>
+                <Box pl={3} borderLeftWidth="3px" borderColor="orange.400">
+                  <Skeleton isLoaded={!!irisStats.data}>
+                    <Text fontSize="lg" fontWeight="700">
+                      {displayCurrency(irisStats.data?.circulatingSupply, true)}
+                    </Text>
+                  </Skeleton>
+                  <Heading mt={1} color="gray.600" fontSize="md">
+                    Circulating Supply
+                  </Heading>
+                </Box>
               </Box>
 
               <Box align={["left", "center"]}>
-                <Skeleton isLoaded={!!irisStats.data}>
-                  <Text fontSize="lg" fontWeight="700">
-                    {displayCurrency(irisStats.data?.totalBurned, true)}
-                  </Text>
-                </Skeleton>
-                <Heading mt={1} color="gray.600" fontSize="lg">
-                  Total Burned
-                </Heading>
+                <Box pl={3} borderLeftWidth="3px" borderColor="red.300">
+                  <Skeleton isLoaded={!!irisStats.data}>
+                    <Text fontSize="lg" fontWeight="700">
+                      {displayCurrency(irisStats.data?.totalBurned, true)}
+                    </Text>
+                  </Skeleton>
+                  <Heading mt={1} color="gray.600" fontSize="md">
+                    Total Burned
+                  </Heading>
+                </Box>
               </Box>
             </SimpleGrid>
 
             <Box flex="1">
               <Stack
-                mb={10}
+                mb={5}
                 align={["flex-start", "center"]}
                 justify="space-between"
                 direction={["column", "row"]}
                 spacing={[6, 0]}
+                ml={12}
               >
                 <div>
-                  <Heading mb={[0, 2]} color="gray.600" fontSize="xl">
+                  <Heading
+                    borderBottomWidth="2px"
+                    borderColor="red.300"
+                    mb={[0, 1]}
+                    color="gray.600"
+                    fontSize="xl"
+                  >
                     Total Value Locked
                   </Heading>
                   <Skeleton isLoaded={!!hermesStats.data}>
@@ -361,7 +380,13 @@ const Page: React.FC = () => {
 
                 <Stack spacing={[5, 10]} direction="row">
                   <Box align={["left", "center"]}>
-                    <Heading mb={1} color="gray.600" fontSize="xl">
+                    <Heading
+                      borderBottomWidth="2px"
+                      borderColor="red.300"
+                      mb={1}
+                      color="gray.600"
+                      fontSize="xl"
+                    >
                       Farms
                     </Heading>
                     <Skeleton isLoaded={!!hermesStats.data}>
@@ -373,7 +398,13 @@ const Page: React.FC = () => {
                   </Box>
 
                   <Box align={["left", "center"]}>
-                    <Heading mb={1} color="gray.600" fontSize="xl">
+                    <Heading
+                      borderBottomWidth="2px"
+                      borderColor="red.300"
+                      mb={1}
+                      color="gray.600"
+                      fontSize="xl"
+                    >
                       Pools
                     </Heading>
                     <Skeleton isLoaded={!!hermesStats.data}>

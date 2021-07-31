@@ -1,6 +1,7 @@
 export interface NavItem {
   label: string;
   isExternal?: boolean;
+  decorate?: boolean;
   subLabel?: string;
   children?: Array<NavItem>;
   href?: string;
@@ -21,7 +22,7 @@ export const NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
-        label: "LP (QuickSwap)",
+        label: "Liquidity (QuickSwap)",
         href: "https://quickswap.exchange/#/pool",
         isExternal: true,
       },
@@ -38,11 +39,11 @@ export const NAV_ITEMS: Array<NavItem> = [
     href: "/app/pools",
   },
 
-  {
-    label: "Charts",
-    href: "https://quickchart.app/",
-    isExternal: true,
-  },
+  // {
+  //   label: "Charts",
+  //   href: "https://quickchart.app/",
+  //   isExternal: true,
+  // },
 
   {
     label: "Referrals",
@@ -51,21 +52,7 @@ export const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Pre Sale",
     href: "/app/pre-sale",
-  },
-  {
-    label: "Media",
-    children: [
-      {
-        label: "Twitter",
-        href: "https://twitter.com/hermesdefi",
-        isExternal: true,
-      },
-      {
-        label: "Medium",
-        href: "https://medium.com/@HermesDefi",
-        isExternal: true,
-      },
-    ],
+    decorate: true,
   },
   {
     label: "More",
@@ -81,13 +68,18 @@ export const NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
-        label: "Audits",
-        href: "https://hermes-defi.gitbook.io/hermes-finance/security/audits",
+        label: "Telegram",
+        href: "https://t.me/hermesfinance",
         isExternal: true,
       },
       {
-        label: "Info",
-        href: "https://hermes-defi.gitbook.io/hermes-finance/get-it-touch/social-media-and-contact",
+        label: "Twitter",
+        href: "https://twitter.com/hermesdefi",
+        isExternal: true,
+      },
+      {
+        label: "Medium",
+        href: "https://medium.com/@HermesDefi",
         isExternal: true,
       },
     ],

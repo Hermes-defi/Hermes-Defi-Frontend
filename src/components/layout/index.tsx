@@ -143,6 +143,12 @@ const Navigation = () => {
                         textDecoration: "none",
                         color: "gray.800",
                       }}
+                      {...(navItem.decorate
+                        ? {
+                            color: "secondary.600",
+                            fontWeight: "bold",
+                          }
+                        : {})}
                     >
                       {navItem.label}
                       {navItem.children && <ChevronDownIcon />}
@@ -225,6 +231,12 @@ const Navigation = () => {
                         textDecoration: "none",
                         color: "gray.800",
                       }}
+                      {...(navItem.decorate
+                        ? {
+                            color: "secondary.600",
+                            fontWeight: "bold",
+                          }
+                        : {})}
                     >
                       {navItem.label}
                       {navItem.children && <ChevronDownIcon />}
