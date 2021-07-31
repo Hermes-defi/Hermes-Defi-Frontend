@@ -27,12 +27,12 @@ import {
 } from "@chakra-ui/react";
 import { PoolCard } from "components/pool-card";
 import { AppLayout } from "components/layout";
+import { useFetchPoolData } from "hooks/pool-queries";
 
 const Page: React.FC = () => {
   const toast = useToast();
-  const getLpContract = useERC20();
-  const masterChef = useMasterChef();
   const { account } = useActiveWeb3React();
+  const fetchPoolData = useFetchPoolData();
 
   // page display actions
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
@@ -46,7 +46,7 @@ const Page: React.FC = () => {
     async (): Promise<PoolInfo[]> => {
       return Promise.all(
         farmIds.map(async (pid) => {
-          return getPoolData(pid, account, masterChef, getLpContract);
+          return fetchPoolData(pid);
         })
       );
     },

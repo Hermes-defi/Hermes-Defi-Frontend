@@ -199,7 +199,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             APR
           </Text>
           <Box display="flex" alignItems="center">
-            <APRCalculator />
+            {/* <APRCalculator /> */}
             <Text fontWeight="700" fontSize="sm">
               {/* TODO:: price */}
               {pool.apr ? `${pool.apr}%` : "N/A"}
