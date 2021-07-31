@@ -1,4 +1,13 @@
 import React from "react";
+
+import { useActiveWeb3React } from "wallet";
+import { displayCurrency } from "libs/utils";
+import { DepositModal } from "components/modals/deposit-modal";
+import { WithdrawModal } from "components/modals/withdraw-modal";
+import { useApprovePool, useDepositIntoPool } from "hooks/pools-actions";
+import { PoolInfo } from "config/pools";
+import { utils } from "ethers";
+
 import {
   Box,
   HStack,
@@ -6,19 +15,15 @@ import {
   Badge,
   Stack,
   Button,
+  Image,
+  Icon,
   Link,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useActiveWeb3React } from "wallet";
-import { displayCurrency } from "libs/utils";
-import { DepositModal } from "components/modals/deposit-modal";
-import { WithdrawModal } from "components/modals/withdraw-modal";
-import { useApprovePool, useDepositIntoPool } from "hooks/pools-actions";
-import { PoolInfo } from "config/pools";
+import { AiOutlineCalculator } from "react-icons/ai";
 import { UnlockButton } from "./unlock-wallet";
-import { utils } from "ethers";
-import { usePoolInfo } from "hooks/pools-reducer";
+import { ROIModal } from "./modals/roi-modal";
 
 // Pool Actions
 const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
@@ -74,6 +79,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
                 isLoading={approveMutation.isLoading}
                 onClick={() => approveMutation.mutate(pool.pid)}
                 bg="gray.700"
+                boxShadow="lg"
                 _hover={{ bg: "gray.600" }}
               >
                 Approve
@@ -142,11 +148,32 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   );
 };
 
+export function APRCalculator() {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  return (
+    <>
+      <Icon onClick={onOpen} mr={1} as={AiOutlineCalculator} />
+      <ROIModal isOpen={isOpen} onClose={onClose} />
+    </>
+  );
+}
+
+const imageMapper = {
+  iris: "/hermes-logo-1.png",
+  weth: "/eth-logo.png",
+  wbtc: "/btc-logo.png",
+  wmatic: "/matic-logo.png",
+  quick: "/quickswap-logo.jpeg",
+  usdc: "/usdc-logo.png",
+  usdt: "/usdt-logo.png",
+  dai: "/dai-logo.png",
+};
 export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   return (
     <Box px={8} py={4} boxShadow="lg" rounded="3xl" bg="accent.500" color="white">
       {/* pool name */}
-      <HStack mb={5} spacing={6}>
+      <HStack align="center" mb={5} spacing={6}>
+        <Image rounded="24px" src={imageMapper[pool.lpToken.toLowerCase()]} boxSize={12} />
         <Heading>{pool.lpToken}</Heading>
       </HStack>
 
@@ -163,10 +190,6 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             No Fees
           </Badge>
         )}
-
-        {/* <Badge px={2} rounded="lg" colorScheme="red">
-            Community
-          </Badge> */}
       </HStack>
 
       {/* pool details */}
@@ -175,10 +198,13 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
           <Text fontWeight="600" fontSize="sm">
             APR
           </Text>
-          <Text fontWeight="700" fontSize="sm">
-            {/* TODO:: price */}
-            N/A
-          </Text>
+          <Box display="flex" alignItems="center">
+            <APRCalculator />
+            <Text fontWeight="700" fontSize="sm">
+              {/* TODO:: price */}
+              N/A
+            </Text>
+          </Box>
         </Stack>
 
         <Stack direction="row" justify="space-between">
@@ -215,9 +241,14 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             <Text fontWeight="700" fontSize="sm">
               Deposit
             </Text>
-            <Text fontWeight="700" fontSize="sm">
+            <Link
+              href={`https://quickswap.exchange/#/swap/${pool.lpAddress}`}
+              isExternal
+              fontWeight="700"
+              fontSize="sm"
+            >
               {pool.lpToken}
-            </Text>
+            </Link>
           </Stack>
 
           <Stack direction="row" justify="space-between">
@@ -225,12 +256,17 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Total Liquidity
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {displayCurrency(utils.formatEther(pool.totalStaked), true)} {pool.lpToken}
+              {displayCurrency(utils.formatEther(pool.totalStaked))}
             </Text>
           </Stack>
         </Stack>
 
-        <Link href="/" textDecoration="underline" fontWeight="700" fontSize="sm">
+        <Link
+          href={`https://polygonscan.com/token/${pool.lpAddress}`}
+          textDecoration="underline"
+          fontWeight="700"
+          fontSize="sm"
+        >
           View on Matic
         </Link>
       </Box>
