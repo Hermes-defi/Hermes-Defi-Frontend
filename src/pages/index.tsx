@@ -338,7 +338,7 @@ const DappStats = () => {
   return (
     <SimpleGrid columns={[2, 4]} spacing={[8, 14]}>
       <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">$7.27</Heading>
+        <Heading size="2xl">N/A</Heading>
         <Text color="gray.700" size="sm">
           $IRIS Price
         </Text>
