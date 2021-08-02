@@ -104,9 +104,11 @@ export async function getPresaleInfo(fenixContract: Contract, currentBlock: numb
 export async function getRedeemInfo(
   redeem: Contract,
   fenix: Contract,
+  iris: Contract,
   currentBlock: number,
   address: string
 ) {
+  const redeemBalance = await iris.balanceOf(defaultContracts.redeem.address);
   const redeemStartBlock = await redeem.startBlock();
   const timeToStartRedeem = redeemStartBlock.sub(currentBlock || 0).toNumber();
 
@@ -116,6 +118,7 @@ export async function getRedeemInfo(
   }
 
   return {
+    redeemBalance: utils.formatEther(redeemBalance),
     blockToRedeem: timeToStartRedeem,
     hasApprovedPool: !allowance.isZero(),
   };

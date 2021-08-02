@@ -1,6 +1,5 @@
 import React from "react";
 
-import defaultContracts from "config/contracts";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   approveFenixContract,
@@ -9,9 +8,9 @@ import {
   purchaseFenix,
   swapFenix,
 } from "web3-functions";
-import { useFenix, useRedeem } from "hooks/contracts";
+import { useFenix, useRedeem, useIrisToken } from "hooks/contracts";
 import { blockToTimestamp, displayCurrency } from "libs/utils";
-import { useCurrentBlockNumber, useTokenBalance } from "hooks/wallet";
+import { useCurrentBlockNumber } from "hooks/wallet";
 import { useActiveWeb3React } from "wallet";
 
 import { AppLayout } from "components/layout";
@@ -89,7 +88,7 @@ const PresaleCard = () => {
         <Box>
           {/* pool name */}
           <HStack mb={6}>
-            <Heading>Fenix sale contract</Heading>
+            <Heading>Fenix pre-sale contract</Heading>
           </HStack>
 
           {/* pool details */}
@@ -199,13 +198,13 @@ const RedeemCard = () => {
 
   const queryClient = useQueryClient();
   const { account } = useActiveWeb3React();
-  const fenixBalance = useTokenBalance(defaultContracts.fenixToken.address);
   const currentBlock = useCurrentBlockNumber();
   const redeemContract = useRedeem();
   const fenixContract = useFenix();
+  const irisContract = useIrisToken();
 
   const redeemInfo = useQuery(["redeem-info", currentBlock], async () => {
-    return getRedeemInfo(redeemContract, fenixContract, currentBlock, account);
+    return getRedeemInfo(redeemContract, fenixContract, irisContract, currentBlock, account);
   });
 
   const approveMutation = useMutation(
@@ -277,11 +276,13 @@ const RedeemCard = () => {
           <Stack>
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                Fenix Balance
+                Iris Balance
               </Text>
-              <Text fontWeight="700" fontSize="sm">
-                {displayCurrency(fenixBalance, true)}
-              </Text>
+              <Skeleton isLoaded={!!redeemInfo.data}>
+                <Text fontWeight="700" fontSize="sm">
+                  {displayCurrency(redeemInfo.data?.redeemBalance, true)} IRIS
+                </Text>
+              </Skeleton>
             </Stack>
 
             <Stack direction="row" justify="space-between">
@@ -384,9 +385,9 @@ const Page: React.FC = () => {
               <Link
                 isExternal
                 color="blue.600"
-                href="https://hermes-defi.gitbook.io/hermes-finance/launch/steps-to-follow"
+                href="https://hermes-defi.gitbook.io/hermes-finance/launch/pre-sale-fenix-2"
               >
-                https://hermes-defi.gitbook.io/hermes-finance/launch/steps-to-follow
+                https://hermes-defi.gitbook.io/hermes-finance/launch/pre-sale-fenix-2
               </Link>
             </Text>
 
