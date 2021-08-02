@@ -129,7 +129,7 @@ export function useFetchPoolData() {
         lpToken: symbol,
         totalStaked,
         decimals,
-        price,
+        // price,
         ...userData,
         apr,
         apy: "0",
