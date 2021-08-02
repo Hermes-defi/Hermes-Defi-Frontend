@@ -23,7 +23,6 @@ import {
 import { AiOutlineCalculator } from "react-icons/ai";
 import { UnlockButton } from "./unlock-wallet";
 import { ROIModal } from "./modals/roi-modal";
-import { utils } from "ethers";
 
 // Pool Actions
 const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
@@ -57,7 +56,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   const harvestMutation = useDepositIntoPool();
 
   if (!account) {
-    return <UnlockButton />;
+    return <UnlockButton boxShadow="2xl" />;
   }
 
   return (
@@ -167,26 +166,67 @@ const imageMapper = {
   usdc: "/usdc-logo.png",
   usdt: "/usdt-logo.png",
   dai: "/dai-logo.png",
+  "iris/wmatic": ["/hermes-logo-1.png", "/matic-logo.png"],
 };
 export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
+  const irisCard = pool.pid === 8 || pool.pid === 0;
   return (
-    <Box px={8} py={4} boxShadow="lg" rounded="3xl" bg="accent.500" color="white">
+    <Box
+      px={8}
+      py={4}
+      bg="accent.500"
+      boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
+      bgGradient={
+        irisCard ? `linear(to-t, accent.500, primary.300)` : `linear(to-t, accent.300, accent.500)`
+      }
+      rounded="3xl"
+      color="white"
+    >
       {/* pool name */}
-      <HStack align="center" mb={5} spacing={6}>
-        <Image rounded="24px" src={imageMapper[pool.lpToken.toLowerCase()]} boxSize={12} />
+      <HStack align="center" mb={5} spacing={2}>
+        {Array.isArray(imageMapper[pool.lpToken.toLowerCase()]) ? (
+          <Box w={12} h={12} pos="relative">
+            <Image
+              pos="absolute"
+              top="5px"
+              left="0"
+              rounded="12px"
+              src={imageMapper[pool.lpToken.toLowerCase()][0]}
+              boxSize={6}
+            />
+            <Image
+              pos="absolute"
+              bottom="-5px"
+              right="0px"
+              rounded="20px"
+              src={imageMapper[pool.lpToken.toLowerCase()][1]}
+              boxSize={10}
+            />
+          </Box>
+        ) : (
+          <Image
+            border="2px"
+            borderColor="white"
+            bg="white"
+            rounded="24px"
+            src={imageMapper[pool.lpToken.toLowerCase()]}
+            boxSize={12}
+          />
+        )}
+
         <Heading>{pool.lpToken}</Heading>
       </HStack>
 
       {/* pool badges */}
       <HStack mb={6} spacing={4}>
         {pool.multiplier && (
-          <Badge px={2} rounded="lg" colorScheme="gray">
+          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="gray">
             {pool.multiplier}x
           </Badge>
         )}
 
         {!pool.depositFees && (
-          <Badge px={2} rounded="lg" colorScheme="green">
+          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="green">
             No Fees
           </Badge>
         )}

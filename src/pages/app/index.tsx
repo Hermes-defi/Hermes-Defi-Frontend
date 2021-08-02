@@ -220,9 +220,10 @@ const Page: React.FC = () => {
 
             <Stack spacing={[5, 14]} direction={{ base: "column", md: "row" }}>
               <Stack
-                boxShadow="2xl"
+                boxShadow="rgb(190 157 65 / 45%) 0px 25px 50px -12px"
                 rounded="3xl"
                 bg="secondary.500"
+                bgGradient="linear(to-t, secondary.500, primary.200)"
                 color="white"
                 justify="space-between"
                 px={8}
@@ -256,9 +257,10 @@ const Page: React.FC = () => {
               </Stack>
 
               <Stack
-                boxShadow="2xl"
+                boxShadow="rgb(179 142 89 / 45%) 0px 25px 50px -12px"
                 rounded="3xl"
-                bg="#B38E5A"
+                bg="accent.500"
+                bgGradient="linear(to-t, accent.500, primary.200)"
                 color="white"
                 justify="space-between"
                 px={8}
@@ -302,7 +304,7 @@ const Page: React.FC = () => {
           <Stack mt={[6, 0]} direction={["column-reverse", "row"]} spacing={10}>
             <SimpleGrid columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
               <Box align={["left", "center"]}>
-                <Box pl={3} borderLeftWidth="3px" borderColor="red.400">
+                <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
                       {/* {displayCurrency(irisStats.data?.marketCap, true)} */}
@@ -316,7 +318,7 @@ const Page: React.FC = () => {
               </Box>
 
               <Box align={["left", "center"]}>
-                <Box pl={3} borderLeftWidth="3px" borderColor="blue.400">
+                <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
                       {displayCurrency(irisStats.data?.maximumSupply, true)}
@@ -329,7 +331,7 @@ const Page: React.FC = () => {
               </Box>
 
               <Box align={["left", "center"]}>
-                <Box pl={3} borderLeftWidth="3px" borderColor="yellow.400">
+                <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
                       {displayCurrency("0.4", true)}
@@ -342,7 +344,7 @@ const Page: React.FC = () => {
               </Box>
 
               <Box align={["left", "center"]}>
-                <Box pl={3} borderLeftWidth="3px" borderColor="teal.400">
+                <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
                       {displayCurrency(irisStats.data?.totalMinted, true)}
@@ -355,7 +357,7 @@ const Page: React.FC = () => {
               </Box>
 
               <Box align={["left", "center"]}>
-                <Box pl={3} borderLeftWidth="3px" borderColor="orange.400">
+                <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
                       {displayCurrency(irisStats.data?.circulatingSupply, true)}
@@ -368,7 +370,7 @@ const Page: React.FC = () => {
               </Box>
 
               <Box align={["left", "center"]}>
-                <Box pl={3} borderLeftWidth="3px" borderColor="red.300">
+                <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
                       {displayCurrency(irisStats.data?.totalBurned, true)}
@@ -393,7 +395,7 @@ const Page: React.FC = () => {
                 <div>
                   <Heading
                     borderBottomWidth="2px"
-                    borderColor="red.300"
+                    borderColor="primary.500"
                     mb={[0, 1]}
                     color="gray.600"
                     fontSize="xl"
@@ -412,7 +414,7 @@ const Page: React.FC = () => {
                   <Box align={["left", "center"]}>
                     <Heading
                       borderBottomWidth="2px"
-                      borderColor="red.300"
+                      borderColor="primary.500"
                       mb={1}
                       color="gray.600"
                       fontSize="xl"
@@ -430,7 +432,7 @@ const Page: React.FC = () => {
                   <Box align={["left", "center"]}>
                     <Heading
                       borderBottomWidth="2px"
-                      borderColor="red.300"
+                      borderColor="primary.500"
                       mb={1}
                       color="gray.600"
                       fontSize="xl"

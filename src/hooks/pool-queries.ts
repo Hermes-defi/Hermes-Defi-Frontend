@@ -3,7 +3,7 @@ import TOKENS from "config/tokens";
 
 import { BigNumber, utils } from "ethers";
 import { Token, WETH, Fetcher, Route } from "quickswap-sdk";
-import { PoolInfo } from "config/pools";
+import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 import { useQuery, UseQueryOptions } from "react-query";
@@ -41,9 +41,16 @@ export function useFetchPoolData() {
   const getLpContract = useERC20();
   const { account, library } = useActiveWeb3React();
 
+  const defaultData = [...farmsDefaultData, ...poolDefaultData];
   const fetchData = useCallback(
     async (pid: number) => {
-      const poolInfo = await masterChef.poolInfo(pid);
+      let poolInfo;
+      try {
+        poolInfo = await masterChef.poolInfo(pid);
+      } catch (e) {
+        //  if we can't fetch pool data then use the default data
+        return defaultData.find((d) => d.pid === pid);
+      }
 
       // PUBLIC DATA
       const multiplier = poolInfo.allocPoint.toString();
@@ -91,6 +98,7 @@ export function useFetchPoolData() {
         irisEarned: "0",
         lpStaked: "0",
       };
+
       if (account) {
         const irisEarned = utils.formatEther(await masterChef.pendingIris(pid, account));
         const userInfo = await masterChef.userInfo(pid, account);

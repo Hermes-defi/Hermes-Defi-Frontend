@@ -6,16 +6,6 @@ import { poolIds, farmIds } from "config/pools";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 // QUERIES
-async function getTokenPrice(token: Token) {
-  const USDC = new Token(DEFAULT_CHAIN_ID, TOKENS.usdc.address, TOKENS.usdc.decimals);
-  const USDCWETHPair = await Fetcher.fetchPairData(USDC, WETH[DEFAULT_CHAIN_ID]);
-  const tokenUSDCPair = await Fetcher.fetchPairData(token, USDC);
-
-  const route = new Route([USDCWETHPair, tokenUSDCPair], WETH[DEFAULT_CHAIN_ID]);
-
-  return route.midPrice.toSignificant(6);
-}
-
 export async function getPoolPublicData(pid: number, masterChef: Contract) {
   const poolInfo = await masterChef.poolInfo(pid);
 
@@ -29,80 +19,6 @@ export async function getPoolPublicData(pid: number, masterChef: Contract) {
     active,
     depositFees,
     lpAddress,
-  };
-}
-
-export async function getPoolLpInfo(lpContract: Contract) {
-  const symbol = await lpContract.symbol();
-  const decimals = await lpContract.decimals();
-  const totalStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
-
-  const token = new Token(DEFAULT_CHAIN_ID, lpContract.address, decimals);
-  const price = await getTokenPrice(token);
-
-  console.log(symbol, price);
-
-  return { token: symbol, totalStaked };
-}
-
-export async function getPoolUserInfo(
-  pid: number,
-  masterChef: Contract,
-  lpContract: Contract,
-  address?: string
-) {
-  const irisEarned = utils.formatEther(await masterChef.pendingIris(pid, address));
-  const userInfo = await masterChef.userInfo(pid, address);
-
-  const lpStaked = utils.formatEther(userInfo.amount);
-  const hasStaked = !(userInfo.amount as BigNumber).isZero();
-
-  const allowance: BigNumber = await lpContract.allowance(
-    address,
-    defaultContracts.masterChef.address
-  );
-  const hasApprovedPool = !allowance.isZero();
-
-  return {
-    hasStaked,
-    hasApprovedPool,
-    irisEarned,
-    lpStaked,
-  };
-}
-
-export async function getPoolData(
-  pid: number,
-  account: string,
-  masterChef: Contract,
-  getLpContract: (address: string) => Contract
-) {
-  const poolPublicData = await getPoolPublicData(pid, masterChef);
-  const lpContract = getLpContract(poolPublicData.lpAddress);
-  const poolLpData = await getPoolLpInfo(lpContract);
-
-  let poolUserData = {
-    hasStaked: false,
-    hasApprovedPool: false,
-    irisEarned: "0",
-    lpStaked: "0",
-  };
-  if (account) {
-    poolUserData = await getPoolUserInfo(pid, masterChef, lpContract, account);
-  }
-
-  // fetch apy/apr
-
-  return {
-    pid,
-    ...poolPublicData,
-    ...poolUserData,
-
-    lpToken: poolLpData.token,
-    totalStaked: poolLpData.totalStaked,
-
-    apr: 0,
-    apy: "0",
   };
 }
 

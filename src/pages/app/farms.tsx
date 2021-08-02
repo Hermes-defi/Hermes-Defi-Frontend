@@ -3,9 +3,6 @@ import React, { useReducer } from "react";
 import { useActiveWeb3React } from "wallet";
 import { useQuery } from "react-query";
 import { useToggle } from "react-use";
-import { useERC20, useMasterChef } from "hooks/contracts";
-
-import { getPoolData } from "web3-functions";
 
 import { farmIds, PoolInfo } from "config/pools";
 import { PoolsContext, poolsReducers } from "hooks/pools-reducer";
