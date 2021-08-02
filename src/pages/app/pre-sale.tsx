@@ -112,7 +112,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={!!presaleInfo.data?.fenixPrice}>
                 <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(presaleInfo.data?.fenixPrice, true)}
+                  {displayCurrency(presaleInfo.data?.fenixPrice, true)}:1
                 </Text>
               </Skeleton>
             </Stack>
