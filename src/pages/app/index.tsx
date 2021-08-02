@@ -104,12 +104,12 @@ function useHermesStats() {
   const masterChef = useMasterChef();
 
   const hermesStats = useQuery("hermesStats", async () => {
-    const farmLps = await Promise.all(
-      farmIds.map(async (pid) => {
-        const { lpAddress } = await getPoolPublicData(pid, masterChef);
-        return getLpContract(lpAddress);
-      })
-    );
+    // const farmLps = await Promise.all(
+    //   farmIds.map(async (pid) => {
+    //     const { lpAddress } = await getPoolPublicData(pid, masterChef);
+    //     return getLpContract(lpAddress);
+    //   })
+    // );
 
     const poolLps = await Promise.all(
       poolIds.map(async (pid) => {
@@ -118,7 +118,7 @@ function useHermesStats() {
       })
     );
 
-    const resp = await getFarmStats(poolLps, farmLps);
+    const resp = await getFarmStats(poolLps, []);
 
     return resp;
   });
