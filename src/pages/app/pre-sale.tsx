@@ -377,17 +377,18 @@ const Page: React.FC = () => {
               <Text fontSize="sm">
                 5. Farming starts, Thursday, August 12th 17.00 pm GMT+2. Block 17865880
               </Text>
-
-              <Text fontSize="sm">
-                For more details{" "}
-                <Link
-                  isExternal
-                  href="https://hermes-defi.gitbook.io/hermes-finance/launch/steps-to-follow"
-                >
-                  https://hermes-defi.gitbook.io/hermes-finance/launch/steps-to-follow
-                </Link>
-              </Text>
             </Stack>
+
+            <Text fontSize="sm">
+              For more details visit:{" "}
+              <Link
+                isExternal
+                color="blue.600"
+                href="https://hermes-defi.gitbook.io/hermes-finance/launch/steps-to-follow"
+              >
+                https://hermes-defi.gitbook.io/hermes-finance/launch/steps-to-follow
+              </Link>
+            </Text>
 
             <Text fontSize="sm">
               Blocks may be subject to change in order to comply with the timeline provided.
