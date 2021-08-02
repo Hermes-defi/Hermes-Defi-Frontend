@@ -25,6 +25,7 @@ import {
   Container,
   Heading,
   HStack,
+  Link,
   SimpleGrid,
   Skeleton,
   Stack,
@@ -375,6 +376,16 @@ const Page: React.FC = () => {
 
               <Text fontSize="sm">
                 5. Farming starts, Thursday, August 12th 17.00 pm GMT+2. Block 17865880
+              </Text>
+
+              <Text fontSize="sm">
+                For more details{" "}
+                <Link
+                  isExternal
+                  href="https://hermes-defi.gitbook.io/hermes-finance/launch/steps-to-follow"
+                >
+                  https://hermes-defi.gitbook.io/hermes-finance/launch/steps-to-follow
+                </Link>
               </Text>
             </Stack>
 
