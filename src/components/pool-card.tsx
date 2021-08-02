@@ -131,15 +131,17 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Harvest
             </Button>
 
-            <Button
-              isLoading={compoundMutation.isLoading}
-              onClick={() => compoundMutation.mutate({ pid: pool.pid, amount: pool.irisEarned })}
-              size="xs"
-              bg="gray.700"
-              _hover={{ bg: "gray.600" }}
-            >
-              Compound
-            </Button>
+            {pool.lpToken.toLowerCase() === "iris" && (
+              <Button
+                isLoading={compoundMutation.isLoading}
+                onClick={() => compoundMutation.mutate({ pid: pool.pid, amount: pool.irisEarned })}
+                size="xs"
+                bg="gray.700"
+                _hover={{ bg: "gray.600" }}
+              >
+                Compound
+              </Button>
+            )}
           </Stack>
         </Stack>
       </Box>
