@@ -107,7 +107,7 @@ const PresaleCard = () => {
 
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                Fenix price (in MATIC)
+                FENIX/MATIC Ratio
               </Text>
 
               <Skeleton isLoaded={!!presaleInfo.data?.fenixPrice}>
