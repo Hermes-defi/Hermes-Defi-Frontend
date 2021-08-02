@@ -1,7 +1,5 @@
 import React from "react";
 
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import defaultContracts from "config/contracts";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
@@ -34,8 +32,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-
-dayjs.extend(relativeTime);
+import { useTimer } from "components/timers";
 
 const PresaleCard = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -71,6 +68,9 @@ const PresaleCard = () => {
       },
     }
   );
+
+  const presaleStartTimer = useTimer(blockToTimestamp(presaleInfo.data?.presaleStartBlock || 0));
+  const presaleEndsTimer = useTimer(blockToTimestamp(presaleInfo.data?.presaleEndBlock || 0));
 
   return (
     <>
@@ -144,9 +144,9 @@ const PresaleCard = () => {
               <Text fontWeight="600" fontSize="sm">
                 Presale starts
               </Text>
-              <Skeleton isLoaded={presaleInfo.data?.presaleStartBlock !== undefined}>
+              <Skeleton isLoaded={!!presaleStartTimer}>
                 <Text fontWeight="700" fontSize="sm">
-                  {blockToTimestamp(presaleInfo.data?.presaleStartBlock || 0).fromNow()}
+                  {presaleStartTimer}
                 </Text>
               </Skeleton>
             </Stack>
@@ -155,9 +155,9 @@ const PresaleCard = () => {
               <Text fontWeight="600" fontSize="sm">
                 Presale ends
               </Text>
-              <Skeleton isLoaded={presaleInfo.data?.presaleEndBlock !== undefined}>
+              <Skeleton isLoaded={!!presaleEndsTimer}>
                 <Text fontWeight="700" fontSize="sm">
-                  {blockToTimestamp(presaleInfo.data?.presaleEndBlock || 0).fromNow()}
+                  {presaleEndsTimer}
                 </Text>
               </Skeleton>
             </Stack>
@@ -252,6 +252,8 @@ const RedeemCard = () => {
     },
   });
 
+  const redeemTimer = useTimer(blockToTimestamp(redeemInfo.data?.blockToRedeem || 0));
+
   return (
     <>
       <Stack
@@ -294,9 +296,9 @@ const RedeemCard = () => {
               <Text fontWeight="600" fontSize="sm">
                 Redeem starts
               </Text>
-              <Skeleton isLoaded={redeemInfo.data?.blockToRedeem !== undefined}>
+              <Skeleton isLoaded={redeemTimer}>
                 <Text fontWeight="700" fontSize="sm">
-                  {blockToTimestamp(redeemInfo.data?.blockToRedeem || 0).fromNow()}
+                  {redeemTimer}
                 </Text>
               </Skeleton>
             </Stack>
@@ -350,6 +352,51 @@ const Page: React.FC = () => {
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>
         <Container align="center" maxWidth="container.lg">
+          <Stack mb={7} spacing={5}>
+            <Heading fontSize="3xl">Hermes Timeline</Heading>
+
+            <Stack>
+              <Text fontSize="sm">
+                1. Pre-sale starts, Monday, August 2nd 17.00 pm GMT+2. Block 134590232323
+              </Text>
+
+              <Text fontSize="sm">
+                2. Pre-sale ends, Thursday, August 5th 17.00 pm GMT+2. Block 134590232323
+              </Text>
+
+              <Text fontSize="sm">
+                3. Liquidity added on Quickswap, Saturday, August 7th 17.00 pm GMT+2. Block
+                134590232323
+              </Text>
+
+              <Text fontSize="sm">
+                4. Swap opens (swap FENIX to IRIS ), Saturday, August 7th 19.00 pm GMT+2. Block
+                134590232323
+              </Text>
+
+              <Text fontSize="sm">
+                5. Farming starts, Monday, August 9th 17.00 pm GMT+2. Block 134590232323
+              </Text>
+            </Stack>
+
+            <Text fontSize="sm">
+              Blocks may be subject to change in order to comply with the timeline provided.
+              However, the timetable is approximate
+            </Text>
+
+            <Stack>
+              <Heading fontSize="xl">How To</Heading>
+
+              <Text fontSize="sm">
+                1. Purchase FENIX with MATIC using the FENIX token Pre-sale Contract
+              </Text>
+
+              <Text fontSize="sm">
+                2. Swap FENIX for IRIS using the Reedem Contract (Swap Contract)
+              </Text>
+            </Stack>
+          </Stack>
+
           <SimpleGrid spacing="80px" alignItems="center" columns={[1, 2]}>
             <PresaleCard />
             <RedeemCard />

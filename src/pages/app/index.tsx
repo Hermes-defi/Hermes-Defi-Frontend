@@ -7,21 +7,23 @@ import {
   getIrisStat,
   getIrisToHarvest,
   getPoolPublicData,
+  getPresaleInfo,
   harvestFromAll,
 } from "web3-functions";
-import { useERC20, useIrisToken, useMasterChef } from "hooks/contracts";
+import { useERC20, useFenix, useIrisToken, useMasterChef, useRedeem } from "hooks/contracts";
 import { addTokenToWallet } from "wallet/utils";
 import defaultContracts from "config/contracts";
 import { farmIds, poolIds } from "config/pools";
 
 import { utils } from "ethers";
-import { displayCurrency } from "libs/utils";
+import { blockToTimestamp, displayCurrency } from "libs/utils";
 
 import { AppLayout } from "components/layout";
 import {
   Box,
   Button,
   Center,
+  Container,
   Heading,
   Icon,
   Image,
@@ -36,6 +38,8 @@ import {
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { useCurrentBlockNumber } from "hooks/wallet";
+import { useTimer } from "components/timers";
 
 const data = [
   { name: "JAN", tvl: 0 },
@@ -122,16 +126,42 @@ function useHermesStats() {
   return hermesStats;
 }
 
+function usePresaleInfo() {
+  const currentBlock = useCurrentBlockNumber();
+  const fenixContract = useFenix();
+
+  const presaleInfo = useQuery(["presale-info", currentBlock], async () => {
+    return getPresaleInfo(fenixContract, currentBlock);
+  });
+
+  const presaleStartTimer = useTimer(
+    blockToTimestamp(presaleInfo.data?.presaleStartBlock || 0),
+    "D [days], H [hours], mm [minutes], ss [seconds]"
+  );
+
+  return presaleStartTimer;
+}
+
 const Page: React.FC = () => {
   const irisStats = useIrisStats();
   const hermesStats = useHermesStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
+  const presaleStartTime = usePresaleInfo();
 
   const harvestAll = useHarvestAll();
 
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
+        {presaleStartTime && (
+          <Container maxW="container.md">
+            <Stack direction="row" justify="space-between">
+              <Heading size="lg">Pre-sale starts in</Heading>
+              <Text>{presaleStartTime}</Text>
+            </Stack>
+          </Container>
+        )}
+
         <Box bg="white" rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color="gray.600" fontSize="xl">
             Farms and Pools
