@@ -27,6 +27,7 @@ function GlobalHead() {
     <>
       <Head>
         <title>Hermes DeFi</title>
+        <link rel="shortcut icon" href="/favicon.png" />
       </Head>
 
       {/* online fonts */}
