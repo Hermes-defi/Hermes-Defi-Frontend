@@ -367,17 +367,17 @@ const Page: React.FC = () => {
               </Text>
 
               <Text fontSize="sm">
-                3. Liquidity added on Quickswap, Wednesday, August 11th 17.00 pm GMT+2 (aprox.).
+                3. Liquidity added on Quickswap, Wednesday, August 11th 17.00 pm GMT+2 (approx.).
                 Block 17877325
               </Text>
 
               <Text fontSize="sm">
-                4. Swap opens (swap FENIX to IRIS ), Wednesday August 11th 19.00 pm GMT+2 (aprox.).
+                4. Swap opens (swap FENIX to IRIS ), Wednesday August 11th 19.00 pm GMT+2 (approx.).
                 Block 17880455
               </Text>
 
               <Text fontSize="sm">
-                5. Farming starts (Masterchef), Friday August 13th 17.00 pm GMT+2 (aprox.). Block
+                5. Farming starts (Masterchef), Friday August 13th 17.00 pm GMT+2 (approx.). Block
                 17952455
               </Text>
             </Stack>
