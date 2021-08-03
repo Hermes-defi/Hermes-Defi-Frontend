@@ -120,29 +120,33 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             {displayCurrency(pool.irisEarned, true)}
           </Text>
 
-          <Stack direction="row">
-            <Button
-              isLoading={harvestMutation.isLoading}
-              onClick={() => harvestMutation.mutate({ pid: pool.pid, amount: "0" })}
-              size="xs"
-              bg="gray.700"
-              _hover={{ bg: "gray.600" }}
-            >
-              Harvest
-            </Button>
-
-            {pool.lpToken.toLowerCase() === "iris" && (
+          {!pool.hasApprovedPool && (
+            <Stack direction="row">
               <Button
-                isLoading={compoundMutation.isLoading}
-                onClick={() => compoundMutation.mutate({ pid: pool.pid, amount: pool.irisEarned })}
+                isLoading={harvestMutation.isLoading}
+                onClick={() => harvestMutation.mutate({ pid: pool.pid, amount: "0" })}
                 size="xs"
                 bg="gray.700"
                 _hover={{ bg: "gray.600" }}
               >
-                Compound
+                Harvest
               </Button>
-            )}
-          </Stack>
+
+              {pool.lpToken.toLowerCase() === "iris" && (
+                <Button
+                  isLoading={compoundMutation.isLoading}
+                  onClick={() =>
+                    compoundMutation.mutate({ pid: pool.pid, amount: pool.irisEarned })
+                  }
+                  size="xs"
+                  bg="gray.700"
+                  _hover={{ bg: "gray.600" }}
+                >
+                  Compound
+                </Button>
+              )}
+            </Stack>
+          )}
         </Stack>
       </Box>
     </Stack>
@@ -179,9 +183,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={
-        irisCard
-          ? `linear(180deg, primary.300 54%, accent.500 97%)`
-          : `linear(to-t, accent.300, accent.500)`
+        irisCard ? `linear(to-b, primary.300, accent.500)` : `linear(to-t, accent.300, accent.500)`
       }
       rounded="3xl"
       color="white"
