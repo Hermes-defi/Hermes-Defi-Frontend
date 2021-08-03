@@ -359,11 +359,11 @@ const Page: React.FC = () => {
 
             <Stack>
               <Text fontSize="sm">
-                1. Pre-sale starts, Friday August 6th 17.00 pm (approx.) GMT+2. Block 17689500
+                1. Pre-sale starts, Friday August 6th 17.00 pm GMT+2 (approx.). Block 17689500
               </Text>
 
               <Text fontSize="sm">
-                2. Pre-sale ends, Monday August 9th 17.00 pm (approx.) GMT+2. Block 17802195
+                2. Pre-sale ends, Monday August 9th 17.00 pm GMT+2 (approx.). Block 17802195
               </Text>
 
               <Text fontSize="sm">
