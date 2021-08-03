@@ -359,24 +359,25 @@ const Page: React.FC = () => {
 
             <Stack>
               <Text fontSize="sm">
-                1. Pre-sale starts, Thursday, August 5th 17.00 pm GMT+2. Block 17633130
+                1. Pre-sale starts, Friday August 6th 17.00 pm GMT+2. Block 17689500
               </Text>
 
               <Text fontSize="sm">
-                2. Pre-sale ends, Sunday, August 8th 17.00 pm GMT+2. Block 17732880
+                2. Pre-sale ends, Monday August 9th 17.00 pm GMT+2. Block 17802195
               </Text>
 
               <Text fontSize="sm">
-                3. Liquidity added on Quickswap, Tuesday, August 10th 17.00 pm GMT+2. Block 17799380
+                3. Liquidity added on Quickswap, Wednesday, August 11th 17.00 pm GMT+2. Block
+                17877325
               </Text>
 
               <Text fontSize="sm">
-                4. Swap opens (swap FENIX to IRIS ), Tuesday, August 10th 19.00 pm GMT+2. Block
-                17802980
+                4. Swap opens (swap FENIX to IRIS ) (Reedem), Wednesday August 11th 19.00 pm GMT+2.
+                Block 17880455
               </Text>
 
               <Text fontSize="sm">
-                5. Farming starts, Thursday, August 12th 17.00 pm GMT+2. Block 17865880
+                5. Farming starts (Masterchef), Friday August 13th 17.00 pm GMT+2. Block 17952455
               </Text>
             </Stack>
 

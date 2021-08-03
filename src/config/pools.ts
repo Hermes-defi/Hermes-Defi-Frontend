@@ -7,6 +7,7 @@ export type PoolInfo = {
   active: boolean;
   multiplier: string;
   depositFees: number;
+  farmDx?: string;
 
   // lp data
   lpToken: string;
@@ -46,6 +47,7 @@ export const farmsDefaultData = {
       active: true,
       multiplier: "80",
       depositFees: 0,
+      farmDx: "Quickswap",
       lpToken: "IRIS/WMATIC",
       lpAddress: constants.AddressZero,
       price: "0",

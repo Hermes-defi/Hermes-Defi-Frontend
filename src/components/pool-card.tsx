@@ -179,7 +179,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={
-        irisCard ? `linear(to-t, accent.500, primary.300)` : `linear(to-t, accent.300, accent.500)`
+        irisCard ? `linear(to-b, primary.300, accent.500)` : `linear(to-t, accent.300, accent.500)`
       }
       rounded="3xl"
       color="white"
@@ -220,7 +220,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
       </HStack>
 
       {/* pool badges */}
-      <HStack mb={6} spacing={4}>
+      <HStack mb={6} spacing={2}>
         {pool.multiplier && (
           <Badge boxShadow="md" px={2} rounded="lg" colorScheme="gray">
             {pool.multiplier}x
@@ -230,6 +230,11 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
         {!pool.depositFees && (
           <Badge boxShadow="md" px={2} rounded="lg" colorScheme="green">
             No Fees
+          </Badge>
+        )}
+        {pool.farmDx && (
+          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="blue">
+            {pool.farmDx}
           </Badge>
         )}
       </HStack>
