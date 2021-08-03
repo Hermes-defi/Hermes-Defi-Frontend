@@ -325,7 +325,8 @@ const Navigation = () => {
 
             {/* token price */}
             <Badge colorScheme="secondary" fontSize="lg" size="lg" py={2} px={10} rounded="xl">
-              $10.46
+              {/* TODO:: PRICE */}
+              {displayCurrency(0)}
             </Badge>
 
             <Stack

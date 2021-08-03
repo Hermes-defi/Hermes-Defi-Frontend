@@ -44,7 +44,7 @@ export const farmsDefaultData = {
     {
       pid: 8,
       active: true,
-      multiplier: "0",
+      multiplier: "80",
       depositFees: 0,
       lpToken: "IRIS/WMATIC",
       lpAddress: constants.AddressZero,
@@ -52,6 +52,8 @@ export const farmsDefaultData = {
       totalStaked: 0,
       hasStaked: false,
       hasApprovedPool: false,
+      irisEarned: "0",
+      lpStaked: "0",
     },
   ],
   80001: [],

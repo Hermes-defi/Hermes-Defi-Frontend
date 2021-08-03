@@ -300,7 +300,7 @@ function Header() {
           <NextLink href="https://hermes-defi.gitbook.io/hermes-finance/bonus/litepaper" passHref>
             <a>
               <Button isFullWidth variant="outline" colorScheme="secondary" size="lg">
-                Lite Paper
+                Litepaper
               </Button>
             </a>
           </NextLink>

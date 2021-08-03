@@ -33,5 +33,5 @@ export function displayCurrency(number: number | string, isToken?: boolean, abbr
 }
 
 export function blockToTimestamp(block: number) {
-  return dayjs().set("s", block * 2);
+  return dayjs().set("s", block * 2.3);
 }
