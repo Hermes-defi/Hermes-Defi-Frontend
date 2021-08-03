@@ -120,7 +120,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             {displayCurrency(pool.irisEarned, true)}
           </Text>
 
-          {!pool.hasApprovedPool && (
+          {pool.hasApprovedPool && (
             <Stack direction="row">
               <Button
                 isLoading={harvestMutation.isLoading}
