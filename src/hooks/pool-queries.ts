@@ -1,8 +1,15 @@
 import defaultContracts from "config/contracts";
-import TOKENS from "config/tokens";
-
+import defaultTokens from "config/tokens";
 import { BigNumber, utils } from "ethers";
-import { Token, WETH, Fetcher, Route } from "quickswap-sdk";
+import {
+  Token,
+  WETH as WMATIC,
+  Fetcher,
+  Route,
+  Trade,
+  TokenAmount,
+  TradeType,
+} from "quickswap-sdk";
 import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
@@ -12,25 +19,77 @@ import { useERC20, useMasterChef } from "./contracts";
 import { useCallback } from "react";
 import { getPoolApr } from "web3-functions/utils";
 
-export function useTokenPrice(tokenAddress: string, decimals = 18, options: UseQueryOptions = {}) {
+async function fetchPrice(
+  tokenAddress: string,
+  tokenDecimal: number,
+  tokenSymbol: string,
+  library: any
+) {
+  const usdc = new Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.usdc.address,
+    defaultTokens.usdc.decimals,
+    "USDC"
+  );
+  const token = new Token(DEFAULT_CHAIN_ID, tokenAddress, tokenDecimal, tokenSymbol);
+
+  let route;
+  if (token.symbol !== "WMATIC") {
+    // fetch matic to usdc pair
+    const MaticToUSDCPair = await Fetcher.fetchPairData(WMATIC[DEFAULT_CHAIN_ID], usdc, library);
+
+    // fetch the token to matic pair info
+    const tokenToMatic = await Fetcher.fetchPairData(token, WMATIC[DEFAULT_CHAIN_ID], library);
+
+    // find a route
+    route = new Route([MaticToUSDCPair, tokenToMatic], usdc);
+  } else {
+    // use only the MATIC-USDC pair to get the price
+    const pair = await Fetcher.fetchPairData(token, usdc, library);
+    route = new Route([pair], usdc);
+  }
+
+  // const trade = new Trade(
+  //   route,
+  //   new TokenAmount(usdc, utils.parseUnits("1", 6).toString()),
+  //   TradeType.EXACT_INPUT
+  // );
+
+  // console.log({
+  //   tokenSymbol: tokenSymbol,
+  //   price: route.midPrice.toSignificant(6),
+  //   priceInvert: route.midPrice.invert().toSignificant(6),
+  // });
+
+  return route.midPrice.toSignificant(6);
+}
+
+export function useTokenPrice(
+  tokenAddress: string,
+  decimals = 18,
+  symbol?: string,
+  options: UseQueryOptions = {}
+) {
   const { library } = useActiveWeb3React();
 
   return useQuery(
     ["token-price", tokenAddress, decimals],
     async () => {
+      let price;
+
       try {
-        const token = new Token(DEFAULT_CHAIN_ID, tokenAddress, decimals);
-        const USDC = new Token(DEFAULT_CHAIN_ID, TOKENS.usdc.address, TOKENS.usdc.decimals);
-
-        const USDCWETHPair = await Fetcher.fetchPairData(USDC, WETH[DEFAULT_CHAIN_ID], library);
-        const tokenUSDCPair = await Fetcher.fetchPairData(token, USDC, library);
-
-        const route = new Route([USDCWETHPair, tokenUSDCPair], WETH[DEFAULT_CHAIN_ID]);
-
-        return route.midPrice.toSignificant(6);
+        price = await fetchPrice(tokenAddress, decimals, symbol, library);
       } catch (e) {
-        return "0";
+        console.log("error getting price", { symbol, tokenAddress }, e.message);
+
+        if (e.message.includes("ADDRESSES")) {
+          price = "1";
+        }
+
+        price = "0";
       }
+
+      return price;
     },
     options
   );
@@ -70,14 +129,7 @@ export function useFetchPoolData() {
       let price;
 
       try {
-        const token = new Token(DEFAULT_CHAIN_ID, lpAddress, decimals);
-        const USDC = new Token(DEFAULT_CHAIN_ID, TOKENS.usdc.address, TOKENS.usdc.decimals);
-
-        const USDCWETHPair = await Fetcher.fetchPairData(USDC, WETH[DEFAULT_CHAIN_ID], library);
-        const tokenUSDCPair = await Fetcher.fetchPairData(token, USDC, library);
-
-        const route = new Route([USDCWETHPair, tokenUSDCPair], WETH[DEFAULT_CHAIN_ID]);
-        price = route.midPrice.toSignificant(6);
+        price = await fetchPrice(lpAddress, decimals, symbol, library);
       } catch (e) {
         console.log("error getting price", { symbol, lpAddress }, e.message);
 
