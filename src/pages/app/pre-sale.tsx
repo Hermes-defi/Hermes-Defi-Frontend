@@ -359,25 +359,26 @@ const Page: React.FC = () => {
 
             <Stack>
               <Text fontSize="sm">
-                1. Pre-sale starts, Friday August 6th 17.00 pm GMT+2. Block 17689500
+                1. Pre-sale starts, Friday August 6th 17.00 pm (aprox.) GMT+2. Block 17689500
               </Text>
 
               <Text fontSize="sm">
-                2. Pre-sale ends, Monday August 9th 17.00 pm GMT+2. Block 17802195
+                2. Pre-sale ends, Monday August 9th 17.00 pm GMT+2 (aprox.). Block 17802195
               </Text>
 
               <Text fontSize="sm">
-                3. Liquidity added on Quickswap, Wednesday, August 11th 17.00 pm GMT+2. Block
-                17877325
+                3. Liquidity added on Quickswap, Wednesday, August 11th 17.00 pm GMT+2 (aprox.).
+                Block 17877325
               </Text>
 
               <Text fontSize="sm">
-                4. Swap opens (swap FENIX to IRIS ) (Reedem), Wednesday August 11th 19.00 pm GMT+2.
+                4. Swap opens (swap FENIX to IRIS ), Wednesday August 11th 19.00 pm GMT+2 (aprox.).
                 Block 17880455
               </Text>
 
               <Text fontSize="sm">
-                5. Farming starts (Masterchef), Friday August 13th 17.00 pm GMT+2. Block 17952455
+                5. Farming starts (Masterchef), Friday August 13th 17.00 pm GMT+2 (aprox.). Block
+                17952455
               </Text>
             </Stack>
 
@@ -393,8 +394,8 @@ const Page: React.FC = () => {
             </Text>
 
             <Text fontSize="sm">
-              Blocks may be subject to change in order to comply with the timeline provided.
-              However, the timetable is approximate
+              The volatility of the blocks in Polygon is very high, so all schedules are estimated.
+              We recommend reviewing them to check the times.
             </Text>
 
             <Stack>

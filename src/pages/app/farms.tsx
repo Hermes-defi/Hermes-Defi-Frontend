@@ -8,6 +8,7 @@ import { farmIds, PoolInfo } from "config/pools";
 import { PoolsContext, poolsReducers } from "hooks/pools-reducer";
 
 import {
+  Box,
   Button,
   Container,
   Flex,
@@ -16,6 +17,7 @@ import {
   Heading,
   HStack,
   SimpleGrid,
+  Spacer,
   Spinner,
   Stack,
   StackDivider,
@@ -114,11 +116,13 @@ const Page: React.FC = () => {
               </Flex>
             )}
 
-            <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
+            <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
               {pools.map((pool) => (
-                <PoolCard pool={pool} key={pool.pid} />
+                <Box pt="40px">
+                  <PoolCard pool={pool} key={pool.pid} />
+                </Box>
               ))}
-            </SimpleGrid>
+            </Stack>
           </Container>
         </Stack>
       </AppLayout>
