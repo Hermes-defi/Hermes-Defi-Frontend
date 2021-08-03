@@ -61,7 +61,7 @@ async function fetchPrice(
   //   priceInvert: route.midPrice.invert().toSignificant(6),
   // });
 
-  return route.midPrice.toSignificant(6);
+  return route.midPrice.invert().toSignificant(6);
 }
 
 export function useTokenPrice(
