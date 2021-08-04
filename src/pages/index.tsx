@@ -284,7 +284,7 @@ function Header() {
           </Heading>
 
           <Text color={"gray.500"}>
-            Safe, transparent and fast. A plataform at the level of the gods.
+            Safe, transparent and fast. A platform at the level of the gods.
           </Text>
         </Stack>
 
@@ -457,7 +457,7 @@ function Security() {
           </Heading>
         </Flex>
 
-        <Flex
+        {/* <Flex
           as={Link}
           isExternal
           href="https://hermes-defi.gitbook.io/hermes-finance/security/audits"
@@ -471,7 +471,7 @@ function Security() {
           textAlign="center"
         >
           <Image size="lg" src="./rugdoc.svg" alt="Rugdoc Logo" />
-        </Flex>
+        </Flex> */}
       </Stack>
 
       <Link isExternal href="https://hermes-defi.gitbook.io/hermes-finance/security/audits">
