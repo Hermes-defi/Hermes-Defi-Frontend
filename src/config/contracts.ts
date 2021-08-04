@@ -19,35 +19,35 @@ export const erc20: (address: string) => ContractInfo = (address: string) => ({
 export default {
   referral: {
     address: {
-      137: "0x8a94E9Df811A1Dad50872C5d2d446ff79a566398",
+      137: "0x24F3282A439EBd13a4F24fE8756a1d6aaC65570F",
       80001: "0x8295CCCA26e2e4396061515B0b72731BDf5796C1",
     }[DEFAULT_CHAIN_ID],
     abi: ReferralABI,
   },
   masterChef: {
     address: {
-      137: "0x50DAedb6cF1b2C912e87dF28a5B9562Db984Fb92",
+      137: "0xF2a544C1Ee9B21D6B068F638B5fB4835D8efBA3D",
       80001: "0xA3dc6b430A90D61e7f1C7800d43Bd67b8a06D597",
     }[DEFAULT_CHAIN_ID],
     abi: MasterChefABI,
   },
   irisToken: {
     address: {
-      137: "0x4C570E70010a5D006271a99706E0b0835Ed61745",
+      137: "0x86F74E2d74cC4eea54b744134Af586c9E11B0Bb3",
       80001: "0x5EB25908Abf8764CB101bE704d6Bb4a8d5254f72",
     }[DEFAULT_CHAIN_ID],
     abi: IrisTokenABI,
   },
   fenixToken: {
     address: {
-      137: "0x855CF7E346647da1C6dc32b53B173BDa232c436E",
+      137: "0x41013D1521B20CA67397e7c65256bfb2975FAAc8",
       80001: "0x807Be9676f72390bCaB19f914f770d9713a2d9e0",
     }[DEFAULT_CHAIN_ID],
     abi: FenixABI,
   },
   redeem: {
     address: {
-      137: "0x8e1f5EE6D1D067d7f48B76BB4FA0D92a73C92Aa8",
+      137: "0x0C72A971AB0D85689bDd95810BE54dD0C3aB3Ab3",
       80001: "0xC481Cc926522A14Ed21077B8eEd85c7C0947F62e",
     }[DEFAULT_CHAIN_ID],
     abi: RedeemABI,
