@@ -151,14 +151,20 @@ export async function depositIntoPool(
   masterChef: Contract,
   pid: number,
   amount: string,
-  referral: string
+  referral: string,
+  decimals: number
 ) {
-  const tx = await masterChef.deposit(pid, utils.parseEther(amount), referral);
+  const tx = await masterChef.deposit(pid, utils.parseUnits(amount, decimals), referral);
   await tx.wait();
 }
 
-export async function withdrawFromPool(masterChef: Contract, pid: number, amount: string) {
-  const tx = await masterChef.withdraw(pid, utils.parseEther(amount));
+export async function withdrawFromPool(
+  masterChef: Contract,
+  pid: number,
+  amount: string,
+  decimals: number
+) {
+  const tx = await masterChef.withdraw(pid, utils.parseUnits(amount, decimals));
   await tx.wait();
 }
 

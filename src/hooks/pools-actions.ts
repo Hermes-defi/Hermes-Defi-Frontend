@@ -54,7 +54,7 @@ export function useDepositIntoPool() {
   const masterChef = useMasterChef();
 
   const { account } = useActiveWeb3React();
-  const [_, dispatch] = usePoolInfo();
+  const [pools, dispatch] = usePoolInfo();
 
   const referrer = getReferralAddress();
   const getPoolData = useFetchPoolData();
@@ -63,7 +63,14 @@ export function useDepositIntoPool() {
     async ({ pid, amount }: { pid: number; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
-      await depositIntoPool(masterChef, pid, amount, referrer || constants.AddressZero);
+      const pool = pools.find((p) => p.pid === pid);
+      await depositIntoPool(
+        masterChef,
+        pid,
+        amount,
+        referrer || constants.AddressZero,
+        pool.decimals
+      );
 
       // fetch new pool data
       const data = await getPoolData(pid);
@@ -95,7 +102,7 @@ export function useDepositIntoPool() {
 
 export function useWithdraw() {
   const { account } = useActiveWeb3React();
-  const [_, dispatch] = usePoolInfo();
+  const [pools, dispatch] = usePoolInfo();
   const getPoolData = useFetchPoolData();
   const masterChef = useMasterChef();
   const toast = useToast();
@@ -103,7 +110,9 @@ export function useWithdraw() {
   const withdrawMutation = useMutation(
     async ({ pid, amount }: { pid: number; amount: string }) => {
       if (!account) throw new Error("No connected account");
-      await withdrawFromPool(masterChef, pid, amount);
+
+      const pool = pools.find((p) => p.pid === pid);
+      await withdrawFromPool(masterChef, pid, amount, pool.decimals);
 
       // fetch new pool data
       const data = await getPoolData(pid);
