@@ -121,8 +121,9 @@ export function useFetchPoolData() {
       const lpContract = getLpContract(lpAddress);
       const symbol = await lpContract.symbol();
       const decimals = await lpContract.decimals();
-      const totalStaked = utils.formatEther(
-        await lpContract.balanceOf(defaultContracts.masterChef.address)
+      const totalStaked = utils.formatUnits(
+        await lpContract.balanceOf(defaultContracts.masterChef.address),
+        decimals
       );
 
       // TOKEN PRICE
