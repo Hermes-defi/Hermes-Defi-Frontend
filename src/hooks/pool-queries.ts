@@ -155,7 +155,7 @@ export function useFetchPoolData() {
         const irisEarned = utils.formatEther(await masterChef.pendingIris(pid, account));
         const userInfo = await masterChef.userInfo(pid, account);
 
-        const lpStaked = utils.formatEther(userInfo.amount);
+        const lpStaked = utils.formatUnits(userInfo.amount, decimals);
         const hasStaked = !(userInfo.amount as BigNumber).isZero();
 
         const allowance: BigNumber = await lpContract.allowance(

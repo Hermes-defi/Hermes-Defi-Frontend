@@ -143,8 +143,8 @@ export async function approveFenixContract(lpContract: Contract) {
   await approveTx.wait();
 }
 
-export async function getTokenBalance(token: Contract, address: string) {
-  return utils.formatEther(await token.balanceOf(address));
+export async function getTokenBalance(token: Contract, address: string, decimals = 18) {
+  return utils.formatUnits(await token.balanceOf(address), decimals);
 }
 
 export async function depositIntoPool(

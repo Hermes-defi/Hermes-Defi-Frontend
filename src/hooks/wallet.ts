@@ -5,14 +5,14 @@ import { useActiveWeb3React } from "wallet";
 import { getTokenBalance } from "web3-functions";
 import { useERC20 } from "./contracts";
 
-export function useTokenBalance(tokenAddress: string) {
+export function useTokenBalance(tokenAddress: string, tokenDecimals = 18) {
   const { account } = useActiveWeb3React();
   const getERC20Contract = useERC20();
 
   const balance = useQuery(["tokenBalance", account, tokenAddress], async () => {
     if (!account) return null;
     const tokenContract = getERC20Contract(tokenAddress);
-    return getTokenBalance(tokenContract, account);
+    return getTokenBalance(tokenContract, account, tokenDecimals);
   });
 
   return balance.data;

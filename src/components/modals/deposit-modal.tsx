@@ -21,7 +21,7 @@ type Props = { isOpen: boolean; onClose: () => void; pool: PoolInfo };
 
 export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
   const depositMutation = useDepositIntoPool();
-  const balance = useTokenBalance(pool.lpAddress);
+  const balance = useTokenBalance(pool.lpAddress, pool.decimals);
   const [amount, setAmount] = useState("");
 
   return (
