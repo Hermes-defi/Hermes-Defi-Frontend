@@ -49,15 +49,12 @@ export function useApprovePool() {
 }
 
 export function useDepositIntoPool() {
-  const toast = useToast();
-
-  const masterChef = useMasterChef();
-
+  const referrer = getReferralAddress();
   const { account } = useActiveWeb3React();
   const [pools, dispatch] = usePoolInfo();
-
-  const referrer = getReferralAddress();
   const getPoolData = useFetchPoolData();
+  const masterChef = useMasterChef();
+  const toast = useToast();
 
   const depositMutation = useMutation(
     async ({ pid, amount }: { pid: number; amount: string }) => {
