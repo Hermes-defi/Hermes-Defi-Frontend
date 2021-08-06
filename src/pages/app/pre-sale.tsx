@@ -112,7 +112,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={!!presaleInfo.data?.fenixPrice}>
                 <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(presaleInfo.data?.fenixPrice, true)}:1
+                  {displayCurrency(presaleInfo.data?.fenixPrice, true)} : 1
                 </Text>
               </Skeleton>
             </Stack>
@@ -290,7 +290,7 @@ const RedeemCard = () => {
                 Rate (FENIX:IRIS)
               </Text>
               <Text fontWeight="700" fontSize="sm">
-                1:1
+                1 : 1
               </Text>
             </Stack>
 

@@ -61,8 +61,23 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Info",
-    isExternal: true,
-    href: "https://vfat.tools/polygon/hermes/",
+    children: [
+      {
+        label: "Vfat-tools",
+        isExternal: true,
+        href: "https://vfat.tools/polygon/hermes/",
+      },
+      {
+        label: "Ape O'Clock",
+        isExternal: true,
+        href: "https://www.apeoclock.com/launch/hermes-defi-presale/",
+      },
+      {
+        label: "Gemtools",
+        isExternal: true,
+        href: "https://gemtools.netlify.app/",
+      },
+    ],
   },
 ];
 
@@ -161,7 +176,7 @@ function Navigation() {
             <Stack direction={"row"} spacing={4}>
               {NAV_ITEMS.map((navItem: NavItem) => (
                 <Box key={navItem.label}>
-                  <Popover trigger={"hover"} placement={"bottom-start"}>
+                  <Popover trigger={"hover"} placement={"bottom"}>
                     <PopoverTrigger>
                       <Flex
                         p={2}
@@ -190,12 +205,12 @@ function Navigation() {
 
                     {navItem.children && (
                       <PopoverContent
+                        w="auto"
                         border={0}
-                        boxShadow={"xl"}
-                        bg={useColorModeValue("white", "gray.800")}
+                        boxShadow="xl"
+                        bg="white"
                         p={4}
-                        rounded={"xl"}
-                        minW={"sm"}
+                        rounded="xl"
                       >
                         <Stack>
                           {navItem.children.map((child) => (
@@ -555,7 +570,8 @@ function Footer() {
 
             <Text fontSize={"sm"}>
               Hermes Finance is the Olympus of Defi. Our friendly community is building a
-              decentralized and proactive platform at the forefront of modern day finance. Join us!
+              decentralized and proactive platform at the forefront of modern day finance. <br />
+              Join us!
             </Text>
           </Stack>
 
