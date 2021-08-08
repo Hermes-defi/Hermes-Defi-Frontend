@@ -1,7 +1,6 @@
 import React from "react";
 import ReactGA from "react-ga";
 
-import { useMount } from "react-use";
 import { useActiveWeb3React } from "wallet";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
@@ -151,10 +150,6 @@ const Page: React.FC = () => {
   const presaleTimer = usePresaleCountdown();
 
   const harvestAll = useHarvestAll(irisToHarvest.data);
-
-  useMount(() => {
-    ReactGA.pageview("/app");
-  });
 
   return (
     <AppLayout>

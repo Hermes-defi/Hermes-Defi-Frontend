@@ -1,7 +1,6 @@
 import React from "react";
 import ReactGA from "react-ga";
 
-import { useMount } from "react-use";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   approveFenixContract,
@@ -368,10 +367,6 @@ const RedeemCard = () => {
 };
 
 const Page: React.FC = () => {
-  useMount(() => {
-    ReactGA.pageview("/app/pre-sale");
-  });
-
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>

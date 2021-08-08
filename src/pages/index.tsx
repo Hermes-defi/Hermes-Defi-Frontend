@@ -1,9 +1,7 @@
 import React from "react";
 import Head from "next/head";
 import NextLink from "next/link";
-import ReactGA from "react-ga";
 
-import { useMount } from "react-use";
 import { farmIds, poolIds } from "config/pools";
 import { useERC20, useMasterChef } from "hooks/contracts";
 import { getPoolPublicData, getFarmStats } from "web3-functions";
@@ -691,10 +689,6 @@ function Footer() {
 }
 
 const Page = () => {
-  useMount(() => {
-    ReactGA.pageview("/");
-  });
-
   return (
     <>
       <Box

@@ -1,9 +1,8 @@
 import React, { useReducer } from "react";
-import ReactGA from "react-ga";
 
 import { useActiveWeb3React } from "wallet";
 import { useQuery } from "react-query";
-import { useToggle, useMount } from "react-use";
+import { useToggle } from "react-use";
 
 import { poolIds, PoolInfo } from "config/pools";
 import { PoolsContext, poolsReducers } from "hooks/pools-reducer";
@@ -31,10 +30,6 @@ const Page: React.FC = () => {
   const toast = useToast();
   const { account } = useActiveWeb3React();
   const fetchPoolData = useFetchPoolData();
-
-  useMount(() => {
-    ReactGA.pageview("/app/pools");
-  });
 
   // page display actions
   const [stakedOnly, toggleStakedOnly] = useToggle(false);

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useRouter } from "next/router";
 import theme from "theme";
 import Head from "next/head";
 import dynamic from "next/dynamic";
@@ -66,10 +67,23 @@ function MyApp({ Component, pageProps }) {
   // check for referral query and store it in cookie
   useSetReferralCookie();
 
+  const router = useRouter();
   useEffect(() => {
     if (process.env.NODE_ENV === "production") {
       ReactGA.initialize("UA-200856510-2");
     }
+
+    const handleRouteChange = (url: string) => {
+      ReactGA.pageview(url);
+    };
+
+    router.events.on("routeChangeComplete", handleRouteChange);
+
+    // If the component is unmounted, unsubscribe
+    // from the event with the `off` method:
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
   }, []);
 
   return (
