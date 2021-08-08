@@ -1,5 +1,7 @@
 import React from "react";
+import ReactGA from "react-ga";
 
+import { useMount } from "react-use";
 import { useActiveWeb3React } from "wallet";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
@@ -7,13 +9,12 @@ import {
   getIrisStat,
   getIrisToHarvest,
   getPoolPublicData,
-  getPresaleInfo,
   harvestFromAll,
 } from "web3-functions";
-import { useERC20, useFenix, useIrisToken, useMasterChef, useRedeem } from "hooks/contracts";
+import { useERC20, useIrisToken, useMasterChef } from "hooks/contracts";
 import { addTokenToWallet } from "wallet/utils";
 import defaultContracts from "config/contracts";
-import { farmIds, poolIds } from "config/pools";
+import { poolIds } from "config/pools";
 
 import { utils } from "ethers";
 import { blockToTimestamp, displayCurrency } from "libs/utils";
@@ -64,7 +65,7 @@ function useIrisData() {
   return { irisInWallet, irisToHarvest };
 }
 
-function useHarvestAll() {
+function useHarvestAll(irisToHarvest: string) {
   const queryClient = useQueryClient();
   const masterChef = useMasterChef();
   const toast = useToast();
@@ -73,6 +74,12 @@ function useHarvestAll() {
     onSuccess: () => {
       queryClient.invalidateQueries("irisInWallet");
       queryClient.invalidateQueries("irisToHarvest");
+
+      ReactGA.event({
+        category: "Withdrawals",
+        action: `Withdrawing from all pools and farms`,
+        value: parseInt(irisToHarvest, 10),
+      });
     },
 
     onError: ({ message, data }) => {
@@ -143,7 +150,11 @@ const Page: React.FC = () => {
   const { irisInWallet, irisToHarvest } = useIrisData();
   const presaleTimer = usePresaleCountdown();
 
-  const harvestAll = useHarvestAll();
+  const harvestAll = useHarvestAll(irisToHarvest.data);
+
+  useMount(() => {
+    ReactGA.pageview("/app");
+  });
 
   return (
     <AppLayout>

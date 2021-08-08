@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import theme from "theme";
 import Head from "next/head";
 import dynamic from "next/dynamic";
 import * as ethers from "ethers";
+import ReactGA from "react-ga";
 import { Global } from "@emotion/react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "@web3-react/core";
@@ -64,6 +65,12 @@ function GlobalHead() {
 function MyApp({ Component, pageProps }) {
   // check for referral query and store it in cookie
   useSetReferralCookie();
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      ReactGA.initialize("UA-200856510-2");
+    }
+  }, []);
 
   return (
     <ChakraProvider theme={theme}>

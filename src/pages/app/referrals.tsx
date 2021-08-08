@@ -1,4 +1,6 @@
 import React from "react";
+import ReactGA from "react-ga";
+
 import { AppLayout } from "components/layout";
 import { Box, Stack, Container, Text, useClipboard, Button, useToast } from "@chakra-ui/react";
 import { FiCopy } from "react-icons/fi";
@@ -6,11 +8,16 @@ import { useActiveWeb3React } from "wallet";
 import { UnlockButton } from "components/unlock-wallet";
 import { useReferral } from "hooks/contracts";
 import { useQuery } from "react-query";
+import { useMount } from "react-use";
 import { getReferralCount } from "web3-functions";
 
 const Page: React.FC = () => {
   const referralContract = useReferral();
   const { account } = useActiveWeb3React();
+
+  useMount(() => {
+    ReactGA.pageview("/app/referrals");
+  });
 
   const toast = useToast();
   const link = `https://hermesdefi.io?ref=${account?.replace(/^0x/, "")}`;

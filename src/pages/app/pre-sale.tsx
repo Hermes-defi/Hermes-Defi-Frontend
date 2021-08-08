@@ -1,5 +1,7 @@
 import React from "react";
+import ReactGA from "react-ga";
 
+import { useMount } from "react-use";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   approveFenixContract,
@@ -220,6 +222,12 @@ const RedeemCard = () => {
       onSuccess: () => {
         queryClient.invalidateQueries("redeem-info");
         queryClient.invalidateQueries("presale-info");
+
+        ReactGA.event({
+          category: "Approval",
+          action: `Approving FENIX`,
+          label: "FENIX",
+        });
       },
 
       onError: ({ data, message }) => {
@@ -239,8 +247,15 @@ const RedeemCard = () => {
   );
 
   const swapFenixMutation = useMutation((amount: string) => swapFenix(redeemContract, amount), {
-    onSuccess: async () => {
+    onSuccess: async (_, amount) => {
       await queryClient.invalidateQueries(["tokenBalance", account, fenixContract.address]);
+
+      ReactGA.event({
+        category: "Pre-Sale",
+        action: `Swap Fenix for IRIS`,
+        value: parseInt(amount, 10),
+      });
+
       onClose();
     },
 
@@ -353,6 +368,10 @@ const RedeemCard = () => {
 };
 
 const Page: React.FC = () => {
+  useMount(() => {
+    ReactGA.pageview("/app/pre-sale");
+  });
+
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>

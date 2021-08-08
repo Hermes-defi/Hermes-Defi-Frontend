@@ -1,3 +1,4 @@
+import ReactGA from "react-ga";
 import { useToast } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 import { useActiveWeb3React } from "wallet";
@@ -27,6 +28,13 @@ export function useApprovePool() {
     {
       onSuccess: (pid) => {
         dispatch({ type: "APPROVE_CONTRACT", payload: { approved: true, pid } });
+
+        const token = state.find((p) => p.pid === pid)?.lpToken;
+        ReactGA.event({
+          category: "Approval",
+          action: `Approving ${token}`,
+          label: token,
+        });
       },
 
       onError: ({ data }) => {
@@ -71,11 +79,18 @@ export function useDepositIntoPool() {
 
       // fetch new pool data
       const data = await getPoolData(pid);
-      return { data, pid };
+      return { data };
     },
     {
-      onSuccess: ({ data, pid }) => {
+      onSuccess: ({ data }, { pid, amount }) => {
         dispatch({ type: "UPDATE_POOL", payload: { pid, data } });
+
+        ReactGA.event({
+          category: "Deposits",
+          action: `Depositing ${data.lpToken}`,
+          value: parseInt(amount, 10),
+          label: data.lpToken,
+        });
       },
 
       onError: ({ data }) => {
@@ -113,11 +128,18 @@ export function useWithdraw() {
 
       // fetch new pool data
       const data = await getPoolData(pid);
-      return { data, pid };
+      return { data };
     },
     {
-      onSuccess: ({ data, pid }) => {
+      onSuccess: ({ data }, { amount, pid }) => {
         dispatch({ type: "UPDATE_POOL", payload: { pid, data } });
+
+        ReactGA.event({
+          category: "Withdrawals",
+          action: `Withdrawing ${data.lpToken}`,
+          value: parseInt(amount, 10),
+          label: data.lpToken,
+        });
       },
 
       onError: ({ data }) => {

@@ -1,8 +1,9 @@
 import React, { useReducer } from "react";
+import ReactGA from "react-ga";
 
 import { useActiveWeb3React } from "wallet";
 import { useQuery } from "react-query";
-import { useToggle } from "react-use";
+import { useToggle, useMount } from "react-use";
 
 import { farmIds, PoolInfo } from "config/pools";
 import { PoolsContext, poolsReducers } from "hooks/pools-reducer";
@@ -16,8 +17,6 @@ import {
   FormLabel,
   Heading,
   HStack,
-  SimpleGrid,
-  Spacer,
   Spinner,
   Stack,
   StackDivider,
@@ -29,9 +28,12 @@ import { AppLayout } from "components/layout";
 import { useFetchPoolData } from "hooks/pool-queries";
 
 const Page: React.FC = () => {
-  const toast = useToast();
   const { account } = useActiveWeb3React();
   const fetchPoolData = useFetchPoolData();
+
+  useMount(() => {
+    ReactGA.pageview("/app/farms");
+  });
 
   // page display actions
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
@@ -56,13 +58,13 @@ const Page: React.FC = () => {
       },
 
       onError: ({ message, data }) => {
-        toast({
-          status: "error",
-          position: "top-right",
-          title: "Error fetching pools",
-          description: data?.message || message,
-          isClosable: true,
-        });
+        // toast({
+        //   status: "error",
+        //   position: "top-right",
+        //   title: "Error fetching pools",
+        //   description: data?.message || message,
+        //   isClosable: true,
+        // });
       },
     }
   );
@@ -86,7 +88,7 @@ const Page: React.FC = () => {
                 mr={3}
               />
               <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
-                Stacked Only
+                Staked Only
               </FormLabel>
             </FormControl>
 
