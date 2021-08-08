@@ -129,7 +129,7 @@ const Navigation = () => {
 
         {/* desktop navigation */}
         <Flex flex={1} display={{ base: "none", md: "flex" }} justify="center" align="center">
-          <Stack direction={"row"} spacing={4}>
+          <Stack flex={1} justify="flex-end" direction={"row"} spacing={4}>
             {NAV_ITEMS.slice(0, 4).map((navItem: NavItem) => (
               <Box key={navItem.label}>
                 <Popover trigger="hover" placement="bottom">
@@ -217,7 +217,7 @@ const Navigation = () => {
           </Stack>
 
           {/* second nav items */}
-          <Stack direction={"row"} spacing={4}>
+          <Stack flex={1} justify="flex-start" direction={"row"} spacing={4}>
             {NAV_ITEMS.slice(4, NAV_ITEMS.length).map((navItem: NavItem) => (
               <Box key={navItem.label}>
                 <Popover trigger="hover" placement="bottom">
@@ -299,7 +299,13 @@ const Navigation = () => {
         </Flex>
 
         {/* connect wallet */}
-        <Stack ml={4} flex={{ base: 1, md: 0 }} justify={"flex-end"} direction={"row"} spacing={6}>
+        <Stack
+          ml={{ base: 4, md: 0 }}
+          flex={{ base: 1, md: 0 }}
+          justify={"flex-end"}
+          direction={"row"}
+          spacing={6}
+        >
           <Wallet />
         </Stack>
       </Flex>
