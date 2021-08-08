@@ -69,8 +69,11 @@ const PresaleCard = () => {
     }
   );
 
-  const presaleStartTimer = useTimer(blockToTimestamp(presaleInfo.data?.presaleStartBlock || 0));
-  const presaleEndsTimer = useTimer(blockToTimestamp(presaleInfo.data?.presaleEndBlock || 0));
+  const timeToStartPresale = presaleInfo.data?.presaleStartBlock.sub(currentBlock || 0).toNumber();
+  const timeToEndPresale = presaleInfo.data?.presaleEndBlock.sub(currentBlock || 0).toNumber();
+
+  const presaleStartTimer = useTimer(blockToTimestamp(timeToStartPresale || 0));
+  const presaleEndsTimer = useTimer(blockToTimestamp(timeToEndPresale || 0));
 
   return (
     <>
@@ -144,9 +147,9 @@ const PresaleCard = () => {
               <Text fontWeight="600" fontSize="sm">
                 Presale starts
               </Text>
-              <Skeleton isLoaded={!!presaleStartTimer}>
+              <Skeleton isLoaded={!!presaleInfo.data}>
                 <Text fontWeight="700" fontSize="sm">
-                  {presaleStartTimer}
+                  {presaleStartTimer || `Block ${presaleInfo.data?.presaleStartBlock.toNumber()}`}
                 </Text>
               </Skeleton>
             </Stack>
@@ -155,9 +158,9 @@ const PresaleCard = () => {
               <Text fontWeight="600" fontSize="sm">
                 Presale ends
               </Text>
-              <Skeleton isLoaded={!!presaleEndsTimer}>
+              <Skeleton isLoaded={!!presaleInfo.data}>
                 <Text fontWeight="700" fontSize="sm">
-                  {presaleEndsTimer}
+                  {presaleEndsTimer || `Block ${presaleInfo.data?.presaleEndBlock.toNumber()}`}
                 </Text>
               </Skeleton>
             </Stack>

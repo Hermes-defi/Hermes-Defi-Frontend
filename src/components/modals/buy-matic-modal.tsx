@@ -15,6 +15,7 @@ import {
 import { useBalance } from "hooks/wallet";
 import { displayCurrency } from "libs/utils";
 
+// TODO:: RENAME TO buy-fenix-modal :facepalm:
 type Props = {
   isOpen: boolean;
   isLoading: boolean;

@@ -136,7 +136,7 @@ const Navigation = () => {
                   <PopoverTrigger>
                     <Link
                       p={2}
-                      href={navItem.href ?? "#"}
+                      href={navItem.href ?? ""}
                       color="gray.600"
                       isExternal={navItem.isExternal}
                       _hover={{

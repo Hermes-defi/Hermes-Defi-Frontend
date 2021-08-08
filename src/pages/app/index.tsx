@@ -126,38 +126,33 @@ function useHermesStats() {
   return hermesStats;
 }
 
-function usePresaleInfo() {
+function usePresaleCountdown() {
   const currentBlock = useCurrentBlockNumber();
-  const fenixContract = useFenix();
 
-  const presaleInfo = useQuery(["presale-info", currentBlock], async () => {
-    return getPresaleInfo(fenixContract, currentBlock);
-  });
-
-  const presaleStartTimer = useTimer(
-    blockToTimestamp(presaleInfo.data?.presaleStartBlock || 0),
+  const presaleTimer = useTimer(
+    blockToTimestamp(17891042 - currentBlock),
     "D [days], H [hours], mm [minutes], ss [seconds]"
   );
 
-  return presaleStartTimer;
+  return presaleTimer;
 }
 
 const Page: React.FC = () => {
   const irisStats = useIrisStats();
   const hermesStats = useHermesStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
-  const presaleStartTime = usePresaleInfo();
+  const presaleTimer = usePresaleCountdown();
 
   const harvestAll = useHarvestAll();
 
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        {presaleStartTime && (
+        {presaleTimer && (
           <Container maxW="container.md">
-            <Stack direction="row" justify="space-between">
-              <Heading size="lg">Pre-sale starts in</Heading>
-              <Text>{presaleStartTime}</Text>
+            <Stack direction="row" align="center" justify="space-between">
+              <Heading size="lg">Countdown to Adding Liquidity</Heading>
+              <Text>{presaleTimer}</Text>
             </Stack>
           </Container>
         )}

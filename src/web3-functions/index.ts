@@ -23,7 +23,10 @@ export async function getPoolPublicData(pid: number, masterChef: Contract) {
 }
 
 export async function getIrisToHarvest(account: string, masterChefContract: Contract) {
-  const totalIrisToHarvest = [...farmIds, ...poolIds].reduce(async (_total, pid) => {
+  const totalIrisToHarvest = [
+    // ...farmIds,
+    ...poolIds,
+  ].reduce(async (_total, pid) => {
     const total = await _total;
     const irisEarned = await masterChefContract.pendingIris(pid, account);
     return total.add(irisEarned);
@@ -96,8 +99,8 @@ export async function getPresaleInfo(fenixContract: Contract, currentBlock: numb
     fenixPrice: utils.formatUnits(fenixPrice, 35),
     maxFenix: utils.formatEther(maxFenix),
     maxFenixToPurchase: utils.formatEther(maxFenixToPurchase),
-    presaleStartBlock: timeToStartPresale,
-    presaleEndBlock: timeToEndPresale,
+    presaleStartBlock,
+    presaleEndBlock,
   };
 }
 
