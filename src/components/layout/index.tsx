@@ -95,7 +95,7 @@ const Navigation = () => {
         </Flex>
 
         {/* mobile logo and token price */}
-        <Flex>
+        <Flex flex={1}>
           {/* logo */}
           <Stack
             display={{ base: "flex", md: "none" }}
@@ -128,7 +128,7 @@ const Navigation = () => {
         </Flex>
 
         {/* desktop navigation */}
-        <Flex flex={1} display={{ base: "none", md: "flex" }} justify="center" align="center">
+        <Flex flex={4} display={{ base: "none", md: "flex" }} justify="center" align="center">
           <Stack flex={1} justify="flex-end" direction={"row"} spacing={4}>
             {NAV_ITEMS.slice(0, 4).map((navItem: NavItem) => (
               <Box key={navItem.label}>
@@ -299,13 +299,7 @@ const Navigation = () => {
         </Flex>
 
         {/* connect wallet */}
-        <Stack
-          ml={{ base: 4, md: 0 }}
-          flex={{ base: 1, md: 0 }}
-          justify={"flex-end"}
-          direction={"row"}
-          spacing={6}
-        >
+        <Stack ml={{ base: 4, md: 0 }} flex={1} justify={"flex-end"} direction={"row"} spacing={6}>
           <Wallet />
         </Stack>
       </Flex>
