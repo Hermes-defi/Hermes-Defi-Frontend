@@ -375,28 +375,15 @@ const Page: React.FC = () => {
             <Heading fontSize="3xl">Hermes Timeline</Heading>
 
             <Stack>
-              <Text fontSize="sm">
-                1. Pre-sale starts, Friday August 6th 17.00 pm GMT+2 (approx.). Block 17694679
-              </Text>
+              <Text fontSize="sm">1. Pre-sale starts at block #17694679</Text>
 
-              <Text fontSize="sm">
-                2. Pre-sale ends, Monday August 9th 17.00 pm GMT+2 (approx.). Block 17812497
-              </Text>
+              <Text fontSize="sm">2. Pre-sale ends, at block #17812497</Text>
 
-              <Text fontSize="sm">
-                3. Liquidity added on Quickswap, Wednesday, August 11th 17.00 pm GMT+2 (approx.).
-                Block 17891042
-              </Text>
+              <Text fontSize="sm">3. Liquidity added on Quickswap at block #17891042</Text>
 
-              <Text fontSize="sm">
-                4. Swap opens (swap FENIX to IRIS ), Wednesday August 11th 19.00 pm GMT+2 (approx.).
-                Block 17894314
-              </Text>
+              <Text fontSize="sm">4. Swap opens (swap FENIX to IRIS ) at block #17894314</Text>
 
-              <Text fontSize="sm">
-                5. Farming starts (Masterchef), Friday August 13th 17.00 pm GMT+2 (approx.). Block
-                17969588
-              </Text>
+              <Text fontSize="sm">5. Farming starts (Masterchef) at block #17969588</Text>
             </Stack>
 
             <Text fontSize="sm">
@@ -411,8 +398,8 @@ const Page: React.FC = () => {
             </Text>
 
             <Text fontSize="sm">
-              The volatility of the blocks in Polygon is very high, so all schedules are estimated.
-              We recommend reviewing them to check the times.
+              The volatility of the blocks in Polygon is very high. We recommend reviewing them to
+              check the times.
             </Text>
 
             <Stack>
@@ -428,10 +415,12 @@ const Page: React.FC = () => {
             </Stack>
           </Stack>
 
-          <SimpleGrid spacing="80px" alignItems="center" columns={[1, 2]}>
-            <PresaleCard />
-            <RedeemCard />
-          </SimpleGrid>
+          <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
+            {/* <PresaleCard /> */}
+            <Box w="md">
+              <RedeemCard />
+            </Box>
+          </Stack>
         </Container>
       </Stack>
     </AppLayout>

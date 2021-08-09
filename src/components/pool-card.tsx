@@ -63,7 +63,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
     <Stack spacing={4}>
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          {displayCurrency(pool.lpStaked, true)} {pool.lpToken} Stacked
+          {displayCurrency(pool.lpStaked, true)} {pool.lpToken} Staked
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">
