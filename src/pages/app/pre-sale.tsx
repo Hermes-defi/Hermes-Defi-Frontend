@@ -375,9 +375,13 @@ const Page: React.FC = () => {
             <Heading fontSize="3xl">Hermes Timeline</Heading>
 
             <Stack>
-              <Text fontSize="sm">1. Pre-sale starts at block #17694679</Text>
+              <Text fontSize="sm">
+                <del>1. Pre-sale starts at block #17694679</del>
+              </Text>
 
-              <Text fontSize="sm">2. Pre-sale ends, at block #17812497</Text>
+              <Text fontSize="sm">
+                <del>2. Pre-sale ends at block #17812497</del>
+              </Text>
 
               <Text fontSize="sm">3. Liquidity added on Quickswap at block #17891042</Text>
 
