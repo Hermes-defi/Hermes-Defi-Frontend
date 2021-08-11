@@ -19,21 +19,21 @@ export const erc20: (address: string) => ContractInfo = (address: string) => ({
 export default {
   referral: {
     address: {
-      137: "0x24F3282A439EBd13a4F24fE8756a1d6aaC65570F",
+      137: "0xDC99FE88118CdE8316df10Eb16c722C3967e73Fd",
       80001: "0x8295CCCA26e2e4396061515B0b72731BDf5796C1",
     }[DEFAULT_CHAIN_ID],
     abi: ReferralABI,
   },
   masterChef: {
     address: {
-      137: "0xF2a544C1Ee9B21D6B068F638B5fB4835D8efBA3D",
+      137: "0x4aA8DeF481d19564596754CD2108086Cf0bDc71B",
       80001: "0xA3dc6b430A90D61e7f1C7800d43Bd67b8a06D597",
     }[DEFAULT_CHAIN_ID],
     abi: MasterChefABI,
   },
   irisToken: {
     address: {
-      137: "0x86F74E2d74cC4eea54b744134Af586c9E11B0Bb3",
+      137: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
       80001: "0x5EB25908Abf8764CB101bE704d6Bb4a8d5254f72",
     }[DEFAULT_CHAIN_ID],
     abi: IrisTokenABI,
