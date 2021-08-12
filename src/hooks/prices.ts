@@ -51,6 +51,11 @@ export async function fetchPrice(
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
     console.log("error getting price", e.message, { tokenSymbol, tokenAddress });
+
+    // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
+    // please refactor
+    // HACK:: we use this for cases where the we're finding a route for a token to the same token,
+    // so we hack the price to be 1 because TOKEN_A_PRICE === TOKEN_A_PRICE (same token!!!)
     if (e.message.includes("ADDRESSES")) {
       return "1";
     }
