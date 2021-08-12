@@ -28,8 +28,8 @@ export function displayCurrency(number: number | string, isToken?: boolean, abbr
     }
   ).format(number as number);
 
-  // hack to remove the "US" in front of the number
-  return isToken ? value : value.replace(/^US/, "");
+  // hack to remove the "US" from the number
+  return isToken ? value : value.replace(/US/, "");
 }
 
 export function blockToTimestamp(block: number) {
