@@ -3,6 +3,8 @@ import React, { useReducer } from "react";
 import { useActiveWeb3React } from "wallet";
 import { useQuery } from "react-query";
 import { useToggle } from "react-use";
+import { useFetchPoolData } from "hooks/pools/queries";
+import { useIrisPrice } from "hooks/prices";
 
 import { farmIds, PoolInfo } from "config/pools";
 import { PoolsContext, poolsReducers } from "hooks/pools/reducer";
@@ -20,15 +22,14 @@ import {
   Stack,
   StackDivider,
   Switch,
-  useToast,
 } from "@chakra-ui/react";
 import { PoolCard } from "components/pool-card";
 import { AppLayout } from "components/layout";
-import { useFetchPoolData } from "hooks/pools/queries";
 
 const Page: React.FC = () => {
   const { account } = useActiveWeb3React();
-  const fetchPoolData = useFetchPoolData();
+  const { data: irisPrice } = useIrisPrice();
+  const fetchPoolData = useFetchPoolData(irisPrice);
 
   // page display actions
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
@@ -37,7 +38,7 @@ const Page: React.FC = () => {
   const [state, dispatch] = useReducer(poolsReducers, [] as PoolInfo[]);
 
   const poolQuery = useQuery(
-    ["farms", account],
+    ["farms", account, irisPrice],
 
     async (): Promise<PoolInfo[]> => {
       return Promise.all(

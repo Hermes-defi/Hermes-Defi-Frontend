@@ -5,13 +5,12 @@ import { useActiveWeb3React } from "wallet";
 import { useERC20, useMasterChef } from "../contracts";
 import { useCallback } from "react";
 import { getPoolApr } from "web3-functions/utils";
-import { fetchPrice, useIrisPrice } from "hooks/prices";
+import { fetchPrice } from "hooks/prices";
 
-export function useFetchPoolData() {
+export function useFetchPoolData(irisPrice: string) {
   const masterChef = useMasterChef();
   const getLpContract = useERC20();
   const { account, library } = useActiveWeb3React();
-  const { data: irisPrice } = useIrisPrice();
 
   const defaultData = [...farmsDefaultData, ...poolDefaultData];
   const fetchData = useCallback(
