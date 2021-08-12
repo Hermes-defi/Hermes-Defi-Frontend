@@ -10,6 +10,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3ReactManager } from "components/web3-manager";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 import { useSetReferralCookie } from "hooks/referral";
 
 const Web3ReactProviderDefault = dynamic(() => import("components/web3-network"), {
@@ -19,6 +20,8 @@ const Web3ReactProviderDefault = dynamic(() => import("components/web3-network")
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      cacheTime: 1000 * 60 * 10,
+      staleTime: 1000 * 60 * 2,
       refetchOnWindowFocus: false,
     },
   },
@@ -143,6 +146,8 @@ function MyApp({ Component, pageProps }) {
             </Web3ReactManager>
           </Web3ReactProviderDefault>
         </Web3ReactProvider>
+
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraProvider>
   );

@@ -41,30 +41,34 @@ export function useIrisStats() {
   const irisContract = useIrisToken();
   const { data: irisPrice } = useIrisPrice();
 
-  const irisStats = useQuery(["irisStats", irisPrice], async () => {
-    const maximumSupply = 1_000_000;
-    const totalMinted = (await irisContract.totalSupply()) as BigNumber;
-    const totalBurned = (await irisContract.balanceOf(BurnAddress)) as BigNumber;
+  const irisStats = useQuery(
+    ["irisStats", irisPrice],
+    async () => {
+      const maximumSupply = 1_000_000;
+      const totalMinted = (await irisContract.totalSupply()) as BigNumber;
+      const totalBurned = (await irisContract.balanceOf(BurnAddress)) as BigNumber;
 
-    const circulatingSupply = totalMinted.sub(totalBurned);
+      const circulatingSupply = totalMinted.sub(totalBurned);
 
-    let marketCap = "N/A";
-    if (irisPrice) {
-      // convert circulating supply to real price
-      const circulatingSupplyInIris = utils.formatEther(circulatingSupply);
-      marketCap = new BigNumberJS(circulatingSupplyInIris)
-        .multipliedBy(irisPrice as string)
-        .toString();
-    }
+      let marketCap = "N/A";
+      if (irisPrice) {
+        // convert circulating supply to real price
+        const circulatingSupplyInIris = utils.formatEther(circulatingSupply);
+        marketCap = new BigNumberJS(circulatingSupplyInIris)
+          .multipliedBy(irisPrice as string)
+          .toString();
+      }
 
-    return {
-      maximumSupply,
-      marketCap,
-      totalMinted: utils.formatEther(totalMinted),
-      totalBurned: utils.formatEther(totalBurned),
-      circulatingSupply: utils.formatEther(circulatingSupply),
-    };
-  });
+      return {
+        maximumSupply,
+        marketCap,
+        totalMinted: utils.formatEther(totalMinted),
+        totalBurned: utils.formatEther(totalBurned),
+        circulatingSupply: utils.formatEther(circulatingSupply),
+      };
+    },
+    { enabled: !!irisPrice }
+  );
 
   return irisStats;
 }
@@ -75,31 +79,35 @@ export function useAPRStats() {
   const { library } = useActiveWeb3React();
   const { data: irisPrice } = useIrisPrice();
 
-  const maxPoolAPR = useQuery(["aprStats", irisPrice], async () => {
-    const aprsPromise = poolIds.map(async (pid) => {
-      const { lpAddress } = await getPoolPublicData(pid, masterChef);
-      const lpContract = getLpContract(lpAddress);
+  const maxPoolAPR = useQuery(
+    ["aprStats", irisPrice],
+    async () => {
+      const aprsPromise = poolIds.map(async (pid) => {
+        const { lpAddress } = await getPoolPublicData(pid, masterChef);
+        const lpContract = getLpContract(lpAddress);
 
-      const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
-      const tokenDecimal = await lpContract.decimals();
-      const tokenSymbol = await lpContract.symbol();
-      const tokenPrice = await fetchPrice(lpContract.address, tokenDecimal, tokenSymbol, library);
+        const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+        const tokenDecimal = await lpContract.decimals();
+        const tokenSymbol = await lpContract.symbol();
+        const tokenPrice = await fetchPrice(lpContract.address, tokenDecimal, tokenSymbol, library);
 
-      const apr = getPoolApr(
-        parseFloat(tokenPrice),
-        parseFloat(irisPrice) || 0,
-        utils.formatUnits(totalLpStaked, tokenDecimal),
-        0.4
-      );
+        const apr = getPoolApr(
+          parseFloat(tokenPrice),
+          parseFloat(irisPrice) || 0,
+          utils.formatUnits(totalLpStaked, tokenDecimal),
+          0.4
+        );
 
-      return apr;
-    });
+        return apr;
+      });
 
-    const aprs = await Promise.all(aprsPromise);
-    const maxAPR = Math.max(...aprs);
+      const aprs = await Promise.all(aprsPromise);
+      const maxAPR = Math.max(...aprs);
 
-    return maxAPR;
-  });
+      return maxAPR;
+    },
+    { enabled: !!irisPrice }
+  );
 
   return { maxPoolAPR };
 }
