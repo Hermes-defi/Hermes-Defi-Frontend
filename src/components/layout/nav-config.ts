@@ -18,12 +18,12 @@ export const NAV_ITEMS: Array<NavItem> = [
     children: [
       {
         label: "Swap (QuickSwap)",
-        href: "https://quickswap.exchange/#/swap",
+        href: "https://quickswap.exchange/#/swap?outputCurrency=0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
         isExternal: true,
       },
       {
         label: "Liquidity (QuickSwap)",
-        href: "https://quickswap.exchange/#/pool",
+        href: "https://quickswap.exchange/#/add/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270/0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
         isExternal: true,
       },
     ],

@@ -136,7 +136,7 @@ function usePresaleCountdown() {
   const currentBlock = useCurrentBlockNumber();
 
   const presaleTimer = useTimer(
-    blockToTimestamp(17891042 - currentBlock),
+    blockToTimestamp(17969588 - currentBlock),
     "D [days], H [hours], mm [minutes], ss [seconds]"
   );
 
@@ -157,7 +157,7 @@ const Page: React.FC = () => {
         {presaleTimer && (
           <Container maxW="container.md">
             <Stack direction="row" align="center" justify="space-between">
-              <Heading size="lg">Countdown to Adding Liquidity</Heading>
+              <Heading size="lg">Countdown to Farming start</Heading>
               <Text>{presaleTimer}</Text>
             </Stack>
           </Container>

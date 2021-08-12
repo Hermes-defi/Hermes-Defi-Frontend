@@ -1,9 +1,7 @@
 import defaultContracts from "config/contracts";
-import TOKENS from "config/tokens";
 import { BigNumber, constants, Contract, utils } from "ethers";
-import { Token, WETH, Fetcher, Route } from "quickswap-sdk";
 import { poolIds, farmIds } from "config/pools";
-import { DEFAULT_CHAIN_ID } from "config/constants";
+import { BurnAddress } from "config/constants";
 
 // QUERIES
 export async function getPoolPublicData(pid: number, masterChef: Contract) {
@@ -40,7 +38,7 @@ export async function getIrisStat(irisContract: Contract) {
 
   const maximumSupply = 1_000_000;
   const totalMinted = (await irisContract.totalSupply()) as BigNumber;
-  const totalBurned = (await irisContract.balanceOf(constants.AddressZero)) as BigNumber;
+  const totalBurned = (await irisContract.balanceOf(BurnAddress)) as BigNumber;
 
   const circulatingSupply = totalMinted.sub(totalBurned);
   const marketCap = circulatingSupply.mul(irisPrice);

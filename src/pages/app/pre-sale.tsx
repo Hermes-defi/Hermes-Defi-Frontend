@@ -383,7 +383,9 @@ const Page: React.FC = () => {
                 <del>2. Pre-sale ends at block #17812497</del>
               </Text>
 
-              <Text fontSize="sm">3. Liquidity added on Quickswap at block #17891042</Text>
+              <Text fontSize="sm">
+                <del>3. Liquidity added on Quickswap at block #17891042</del>
+              </Text>
 
               <Text fontSize="sm">4. Swap opens (swap FENIX to IRIS ) at block #17894314</Text>
 

@@ -507,6 +507,26 @@ function Security() {
             alt="Rugdoc Logo"
           />
         </Flex>
+
+        <Flex
+          as={Link}
+          isExternal
+          href="https://hermes-defi.gitbook.io/hermes-finance/security/audits"
+          maxW="250px"
+          w="250px"
+          bg="primary.500"
+          boxShadow="base"
+          rounded="xl"
+          p={6}
+          align="center"
+          textAlign="center"
+        >
+          <Image
+            size="lg"
+            src="https://paladinsec.co/pld/assets/audited-by-paladin-standard.svg"
+            alt="Rugdoc Logo"
+          />
+        </Flex>
       </Stack>
 
       <Link isExternal href="https://hermes-defi.gitbook.io/hermes-finance/security/audits">
