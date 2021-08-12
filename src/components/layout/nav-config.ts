@@ -57,6 +57,11 @@ export const NAV_ITEMS: Array<NavItem> = [
         href: "https://www.defined.fi/matic/0x86ad6271809f350522085f95f5a67d46ff7ed3ab",
         isExternal: true,
       },
+      {
+        label: "DexGuru",
+        href: "https://dex.guru/token/0xdab35042e63e93cc8556c9bae482e5415b5ac4b1-polygon",
+        isExternal: true,
+      },
     ],
   },
 
