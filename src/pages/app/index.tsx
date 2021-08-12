@@ -1,22 +1,12 @@
 import React from "react";
-import ReactGA from "react-ga";
 
-import { useActiveWeb3React } from "wallet";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import {
-  getFarmStats,
-  getIrisStat,
-  getIrisToHarvest,
-  getPoolPublicData,
-  harvestFromAll,
-} from "web3-functions";
-import { useERC20, useIrisToken, useMasterChef } from "hooks/contracts";
-import { addTokenToWallet } from "wallet/utils";
 import defaultContracts from "config/contracts";
-import { poolIds } from "config/pools";
 
-import { utils } from "ethers";
+import { addTokenToWallet } from "wallet/utils";
 import { blockToTimestamp, displayCurrency } from "libs/utils";
+import { useCurrentBlockNumber } from "hooks/wallet";
+import { useTimer } from "components/timers";
+import { useHarvestAll, useHermesStats, useIrisData, useIrisStats } from "hooks/home";
 
 import { AppLayout } from "components/layout";
 import {
@@ -33,13 +23,10 @@ import {
   Stack,
   Text,
   useBreakpointValue,
-  useToast,
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
 import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
-import { useCurrentBlockNumber } from "hooks/wallet";
-import { useTimer } from "components/timers";
 
 const data = [
   { name: "JAN", tvl: 0 },
@@ -47,90 +34,6 @@ const data = [
   { name: "MAR", tvl: 0 },
   { name: "APR", tvl: 0 },
 ];
-
-function useIrisData() {
-  const { account } = useActiveWeb3React();
-  const masterChef = useMasterChef();
-  const irisToken = useIrisToken();
-
-  const irisInWallet = useQuery("irisInWallet", async () => {
-    return account ? utils.formatEther(await irisToken.balanceOf(account)) : "0.00";
-  });
-
-  const irisToHarvest = useQuery("irisToHarvest", async () => {
-    return account ? utils.formatEther(await getIrisToHarvest(account, masterChef)) : "0.00";
-  });
-
-  return { irisInWallet, irisToHarvest };
-}
-
-function useHarvestAll(irisToHarvest: string) {
-  const queryClient = useQueryClient();
-  const masterChef = useMasterChef();
-  const toast = useToast();
-
-  const harvestAll = useMutation(() => harvestFromAll(masterChef), {
-    onSuccess: () => {
-      queryClient.invalidateQueries("irisInWallet");
-      queryClient.invalidateQueries("irisToHarvest");
-
-      ReactGA.event({
-        category: "Withdrawals",
-        action: `Withdrawing from all pools and farms`,
-        value: parseInt(irisToHarvest, 10),
-      });
-    },
-
-    onError: ({ message, data }) => {
-      toast({
-        status: "error",
-        position: "top-right",
-        title: "Error harvesting IRIS",
-        description: data?.message || message,
-        isClosable: true,
-      });
-    },
-  });
-
-  return harvestAll;
-}
-
-function useIrisStats() {
-  const irisContract = useIrisToken();
-
-  const irisStats = useQuery("irisStats", async () => {
-    return getIrisStat(irisContract);
-  });
-
-  return irisStats;
-}
-
-function useHermesStats() {
-  const getLpContract = useERC20();
-  const masterChef = useMasterChef();
-
-  const hermesStats = useQuery("hermesStats", async () => {
-    // const farmLps = await Promise.all(
-    //   farmIds.map(async (pid) => {
-    //     const { lpAddress } = await getPoolPublicData(pid, masterChef);
-    //     return getLpContract(lpAddress);
-    //   })
-    // );
-
-    const poolLps = await Promise.all(
-      poolIds.map(async (pid) => {
-        const { lpAddress } = await getPoolPublicData(pid, masterChef);
-        return getLpContract(lpAddress);
-      })
-    );
-
-    const resp = await getFarmStats(poolLps, []);
-
-    return resp;
-  });
-
-  return hermesStats;
-}
 
 function usePresaleCountdown() {
   const currentBlock = useCurrentBlockNumber();
@@ -146,9 +49,9 @@ function usePresaleCountdown() {
 const Page: React.FC = () => {
   const irisStats = useIrisStats();
   const hermesStats = useHermesStats();
-  const { irisInWallet, irisToHarvest } = useIrisData();
   const presaleTimer = usePresaleCountdown();
 
+  const { irisInWallet, irisToHarvest } = useIrisData();
   const harvestAll = useHarvestAll(irisToHarvest.data);
 
   return (
@@ -308,8 +211,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {/* {displayCurrency(irisStats.data?.marketCap, true)} */}
-                      N/A
+                      {displayCurrency(irisStats.data?.marketCap)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color="gray.600" fontSize="md">
@@ -405,8 +307,7 @@ const Page: React.FC = () => {
                   </Heading>
                   <Skeleton isLoaded={!!hermesStats.data}>
                     <Text fontSize="3xl" fontWeight="700">
-                      {/* {displayCurrency(hermesStats.data?.tvl)} */}
-                      N/A
+                      {displayCurrency(hermesStats.data?.tvl)}
                     </Text>
                   </Skeleton>
                 </div>
@@ -442,8 +343,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!!hermesStats.data}>
                       <Text fontSize="2xl" fontWeight="700">
-                        {/* {displayCurrency(hermesStats.data?.totalValueInPools)} */}
-                        N/A
+                        {displayCurrency(hermesStats.data?.totalValueInPools)}
                       </Text>
                     </Skeleton>
                   </Box>

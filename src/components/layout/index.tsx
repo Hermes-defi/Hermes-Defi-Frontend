@@ -17,6 +17,7 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  Skeleton,
   Stack,
   Text,
   useColorModeValue,
@@ -27,6 +28,7 @@ import { Wallet } from "components/wallet";
 import { Global } from "@emotion/react";
 import { NavItem, NAV_ITEMS } from "./nav-config";
 import { displayCurrency } from "libs/utils";
+import { useIrisPrice } from "hooks/prices";
 
 const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
@@ -80,6 +82,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
 
 const Navigation = () => {
   const { isOpen, onToggle } = useDisclosure();
+  const { data: irisPrice } = useIrisPrice();
 
   return (
     <Box>
@@ -122,8 +125,7 @@ const Navigation = () => {
             px={10}
             rounded="xl"
           >
-            {/* TODO:: PRICE */}
-            {displayCurrency(0)}
+            <Skeleton isLoaded={!!irisPrice}>{displayCurrency(irisPrice as string)}</Skeleton>
           </Badge>
         </Flex>
 
@@ -325,8 +327,7 @@ const Navigation = () => {
 
             {/* token price */}
             <Badge colorScheme="secondary" fontSize="lg" size="lg" py={2} px={10} rounded="xl">
-              {/* TODO:: PRICE */}
-              {displayCurrency(0)}
+              {displayCurrency(irisPrice as string)}
             </Badge>
 
             <Stack

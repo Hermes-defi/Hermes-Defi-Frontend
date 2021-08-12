@@ -1,7 +1,6 @@
 import defaultContracts from "config/contracts";
 import { BigNumber, constants, Contract, utils } from "ethers";
 import { poolIds, farmIds } from "config/pools";
-import { BurnAddress } from "config/constants";
 
 // QUERIES
 export async function getPoolPublicData(pid: number, masterChef: Contract) {
@@ -17,38 +16,6 @@ export async function getPoolPublicData(pid: number, masterChef: Contract) {
     active,
     depositFees,
     lpAddress,
-  };
-}
-
-export async function getIrisToHarvest(account: string, masterChefContract: Contract) {
-  const totalIrisToHarvest = [
-    // ...farmIds,
-    ...poolIds,
-  ].reduce(async (_total, pid) => {
-    const total = await _total;
-    const irisEarned = await masterChefContract.pendingIris(pid, account);
-    return total.add(irisEarned);
-  }, Promise.resolve(BigNumber.from(0)));
-
-  return totalIrisToHarvest;
-}
-
-export async function getIrisStat(irisContract: Contract) {
-  const irisPrice = 0; // TODO: get real price
-
-  const maximumSupply = 1_000_000;
-  const totalMinted = (await irisContract.totalSupply()) as BigNumber;
-  const totalBurned = (await irisContract.balanceOf(BurnAddress)) as BigNumber;
-
-  const circulatingSupply = totalMinted.sub(totalBurned);
-  const marketCap = circulatingSupply.mul(irisPrice);
-
-  return {
-    maximumSupply,
-    totalMinted: utils.formatEther(totalMinted),
-    totalBurned: utils.formatEther(totalBurned),
-    circulatingSupply: utils.formatEther(circulatingSupply),
-    marketCap: utils.formatEther(marketCap),
   };
 }
 

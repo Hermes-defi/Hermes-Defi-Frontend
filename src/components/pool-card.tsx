@@ -4,7 +4,7 @@ import { useActiveWeb3React } from "wallet";
 import { displayCurrency } from "libs/utils";
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
-import { useApprovePool, useDepositIntoPool } from "hooks/pools-actions";
+import { useApprovePool, useDepositIntoPool } from "hooks/pools/actions";
 import { PoolInfo } from "config/pools";
 
 import {
@@ -250,10 +250,9 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             APR
           </Text>
           <Box display="flex" alignItems="center">
-            {/* <APRCalculator /> */}
+            {/* {pool.apr && <APRCalculator />} */}
             <Text fontWeight="700" fontSize="sm">
-              {/* TODO:: price */}
-              {pool.apr ? `${pool.apr}%` : "N/A"}
+              {pool.apr ? `${new Intl.NumberFormat().format(Math.round(pool.apr))}%` : "N/A"}
             </Text>
           </Box>
         </Stack>

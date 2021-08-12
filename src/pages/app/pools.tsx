@@ -5,7 +5,7 @@ import { useQuery } from "react-query";
 import { useToggle } from "react-use";
 
 import { poolIds, PoolInfo } from "config/pools";
-import { PoolsContext, poolsReducers } from "hooks/pools-reducer";
+import { PoolsContext, poolsReducers } from "hooks/pools/reducer";
 
 import {
   Button,
@@ -24,7 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { PoolCard } from "components/pool-card";
 import { AppLayout } from "components/layout";
-import { useFetchPoolData } from "hooks/pool-queries";
+import { useFetchPoolData } from "hooks/pools/queries";
 
 const Page: React.FC = () => {
   const toast = useToast();

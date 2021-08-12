@@ -12,7 +12,7 @@ import {
   Box,
   Input,
 } from "@chakra-ui/react";
-import { useWithdraw } from "hooks/pools-actions";
+import { useWithdraw } from "hooks/pools/actions";
 import { displayCurrency } from "libs/utils";
 import { PoolInfo } from "config/pools";
 

@@ -2,12 +2,12 @@ import ReactGA from "react-ga";
 import { useToast } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 import { useActiveWeb3React } from "wallet";
-import { usePoolInfo } from "./pools-reducer";
+import { usePoolInfo } from "./reducer";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
 import { constants } from "ethers";
-import { useERC20, useMasterChef } from "./contracts";
-import { getReferralAddress } from "./referral";
-import { useFetchPoolData } from "./pool-queries";
+import { useERC20, useMasterChef } from "../contracts";
+import { getReferralAddress } from "../referral";
+import { useFetchPoolData } from "./queries";
 
 export function useApprovePool() {
   const { account } = useActiveWeb3React();

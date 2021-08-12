@@ -13,7 +13,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useTokenBalance } from "hooks/wallet";
-import { useDepositIntoPool } from "hooks/pools-actions";
+import { useDepositIntoPool } from "hooks/pools/actions";
 import { displayCurrency } from "libs/utils";
 import { PoolInfo } from "config/pools";
 
