@@ -8,6 +8,7 @@ import { constants } from "ethers";
 import { useERC20, useMasterChef } from "../contracts";
 import { getReferralAddress } from "../referral";
 import { useFetchPoolData } from "./queries";
+import { useIrisPrice } from "hooks/prices";
 
 export function useApprovePool() {
   const { account } = useActiveWeb3React();
@@ -60,7 +61,9 @@ export function useDepositIntoPool() {
   const referrer = getReferralAddress();
   const { account } = useActiveWeb3React();
   const [pools, dispatch] = usePoolInfo();
-  const getPoolData = useFetchPoolData();
+
+  const { data: irisPrice } = useIrisPrice();
+  const getPoolData = useFetchPoolData(irisPrice);
   const masterChef = useMasterChef();
   const toast = useToast();
 
@@ -115,7 +118,8 @@ export function useDepositIntoPool() {
 export function useWithdraw() {
   const { account } = useActiveWeb3React();
   const [pools, dispatch] = usePoolInfo();
-  const getPoolData = useFetchPoolData();
+  const { data: irisPrice } = useIrisPrice();
+  const getPoolData = useFetchPoolData(irisPrice);
   const masterChef = useMasterChef();
   const toast = useToast();
 
