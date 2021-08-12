@@ -10,6 +10,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { getPoolPublicData, harvestFromAll } from "web3-functions";
 import { useToast } from "@chakra-ui/react";
+import { getPoolApr } from "web3-functions/utils";
 
 export function useIrisData() {
   const { account } = useActiveWeb3React();
@@ -66,6 +67,41 @@ export function useIrisStats() {
   });
 
   return irisStats;
+}
+
+export function useAPRStats() {
+  const getLpContract = useERC20();
+  const masterChef = useMasterChef();
+  const { library } = useActiveWeb3React();
+  const { data: irisPrice } = useIrisPrice();
+
+  const maxPoolAPR = useQuery(["aprStats", irisPrice], async () => {
+    const aprsPromise = poolIds.map(async (pid) => {
+      const { lpAddress } = await getPoolPublicData(pid, masterChef);
+      const lpContract = getLpContract(lpAddress);
+
+      const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+      const tokenDecimal = await lpContract.decimals();
+      const tokenSymbol = await lpContract.symbol();
+      const tokenPrice = await fetchPrice(lpContract.address, tokenDecimal, tokenSymbol, library);
+
+      const apr = getPoolApr(
+        parseFloat(tokenPrice),
+        parseFloat(irisPrice) || 0,
+        utils.formatUnits(totalLpStaked, tokenDecimal),
+        0.4
+      );
+
+      return apr;
+    });
+
+    const aprs = await Promise.all(aprsPromise);
+    const maxAPR = Math.max(...aprs);
+
+    return maxAPR;
+  });
+
+  return { maxPoolAPR };
 }
 
 export function useHermesStats() {

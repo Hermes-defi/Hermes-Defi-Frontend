@@ -3,10 +3,10 @@ import React from "react";
 import defaultContracts from "config/contracts";
 
 import { addTokenToWallet } from "wallet/utils";
-import { blockToTimestamp, displayCurrency } from "libs/utils";
+import { blockToTimestamp, displayCurrency, displayNumber } from "libs/utils";
 import { useCurrentBlockNumber } from "hooks/wallet";
 import { useTimer } from "components/timers";
-import { useHarvestAll, useHermesStats, useIrisData, useIrisStats } from "hooks/home";
+import { useAPRStats, useHarvestAll, useHermesStats, useIrisData, useIrisStats } from "hooks/home";
 
 import { AppLayout } from "components/layout";
 import {
@@ -51,6 +51,7 @@ const Page: React.FC = () => {
   const hermesStats = useHermesStats();
   const presaleTimer = usePresaleCountdown();
 
+  const { maxPoolAPR } = useAPRStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
   const harvestAll = useHarvestAll(irisToHarvest.data);
 
@@ -188,9 +189,12 @@ const Page: React.FC = () => {
                   <Text fontSize={["xl", "sm"]} fontWeight="700">
                     Earn Upto
                   </Text>
-                  <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                    N/A%{" "}
-                  </Text>
+                  <Skeleton isLoaded={!!maxPoolAPR.data}>
+                    <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
+                      {displayNumber(Math.round(maxPoolAPR.data))}%{" "}
+                    </Text>{" "}
+                  </Skeleton>
+
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
                     APR
                   </Text>

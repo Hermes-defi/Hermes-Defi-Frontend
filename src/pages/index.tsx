@@ -42,6 +42,8 @@ import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
 import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
+import { useIrisPrice } from "hooks/prices";
+import { useHermesStats } from "hooks/home";
 
 // NAVIGATION
 interface NavItem {
@@ -327,33 +329,13 @@ function Header() {
 
 // NUMBERS
 const DappStats = () => {
-  const getLpContract = useERC20();
-  const masterChef = useMasterChef();
-
-  const hermesStats = useQuery("hermesStats", async () => {
-    const farmLps = await Promise.all(
-      farmIds.map(async (pid) => {
-        const { lpAddress } = await getPoolPublicData(pid, masterChef);
-        return getLpContract(lpAddress);
-      })
-    );
-
-    const poolLps = await Promise.all(
-      poolIds.map(async (pid) => {
-        const { lpAddress } = await getPoolPublicData(pid, masterChef);
-        return getLpContract(lpAddress);
-      })
-    );
-
-    const resp = await getFarmStats(poolLps, farmLps);
-
-    return resp;
-  });
+  const { data: irisPrice } = useIrisPrice();
+  const hermesStats = useHermesStats();
 
   return (
     <SimpleGrid columns={[2, 4]} spacing={[8, 14]}>
       <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">N/A</Heading>
+        <Heading size="2xl">{irisPrice ? displayCurrency(irisPrice) : "N/A"}</Heading>
         <Text color="gray.700" size="sm">
           $IRIS Price
         </Text>
@@ -361,7 +343,7 @@ const DappStats = () => {
 
       <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
-          ${displayCurrency(hermesStats.data?.totalValueInFarms || 0, true, true)}
+          ${displayCurrency(hermesStats.data?.totalValueInFarms || 0, false, true)}
         </Heading>
         <Text color="gray.700" size="sm">
           Total in Farms
@@ -370,7 +352,7 @@ const DappStats = () => {
 
       <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
-          ${displayCurrency(hermesStats.data?.totalValueInPools || 0, true, true)}
+          ${displayCurrency(hermesStats.data?.totalValueInPools || 0, false, true)}
         </Heading>
         <Text color="gray.700" size="sm">
           Total in Pools
@@ -378,7 +360,7 @@ const DappStats = () => {
       </Box>
 
       <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">${displayCurrency(hermesStats.data?.tvl || 0, true, true)}</Heading>
+        <Heading size="2xl">${displayCurrency(hermesStats.data?.tvl || 0, false, true)}</Heading>
         <Text color="gray.700" size="sm">
           Total Value Locked
         </Text>
