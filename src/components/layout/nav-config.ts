@@ -39,12 +39,6 @@ export const NAV_ITEMS: Array<NavItem> = [
     href: "/app/pools",
   },
 
-  // {
-  //   label: "Charts",
-  //   href: "https://quickchart.app/",
-  //   isExternal: true,
-  // },
-
   {
     label: "Referrals",
     href: "/app/referrals",
@@ -54,6 +48,18 @@ export const NAV_ITEMS: Array<NavItem> = [
     href: "/app/pre-sale",
     decorate: true,
   },
+
+  {
+    label: "Charts",
+    children: [
+      {
+        label: "Defined",
+        href: "https://www.defined.fi/matic/0x86ad6271809f350522085f95f5a67d46ff7ed3ab",
+        isExternal: true,
+      },
+    ],
+  },
+
   {
     label: "More",
     children: [
