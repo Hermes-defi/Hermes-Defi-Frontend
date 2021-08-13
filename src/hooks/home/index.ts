@@ -103,9 +103,11 @@ export function useAPRStats() {
           parseFloat(irisPrice || "0"),
           poolRewardsPerWeek,
           parseFloat(tokenPrice || "0"),
-          parseFloat(totalLpStaked || "0")
+          parseFloat(utils.formatUnits(totalLpStaked, pool.decimals) || "0")
         );
 
+        console.log(irisPrice, poolRewardsPerWeek, tokenPrice, totalLpStaked);
+        console.log(apr);
         return apr.yearlyAPR;
       });
 
