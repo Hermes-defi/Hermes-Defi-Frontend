@@ -292,7 +292,11 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Deposit
             </Text>
             <Link
-              href={`https://quickswap.exchange/#/swap/${pool.lpAddress}`}
+              href={
+                pool.isFarm
+                  ? `https://quickswap.exchange/#/add/${pool.pairTokens[0].tokenAddress}/${pool.pairTokens[1].tokenAddress}`
+                  : `https://quickswap.exchange/#/swap/${pool.lpAddress}`
+              }
               isExternal
               fontWeight="700"
               fontSize="sm"
