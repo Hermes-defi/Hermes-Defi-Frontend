@@ -5,19 +5,13 @@ import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
 import { useActiveWeb3React } from "wallet";
 import { useQuery, UseQueryOptions } from "react-query";
 
-export async function fetchPrice(
-  tokenAddress: string,
-  tokenDecimal: number,
-  tokenSymbol: string,
-  library: any
-) {
+export async function fetchPrice(token: Token, library: any) {
   const usdc = new Token(
     DEFAULT_CHAIN_ID,
     defaultTokens.usdc.address,
     defaultTokens.usdc.decimals,
     "USDC"
   );
-  const token = new Token(DEFAULT_CHAIN_ID, tokenAddress, tokenDecimal, tokenSymbol);
 
   try {
     let route;
@@ -50,7 +44,7 @@ export async function fetchPrice(
 
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
-    console.log("error getting price", e.message, { tokenSymbol, tokenAddress });
+    console.log(`error getting price for ${token.symbol}`, e.message, token);
 
     // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
     // please refactor
@@ -75,7 +69,8 @@ export function useTokenPrice(
   return useQuery<string>(
     ["token-price", tokenAddress, decimals],
     async () => {
-      return await fetchPrice(tokenAddress, decimals, symbol, library);
+      const token = new Token(DEFAULT_CHAIN_ID, tokenAddress, decimals, symbol);
+      return await fetchPrice(token, library);
     },
     options
   );

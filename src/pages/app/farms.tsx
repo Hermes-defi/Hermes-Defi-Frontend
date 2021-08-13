@@ -116,7 +116,7 @@ const Page: React.FC = () => {
 
             <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
               {pools.map((pool) => (
-                <Box pt="40px">
+                <Box key={pool.pid} w={80} pt="40px">
                   <PoolCard pool={pool} key={pool.pid} />
                 </Box>
               ))}

@@ -1,28 +1,30 @@
-import { constants } from "ethers";
+import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID } from "./constants";
 
 export type PoolInfo = {
   // public data
   pid: number;
-  active: boolean;
   multiplier: string;
   depositFees: number;
+  isFarm?: boolean;
+  active?: boolean;
   farmDx?: string;
 
   // lp data
   lpToken: string;
   lpAddress: string;
-  totalStaked: string;
   decimals: number;
+  token?: Token;
+  totalStaked?: string;
   price?: string;
-  apy: string;
-  apr: number;
+  apy?: string;
+  apr?: number;
 
   // user data
-  hasStaked: boolean;
-  hasApprovedPool: boolean;
-  irisEarned: string;
-  lpStaked: string;
+  hasStaked?: boolean;
+  hasApprovedPool?: boolean;
+  irisEarned?: string;
+  lpStaked?: string;
 };
 
 export const poolIds = {
@@ -35,28 +37,84 @@ export const farmIds = {
   80001: [],
 }[DEFAULT_CHAIN_ID];
 
-export const poolDefaultData = {
-  137: [],
+export const poolDefaultData: PoolInfo[] = {
+  137: [
+    {
+      pid: 0,
+      multiplier: "40",
+      depositFees: 0,
+      lpToken: "IRIS",
+      lpAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+      decimals: 18,
+    },
+
+    {
+      pid: 1,
+      multiplier: "15",
+      depositFees: 4,
+      lpToken: "WETH",
+      lpAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+      decimals: 18,
+    },
+
+    {
+      pid: 2,
+      multiplier: "10",
+      depositFees: 4,
+      lpToken: "WBTC",
+      lpAddress: "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
+      decimals: 8,
+    },
+
+    {
+      pid: 3,
+      multiplier: "15",
+      depositFees: 4,
+      lpToken: "WMATIC",
+      lpAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+      decimals: 18,
+    },
+
+    {
+      pid: 4,
+      multiplier: "10",
+      depositFees: 4,
+      lpToken: "QUICK",
+      lpAddress: "0x831753DD7087CaC61aB5644b308642cc1c33Dc13",
+      decimals: 18,
+    },
+
+    {
+      pid: 5,
+      multiplier: "10",
+      depositFees: 4,
+      lpToken: "USDC",
+      lpAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+      decimals: 6,
+    },
+
+    {
+      pid: 6,
+      multiplier: "10",
+      depositFees: 4,
+      lpToken: "QUICK",
+      lpAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+      decimals: 6,
+    },
+
+    {
+      pid: 7,
+      multiplier: "10",
+      depositFees: 4,
+      lpToken: "DAI",
+      lpAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+      decimals: 18,
+    },
+  ],
   80001: [],
 }[DEFAULT_CHAIN_ID];
 
-export const farmsDefaultData = {
-  137: [
-    {
-      pid: 8,
-      active: true,
-      multiplier: "80",
-      depositFees: 0,
-      farmDx: "Quickswap",
-      lpToken: "IRIS/WMATIC",
-      lpAddress: constants.AddressZero,
-      price: "0",
-      totalStaked: 0,
-      hasStaked: false,
-      hasApprovedPool: false,
-      irisEarned: "0",
-      lpStaked: "0",
-    },
-  ],
+export const farmsDefaultData: PoolInfo[] = {
+  137: [],
   80001: [],
 }[DEFAULT_CHAIN_ID];

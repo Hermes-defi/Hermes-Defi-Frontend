@@ -1,4 +1,6 @@
 import defaultContracts from "config/contracts";
+import { ChainId, Token, Fetcher } from "quickswap-sdk";
+import { DEFAULT_CHAIN_ID } from "config/constants";
 import { BigNumber, utils } from "ethers";
 import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 import { useActiveWeb3React } from "wallet";
@@ -7,6 +9,7 @@ import { useCallback } from "react";
 import { getPoolApr } from "web3-functions/utils";
 import { fetchPrice } from "hooks/prices";
 
+const IRIS_PER_BLOCK = 0.4;
 export function useFetchPoolData(irisPrice: string) {
   const masterChef = useMasterChef();
   const getLpContract = useERC20();
@@ -15,80 +18,65 @@ export function useFetchPoolData(irisPrice: string) {
   const defaultData = [...farmsDefaultData, ...poolDefaultData];
   const fetchData = useCallback(
     async (pid: number) => {
-      let poolInfo;
+      let poolInfo = defaultData.find((d) => d.pid === pid);
       try {
-        poolInfo = await masterChef.poolInfo(pid);
+        // fetch data from contract
+        let masterChefInfo = await masterChef.poolInfo(pid);
+
+        // override data with contract data
+        poolInfo.multiplier = masterChefInfo.allocPoint.toString();
+        poolInfo.active = masterChefInfo.allocPoint.toString() !== "0";
+        poolInfo.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
+        poolInfo.lpAddress = masterChefInfo.lpToken;
       } catch (e) {
         //  if we can't fetch pool data then use the default data
-        return defaultData.find((d) => d.pid === pid);
+        return poolInfo;
       }
 
-      // PUBLIC DATA
-      const multiplier = poolInfo.allocPoint.toString();
-      const active = multiplier !== "0";
-      const depositFees = BigNumber.from(poolInfo.depositFeeBP).div(100).toNumber();
-      const lpAddress = poolInfo.lpToken;
+      // TOKEN/PAIR DATA
+      if (poolInfo.isFarm) {
+        //
+      } else {
+        poolInfo.token = new Token(
+          DEFAULT_CHAIN_ID,
+          poolInfo.lpAddress,
+          poolInfo.decimals,
+          poolInfo.lpToken
+        );
+      }
 
-      // TOKEN DATA
-      const lpContract = getLpContract(lpAddress);
-      const symbol = await lpContract.symbol();
-      const decimals = await lpContract.decimals();
-      const totalStaked = utils.formatUnits(
+      const lpContract = getLpContract(poolInfo.lpAddress);
+      poolInfo.totalStaked = utils.formatUnits(
         await lpContract.balanceOf(defaultContracts.masterChef.address),
-        decimals
+        poolInfo.decimals
       );
 
       // TOKEN PRICE
-      let price = await fetchPrice(lpAddress, decimals, symbol, library);
+      poolInfo.price = await fetchPrice(poolInfo.token, library);
 
       // GET APY
-      const apr = getPoolApr(price, parseFloat(irisPrice) || 0, totalStaked, 0.4);
-
-      // USER DATA
-      let userData = {
-        hasStaked: false,
-        hasApprovedPool: false,
-        irisEarned: "0",
-        lpStaked: "0",
-      };
+      poolInfo.apr = getPoolApr(
+        parseFloat(poolInfo.price),
+        parseFloat(irisPrice) || 0,
+        poolInfo.totalStaked,
+        IRIS_PER_BLOCK
+      );
 
       if (account) {
-        const irisEarned = utils.formatEther(await masterChef.pendingIris(pid, account));
+        poolInfo.irisEarned = utils.formatEther(await masterChef.pendingIris(pid, account));
         const userInfo = await masterChef.userInfo(pid, account);
 
-        const lpStaked = utils.formatUnits(userInfo.amount, decimals);
-        const hasStaked = !(userInfo.amount as BigNumber).isZero();
+        poolInfo.lpStaked = utils.formatUnits(userInfo.amount, poolInfo.decimals);
+        poolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
 
         const allowance: BigNumber = await lpContract.allowance(
           account,
           defaultContracts.masterChef.address
         );
-        const hasApprovedPool = !allowance.isZero();
-
-        userData = {
-          irisEarned,
-          lpStaked,
-          hasStaked,
-          hasApprovedPool,
-        };
+        poolInfo.hasApprovedPool = !allowance.isZero();
       }
 
-      const pool: PoolInfo = {
-        pid,
-        multiplier,
-        active,
-        depositFees,
-        lpAddress,
-        lpToken: symbol,
-        totalStaked,
-        decimals,
-        price,
-        ...userData,
-        apr,
-        apy: "0",
-      };
-
-      return pool;
+      return poolInfo;
     },
     [account, library, irisPrice]
   );
