@@ -97,7 +97,7 @@ export const poolDefaultData: PoolInfo[] = {
       pid: 6,
       multiplier: "10",
       depositFees: 4,
-      lpToken: "QUICK",
+      lpToken: "USDT",
       lpAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
       decimals: 6,
     },
