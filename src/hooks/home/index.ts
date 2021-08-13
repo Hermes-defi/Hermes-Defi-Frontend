@@ -1,7 +1,7 @@
 import BigNumberJS from "bignumber.js";
 import defaultContracts from "config/contracts";
 import ReactGA from "react-ga";
-import { BurnAddress, DEFAULT_CHAIN_ID } from "config/constants";
+import { BurnAddress, DEFAULT_CHAIN_ID, irisPerBlock } from "config/constants";
 import { poolDefaultData } from "config/pools";
 import { BigNumber, Contract, utils } from "ethers";
 import { useMasterChef, useIrisToken, useERC20 } from "hooks/contracts";
@@ -76,6 +76,7 @@ export function useIrisStats() {
 
 export function useAPRStats() {
   const getLpContract = useERC20();
+  const masterChef = useMasterChef();
   const { library } = useActiveWeb3React();
   const { data: irisPrice } = useIrisPrice();
 
@@ -89,14 +90,23 @@ export function useAPRStats() {
         const token = new Token(DEFAULT_CHAIN_ID, pool.lpAddress, pool.decimals, pool.lpToken);
         const tokenPrice = await fetchPrice(token, library);
 
+        const rewardsPerWeek = irisPerBlock * (604800 / 2.1);
+        const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
+
+        const poolRewardsPerWeek = new BigNumberJS(pool.multiplier)
+          .div(totalAllocPoints)
+          .times(rewardsPerWeek)
+          .toNumber();
+
+        // GET APY
         const apr = getPoolApr(
-          parseFloat(tokenPrice),
-          parseFloat(irisPrice) || 0,
-          utils.formatUnits(totalLpStaked, pool.decimals),
-          0.4
+          parseFloat(irisPrice || "0"),
+          poolRewardsPerWeek,
+          parseFloat(tokenPrice || "0"),
+          parseFloat(totalLpStaked || "0")
         );
 
-        return apr;
+        return apr.yearlyAPR;
       });
 
       const aprs = await Promise.all(aprsPromise);
