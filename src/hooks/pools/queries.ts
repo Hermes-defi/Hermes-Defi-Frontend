@@ -5,15 +5,16 @@ import { DEFAULT_CHAIN_ID } from "config/constants";
 import { BigNumber, utils } from "ethers";
 import { farmsDefaultData, poolDefaultData } from "config/pools";
 import { useActiveWeb3React } from "wallet";
-import { useERC20, useMasterChef } from "../contracts";
+import { useERC20, useMasterChef, useUniPair } from "../contracts";
 import { useCallback } from "react";
 import { getPoolApr } from "web3-functions/utils";
-import { fetchPrice } from "hooks/prices";
+import { fetchPairPrice, fetchPrice } from "hooks/prices";
 
 const IRIS_PER_BLOCK = 0.4;
 export function useFetchPoolData(irisPrice: string) {
   const masterChef = useMasterChef();
   const getLpContract = useERC20();
+  const getPairContract = useUniPair();
   const { account, library } = useActiveWeb3React();
 
   const defaultData = [...farmsDefaultData, ...poolDefaultData];
@@ -35,14 +36,33 @@ export function useFetchPoolData(irisPrice: string) {
       }
 
       // TOKEN/PAIR DATA
-      const lpContract = getLpContract(poolInfo.lpAddress);
+      let lpContract = getLpContract(poolInfo.lpAddress);
       poolInfo.totalStaked = utils.formatUnits(
         await lpContract.balanceOf(defaultContracts.masterChef.address),
         poolInfo.decimals
       );
 
+      // TOKEN PRICE
       if (poolInfo.isFarm) {
-        poolInfo.price = "1";
+        lpContract = getPairContract(poolInfo.lpAddress);
+
+        const totalSupply = utils.formatUnits(await lpContract.totalSupply(), poolInfo.decimals);
+
+        const token0 = new Token(
+          DEFAULT_CHAIN_ID,
+          poolInfo.pairTokens[0].tokenAddress,
+          poolInfo.pairTokens[0].tokenDecimals,
+          poolInfo.pairTokens[0].tokenName
+        );
+
+        const token1 = new Token(
+          DEFAULT_CHAIN_ID,
+          poolInfo.pairTokens[1].tokenAddress,
+          poolInfo.pairTokens[1].tokenDecimals,
+          poolInfo.pairTokens[1].tokenName
+        );
+
+        poolInfo.price = await fetchPairPrice(token0, token1, totalSupply, library);
       } else {
         poolInfo.token = new Token(
           DEFAULT_CHAIN_ID,
@@ -55,25 +75,24 @@ export function useFetchPoolData(irisPrice: string) {
         poolInfo.price = await fetchPrice(poolInfo.token, library);
       }
 
-      if (!poolInfo.isFarm) {
-        const rewardsPerWeek = IRIS_PER_BLOCK * (604800 / 2.1);
-        const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
+      // APR
+      const rewardsPerWeek = IRIS_PER_BLOCK * (604800 / 2.1);
+      const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
-        const poolRewardsPerWeek = new BigNumberJS(poolInfo.multiplier)
-          .div(totalAllocPoints)
-          .times(rewardsPerWeek)
-          .toNumber();
+      const poolRewardsPerWeek = new BigNumberJS(poolInfo.multiplier)
+        .div(totalAllocPoints)
+        .times(rewardsPerWeek)
+        .toNumber();
 
-        // GET APY
-        const apr = getPoolApr(
-          parseFloat(irisPrice || "0"),
-          poolRewardsPerWeek,
-          parseFloat(poolInfo.price || "0"),
-          parseFloat(poolInfo.totalStaked || "0")
-        );
+      // GET APY
+      const apr = getPoolApr(
+        parseFloat(irisPrice || "0"),
+        poolRewardsPerWeek,
+        parseFloat(poolInfo.price || "0"),
+        parseFloat(poolInfo.totalStaked || "0")
+      );
 
-        poolInfo.apr = apr.yearlyAPR;
-      }
+      poolInfo.apr = apr.yearlyAPR;
 
       if (account) {
         poolInfo.irisEarned = utils.formatEther(await masterChef.pendingIris(pid, account));

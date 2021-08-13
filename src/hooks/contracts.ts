@@ -1,4 +1,4 @@
-import defaultContracts, { erc20, ContractInfo } from "config/contracts";
+import defaultContracts, { erc20, ContractInfo, uniPair } from "config/contracts";
 import { utils, providers, constants, Contract } from "ethers";
 import { useCallback } from "react";
 import { useActiveWeb3React } from "wallet";
@@ -63,5 +63,14 @@ export function useERC20() {
   return (address: string) => {
     const erc20ContractInfo = erc20(address);
     return contract(erc20ContractInfo);
+  };
+}
+
+export function useUniPair() {
+  const contract = useContract();
+
+  return (address: string) => {
+    const uniPairContractInfo = uniPair(address);
+    return contract(uniPairContractInfo);
   };
 }

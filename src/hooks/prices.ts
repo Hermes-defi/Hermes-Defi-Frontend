@@ -1,5 +1,6 @@
 import defaultTokens from "config/tokens";
 import defaultContracts from "config/contracts";
+import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
 import { useActiveWeb3React } from "wallet";
@@ -58,6 +59,29 @@ export async function fetchPrice(token: Token, library: any) {
   }
 }
 
+export async function fetchPairPrice(
+  token0: Token,
+  token1: Token,
+  totalSupply: string,
+  library: any
+) {
+  // price of an lp token is [ totalValueOrLP / tokenSupplyOfLPToken ]
+  const token0Price = await fetchPrice(token0, library);
+  const token1Price = await fetchPrice(token1, library);
+
+  const pair = await Fetcher.fetchPairData(token0, token1, library);
+  const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
+  const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
+
+  const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
+  const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
+
+  const tvl = token0Total.plus(token1Total);
+  const price = tvl.dividedBy(new BigNumberJS(totalSupply));
+
+  return price.toString();
+}
+
 export function useTokenPrice(
   tokenAddress: string,
   decimals = 18,
@@ -71,6 +95,25 @@ export function useTokenPrice(
     async () => {
       const token = new Token(DEFAULT_CHAIN_ID, tokenAddress, decimals, symbol);
       return await fetchPrice(token, library);
+    },
+    options
+  );
+}
+
+export function useLpPrice(
+  tokenO: { tokenAddress: string; decimals: number; symbol?: string },
+  token1: { tokenAddress: string; decimals: number; symbol?: string },
+  totalSupply: string,
+  options: UseQueryOptions<any> = {}
+) {
+  const { library } = useActiveWeb3React();
+
+  return useQuery<string>(
+    ["token-price", tokenO.tokenAddress, token1.tokenAddress],
+    async () => {
+      const t0 = new Token(DEFAULT_CHAIN_ID, tokenO.tokenAddress, tokenO.decimals, tokenO.symbol);
+      const t1 = new Token(DEFAULT_CHAIN_ID, token1.tokenAddress, token1.decimals, token1.symbol);
+      return await fetchPairPrice(t0, t1, totalSupply, library);
     },
     options
   );

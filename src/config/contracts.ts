@@ -4,6 +4,7 @@ import ReferralABI from "config/abis/Referral.json";
 import FenixABI from "config/abis/Fenix.json";
 import RedeemABI from "config/abis/Redeem.json";
 import ERC20ABI from "config/abis/ERC20.json";
+import UNIPAIRABI from "config/abis/UNIPAIR.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -13,6 +14,11 @@ export type ContractInfo = {
 
 export const erc20: (address: string) => ContractInfo = (address: string) => ({
   abi: ERC20ABI,
+  address,
+});
+
+export const uniPair: (address: string) => ContractInfo = (address: string) => ({
+  abi: UNIPAIRABI,
   address,
 });
 

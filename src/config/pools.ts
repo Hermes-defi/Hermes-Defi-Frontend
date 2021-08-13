@@ -14,6 +14,11 @@ export type PoolInfo = {
   lpToken: string;
   lpAddress: string;
   decimals: number;
+  pairTokens?: {
+    tokenAddress: string;
+    tokenDecimals: number;
+    tokenName: string;
+  }[];
   token?: Token;
   totalStaked?: string;
   price?: string;
@@ -124,6 +129,19 @@ export const farmsDefaultData: PoolInfo[] = {
       farmDx: "Quickswap",
       lpToken: "IRIS/WMATIC",
       lpAddress: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
+      pairTokens: [
+        {
+          tokenAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+          tokenDecimals: 18,
+          tokenName: "WMATIC",
+        },
+        {
+          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          tokenDecimals: 18,
+          tokenName: "IRIS",
+        },
+        ,
+      ],
       decimals: 18,
     },
   ],
