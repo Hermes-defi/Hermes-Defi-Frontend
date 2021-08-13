@@ -49,6 +49,8 @@ const Page: React.FC = () => {
     },
 
     {
+      enabled: !!irisPrice,
+
       onSuccess: (data) => {
         dispatch({ type: "ADD_POOLS", payload: data });
       },

@@ -2,10 +2,10 @@ import BigNumberJS from "bignumber.js";
 import defaultContracts from "config/contracts";
 import ReactGA from "react-ga";
 import { BurnAddress, DEFAULT_CHAIN_ID, irisPerBlock } from "config/constants";
-import { poolDefaultData } from "config/pools";
+import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 import { BigNumber, Contract, utils } from "ethers";
-import { useMasterChef, useIrisToken, useERC20 } from "hooks/contracts";
-import { useIrisPrice, fetchPrice } from "hooks/prices";
+import { useMasterChef, useIrisToken, useERC20, useUniPair } from "hooks/contracts";
+import { useIrisPrice, fetchPrice, fetchPairPrice } from "hooks/prices";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { harvestFromAll } from "web3-functions";
@@ -76,12 +76,66 @@ export function useIrisStats() {
 
 export function useAPRStats() {
   const getLpContract = useERC20();
+  const getPairContract = useUniPair();
   const masterChef = useMasterChef();
   const { library } = useActiveWeb3React();
   const { data: irisPrice } = useIrisPrice();
 
+  const maxFarmAPR = useQuery(
+    ["aprFarmStats", irisPrice],
+    async () => {
+      const aprsPromise = farmsDefaultData.map(async (pool) => {
+        const lpContract = getLpContract(pool.lpAddress);
+        const pairLpContract = getPairContract(pool.lpAddress);
+
+        const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+        const totalSupply = utils.formatUnits(await pairLpContract.totalSupply(), pool.decimals);
+
+        const token0 = new Token(
+          DEFAULT_CHAIN_ID,
+          pool.pairTokens[0].tokenAddress,
+          pool.pairTokens[0].tokenDecimals,
+          pool.pairTokens[0].tokenName
+        );
+
+        const token1 = new Token(
+          DEFAULT_CHAIN_ID,
+          pool.pairTokens[1].tokenAddress,
+          pool.pairTokens[1].tokenDecimals,
+          pool.pairTokens[1].tokenName
+        );
+
+        const tokenPrice = await fetchPairPrice(token0, token1, totalSupply, library);
+
+        const rewardsPerWeek = irisPerBlock * (604800 / 2.1);
+        const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
+
+        const poolRewardsPerWeek = new BigNumberJS(pool.multiplier)
+          .div(totalAllocPoints)
+          .times(rewardsPerWeek)
+          .toNumber();
+
+        // GET APY
+        const apr = getPoolApr(
+          parseFloat(irisPrice || "0"),
+          poolRewardsPerWeek,
+          parseFloat(tokenPrice || "0"),
+          parseFloat(utils.formatUnits(totalLpStaked, pool.decimals) || "0")
+        );
+
+        return apr.yearlyAPR;
+      });
+
+      const aprs = await Promise.all(aprsPromise);
+      const maxAPR = Math.max(...aprs);
+
+      return maxAPR;
+    },
+    { enabled: !!irisPrice }
+  );
+
   const maxPoolAPR = useQuery(
-    ["aprStats", irisPrice],
+    ["aprPoolStats", irisPrice],
     async () => {
       const aprsPromise = poolDefaultData.map(async (pool) => {
         const lpContract = getLpContract(pool.lpAddress);
@@ -117,51 +171,66 @@ export function useAPRStats() {
     { enabled: !!irisPrice }
   );
 
-  return { maxPoolAPR };
+  return { maxFarmAPR, maxPoolAPR };
 }
 
 export function useHermesStats() {
   const getLpContract = useERC20();
+  const getPairContract = useUniPair();
   const { library } = useActiveWeb3React();
 
   const hermesStats = useQuery("hermesStats", async () => {
-    const farmLps = await Promise.all(
-      []
-      //   farmIds.map(async (pid) => {
-      //     const { lpAddress } = await getPoolPublicData(pid, masterChef);
-      //     return getLpContract(lpAddress);
-      //   })
-    );
+    const totalValueInPools = await poolDefaultData.reduce(
+      async (_total: Promise<BigNumberJS>, pool: PoolInfo) => {
+        const lpContract = getLpContract(pool.lpAddress);
 
-    const poolLps = await Promise.all(
-      poolDefaultData.map(async (pool) => {
-        return getLpContract(pool.lpAddress);
-      })
-    );
+        const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+        const tokenDecimal = await lpContract.decimals();
+        const tokenSymbol = await lpContract.symbol();
 
-    const priceReducer = async (_total: Promise<BigNumberJS>, lpContract: Contract) => {
-      const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
-      const tokenDecimal = await lpContract.decimals();
-      const tokenSymbol = await lpContract.symbol();
+        const token = new Token(DEFAULT_CHAIN_ID, lpContract.address, tokenDecimal, tokenSymbol);
+        const tokenPrice = await fetchPrice(token, library);
 
-      const token = new Token(DEFAULT_CHAIN_ID, lpContract.address, tokenDecimal, tokenSymbol);
-      const tokenPrice = await fetchPrice(token, library);
+        const total = await _total;
+        const poolPrice = new BigNumberJS(
+          utils.formatUnits(totalLpStaked, tokenDecimal)
+        ).multipliedBy(tokenPrice);
 
-      const total = await _total;
-      const poolPrice = new BigNumberJS(
-        utils.formatUnits(totalLpStaked, tokenDecimal)
-      ).multipliedBy(tokenPrice);
-
-      return total.plus(poolPrice);
-    };
-
-    const totalValueInPools = await poolLps.reduce(
-      priceReducer,
+        return total.plus(poolPrice);
+      },
       Promise.resolve(new BigNumberJS(0))
     );
 
-    const totalValueInFarms = await farmLps.reduce(
-      priceReducer,
+    const totalValueInFarms = await farmsDefaultData.reduce(
+      async (_total: Promise<BigNumberJS>, pool: PoolInfo) => {
+        const lpContract = getPairContract(pool.lpAddress);
+
+        const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+        const totalSupply = utils.formatUnits(await lpContract.totalSupply(), pool.decimals);
+
+        const token0 = new Token(
+          DEFAULT_CHAIN_ID,
+          pool.pairTokens[0].tokenAddress,
+          pool.pairTokens[0].tokenDecimals,
+          pool.pairTokens[0].tokenName
+        );
+
+        const token1 = new Token(
+          DEFAULT_CHAIN_ID,
+          pool.pairTokens[1].tokenAddress,
+          pool.pairTokens[1].tokenDecimals,
+          pool.pairTokens[1].tokenName
+        );
+
+        const tokenPrice = await fetchPairPrice(token0, token1, totalSupply, library);
+
+        const total = await _total;
+        const poolPrice = new BigNumberJS(
+          utils.formatUnits(totalLpStaked, pool.decimals)
+        ).multipliedBy(tokenPrice);
+
+        return total.plus(poolPrice);
+      },
       Promise.resolve(new BigNumberJS(0))
     );
 

@@ -51,7 +51,7 @@ const Page: React.FC = () => {
   const hermesStats = useHermesStats();
   const presaleTimer = usePresaleCountdown();
 
-  const { maxPoolAPR } = useAPRStats();
+  const { maxPoolAPR, maxFarmAPR } = useAPRStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
   const harvestAll = useHarvestAll(irisToHarvest.data);
 
@@ -152,9 +152,11 @@ const Page: React.FC = () => {
                   <Text fontSize={["xl", "sm"]} fontWeight="700">
                     Earn Upto
                   </Text>
-                  <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                    N/A%{" "}
-                  </Text>
+                  <Skeleton isLoaded={!!maxFarmAPR.data}>
+                    <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
+                      {displayNumber(Math.round(maxFarmAPR.data))}%{" "}
+                    </Text>{" "}
+                  </Skeleton>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
                     APR
                   </Text>
@@ -329,8 +331,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!!hermesStats.data}>
                       <Text fontSize="2xl" fontWeight="700">
-                        {/* {displayCurrency(hermesStats.data?.totalValueInFarms)} */}
-                        N/A
+                        {displayCurrency(hermesStats.data?.totalValueInFarms)}
                       </Text>
                     </Skeleton>
                   </Box>

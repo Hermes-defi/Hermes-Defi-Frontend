@@ -123,7 +123,7 @@ export const farmsDefaultData: PoolInfo[] = {
   137: [
     {
       pid: 8,
-      multiplier: "80",
+      multiplier: "160",
       depositFees: 0,
       isFarm: true,
       farmDx: "Quickswap",
