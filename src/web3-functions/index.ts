@@ -3,22 +3,6 @@ import { BigNumber, constants, Contract, utils } from "ethers";
 import { poolIds, farmIds } from "config/pools";
 
 // QUERIES
-export async function getPoolPublicData(pid: number, masterChef: Contract) {
-  const poolInfo = await masterChef.poolInfo(pid);
-
-  const multiplier = poolInfo.allocPoint.toString();
-  const active = multiplier !== "0";
-  const depositFees = BigNumber.from(poolInfo.depositFeeBP).div(100).toNumber();
-  const lpAddress = poolInfo.lpToken;
-
-  return {
-    multiplier,
-    active,
-    depositFees,
-    lpAddress,
-  };
-}
-
 export async function getFarmStats(poolContracts: Contract[], farmContracts: Contract[]) {
   // in this function we're assuming all tokens are worth 1$
 

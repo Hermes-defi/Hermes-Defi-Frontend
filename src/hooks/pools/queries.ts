@@ -1,8 +1,8 @@
 import defaultContracts from "config/contracts";
-import { ChainId, Token, Fetcher } from "quickswap-sdk";
+import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { BigNumber, utils } from "ethers";
-import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
+import { farmsDefaultData, poolDefaultData } from "config/pools";
 import { useActiveWeb3React } from "wallet";
 import { useERC20, useMasterChef } from "../contracts";
 import { useCallback } from "react";
@@ -34,8 +34,14 @@ export function useFetchPoolData(irisPrice: string) {
       }
 
       // TOKEN/PAIR DATA
+      const lpContract = getLpContract(poolInfo.lpAddress);
+      poolInfo.totalStaked = utils.formatUnits(
+        await lpContract.balanceOf(defaultContracts.masterChef.address),
+        poolInfo.decimals
+      );
+
       if (poolInfo.isFarm) {
-        //
+        poolInfo.price = "1";
       } else {
         poolInfo.token = new Token(
           DEFAULT_CHAIN_ID,
@@ -43,24 +49,20 @@ export function useFetchPoolData(irisPrice: string) {
           poolInfo.decimals,
           poolInfo.lpToken
         );
+
+        // TOKEN PRICE
+        poolInfo.price = await fetchPrice(poolInfo.token, library);
       }
 
-      const lpContract = getLpContract(poolInfo.lpAddress);
-      poolInfo.totalStaked = utils.formatUnits(
-        await lpContract.balanceOf(defaultContracts.masterChef.address),
-        poolInfo.decimals
-      );
-
-      // TOKEN PRICE
-      poolInfo.price = await fetchPrice(poolInfo.token, library);
-
-      // GET APY
-      poolInfo.apr = getPoolApr(
-        parseFloat(poolInfo.price),
-        parseFloat(irisPrice) || 0,
-        poolInfo.totalStaked,
-        IRIS_PER_BLOCK
-      );
+      if (!poolInfo.isFarm) {
+        // GET APY
+        poolInfo.apr = getPoolApr(
+          parseFloat(poolInfo.price),
+          parseFloat(irisPrice) || 0,
+          poolInfo.totalStaked,
+          IRIS_PER_BLOCK
+        );
+      }
 
       if (account) {
         poolInfo.irisEarned = utils.formatEther(await masterChef.pendingIris(pid, account));

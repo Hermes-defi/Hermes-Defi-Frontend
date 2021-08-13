@@ -306,7 +306,11 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Total Liquidity
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {displayCurrency(new BigNumber(pool.totalStaked).times(pool.price || 0).toNumber())}
+              {displayCurrency(
+                new BigNumber(pool.totalStaked).times(pool.price || 0).toNumber(),
+                pool.isFarm
+              )}{" "}
+              {pool.isFarm && "LP"}
             </Text>
           </Stack>
         </Stack>

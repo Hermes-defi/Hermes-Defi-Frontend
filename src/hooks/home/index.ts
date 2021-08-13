@@ -1,16 +1,17 @@
 import BigNumberJS from "bignumber.js";
 import defaultContracts from "config/contracts";
 import ReactGA from "react-ga";
-import { BurnAddress } from "config/constants";
-import { farmIds, poolIds } from "config/pools";
+import { BurnAddress, DEFAULT_CHAIN_ID } from "config/constants";
+import { poolDefaultData } from "config/pools";
 import { BigNumber, Contract, utils } from "ethers";
 import { useMasterChef, useIrisToken, useERC20 } from "hooks/contracts";
 import { useIrisPrice, fetchPrice } from "hooks/prices";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
-import { getPoolPublicData, harvestFromAll } from "web3-functions";
+import { harvestFromAll } from "web3-functions";
 import { useToast } from "@chakra-ui/react";
 import { getPoolApr } from "web3-functions/utils";
+import { Token } from "quickswap-sdk";
 
 export function useIrisData() {
   const { account } = useActiveWeb3React();
@@ -24,10 +25,10 @@ export function useIrisData() {
   const irisToHarvest = useQuery("irisToHarvest", async () => {
     const totalIrisToHarvest = [
       // ...farmIds,
-      ...poolIds,
-    ].reduce(async (_total, pid) => {
+      ...poolDefaultData,
+    ].reduce(async (_total, pool) => {
       const total = await _total;
-      const irisEarned = await masterChef.pendingIris(pid, account);
+      const irisEarned = await masterChef.pendingIris(pool.pid, account);
       return total.add(irisEarned);
     }, Promise.resolve(BigNumber.from(0)));
 
@@ -75,26 +76,23 @@ export function useIrisStats() {
 
 export function useAPRStats() {
   const getLpContract = useERC20();
-  const masterChef = useMasterChef();
   const { library } = useActiveWeb3React();
   const { data: irisPrice } = useIrisPrice();
 
   const maxPoolAPR = useQuery(
     ["aprStats", irisPrice],
     async () => {
-      const aprsPromise = poolIds.map(async (pid) => {
-        const { lpAddress } = await getPoolPublicData(pid, masterChef);
-        const lpContract = getLpContract(lpAddress);
-
+      const aprsPromise = poolDefaultData.map(async (pool) => {
+        const lpContract = getLpContract(pool.lpAddress);
         const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
-        const tokenDecimal = await lpContract.decimals();
-        const tokenSymbol = await lpContract.symbol();
-        const tokenPrice = await fetchPrice(lpContract.address, tokenDecimal, tokenSymbol, library);
+
+        const token = new Token(DEFAULT_CHAIN_ID, pool.lpAddress, pool.decimals, pool.lpToken);
+        const tokenPrice = await fetchPrice(token, library);
 
         const apr = getPoolApr(
           parseFloat(tokenPrice),
           parseFloat(irisPrice) || 0,
-          utils.formatUnits(totalLpStaked, tokenDecimal),
+          utils.formatUnits(totalLpStaked, pool.decimals),
           0.4
         );
 
@@ -114,7 +112,6 @@ export function useAPRStats() {
 
 export function useHermesStats() {
   const getLpContract = useERC20();
-  const masterChef = useMasterChef();
   const { library } = useActiveWeb3React();
 
   const hermesStats = useQuery("hermesStats", async () => {
@@ -127,9 +124,8 @@ export function useHermesStats() {
     );
 
     const poolLps = await Promise.all(
-      poolIds.map(async (pid) => {
-        const { lpAddress } = await getPoolPublicData(pid, masterChef);
-        return getLpContract(lpAddress);
+      poolDefaultData.map(async (pool) => {
+        return getLpContract(pool.lpAddress);
       })
     );
 
@@ -137,7 +133,9 @@ export function useHermesStats() {
       const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
       const tokenDecimal = await lpContract.decimals();
       const tokenSymbol = await lpContract.symbol();
-      const tokenPrice = await fetchPrice(lpContract.address, tokenDecimal, tokenSymbol, library);
+
+      const token = new Token(DEFAULT_CHAIN_ID, lpContract.address, tokenDecimal, tokenSymbol);
+      const tokenPrice = await fetchPrice(token, library);
 
       const total = await _total;
       const poolPrice = new BigNumberJS(

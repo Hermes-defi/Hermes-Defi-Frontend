@@ -2,10 +2,6 @@ import React from "react";
 import Head from "next/head";
 import NextLink from "next/link";
 
-import { farmIds, poolIds } from "config/pools";
-import { useERC20, useMasterChef } from "hooks/contracts";
-import { getPoolPublicData, getFarmStats } from "web3-functions";
-import { useQuery } from "react-query";
 import { displayCurrency } from "libs/utils";
 
 import {

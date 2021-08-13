@@ -115,6 +115,17 @@ export const poolDefaultData: PoolInfo[] = {
 }[DEFAULT_CHAIN_ID];
 
 export const farmsDefaultData: PoolInfo[] = {
-  137: [],
+  137: [
+    {
+      pid: 8,
+      multiplier: "80",
+      depositFees: 0,
+      isFarm: true,
+      farmDx: "Quickswap",
+      lpToken: "IRIS/WMATIC",
+      lpAddress: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
+      decimals: 18,
+    },
+  ],
   80001: [],
 }[DEFAULT_CHAIN_ID];
