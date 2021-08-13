@@ -1,4 +1,5 @@
 import defaultContracts from "config/contracts";
+import BigNumberJS from "bignumber.js";
 import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { BigNumber, utils } from "ethers";
@@ -55,13 +56,23 @@ export function useFetchPoolData(irisPrice: string) {
       }
 
       if (!poolInfo.isFarm) {
+        const rewardsPerWeek = IRIS_PER_BLOCK * (604800 / 2.1);
+        const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
+
+        const poolRewardsPerWeek = new BigNumberJS(poolInfo.multiplier)
+          .div(totalAllocPoints)
+          .times(rewardsPerWeek)
+          .toNumber();
+
         // GET APY
-        poolInfo.apr = getPoolApr(
-          parseFloat(poolInfo.price),
-          parseFloat(irisPrice) || 0,
-          poolInfo.totalStaked,
-          IRIS_PER_BLOCK
+        const apr = getPoolApr(
+          parseFloat(irisPrice || "0"),
+          poolRewardsPerWeek,
+          parseFloat(poolInfo.price || "0"),
+          parseFloat(poolInfo.totalStaked || "0")
         );
+
+        poolInfo.apr = apr.yearlyAPR;
       }
 
       if (account) {

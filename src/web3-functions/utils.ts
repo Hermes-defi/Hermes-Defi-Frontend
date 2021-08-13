@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 const BLOCKS_PER_YEAR = 15768000;
 
-export const getPoolApr = (
+export const old_getPoolApr = (
   stakingTokenPrice: number,
   rewardTokenPrice: number,
   totalStaked: number | string,
@@ -15,6 +15,25 @@ export const getPoolApr = (
 
   return apr.isNaN() || !apr.isFinite() ? null : apr.toNumber();
 };
+
+export function getPoolApr(
+  rewardTokenPrice: number,
+  poolRewardsPerWeek: number,
+  poolTokenPrice: number,
+  totalStaked: number
+) {
+  const rewardPerWeekInUSD = poolRewardsPerWeek * rewardTokenPrice;
+  const totalStakedInUSD = totalStaked * poolTokenPrice;
+  const weeklyAPR = (rewardPerWeekInUSD / totalStakedInUSD) * 100;
+  const dailyAPR = weeklyAPR * 7;
+  const yearlyAPR = weeklyAPR * 52;
+
+  return {
+    weeklyAPR,
+    dailyAPR,
+    yearlyAPR,
+  };
+}
 
 export const tokenEarnedPerThousandDollarsCompounding = ({
   numberOfDays,
