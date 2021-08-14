@@ -3,9 +3,7 @@ import React from "react";
 import defaultContracts from "config/contracts";
 
 import { addTokenToWallet } from "wallet/utils";
-import { blockToTimestamp, displayCurrency, displayNumber } from "libs/utils";
-import { useCurrentBlockNumber } from "hooks/wallet";
-import { useTimer } from "components/timers";
+import { displayCurrency, displayNumber } from "libs/utils";
 import { useAPRStats, useHarvestAll, useHermesStats, useIrisData, useIrisStats } from "hooks/home";
 
 import { AppLayout } from "components/layout";
@@ -13,7 +11,6 @@ import {
   Box,
   Button,
   Center,
-  Container,
   Heading,
   Icon,
   Image,
@@ -35,21 +32,9 @@ const data = [
   { name: "APR", tvl: 0 },
 ];
 
-function usePresaleCountdown() {
-  const currentBlock = useCurrentBlockNumber();
-
-  const presaleTimer = useTimer(
-    blockToTimestamp(17969588 - currentBlock),
-    "D [days], H [hours], mm [minutes], ss [seconds]"
-  );
-
-  return presaleTimer;
-}
-
 const Page: React.FC = () => {
   const irisStats = useIrisStats();
   const hermesStats = useHermesStats();
-  const presaleTimer = usePresaleCountdown();
 
   const { maxPoolAPR, maxFarmAPR } = useAPRStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
@@ -58,15 +43,6 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        {presaleTimer && (
-          <Container maxW="container.md">
-            <Stack direction="row" align="center" justify="space-between">
-              <Heading size="lg">Countdown to Farming start</Heading>
-              <Text>{presaleTimer}</Text>
-            </Stack>
-          </Container>
-        )}
-
         <Box bg="white" rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color="gray.600" fontSize="xl">
             Farms and Pools

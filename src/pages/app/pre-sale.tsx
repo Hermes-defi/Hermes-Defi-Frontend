@@ -423,9 +423,9 @@ const Page: React.FC = () => {
 
           <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
             {/* <PresaleCard /> */}
-            <Box w="md">
+            {/* <Box w="md">
               <RedeemCard />
-            </Box>
+            </Box> */}
           </Stack>
         </Container>
       </Stack>
