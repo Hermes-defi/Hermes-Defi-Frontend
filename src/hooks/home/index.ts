@@ -23,14 +23,14 @@ export function useIrisData() {
   });
 
   const irisToHarvest = useQuery("irisToHarvest", async () => {
-    const totalIrisToHarvest = [
-      // ...farmIds,
-      ...poolDefaultData,
-    ].reduce(async (_total, pool) => {
-      const total = await _total;
-      const irisEarned = await masterChef.pendingIris(pool.pid, account);
-      return total.add(irisEarned);
-    }, Promise.resolve(BigNumber.from(0)));
+    const totalIrisToHarvest = [...farmsDefaultData, ...poolDefaultData].reduce(
+      async (_total, pool) => {
+        const total = await _total;
+        const irisEarned = await masterChef.pendingIris(pool.pid, account);
+        return total.add(irisEarned);
+      },
+      Promise.resolve(BigNumber.from(0))
+    );
 
     return account ? utils.formatEther(await totalIrisToHarvest) : "0.00";
   });
