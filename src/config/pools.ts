@@ -46,7 +46,7 @@ export const poolDefaultData: PoolInfo[] = {
   137: [
     {
       pid: 0,
-      multiplier: "40",
+      multiplier: "80",
       depositFees: 0,
       lpToken: "IRIS",
       lpAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
