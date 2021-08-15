@@ -80,24 +80,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   switch (method) {
     case "GET": {
-      const tvlJSON = fs.readFileSync("public/tvlData/chartData.json").toString();
+      try {
+        const tvlJSON = fs.readFileSync("public/tvlData/chartData.json").toString();
 
-      // perse json
-      const tvlData: any[] = JSON.parse(tvlJSON);
+        // perse json
+        const tvlData: any[] = JSON.parse(tvlJSON);
 
-      // push the new tvl to the array
-      const currentTime = dayjs().toISOString();
-      const tvl = await calculateTVL();
+        // push the new tvl to the array
+        const currentTime = dayjs().toISOString();
+        const tvl = await calculateTVL();
 
-      tvlData.push({ time: currentTime, value: tvl });
+        tvlData.push({ time: currentTime, value: tvl });
 
-      if (tvlData.length === 12) {
-        tvlData.shift();
+        if (tvlData.length === 12) {
+          tvlData.shift();
+        }
+
+        // write new json to file
+        fs.writeFileSync("public/tvlData/chartData.json", JSON.stringify(tvlData));
+        return res.send(true);
+      } catch (e) {
+        return res.send(e.message);
       }
-
-      // write new json to file
-      fs.writeFileSync("public/tvlData/chartData.json", JSON.stringify(tvlData));
-      return res.send(true);
     }
     default: {
       return res.status(404).send("Page not found");
