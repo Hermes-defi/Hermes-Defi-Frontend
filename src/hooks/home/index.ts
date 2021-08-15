@@ -3,12 +3,11 @@ import defaultContracts from "config/contracts";
 import ReactGA from "react-ga";
 import { BurnAddress, DEFAULT_CHAIN_ID, irisPerBlock } from "config/constants";
 import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
-import { BigNumber, Contract, utils } from "ethers";
+import { BigNumber, constants, utils } from "ethers";
 import { useMasterChef, useIrisToken, useERC20, useUniPair } from "hooks/contracts";
 import { useIrisPrice, fetchPrice, fetchPairPrice } from "hooks/prices";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
-import { harvestFromAll } from "web3-functions";
 import { useToast } from "@chakra-ui/react";
 import { getPoolApr } from "web3-functions/utils";
 import { Token } from "quickswap-sdk";
@@ -247,32 +246,58 @@ export function useHermesStats() {
 }
 
 export function useHarvestAll(irisToHarvest: string) {
+  const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const masterChef = useMasterChef();
+  const getLpContract = useERC20();
   const toast = useToast();
 
-  const harvestAll = useMutation(() => harvestFromAll(masterChef), {
-    onSuccess: () => {
-      queryClient.invalidateQueries("irisInWallet");
-      queryClient.invalidateQueries("irisToHarvest");
+  const harvestAll = useMutation(
+    async () => {
+      return Promise.all(
+        [...farmsDefaultData, ...poolDefaultData].map(async (pool) => {
+          const lpContract = getLpContract(pool.lpAddress);
+          const allowance: BigNumber = await lpContract.allowance(
+            account,
+            defaultContracts.masterChef.address
+          );
 
-      ReactGA.event({
-        category: "Withdrawals",
-        action: `Withdrawing from all pools and farms`,
-        value: parseInt(irisToHarvest, 10),
-      });
-    },
+          const hasApprovedPool = !allowance.isZero();
 
-    onError: ({ message, data }) => {
-      toast({
-        status: "error",
-        position: "top-right",
-        title: "Error harvesting IRIS",
-        description: data?.message || message,
-        isClosable: true,
-      });
+          if (!hasApprovedPool) return;
+
+          const tx = await masterChef.deposit(
+            pool.pid,
+            utils.parseEther("0"),
+            constants.AddressZero
+          );
+          await tx.wait();
+        })
+      );
     },
-  });
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("irisInWallet");
+        queryClient.invalidateQueries("irisToHarvest");
+
+        ReactGA.event({
+          category: "Withdrawals",
+          action: `Withdrawing from all pools and farms`,
+          value: parseInt(irisToHarvest, 10),
+        });
+      },
+
+      onError: ({ message, data }) => {
+        toast({
+          status: "error",
+          position: "top-right",
+          title: "Error harvesting IRIS",
+          description: data?.message || message,
+          isClosable: true,
+        });
+      },
+    }
+  );
 
   return harvestAll;
 }
