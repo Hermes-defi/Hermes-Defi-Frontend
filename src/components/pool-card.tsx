@@ -153,12 +153,12 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   );
 };
 
-export function APRCalculator({ apr }: any) {
+export function APRCalculator({ pool }: any) {
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <>
       <Icon onClick={onOpen} mr={1} as={AiOutlineCalculator} />
-      <APRModal apr={apr} isOpen={isOpen} onClose={onClose} />
+      <APRModal pool={pool} isOpen={isOpen} onClose={onClose} />
     </>
   );
 }
@@ -250,7 +250,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             APR
           </Text>
           <Box display="flex" alignItems="center">
-            {pool.apr && <APRCalculator apr={pool.apr} />}
+            {pool.apr && <APRCalculator pool={pool} />}
             <Text fontWeight="700" fontSize="sm">
               {pool.apr
                 ? `${new Intl.NumberFormat().format(Math.round(pool.apr.yearlyAPR))}%`

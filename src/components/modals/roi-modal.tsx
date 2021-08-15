@@ -13,8 +13,12 @@ import {
   Link,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { PoolInfo } from "config/pools";
 
-export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; apr: any }> = (props) => {
+export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: PoolInfo }> = ({
+  pool,
+  ...props
+}) => {
   return (
     <Modal size="sm" isOpen={props.isOpen} onClose={props.onClose} isCentered>
       <ModalOverlay />
@@ -37,38 +41,44 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; apr: any
 
           <Stack mb={7} spacing={1}>
             <Stack mb={1} justify="space-between" direction="row">
-              <Text flex="1" fontSize="md">
+              <Text flex="1" fontSize="sm">
                 1d
               </Text>
-              <Text flex="1" fontSize="md">
-                {new Intl.NumberFormat().format(Math.round(props.apr.dailyAPR))}%
+              <Text flex="1" fontSize="sm">
+                {new Intl.NumberFormat().format(pool.apr?.dailyAPR)}%
               </Text>
-              <Text flex="1" fontSize="md">
-                {new Intl.NumberFormat().format(Math.round(props.apr.dailyAPR * 1000))}
+              <Text flex="1" fontSize="sm">
+                {new Intl.NumberFormat().format(
+                  pool.apr?.dailyAPR * (1000 * parseFloat(pool.price))
+                )}
               </Text>
             </Stack>
 
             <Stack justify="space-between" direction="row">
-              <Text flex="1" fontSize="md">
+              <Text flex="1" fontSize="sm">
                 7d
               </Text>
-              <Text flex="1" fontSize="md">
-                {new Intl.NumberFormat().format(Math.round(props.apr.weeklyAPR))}%
+              <Text flex="1" fontSize="sm">
+                {new Intl.NumberFormat().format(pool.apr?.weeklyAPR)}%
               </Text>
-              <Text flex="1" fontSize="md">
-                {new Intl.NumberFormat().format(Math.round(props.apr.weeklyAPR * 1000))}
+              <Text flex="1" fontSize="sm">
+                {new Intl.NumberFormat().format(
+                  pool.apr?.weeklyAPR * (1000 * parseFloat(pool.price))
+                )}
               </Text>
             </Stack>
 
             <Stack justify="space-between" direction="row">
-              <Text flex="1" fontSize="md">
+              <Text flex="1" fontSize="sm">
                 365d
               </Text>
-              <Text flex="1" fontSize="md">
-                {new Intl.NumberFormat().format(Math.round(props.apr.yearlyAPR))}%
+              <Text flex="1" fontSize="sm">
+                {new Intl.NumberFormat().format(pool.apr?.yearlyAPR)}%
               </Text>
-              <Text flex="1" fontSize="md">
-                {new Intl.NumberFormat().format(Math.round(props.apr.yearlyAPR * 1000))}
+              <Text flex="1" fontSize="sm">
+                {new Intl.NumberFormat().format(
+                  pool.apr?.yearlyAPR * (1000 * parseFloat(pool.price))
+                )}
               </Text>
             </Stack>
           </Stack>
@@ -81,15 +91,19 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; apr: any
               Compounding once daily
             </Text>
             <Text as="li" fontSize="sm" color="gray.600">
-              Rates are estimates provided for your convenience only, and by no means represent
-              guaranteed returns
+              Rates are estimates provided for your convenience only. No means represent guaranteed
+              returns
             </Text>
           </Stack>
 
           <Stack spacing={2} direction="row" justify="center" align="center">
             <Button
               as={Link}
-              href={`https://quickswap.exchange/#/swap/${defaultContracts.irisToken.address}`}
+              href={
+                pool.isFarm
+                  ? `https://quickswap.exchange/#/add/${pool.pairTokens[0].tokenAddress}/${pool.pairTokens[1].tokenAddress}`
+                  : `https://quickswap.exchange/#/swap/${pool.lpAddress}`
+              }
               isExternal
               rightIcon={<ExternalLinkIcon color="primary.500" />}
               size="sm"
