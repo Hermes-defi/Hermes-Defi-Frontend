@@ -21,6 +21,7 @@
     "bignumber.js": "^9.0.1",
     "dayjs": "^1.10.6",
     "ethers": "^5.4.1",
+    "firebase-admin": "^9.11.0",
     "framer-motion": "^4",
     "js-abbreviation-number": "^1.2.0",
     "js-cookie": "^3.0.0",

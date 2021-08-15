@@ -289,6 +289,17 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
         </Heading>
 
         <Stack mb={5}>
+          {pool.isFarm && (
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="700" fontSize="sm">
+                LP Token Price
+              </Text>
+              <Text fontWeight="700" fontSize="sm">
+                {displayCurrency(pool.price || 0)}
+              </Text>
+            </Stack>
+          )}
+
           <Stack direction="row" justify="space-between">
             <Text fontWeight="700" fontSize="sm">
               Deposit
