@@ -8,7 +8,7 @@ import { useActiveWeb3React } from "wallet";
 import { useERC20, useMasterChef, useUniPair } from "../contracts";
 import { useCallback } from "react";
 import { getPoolApr } from "web3-functions/utils";
-import { fetchPairPrice, fetchPrice } from "hooks/prices";
+import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 
 const IRIS_PER_BLOCK = 0.4;
 export function useFetchPoolData(irisPrice: string) {

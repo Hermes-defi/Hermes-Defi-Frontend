@@ -1,16 +1,19 @@
 import BigNumberJS from "bignumber.js";
 import defaultContracts from "config/contracts";
 import ReactGA from "react-ga";
+import dayjs from "dayjs";
+
 import { BurnAddress, DEFAULT_CHAIN_ID, irisPerBlock } from "config/constants";
 import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
 import { useMasterChef, useIrisToken, useERC20, useUniPair } from "hooks/contracts";
-import { useIrisPrice, fetchPrice, fetchPairPrice } from "hooks/prices";
+import { useIrisPrice } from "hooks/prices";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
 import { getPoolApr } from "web3-functions/utils";
 import { Token } from "quickswap-sdk";
+import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 
 export function useIrisData() {
   const { account } = useActiveWeb3React();
@@ -243,6 +246,27 @@ export function useHermesStats() {
   });
 
   return hermesStats;
+}
+
+export function useTvlChart() {
+  return useQuery("tvl-chart-data", async () => {
+    // const resp = await fetch("https://hermesdefi.io/tvlData/chartData.json");
+    // const data = await resp.json();
+
+    // format data
+    // const formattedData = data.map((tvlData: { value: string; time: string }) => {
+    //   const time = dayjs(tvlData.time).format("HH:[00]");
+    //   const value = parseInt(tvlData.value);
+
+    //   return { time, value };
+    // });
+
+    return [
+      { time: "00:00", value: 0 },
+      { time: "01:00", value: 0 },
+      { time: "02:00", value: 0 },
+    ];
+  });
 }
 
 export function useHarvestAll(irisToHarvest: string) {

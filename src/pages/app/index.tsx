@@ -4,7 +4,14 @@ import defaultContracts from "config/contracts";
 
 import { addTokenToWallet } from "wallet/utils";
 import { displayCurrency, displayNumber } from "libs/utils";
-import { useAPRStats, useHarvestAll, useHermesStats, useIrisData, useIrisStats } from "hooks/home";
+import {
+  useAPRStats,
+  useHarvestAll,
+  useHermesStats,
+  useIrisData,
+  useIrisStats,
+  useTvlChart,
+} from "hooks/home";
 
 import { AppLayout } from "components/layout";
 import {
@@ -23,13 +30,21 @@ import {
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
-import { CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import {
+  ResponsiveContainer,
+  CartesianGrid,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const data = [
-  { name: "JAN", tvl: 0 },
-  { name: "FEB", tvl: 0 },
-  { name: "MAR", tvl: 0 },
-  { name: "APR", tvl: 0 },
+  { time: "JAN", value: 500000 },
+  { time: "FEB", value: 100000 },
+  { time: "MAR", value: 400000 },
+  { time: "APR", value: 200000 },
 ];
 
 const Page: React.FC = () => {
@@ -38,6 +53,8 @@ const Page: React.FC = () => {
 
   const { maxPoolAPR, maxFarmAPR } = useAPRStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
+  const chartData = useTvlChart();
+
   const harvestAll = useHarvestAll(irisToHarvest.data);
 
   return (
@@ -331,20 +348,44 @@ const Page: React.FC = () => {
                 </Stack>
               </Stack>
 
-              <Box>
+              <ResponsiveContainer width={useBreakpointValue({ base: 340, md: 800 })} height="80%">
                 <LineChart
+                  style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
+                  data={chartData.data}
+                >
+                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
+                  <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                  <XAxis style={{ fontSize: "12px" }} dataKey="time" />
+                  <YAxis
+                    style={{ fontSize: "12px" }}
+                    domain={[
+                      Math.min(...(chartData.data || []).map((d: any) => d.value)) - 100000,
+                      Math.max(...(chartData.data || []).map((d: any) => d.value)) + 100000,
+                    ]}
+                  />
+                  <Tooltip />
+                </LineChart>
+
+                {/* <LineChart
                   width={useBreakpointValue({ base: 340, md: 800 })}
                   height={useBreakpointValue({ base: 200, md: 300 })}
                   style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
-                  data={data}
+                  data={chartData.data || []}
                 >
-                  <Line type="monotone" dataKey="tvl" stroke="#8884d8" />
-                  <CartesianGrid stroke="#ccc" />
-                  <XAxis dataKey="name" />
+                  <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                  <XAxis style={{ fontSize: "12px" }} dataKey="time" />
                   <YAxis />
-                  <Tooltip />
-                </LineChart>
-              </Box>
+                  <Tooltip formatter={(label) => "$" + label} separator=": " label="Value" />
+
+                  <Line
+                    type="monotone"
+                    dataKey="value"
+                    stroke="#8884d8"
+                    strokeWidth={2}
+                    isAnimationActive={false}
+                  />
+                </LineChart> */}
+              </ResponsiveContainer>
             </Box>
           </Stack>
         </Box>
