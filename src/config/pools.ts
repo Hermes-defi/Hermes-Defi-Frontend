@@ -23,7 +23,7 @@ export type PoolInfo = {
   totalStaked?: string;
   price?: string;
   apy?: string;
-  apr?: number;
+  apr?: { yearlyAPR: number; weeklyAPR: number; dailyAPR: number };
 
   // user data
   hasStaked?: boolean;

@@ -1,4 +1,5 @@
 import React from "react";
+import defaultContracts from "config/contracts";
 import {
   Modal,
   ModalOverlay,
@@ -9,10 +10,11 @@ import {
   Stack,
   Text,
   Button,
+  Link,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 
-export const ROIModal: React.FC<{ isOpen: boolean; onClose: () => void }> = (props) => {
+export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; apr: any }> = (props) => {
   return (
     <Modal size="sm" isOpen={props.isOpen} onClose={props.onClose} isCentered>
       <ModalOverlay />
@@ -39,10 +41,10 @@ export const ROIModal: React.FC<{ isOpen: boolean; onClose: () => void }> = (pro
                 1d
               </Text>
               <Text flex="1" fontSize="md">
-                0.18%
+                {new Intl.NumberFormat().format(Math.round(props.apr.dailyAPR))}%
               </Text>
               <Text flex="1" fontSize="md">
-                0.12
+                {new Intl.NumberFormat().format(Math.round(props.apr.dailyAPR * 1000))}
               </Text>
             </Stack>
 
@@ -51,22 +53,10 @@ export const ROIModal: React.FC<{ isOpen: boolean; onClose: () => void }> = (pro
                 7d
               </Text>
               <Text flex="1" fontSize="md">
-                1.33%
+                {new Intl.NumberFormat().format(Math.round(props.apr.weeklyAPR))}%
               </Text>
               <Text flex="1" fontSize="md">
-                0.87
-              </Text>
-            </Stack>
-
-            <Stack justify="space-between" direction="row">
-              <Text flex="1" fontSize="md">
-                30d
-              </Text>
-              <Text flex="1" fontSize="md">
-                5.79%
-              </Text>
-              <Text flex="1" fontSize="md">
-                0.87
+                {new Intl.NumberFormat().format(Math.round(props.apr.weeklyAPR * 1000))}
               </Text>
             </Stack>
 
@@ -75,10 +65,10 @@ export const ROIModal: React.FC<{ isOpen: boolean; onClose: () => void }> = (pro
                 365d
               </Text>
               <Text flex="1" fontSize="md">
-                98.23%
+                {new Intl.NumberFormat().format(Math.round(props.apr.yearlyAPR))}%
               </Text>
               <Text flex="1" fontSize="md">
-                0.87
+                {new Intl.NumberFormat().format(Math.round(props.apr.yearlyAPR * 1000))}
               </Text>
             </Stack>
           </Stack>
@@ -97,7 +87,14 @@ export const ROIModal: React.FC<{ isOpen: boolean; onClose: () => void }> = (pro
           </Stack>
 
           <Stack spacing={2} direction="row" justify="center" align="center">
-            <Button rightIcon={<ExternalLinkIcon color="primary.500" />} size="sm" variant="link">
+            <Button
+              as={Link}
+              href={`https://quickswap.exchange/#/swap/${defaultContracts.irisToken.address}`}
+              isExternal
+              rightIcon={<ExternalLinkIcon color="primary.500" />}
+              size="sm"
+              variant="link"
+            >
               <Text fontSize="lg" fontWeight="bold" textColor="primary.500">
                 Get IRIS
               </Text>

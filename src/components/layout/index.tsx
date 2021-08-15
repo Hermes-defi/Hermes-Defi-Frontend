@@ -352,6 +352,7 @@ const Footer = () => {
   return (
     <Slide direction="bottom" in style={{ zIndex: 10 }}>
       <Stack
+        display={["none", "flex"]}
         direction="row"
         align="flex-end"
         justify="flex-end"

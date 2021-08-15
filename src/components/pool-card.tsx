@@ -22,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 import { AiOutlineCalculator } from "react-icons/ai";
 import { UnlockButton } from "./unlock-wallet";
-import { ROIModal } from "./modals/roi-modal";
+import { APRModal } from "./modals/roi-modal";
 
 // Pool Actions
 const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
@@ -153,12 +153,12 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   );
 };
 
-export function APRCalculator() {
+export function APRCalculator({ apr }: any) {
   const { isOpen, onClose, onOpen } = useDisclosure();
   return (
     <>
       <Icon onClick={onOpen} mr={1} as={AiOutlineCalculator} />
-      <ROIModal isOpen={isOpen} onClose={onClose} />
+      <APRModal apr={apr} isOpen={isOpen} onClose={onClose} />
     </>
   );
 }
@@ -250,9 +250,11 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             APR
           </Text>
           <Box display="flex" alignItems="center">
-            {/* {pool.apr && <APRCalculator />} */}
+            {pool.apr && <APRCalculator apr={pool.apr} />}
             <Text fontWeight="700" fontSize="sm">
-              {pool.apr ? `${new Intl.NumberFormat().format(Math.round(pool.apr))}%` : "N/A"}
+              {pool.apr
+                ? `${new Intl.NumberFormat().format(Math.round(pool.apr.yearlyAPR))}%`
+                : "N/A"}
             </Text>
           </Box>
         </Stack>

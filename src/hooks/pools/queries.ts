@@ -92,7 +92,7 @@ export function useFetchPoolData(irisPrice: string) {
         parseFloat(poolInfo.totalStaked || "0")
       );
 
-      poolInfo.apr = apr.yearlyAPR;
+      poolInfo.apr = apr;
 
       if (account) {
         poolInfo.irisEarned = utils.formatEther(await masterChef.pendingIris(pid, account));
