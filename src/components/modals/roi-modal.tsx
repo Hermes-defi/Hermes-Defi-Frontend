@@ -1,5 +1,4 @@
 import React from "react";
-import defaultContracts from "config/contracts";
 import {
   Modal,
   ModalOverlay,
@@ -14,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { PoolInfo } from "config/pools";
+import { displayNumber, displayTokenCurrency } from "libs/utils";
 
 export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: PoolInfo }> = ({
   pool,
@@ -45,12 +45,10 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 1d
               </Text>
               <Text flex="1" fontSize="sm">
-                {new Intl.NumberFormat().format(pool.apr?.dailyAPR)}%
+                {displayNumber(pool.apr?.dailyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
-                {new Intl.NumberFormat().format(
-                  pool.apr?.dailyAPR * (1000 * parseFloat(pool.price))
-                )}
+                {displayTokenCurrency(pool.apr?.dailyAPR * (1000 * parseFloat(pool.price)), "")}
               </Text>
             </Stack>
 
@@ -59,12 +57,10 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 7d
               </Text>
               <Text flex="1" fontSize="sm">
-                {new Intl.NumberFormat().format(pool.apr?.weeklyAPR)}%
+                {displayNumber(pool.apr?.weeklyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
-                {new Intl.NumberFormat().format(
-                  pool.apr?.weeklyAPR * (1000 * parseFloat(pool.price))
-                )}
+                {displayTokenCurrency(pool.apr?.weeklyAPR * (1000 * parseFloat(pool.price)), "")}
               </Text>
             </Stack>
 
@@ -73,12 +69,10 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 365d
               </Text>
               <Text flex="1" fontSize="sm">
-                {new Intl.NumberFormat().format(pool.apr?.yearlyAPR)}%
+                {displayNumber(pool.apr?.yearlyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
-                {new Intl.NumberFormat().format(
-                  pool.apr?.yearlyAPR * (1000 * parseFloat(pool.price))
-                )}
+                {displayTokenCurrency(pool.apr?.yearlyAPR * (1000 * parseFloat(pool.price)), "")}
               </Text>
             </Stack>
           </Stack>
@@ -110,7 +104,7 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
               variant="link"
             >
               <Text fontSize="lg" fontWeight="bold" textColor="primary.500">
-                Get IRIS
+                Get {pool.lpToken}
               </Text>
             </Button>
           </Stack>

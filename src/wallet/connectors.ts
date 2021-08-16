@@ -7,8 +7,8 @@ import { DEFAULT_CHAIN_ID } from "config/constants";
 // CONSTANTS
 export const RPC_URLS: { [chainId: number]: string } = {
   // 137: "https://polygon-mainnet.g.alchemy.com/v2/-wr8PeteJZ7rtsFZIw6AesEuE9-Nk1KA", // alchemy
-  137: "https://polygon-mainnet.infura.io/v3/c444c7d7bd584ff5b3e1f3183205fbdc", // personal
-  // 137: "https://polygon-mainnet.infura.io/v3/b6cb6bc2b88a449295d81e3376ff4734", // main
+  // 137: "https://polygon-mainnet.infura.io/v3/c444c7d7bd584ff5b3e1f3183205fbdc", // personal
+  137: "https://polygon-mainnet.infura.io/v3/b6cb6bc2b88a449295d81e3376ff4734", // main
   80001: "https://polygon-mumbai.infura.io/v3/93518d8fd18e494899c057da3bd5a35d",
 };
 

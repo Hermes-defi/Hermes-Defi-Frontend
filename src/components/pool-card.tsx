@@ -1,7 +1,7 @@
 import React from "react";
 import BigNumber from "bignumber.js";
 import { useActiveWeb3React } from "wallet";
-import { displayCurrency } from "libs/utils";
+import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
 import { useApprovePool, useDepositIntoPool } from "hooks/pools/actions";
@@ -63,12 +63,12 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
     <Stack spacing={4}>
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          {displayCurrency(pool.lpStaked, true)} {pool.lpToken} Staked
+          {displayTokenCurrency(pool.lpStaked, pool.lpToken)} Staked
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="700" fontSize="2xl">
-            {displayCurrency(pool.lpStaked, true)}
+            {displayTokenCurrency(pool.lpStaked, "")}
           </Text>
 
           <Stack direction="row">
@@ -117,7 +117,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
 
         <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="700" fontSize="2xl">
-            {displayCurrency(pool.irisEarned, true)}
+            {displayTokenCurrency(pool.irisEarned, "")}
           </Text>
 
           {pool.hasApprovedPool && (
@@ -252,9 +252,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
           <Box display="flex" alignItems="center">
             {pool.apr && <APRCalculator pool={pool} />}
             <Text fontWeight="700" fontSize="sm">
-              {pool.apr
-                ? `${new Intl.NumberFormat().format(Math.round(pool.apr.yearlyAPR))}%`
-                : "N/A"}
+              {pool.apr ? `${displayNumber(Math.round(pool.apr.yearlyAPR))}%` : "N/A"}
             </Text>
           </Box>
         </Stack>

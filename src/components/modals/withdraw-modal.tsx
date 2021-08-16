@@ -13,7 +13,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useWithdraw } from "hooks/pools/actions";
-import { displayCurrency } from "libs/utils";
+import { displayTokenCurrency } from "libs/utils";
 import { PoolInfo } from "config/pools";
 
 type Props = { isOpen: boolean; onClose: () => void; pool: PoolInfo };
@@ -44,7 +44,7 @@ export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
             >
               <Box flex="1">
                 <Text mb={2} fontSize="xs">
-                  Balance: {displayCurrency(pool.lpStaked, true)} {pool.lpToken}
+                  Balance: {displayTokenCurrency(pool.lpStaked, pool.lpToken)}
                 </Text>
 
                 <Input

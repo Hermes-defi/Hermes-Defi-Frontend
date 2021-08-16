@@ -13,7 +13,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 import { useBalance } from "hooks/wallet";
-import { displayCurrency } from "libs/utils";
+import { displayTokenCurrency } from "libs/utils";
 
 // TODO:: RENAME TO buy-fenix-modal :facepalm:
 type Props = {
@@ -49,7 +49,7 @@ export const BuyMaticModal: React.FC<Props> = (props) => {
               <Box flex="1">
                 {balance && (
                   <Text mb={2} fontSize="xs">
-                    Balance: {displayCurrency(balance, true)} MATIC
+                    Balance: {displayTokenCurrency(balance, "MATIC")}
                   </Text>
                 )}
 

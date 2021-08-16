@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useTokenBalance } from "hooks/wallet";
 import { useDepositIntoPool } from "hooks/pools/actions";
-import { displayCurrency } from "libs/utils";
+import { displayTokenCurrency } from "libs/utils";
 import { PoolInfo } from "config/pools";
 
 type Props = { isOpen: boolean; onClose: () => void; pool: PoolInfo };
@@ -47,7 +47,7 @@ export const DepositModal: React.FC<Props> = ({ pool, ...props }) => {
               <Box flex="1">
                 {balance && (
                   <Text mb={2} fontSize="xs">
-                    Balance: {displayCurrency(balance, true)} {pool.lpToken}
+                    Balance: {displayTokenCurrency(balance, pool.lpToken)}
                   </Text>
                 )}
 

@@ -15,7 +15,7 @@ import {
 
 import defaultContracts from "config/contracts";
 import { useTokenBalance } from "hooks/wallet";
-import { displayCurrency } from "libs/utils";
+import { displayTokenCurrency } from "libs/utils";
 
 type Props = {
   isOpen: boolean;
@@ -50,7 +50,7 @@ export const SwapFenixModal: React.FC<Props> = (props) => {
               <Box flex="1">
                 {balance && (
                   <Text mb={2} fontSize="xs">
-                    Balance: {displayCurrency(balance, true)} FENIX
+                    Balance: {displayTokenCurrency(balance, "FENIX")}
                   </Text>
                 )}
 

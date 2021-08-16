@@ -8,28 +8,33 @@ export function truncateAddress(address: string, length: number): string {
   )}`;
 }
 
-export function displayNumber(number: number) {
-  return abbreviateNumber(number, 1, { padding: false, symbols: ["", "K", "M", "B", "T"] });
+export function displayNumber(number: number | string, compact?: boolean) {
+  const value = new Intl.NumberFormat(undefined, {
+    maximumFractionDigits: 2,
+    ...(compact ? { notation: "compact", compactDisplay: "short" } : {}),
+  }).format(number as number);
+
+  return value;
 }
 
-export function displayCurrency(number: number | string, isToken?: boolean, abbr?: boolean) {
-  if (abbr) {
-    return abbreviateNumber(parseFloat(`${number}`), 1, {
-      padding: false,
-      symbols: ["", "K", "M", "B", "T"],
-    });
-  }
+export function displayTokenCurrency(number: number | string, token: string, compact?: boolean) {
+  const value = new Intl.NumberFormat(undefined, {
+    maximumFractionDigits: 2,
+    ...(compact ? { notation: "compact", compactDisplay: "short" } : {}),
+  }).format(number as number);
 
-  const value = new Intl.NumberFormat(
-    undefined,
-    !isToken && {
-      style: "currency",
-      currency: "USD",
-    }
-  ).format(number as number);
+  return `${value} ${token}`;
+}
 
-  // hack to remove the "US" from the number
-  return isToken ? value : value.replace(/US/, "");
+export function displayCurrency(number: number | string, compact?: boolean) {
+  const value = new Intl.NumberFormat(undefined, {
+    style: "currency",
+    currency: "USD",
+    currencyDisplay: "narrowSymbol",
+    ...(compact ? { notation: "compact", compactDisplay: "short" } : {}),
+  }).format(number as number);
+
+  return value;
 }
 
 export function blockToTimestamp(block: number) {

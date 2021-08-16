@@ -3,7 +3,7 @@ import React from "react";
 import defaultContracts from "config/contracts";
 
 import { addTokenToWallet } from "wallet/utils";
-import { displayCurrency, displayNumber } from "libs/utils";
+import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
 import {
   useAPRStats,
   useHarvestAll,
@@ -83,7 +83,7 @@ const Page: React.FC = () => {
                 <Box align="center">
                   <Skeleton isLoaded={!!irisToHarvest.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">
-                      {displayCurrency(irisToHarvest.data, true)}
+                      {displayTokenCurrency(irisToHarvest.data, "", true)}
                     </Text>
                   </Skeleton>
 
@@ -95,7 +95,7 @@ const Page: React.FC = () => {
                 <Box align="center">
                   <Skeleton isLoaded={!!irisInWallet.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">
-                      {displayCurrency(irisInWallet.data, true)}
+                      {displayTokenCurrency(irisInWallet.data, "", true)}
                     </Text>
                   </Skeleton>
                   <Text fontSize={"sm"} color="gray.600">
@@ -147,7 +147,7 @@ const Page: React.FC = () => {
                   </Text>
                   <Skeleton isLoaded={!!maxFarmAPR.data}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {displayNumber(Math.round(maxFarmAPR.data))}%{" "}
+                      {displayNumber(Math.round(maxFarmAPR.data), true)}%
                     </Text>{" "}
                   </Skeleton>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
@@ -186,7 +186,7 @@ const Page: React.FC = () => {
                   </Text>
                   <Skeleton isLoaded={!!maxPoolAPR.data}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {displayNumber(Math.round(maxPoolAPR.data))}%{" "}
+                      {displayNumber(Math.round(maxPoolAPR.data), true)}%
                     </Text>{" "}
                   </Skeleton>
 
@@ -223,7 +223,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency(irisStats.data?.maximumSupply, true)}
+                      {displayTokenCurrency(irisStats.data?.maximumSupply, "")}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color="gray.600" fontSize="md">
@@ -236,7 +236,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency("0.4", true)}
+                      {displayNumber("0.4")}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color="gray.600" fontSize="md">
@@ -249,7 +249,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency(irisStats.data?.totalMinted, true)}
+                      {displayNumber(irisStats.data?.totalMinted)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color="gray.600" fontSize="md">
@@ -262,7 +262,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency(irisStats.data?.circulatingSupply, true)}
+                      {displayNumber(irisStats.data?.circulatingSupply)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color="gray.600" fontSize="md">
@@ -275,7 +275,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency(irisStats.data?.totalBurned, true)}
+                      {displayNumber(irisStats.data?.totalBurned, true)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color="gray.600" fontSize="md">
