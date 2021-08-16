@@ -14,11 +14,14 @@ import {
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { PoolInfo } from "config/pools";
 import { displayNumber, displayTokenCurrency } from "libs/utils";
+import { useIrisPrice } from "hooks/prices";
 
 export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: PoolInfo }> = ({
   pool,
   ...props
 }) => {
+  const irisPrice = useIrisPrice();
+
   return (
     <Modal size="sm" isOpen={props.isOpen} onClose={props.onClose} isCentered>
       <ModalOverlay />
@@ -48,7 +51,10 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 {displayNumber(pool.apr?.dailyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
-                {displayTokenCurrency(pool.apr?.dailyAPR * (1000 * parseFloat(pool.price)), "")}
+                {displayTokenCurrency(
+                  ((pool.apr?.dailyAPR / 100) * 1000) / parseFloat(irisPrice.data),
+                  ""
+                )}
               </Text>
             </Stack>
 
@@ -60,7 +66,10 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 {displayNumber(pool.apr?.weeklyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
-                {displayTokenCurrency(pool.apr?.weeklyAPR * (1000 * parseFloat(pool.price)), "")}
+                {displayTokenCurrency(
+                  ((pool.apr?.weeklyAPR / 100) * 1000) / parseFloat(irisPrice.data),
+                  ""
+                )}
               </Text>
             </Stack>
 
@@ -72,7 +81,10 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 {displayNumber(pool.apr?.yearlyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
-                {displayTokenCurrency(pool.apr?.yearlyAPR * (1000 * parseFloat(pool.price)), "")}
+                {displayTokenCurrency(
+                  ((pool.apr?.yearlyAPR / 100) * 1000) / parseFloat(irisPrice.data),
+                  ""
+                )}
               </Text>
             </Stack>
           </Stack>
