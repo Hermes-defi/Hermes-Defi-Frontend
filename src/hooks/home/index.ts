@@ -250,22 +250,20 @@ export function useHermesStats() {
 
 export function useTvlChart() {
   return useQuery("tvl-chart-data", async () => {
-    // const resp = await fetch("https://bucketforhermes.s3.eu-central-1.amazonaws.com/chartData.json");
-    // const data = await resp.json();
+    const resp = await fetch(
+      "https://bucketforhermes.s3.eu-central-1.amazonaws.com/chartData.json"
+    );
+    const data = await resp.json();
 
     // format data
-    // const formattedData = data.map((tvlData: { value: string; time: string }) => {
-    //   const time = dayjs(tvlData.time).format("HH:[00]");
-    //   const value = parseInt(tvlData.value);
+    const formattedData = data.map((tvlData: { value: string; time: string }) => {
+      const time = dayjs(tvlData.time).format("HH:mm");
+      const value = parseInt(tvlData.value);
 
-    //   return { time, value };
-    // });
+      return { time, value };
+    });
 
-    return [
-      { time: "00:00", value: 0 },
-      { time: "01:00", value: 0 },
-      { time: "02:00", value: 0 },
-    ];
+    return formattedData;
   });
 }
 
