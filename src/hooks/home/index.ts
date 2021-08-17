@@ -250,7 +250,7 @@ export function useHermesStats() {
 
 export function useTvlChart() {
   return useQuery("tvl-chart-data", async () => {
-    // const resp = await fetch("https://hermesdefi.io/tvlData/chartData.json");
+    // const resp = await fetch("https://bucketforhermes.s3.eu-central-1.amazonaws.com/chartData.json");
     // const data = await resp.json();
 
     // format data

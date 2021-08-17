@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import dayjs from "dayjs";
+import AWS from "aws-sdk";
 
 import * as ethers from "ethers";
 import BigNumberJS from "bignumber.js";
@@ -14,6 +15,11 @@ import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 
 import { Token } from "quickswap-sdk";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_KEY_ID,
+});
 
 async function calculateTVL() {
   const provider = new ethers.providers.JsonRpcProvider(RPC_URLS[DEFAULT_CHAIN_ID]);
@@ -81,10 +87,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   switch (method) {
     case "GET": {
       try {
-        const tvlJSON = fs.readFileSync("public/tvlData/chartData.json").toString();
+        const tvlJSON = await s3
+          .getObject({ Bucket: "bucketforhermes", Key: "chartData.json" })
+          .promise();
 
         // perse json
-        const tvlData: any[] = JSON.parse(tvlJSON);
+        const tvlData: any[] = tvlJSON.Body ? JSON.parse(tvlJSON.Body.toString()) : [];
 
         // push the new tvl to the array
         const currentTime = dayjs().toISOString();
@@ -97,7 +105,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // write new json to file
-        fs.writeFileSync("public/tvlData/chartData.json", JSON.stringify(tvlData));
+        await s3
+          .upload({
+            Bucket: "bucketforhermes",
+            Key: "chartData.json",
+            Body: JSON.stringify(tvlData),
+          })
+          .promise();
+
         return res.send(true);
       } catch (e) {
         return res.send(e.message);
