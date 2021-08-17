@@ -113,7 +113,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           })
           .promise();
 
-        return res.send(true);
+        return res.send(tvlData);
       } catch (e) {
         return res.send(e.message);
       }
