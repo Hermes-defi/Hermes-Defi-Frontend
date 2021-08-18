@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import fs from "fs";
+import { withSentry } from "@sentry/nextjs";
 import dayjs from "dayjs";
 import AWS from "aws-sdk";
 
@@ -81,7 +81,7 @@ async function calculateTVL() {
   return totalValueInPools.plus(totalValueInFarms).toFixed(2).toString();
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method } = req;
 
   switch (method) {
@@ -123,3 +123,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   }
 }
+
+export default withSentry(handler);
