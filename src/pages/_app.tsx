@@ -89,10 +89,7 @@ function MetaTags() {
         property="og:description"
         content="Hermes Finance aka Hermes defi is a decentralized hybrid yield optimizer (yield farm and yield aggregator) based in the community feedback. Blessed by the gods!"
       />
-      <meta
-        property="og:image"
-        content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
-      />
+      <meta property="og:image" content="https://ibb.co/pW4Xm7F" />
 
       {/* twitter */}
       <meta property="twitter:card" content="summary_large_image" />
@@ -102,10 +99,7 @@ function MetaTags() {
         property="twitter:description"
         content="Hermes Finance aka Hermes defi is a decentralized hybrid yield optimizer (yield farm and yield aggregator) based in the community feedback. Blessed by the gods!"
       />
-      <meta
-        property="twitter:image"
-        content="https://metatags.io/assets/meta-tags-16a33a6a8531e519cc0936fbba0ad904e52d35f34a46c97a2c9f6f7dd7d336f2.png"
-      />
+      <meta property="twitter:image" content="https://ibb.co/pW4Xm7F" />
     </Head>
   );
 }
