@@ -30,11 +30,11 @@ export function displayCurrency(number: number | string, compact?: boolean) {
   const value = new Intl.NumberFormat(undefined, {
     style: "currency",
     currency: "USD",
-    currencyDisplay: "narrowSymbol",
+    // currencyDisplay: "narrowSymbol",
     ...(compact ? { notation: "compact", compactDisplay: "short" } : {}),
   }).format(number as number);
 
-  return value;
+  return value.replace(/US/, "");
 }
 
 export function blockToTimestamp(block: number) {
