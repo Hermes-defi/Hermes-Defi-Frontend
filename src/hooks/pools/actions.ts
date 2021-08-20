@@ -9,6 +9,7 @@ import { useERC20, useMasterChef } from "../contracts";
 import { getReferralAddress } from "../referral";
 import { useFetchPoolData } from "./queries";
 import { useIrisPrice } from "hooks/prices";
+import { balancersDefaultData, farmsDefaultData, poolDefaultData } from "config/pools";
 
 export function useApprovePool() {
   const { account } = useActiveWeb3React();
@@ -81,7 +82,11 @@ export function useDepositIntoPool() {
       );
 
       // fetch new pool data
-      const data = await getPoolData(pid);
+      const poolInfo = [...poolDefaultData, ...farmsDefaultData, ...balancersDefaultData].find(
+        (p) => p.pid === pid
+      );
+
+      const data = await getPoolData(poolInfo);
       return { data };
     },
     {
@@ -131,7 +136,10 @@ export function useWithdraw() {
       await withdrawFromPool(masterChef, pid, amount, pool.decimals);
 
       // fetch new pool data
-      const data = await getPoolData(pid);
+      const poolInfo = [...poolDefaultData, ...farmsDefaultData, ...balancersDefaultData].find(
+        (p) => p.pid === pid
+      );
+      const data = await getPoolData(poolInfo);
       return { data };
     },
     {
