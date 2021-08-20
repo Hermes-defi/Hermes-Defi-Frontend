@@ -6,10 +6,11 @@ import { useToggle } from "react-use";
 import { useFetchPoolData } from "hooks/pools/queries";
 import { useIrisPrice } from "hooks/prices";
 
-import { poolDefaultData, PoolInfo } from "config/pools";
+import { balancersDefaultData, PoolInfo } from "config/pools";
 import { PoolsContext, poolsReducers } from "hooks/pools/reducer";
 
 import {
+  Box,
   Button,
   Container,
   Flex,
@@ -17,7 +18,6 @@ import {
   FormLabel,
   Heading,
   HStack,
-  SimpleGrid,
   Spinner,
   Stack,
   StackDivider,
@@ -27,8 +27,8 @@ import { PoolCard } from "components/pool-card";
 import { AppLayout } from "components/layout";
 
 const Page: React.FC = () => {
-  const { data: irisPrice } = useIrisPrice();
   const { account } = useActiveWeb3React();
+  const { data: irisPrice } = useIrisPrice();
   const fetchPoolData = useFetchPoolData(irisPrice);
 
   // page display actions
@@ -38,12 +38,12 @@ const Page: React.FC = () => {
   const [state, dispatch] = useReducer(poolsReducers, [] as PoolInfo[]);
 
   const poolQuery = useQuery(
-    ["pools", account, irisPrice],
+    ["farms", account, irisPrice],
 
     async (): Promise<PoolInfo[]> => {
       return Promise.all(
-        poolDefaultData.map(async (pool) => {
-          return fetchPoolData(pool);
+        balancersDefaultData.map(async (bal) => {
+          return fetchPoolData(bal);
         })
       );
     },
@@ -110,17 +110,19 @@ const Page: React.FC = () => {
           </HStack>
 
           <Container align="center" maxWidth="container.lg">
-            {poolQuery.isLoading && !poolQuery.data && (
+            {poolQuery.isLoading && (
               <Flex mt={16} align="center" justify="center">
                 <Spinner size="xl" />
               </Flex>
             )}
 
-            <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
+            <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
               {pools.map((pool) => (
-                <PoolCard pool={pool} key={pool.pid} />
+                <Box key={pool.pid} w={80} pt="40px">
+                  <PoolCard pool={pool} key={pool.pid} />
+                </Box>
               ))}
-            </SimpleGrid>
+            </Stack>
           </Container>
         </Stack>
       </AppLayout>

@@ -3,7 +3,7 @@ import BigNumberJS from "bignumber.js";
 import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { BigNumber, utils } from "ethers";
-import { farmsDefaultData, poolDefaultData } from "config/pools";
+import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 import { useActiveWeb3React } from "wallet";
 import { useERC20, useMasterChef, useUniPair } from "../contracts";
 import { useCallback } from "react";
@@ -17,13 +17,11 @@ export function useFetchPoolData(irisPrice: string) {
   const getPairContract = useUniPair();
   const { account, library } = useActiveWeb3React();
 
-  const defaultData = [...farmsDefaultData, ...poolDefaultData];
   const fetchData = useCallback(
-    async (pid: number) => {
-      let poolInfo = defaultData.find((d) => d.pid === pid);
+    async (poolInfo: PoolInfo) => {
       try {
         // fetch data from contract
-        let masterChefInfo = await masterChef.poolInfo(pid);
+        let masterChefInfo = await masterChef.poolInfo(poolInfo.pid);
 
         // override data with contract data
         poolInfo.multiplier = masterChefInfo.allocPoint.toString();
@@ -63,6 +61,8 @@ export function useFetchPoolData(irisPrice: string) {
         );
 
         poolInfo.price = await fetchPairPrice(token0, token1, totalSupply, library);
+      } else if (poolInfo.isBalancer) {
+        poolInfo.price = "0";
       } else {
         poolInfo.token = new Token(
           DEFAULT_CHAIN_ID,
@@ -95,8 +95,10 @@ export function useFetchPoolData(irisPrice: string) {
       poolInfo.apr = apr;
 
       if (account) {
-        poolInfo.irisEarned = utils.formatEther(await masterChef.pendingIris(pid, account));
-        const userInfo = await masterChef.userInfo(pid, account);
+        poolInfo.irisEarned = utils.formatEther(
+          await masterChef.pendingIris(poolInfo.pid, account)
+        );
+        const userInfo = await masterChef.userInfo(poolInfo.pid, account);
 
         poolInfo.lpStaked = utils.formatUnits(userInfo.amount, poolInfo.decimals);
         poolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();

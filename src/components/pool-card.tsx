@@ -63,12 +63,15 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
     <Stack spacing={4}>
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          {displayTokenCurrency(pool.lpStaked, pool.lpToken)} Staked
+          {pool.lpStaked
+            ? displayTokenCurrency(pool.lpStaked, pool.lpToken)
+            : `N/A ${pool.lpToken}`}{" "}
+          Staked
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="700" fontSize="2xl">
-            {displayTokenCurrency(pool.lpStaked, "")}
+            {pool.lpStaked ? displayTokenCurrency(pool.lpStaked, "") : "N/A"}
           </Text>
 
           <Stack direction="row">
@@ -117,7 +120,7 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
 
         <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="700" fontSize="2xl">
-            {displayTokenCurrency(pool.irisEarned, "")}
+            {pool.irisEarned ? displayTokenCurrency(pool.irisEarned, "") : "N/A"}
           </Text>
 
           {pool.hasApprovedPool && (
@@ -172,6 +175,7 @@ const imageMapper = {
   usdc: "/usdc-logo.png",
   usdt: "/usdt-logo.png",
   dai: "/dai-logo.png",
+  aes: "/aes-logo.png",
   "iris/wmatic": ["/hermes-logo-1.png", "/matic-logo.png"],
 };
 export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
@@ -304,7 +308,9 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             </Text>
             <Link
               href={
-                pool.isFarm
+                pool.isBalancer
+                  ? `https://polygon.balancer.fi/#/pool/${pool.balancerAddress}`
+                  : pool.isFarm
                   ? `https://quickswap.exchange/#/add/${pool.pairTokens[0].tokenAddress}/${pool.pairTokens[1].tokenAddress}`
                   : `https://quickswap.exchange/#/swap/${pool.lpAddress}`
               }
@@ -321,7 +327,9 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               Total Liquidity
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {displayCurrency(new BigNumber(pool.totalStaked).times(pool.price || 0).toNumber())}
+              {pool.totalStaked
+                ? displayCurrency(new BigNumber(pool.totalStaked).times(pool.price || 0).toNumber())
+                : "N/A"}
             </Text>
           </Stack>
         </Stack>

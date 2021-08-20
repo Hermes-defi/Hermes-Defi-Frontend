@@ -40,6 +40,11 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
 
   {
+    label: "Balancers",
+    href: "/app/balancers",
+  },
+
+  {
     label: "Referrals",
     href: "/app/referrals",
   },

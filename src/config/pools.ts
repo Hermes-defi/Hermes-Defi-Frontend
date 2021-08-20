@@ -7,6 +7,7 @@ export type PoolInfo = {
   multiplier: string;
   depositFees: number;
   isFarm?: boolean;
+  isBalancer?: boolean;
   active?: boolean;
   farmDx?: string;
 
@@ -19,6 +20,7 @@ export type PoolInfo = {
     tokenDecimals: number;
     tokenName: string;
   }[];
+  balancerAddress?: string;
   token?: Token;
   totalStaked?: string;
   price?: string;
@@ -115,6 +117,14 @@ export const poolDefaultData: PoolInfo[] = {
       lpAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
       decimals: 18,
     },
+    {
+      pid: 9,
+      multiplier: "5",
+      depositFees: 3,
+      lpToken: "AES",
+      lpAddress: "0x5ac3ceee2c3e6790cadd6707deb2e87ea83b0631",
+      decimals: 9,
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID];
@@ -140,10 +150,82 @@ export const farmsDefaultData: PoolInfo[] = {
           tokenDecimals: 18,
           tokenName: "IRIS",
         },
-        ,
       ],
       decimals: 18,
     },
   ],
   80001: [],
+}[DEFAULT_CHAIN_ID];
+
+export const balancersDefaultData: PoolInfo[] = {
+  137: [
+    {
+      pid: 10,
+      multiplier: "15",
+      depositFees: 3,
+      active: true,
+      isBalancer: true,
+      farmDx: "Balancer",
+      lpToken: "U/D/M/U BPT",
+      lpAddress: "0x06df3b2bbb68adc8b0e302443692037ed9f91b42",
+      balancerAddress: "0x06df3b2bbb68adc8b0e302443692037ed9f91b42000000000000000000000012",
+      pairTokens: [
+        {
+          tokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+          tokenDecimals: 6,
+          tokenName: "USDC",
+        },
+        {
+          tokenAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+          tokenDecimals: 18,
+          tokenName: "DAI",
+        },
+        {
+          tokenAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+          tokenDecimals: 18,
+          tokenName: "DAI",
+        },
+        {
+          tokenAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
+          tokenDecimals: 6,
+          tokenName: "USDT",
+        },
+      ],
+      decimals: 18,
+    },
+    {
+      pid: 11,
+      multiplier: "30",
+      depositFees: 2,
+      active: true,
+      isBalancer: true,
+      farmDx: "Balancer",
+      lpToken: "L/W/B/A BPT",
+      lpAddress: "0xce66904b68f1f070332cbc631de7ee98b650b499",
+      balancerAddress: "0xce66904b68f1f070332cbc631de7ee98b650b499000100000000000000000009",
+      pairTokens: [
+        {
+          tokenAddress: "0x53E0bca35eC356BD5ddDFebbD1Fc0fD03FaBad39",
+          tokenDecimals: 18,
+          tokenName: "LINK",
+        },
+        {
+          tokenAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
+          tokenDecimals: 18,
+          tokenName: "WETH",
+        },
+        {
+          tokenAddress: "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3",
+          tokenDecimals: 18,
+          tokenName: "BAL",
+        },
+        {
+          tokenAddress: "0xD6DF932A45C0f255f85145f286eA0b292B21C90B",
+          tokenDecimals: 18,
+          tokenName: "AAVE",
+        },
+      ],
+      decimals: 18,
+    },
+  ],
 }[DEFAULT_CHAIN_ID];

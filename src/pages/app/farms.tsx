@@ -6,7 +6,7 @@ import { useToggle } from "react-use";
 import { useFetchPoolData } from "hooks/pools/queries";
 import { useIrisPrice } from "hooks/prices";
 
-import { farmIds, PoolInfo } from "config/pools";
+import { farmsDefaultData, PoolInfo } from "config/pools";
 import { PoolsContext, poolsReducers } from "hooks/pools/reducer";
 
 import {
@@ -42,8 +42,8 @@ const Page: React.FC = () => {
 
     async (): Promise<PoolInfo[]> => {
       return Promise.all(
-        farmIds.map(async (pid) => {
-          return fetchPoolData(pid);
+        farmsDefaultData.map(async (farm) => {
+          return fetchPoolData(farm);
         })
       );
     },
