@@ -78,3 +78,36 @@ export async function fetchPairPrice(
 
   return price.toString();
 }
+
+export async function fetchBalancerPrice(balancerId: string) {
+  try {
+    const resp = await fetch(
+      "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `{    
+              pool(id: "${balancerId}" ) {
+                id
+                totalLiquidity
+                totalShares
+              }
+          }`,
+        }),
+      }
+    );
+
+    const { data } = await resp.json();
+
+    const totalLiqidity = new BigNumberJS(data.pool.totalLiquidity);
+    const totalShares = new BigNumberJS(data.pool.totalShares);
+
+    return totalLiqidity.dividedBy(totalShares).toString();
+  } catch (e) {
+    console.log(e);
+    return "0";
+  }
+}
