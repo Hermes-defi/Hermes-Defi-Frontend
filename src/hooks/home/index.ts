@@ -250,7 +250,7 @@ export function useHermesStats() {
 
     return {
       tvl: tvl.toString(),
-      totalValueInFarms: totalValueInFarms.toString(),
+      totalValueInFarms: totalValueInFarms.plus(totalValueInBalancers).toString(),
       totalValueInPools: totalValueInPools.toString(),
     };
   });
