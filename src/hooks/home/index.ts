@@ -238,8 +238,17 @@ export function useHermesStats() {
 
     const totalValueInBalancers = await balancersDefaultData.reduce(
       async (_total: Promise<BigNumberJS>, pool: PoolInfo) => {
+        const lpContract = getLpContract(pool.lpAddress);
+
+        const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+        const tokenDecimal = await lpContract.decimals();
+
+        const tokenPrice = await fetchBalancerPrice(pool.balancerAddress);
+
         const total = await _total;
-        const poolPrice = await fetchBalancerPrice(pool.balancerAddress);
+        const poolPrice = new BigNumberJS(
+          utils.formatUnits(totalLpStaked, tokenDecimal)
+        ).multipliedBy(tokenPrice);
 
         return total.plus(poolPrice);
       },
