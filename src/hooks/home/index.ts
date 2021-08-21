@@ -4,7 +4,7 @@ import ReactGA from "react-ga";
 import dayjs from "dayjs";
 
 import { BurnAddress, DEFAULT_CHAIN_ID, irisPerBlock } from "config/constants";
-import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
+import { balancersDefaultData, farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
 import { useMasterChef, useIrisToken, useERC20, useUniPair } from "hooks/contracts";
 import { useIrisPrice } from "hooks/prices";
@@ -13,7 +13,7 @@ import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
 import { getPoolApr } from "web3-functions/utils";
 import { Token } from "quickswap-sdk";
-import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
+import { fetchBalancerPrice, fetchPairPrice, fetchPrice } from "web3-functions/prices";
 
 export function useIrisData() {
   const { account } = useActiveWeb3React();
@@ -236,7 +236,17 @@ export function useHermesStats() {
       Promise.resolve(new BigNumberJS(0))
     );
 
-    const tvl = totalValueInPools.plus(totalValueInFarms);
+    const totalValueInBalancers = await balancersDefaultData.reduce(
+      async (_total: Promise<BigNumberJS>, pool: PoolInfo) => {
+        const total = await _total;
+        const poolPrice = await fetchBalancerPrice(pool.balancerAddress);
+
+        return total.plus(poolPrice);
+      },
+      Promise.resolve(new BigNumberJS(0))
+    );
+
+    const tvl = totalValueInPools.plus(totalValueInFarms).plus(totalValueInBalancers);
 
     return {
       tvl: tvl.toString(),
