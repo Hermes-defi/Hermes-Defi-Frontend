@@ -21,6 +21,7 @@ import {
   Spinner,
   Stack,
   StackDivider,
+  SimpleGrid,
   Switch,
 } from "@chakra-ui/react";
 import { PoolCard } from "components/pool-card";
@@ -116,13 +117,11 @@ const Page: React.FC = () => {
               </Flex>
             )}
 
-            <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
+            <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
               {pools.map((pool) => (
-                <Box key={pool.pid} w={80} pt="40px">
-                  <PoolCard pool={pool} key={pool.pid} />
-                </Box>
+                <PoolCard pool={pool} key={pool.pid} />
               ))}
-            </Stack>
+            </SimpleGrid>
           </Container>
         </Stack>
       </AppLayout>

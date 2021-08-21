@@ -177,9 +177,13 @@ const imageMapper = {
   dai: "/dai-logo.png",
   aes: "/aes-logo.png",
   "iris/wmatic": ["/hermes-logo-1.png", "/matic-logo.png"],
+  "u/d/m/u bpt": "/USDC__USDT__DAI__miMATIC.png",
+  "l/w/b/a bpt": "/AAVEBALLINKETH.png",
+  "w/u/w/b/i bpt": "/WETH__WMATIC__BAL__USDC__IRIS.png",
 };
+
 export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
-  const irisCard = pool.pid === 8 || pool.pid === 0;
+  const irisCard = pool.pid === 8 || pool.pid === 0 || pool.pid === 12;
   return (
     <Box
       px={8}
@@ -224,7 +228,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
           />
         )}
 
-        <Heading>{pool.lpToken}</Heading>
+        <Heading fontSize="3xl">{pool.lpToken}</Heading>
       </HStack>
 
       {/* pool badges */}

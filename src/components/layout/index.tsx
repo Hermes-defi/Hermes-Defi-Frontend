@@ -131,7 +131,7 @@ const Navigation = () => {
         </Flex>
 
         {/* desktop navigation */}
-        <Flex flex={5} display={{ base: "none", md: "flex" }} justify="center" align="center">
+        <Flex flex={6} display={{ base: "none", md: "flex" }} justify="center" align="center">
           <Stack flex={1} justify="flex-end" direction={"row"} spacing={4}>
             {NAV_ITEMS.slice(0, 4).map((navItem: NavItem) => (
               <Box key={navItem.label}>
