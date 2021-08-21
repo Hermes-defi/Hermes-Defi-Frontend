@@ -1,3 +1,4 @@
+import fetch from "isomorphic-fetch";
 import defaultTokens from "config/tokens";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";

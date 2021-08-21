@@ -11,10 +11,10 @@ import ERC20_ABI from "config/abis/ERC20.json";
 import UNIPAIR_ABI from "config/abis/UNIPAIR.json";
 import { RPC_URLS } from "wallet/connectors";
 import { DEFAULT_CHAIN_ID } from "config/constants";
-import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
+import { balancersDefaultData, farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
 
 import { Token } from "quickswap-sdk";
-import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
+import { fetchBalancerPrice, fetchPairPrice, fetchPrice } from "web3-functions/prices";
 
 const s3 = new AWS.S3({
   accessKeyId: process.env.HERMES_AWS_ACCESS_KEY_ID,
@@ -78,7 +78,30 @@ async function calculateTVL() {
     Promise.resolve(new BigNumberJS(0))
   );
 
-  return totalValueInPools.plus(totalValueInFarms).toFixed(2).toString();
+  const totalValueInBalancers = await balancersDefaultData.reduce(
+    async (_total: Promise<BigNumberJS>, pool: PoolInfo) => {
+      const lpContract = new ethers.Contract(pool.lpAddress, ERC20_ABI, provider);
+
+      const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+      const tokenDecimal = await lpContract.decimals();
+
+      const tokenPrice = await fetchBalancerPrice(pool.balancerAddress);
+
+      const total = await _total;
+      const poolPrice = new BigNumberJS(
+        ethers.utils.formatUnits(totalLpStaked, tokenDecimal)
+      ).multipliedBy(tokenPrice);
+
+      return total.plus(poolPrice);
+    },
+    Promise.resolve(new BigNumberJS(0))
+  );
+
+  return totalValueInPools
+    .plus(totalValueInFarms)
+    .plus(totalValueInBalancers)
+    .toFixed(2)
+    .toString();
 }
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
