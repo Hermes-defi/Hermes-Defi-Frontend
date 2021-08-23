@@ -1,6 +1,12 @@
 import defaultContracts from "config/contracts";
 import { BigNumber, constants, Contract, utils } from "ethers";
-import { poolIds, farmIds } from "config/pools";
+import {
+  poolIds,
+  farmIds,
+  farmsDefaultData,
+  poolDefaultData,
+  balancersDefaultData,
+} from "config/pools";
 
 // QUERIES
 export async function getFarmStats(poolContracts: Contract[], farmContracts: Contract[]) {
@@ -118,15 +124,6 @@ export async function withdrawFromPool(
 ) {
   const tx = await masterChef.withdraw(pid, utils.parseUnits(amount, decimals));
   await tx.wait();
-}
-
-export async function harvestFromAll(masterChef: Contract) {
-  return Promise.all(
-    [...farmIds, ...poolIds].map(async (pid) => {
-      const tx = await masterChef.deposit(pid, utils.parseEther("0"), constants.AddressZero);
-      await tx.wait();
-    })
-  );
 }
 
 export async function purchaseFenix(fenixContract: Contract, amount: string) {

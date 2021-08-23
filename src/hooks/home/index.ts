@@ -296,7 +296,7 @@ export function useHarvestAll(irisToHarvest: string) {
   const harvestAll = useMutation(
     async () => {
       return Promise.all(
-        [...farmsDefaultData, ...poolDefaultData].map(async (pool) => {
+        [...farmsDefaultData, ...poolDefaultData, ...balancersDefaultData].map(async (pool) => {
           const lpContract = getLpContract(pool.lpAddress);
           const allowance: BigNumber = await lpContract.allowance(
             account,
