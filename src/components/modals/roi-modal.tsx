@@ -106,7 +106,9 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
             <Button
               as={Link}
               href={
-                pool.isFarm
+                pool.isBalancer
+                  ? `https://polygon.balancer.fi/#/pool/${pool.balancerAddress}`
+                  : pool.isFarm
                   ? `https://quickswap.exchange/#/add/${pool.pairTokens[0].tokenAddress}/${pool.pairTokens[1].tokenAddress}`
                   : `https://quickswap.exchange/#/swap/${pool.lpAddress}`
               }
