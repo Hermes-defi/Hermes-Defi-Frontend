@@ -51,21 +51,10 @@ const theme = extendTheme({
 
   components: {
     Button: {
-      variants: {
-        primaryOutline: {
-          fontWeight: 600,
-          color: "primary.500",
-          rounded: "2xl",
-          borderWidth: { base: 1, md: 3 },
-          borderColor: "primary.400",
-        },
-
-        primary: {
-          fontWeight: 600,
-          color: "white",
-          bgColor: "primary.400",
-        },
+      base: {
+        rounded: "xl",
       },
+      variants: {},
     },
   },
 });

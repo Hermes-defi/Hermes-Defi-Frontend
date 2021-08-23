@@ -40,13 +40,6 @@ import {
   YAxis,
 } from "recharts";
 
-const data = [
-  { time: "JAN", value: 500000 },
-  { time: "FEB", value: 100000 },
-  { time: "MAR", value: 400000 },
-  { time: "APR", value: 200000 },
-];
-
 const Page: React.FC = () => {
   const irisStats = useIrisStats();
   const hermesStats = useHermesStats();
@@ -107,7 +100,8 @@ const Page: React.FC = () => {
               <Button
                 isLoading={harvestAll.isLoading && !harvestAll.isSuccess}
                 onClick={() => harvestAll.mutate()}
-                variant="primary"
+                rounded="xl"
+                colorScheme="primary"
                 fontSize="md"
               >
                 Harvest All

@@ -15,7 +15,9 @@ export const Wallet: React.FC<{}> = () => {
         display="inline-flex"
         size={useBreakpointValue({ base: "sm", md: "md" })}
         onClick={onOpen}
-        variant={account ? "primaryOutline" : "primary"}
+        rounded="xl"
+        colorScheme="primary"
+        variant={account ? "outline" : "solid"}
       >
         {account ? accountEllipsis : "Connect Wallet"}
       </Button>

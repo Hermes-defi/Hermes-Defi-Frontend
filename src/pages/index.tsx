@@ -257,7 +257,8 @@ function Navigation() {
               <Button
                 display={{ base: "inline-flex" }}
                 size={useBreakpointValue({ base: "sm", md: "md" })}
-                variant="primaryOutline"
+                variant="outline"
+                colorScheme="primary"
               >
                 Enter App
               </Button>
