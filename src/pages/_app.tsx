@@ -17,15 +17,7 @@ const Web3ReactProviderDefault = dynamic(() => import("components/web3-network")
   ssr: false,
 });
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      cacheTime: 1000 * 60 * 10,
-      staleTime: 1000 * 60 * 2,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
 function getLibrary(provider: any): ethers.providers.Web3Provider {
   const library = new ethers.providers.Web3Provider(provider);

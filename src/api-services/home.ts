@@ -23,7 +23,16 @@ const masterChef = new ethers.Contract(
   provider
 );
 
-async function getIrisStats(irisPrice: string) {
+export async function getIrisPrice() {
+  const irisPrice = await fetchPrice(
+    new Token(DEFAULT_CHAIN_ID, defaultContracts.irisToken.address, 18, "IRIS"),
+    provider
+  );
+
+  return irisPrice;
+}
+
+export async function getIrisStats(irisPrice: string) {
   const maximumSupply = 1_000_000;
   const totalMinted = (await irisContract.totalSupply()) as BigNumber;
   const totalBurned = (await irisContract.balanceOf(BurnAddress)) as BigNumber;
@@ -48,7 +57,7 @@ async function getIrisStats(irisPrice: string) {
   };
 }
 
-async function getAPRStats(irisPrice: string) {
+export async function getAPRStats(irisPrice: string) {
   const farmAprsPromise = farmsDefaultData.map(async (pool) => {
     const lpContract = new ethers.Contract(pool.lpAddress, ERC20_ABI, provider);
 
@@ -200,7 +209,7 @@ export async function getHermesStats() {
 
   return {
     totalValueInPools: totalValueInPools.toString(),
-    totalValueInFarms: totalValueInFarms.toString(),
+    totalValueInFarms: totalValueInFarms.plus(totalValueInBalancers).toString(),
     totalValueInBalancers: totalValueInBalancers.toString(),
     tvl: tvl.toString(),
   };
@@ -208,10 +217,7 @@ export async function getHermesStats() {
 
 export async function loadHomePageData() {
   // load iris price
-  const irisPrice = await fetchPrice(
-    new Token(DEFAULT_CHAIN_ID, defaultContracts.irisToken.address, 18, "IRIS"),
-    provider
-  );
+  const irisPrice = await getIrisPrice();
 
   // load iris stats
   const irisStats = await getIrisStats(irisPrice);

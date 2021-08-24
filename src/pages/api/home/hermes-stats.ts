@@ -1,6 +1,6 @@
 import Redis from "ioredis";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { loadHomePageData } from "api-services/home";
+import { getHermesStats } from "api-services/home";
 
 const redis = new Redis(process.env.HERMES_REDIS_URL);
 
@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case "GET": {
         let start = Date.now();
         let result: any = {};
-        let cache = await redis.get("home");
+        let cache = await redis.get("home/apr_stats");
         cache = JSON.parse(cache);
 
         if (cache) {
@@ -27,14 +27,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.log("loading from api");
 
         start = Date.now();
-        const data = await loadHomePageData();
+
+        const data = await getHermesStats();
 
         result.data = data;
         result.type = "api";
         result.latency = Date.now() - start;
 
         // set cache to expire every 60 seconds
-        redis.set("home", JSON.stringify(result.data), "EX", 120);
+        redis.set("home/apr_stats", JSON.stringify(result.data), "EX", 120);
         return res.send(result);
       }
       default: {
@@ -42,6 +43,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
     }
   } catch (err) {
-    return res.status(400).send(err);
+    return res.status(400).send(err.message);
   }
 }

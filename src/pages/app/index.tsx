@@ -44,7 +44,7 @@ const Page: React.FC = () => {
   const irisStats = useIrisStats();
   const hermesStats = useHermesStats();
 
-  const { maxPoolAPR, maxFarmAPR } = useAPRStats();
+  const maxAPRs = useAPRStats();
   const { irisInWallet, irisToHarvest } = useIrisData();
   const chartData = useTvlChart();
 
@@ -139,9 +139,9 @@ const Page: React.FC = () => {
                   <Text fontSize={["xl", "sm"]} fontWeight="700">
                     Earn Upto
                   </Text>
-                  <Skeleton isLoaded={!!maxFarmAPR.data}>
+                  <Skeleton isLoaded={!!maxAPRs.data}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {displayNumber(Math.round(maxFarmAPR.data), true)}%
+                      {displayNumber(Math.round(maxAPRs.data && maxAPRs.data[0]), true)}%
                     </Text>{" "}
                   </Skeleton>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
@@ -178,9 +178,9 @@ const Page: React.FC = () => {
                   <Text fontSize={["xl", "sm"]} fontWeight="700">
                     Earn Upto
                   </Text>
-                  <Skeleton isLoaded={!!maxPoolAPR.data}>
+                  <Skeleton isLoaded={!!maxAPRs.data}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {displayNumber(Math.round(maxPoolAPR.data), true)}%
+                      {displayNumber(Math.round(maxAPRs.data && maxAPRs.data[1]), true)}%
                     </Text>{" "}
                   </Skeleton>
 
@@ -353,8 +353,8 @@ const Page: React.FC = () => {
                   <YAxis
                     style={{ fontSize: "12px" }}
                     domain={[
-                      Math.min(...(chartData.data || []).map((d: any) => d.value)) - 10000,
-                      Math.max(...(chartData.data || []).map((d: any) => d.value)) + 10000,
+                      Math.min(...(chartData.data || []).map((d: any) => d.value)) - 50000,
+                      Math.max(...(chartData.data || []).map((d: any) => d.value)) + 50000,
                     ]}
                   />
                   <Tooltip />
