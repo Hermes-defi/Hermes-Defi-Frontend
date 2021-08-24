@@ -22,7 +22,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         tvlCache.push({ time: currentTime, value: tvl });
 
         // set cache to expire every 60 seconds
-        redis.set("home", JSON.stringify(tvlCache));
+        redis.set("tvl-chart", JSON.stringify(tvlCache));
         return res.send(true);
       } catch (e) {
         return res.send(e.message);
