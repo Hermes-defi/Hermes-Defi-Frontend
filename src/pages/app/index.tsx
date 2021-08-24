@@ -353,32 +353,12 @@ const Page: React.FC = () => {
                   <YAxis
                     style={{ fontSize: "12px" }}
                     domain={[
-                      Math.min(...(chartData.data || []).map((d: any) => d.value)) - 100000,
-                      Math.max(...(chartData.data || []).map((d: any) => d.value)) + 100000,
+                      Math.min(...(chartData.data || []).map((d: any) => d.value)) - 10000,
+                      Math.max(...(chartData.data || []).map((d: any) => d.value)) + 10000,
                     ]}
                   />
                   <Tooltip />
                 </LineChart>
-
-                {/* <LineChart
-                  width={useBreakpointValue({ base: 340, md: 800 })}
-                  height={useBreakpointValue({ base: 200, md: 300 })}
-                  style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
-                  data={chartData.data || []}
-                >
-                  <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                  <XAxis style={{ fontSize: "12px" }} dataKey="time" />
-                  <YAxis />
-                  <Tooltip formatter={(label) => "$" + label} separator=": " label="Value" />
-
-                  <Line
-                    type="monotone"
-                    dataKey="value"
-                    stroke="#8884d8"
-                    strokeWidth={2}
-                    isAnimationActive={false}
-                  />
-                </LineChart> */}
               </ResponsiveContainer>
             </Box>
           </Stack>
