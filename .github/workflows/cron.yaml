@@ -8,4 +8,4 @@ jobs:
     steps:
       - name: hourly-cron-job
         run: |
-          curl --request GET --url 'https://hermesdefi.io/api/tvl-calculator'
+          curl --request GET --url 'https://www.hermesdefi.io/api/tvl-calculator'

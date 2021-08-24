@@ -20,6 +20,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         const { tvl } = await getHermesStats();
 
         tvlCache.push({ time: currentTime, value: tvl });
+        if (tvlCache.length > 12) {
+          tvlCache.shift();
+        }
 
         // set cache to expire every 60 seconds
         redis.set("tvl-chart", JSON.stringify(tvlCache));
