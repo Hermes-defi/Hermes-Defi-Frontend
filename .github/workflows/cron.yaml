@@ -1,12 +1,11 @@
 name: hourly-cron-job
 on:
   schedule:
-    - cron: '*/60 * * * *'
+    - cron: '*/1 * * * *'
 jobs:
   cron:
     runs-on: ubuntu-latest
     steps:
       - name: hourly-cron-job
         run: |
-          curl --request GET \
-          --url 'https://hermesdefi.io/api/tvl-calculator'
+          curl --request GET --url 'https://hermesdefi.io/api/tvl-calculator'
