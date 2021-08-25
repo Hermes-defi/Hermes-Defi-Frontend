@@ -613,7 +613,7 @@ function Footer() {
             <Stack
               as={Link}
               isExternal
-              href="https://t.me/hermesfinance"
+              href="https://t.me/hermesdefinance"
               direction="row"
               align="center"
             >

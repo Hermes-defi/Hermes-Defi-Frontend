@@ -90,7 +90,7 @@ export const NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Telegram",
-        href: "https://t.me/hermesfinance",
+        href: "https://t.me/hermesdefinance",
         isExternal: true,
       },
       {
