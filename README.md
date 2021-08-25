@@ -8,14 +8,14 @@ To setup the project, you need the following:
 
 #### Pre setup
 
-0: `cp .env.example .env.local`
-1: REDIS_URL - from upstash.com for caching homepage and tvl historical data (if you have a better idea how to get the tvl history, feel free to implement)
-2: Add the URL to the `.env.local` in the `HERMES_REDIS_URL` key
+- `cp .env.example .env.local`
+- REDIS_URL - from upstash.com for caching homepage and tvl historical data (if you have a better idea how to get the tvl history, feel free to implement)
+- Add the URL to the `.env.local` in the `HERMES_REDIS_URL` key
 
 #### Setup
 
-0: run `yarn install` to install all packages
-1: run `yarn dev` to start the development server
+- run `yarn install` to install all packages
+- run `yarn dev` to start the development server
 
 ### Project Structure
 
