@@ -15,6 +15,7 @@ import {
   IconButton,
   Image,
   Link,
+  LightMode,
   Popover,
   PopoverContent,
   PopoverTrigger,
@@ -695,7 +696,7 @@ function Footer() {
 
 const Page = () => {
   return (
-    <>
+    <LightMode>
       <Box
         bgImage="linear-gradient(0deg, rgba(255,255,255,1) 7%, rgba(255,255,255,0.16) 28%, rgba(255,255,255,0.02) 39%), url('./bg-image-1.jpg')"
         bgPosition="center"
@@ -717,7 +718,7 @@ const Page = () => {
       </Container>
 
       <Footer />
-    </>
+    </LightMode>
   );
 };
 

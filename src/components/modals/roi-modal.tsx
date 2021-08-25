@@ -10,6 +10,7 @@ import {
   Text,
   Button,
   Link,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { PoolInfo } from "config/pools";
@@ -31,13 +32,28 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
 
         <ModalBody px={8} pb={6}>
           <Stack mb={3} justify="space-between" direction="row">
-            <Text color="accent.600" flex="1" fontWeight="bold" fontSize="sm">
+            <Text
+              color={useColorModeValue("accent.600", "accent.200")}
+              flex="1"
+              fontWeight="bold"
+              fontSize="sm"
+            >
               Timeframe
             </Text>
-            <Text color="accent.600" flex="1" fontWeight="bold" fontSize="sm">
+            <Text
+              color={useColorModeValue("accent.600", "accent.200")}
+              flex="1"
+              fontWeight="bold"
+              fontSize="sm"
+            >
               ROI
             </Text>
-            <Text color="accent.600" flex="1" fontWeight="bold" fontSize="sm">
+            <Text
+              color={useColorModeValue("accent.600", "accent.200")}
+              flex="1"
+              fontWeight="bold"
+              fontSize="sm"
+            >
               IRIS per $1000
             </Text>
           </Stack>
@@ -90,13 +106,13 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
           </Stack>
 
           <Stack mb={7} spacing={0} px={4} as="ul">
-            <Text as="li" fontSize="sm" color="gray.600">
+            <Text as="li" fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
               Calculated based on current rates
             </Text>
-            <Text as="li" fontSize="sm" color="gray.600">
+            <Text as="li" fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
               Compounding once daily
             </Text>
-            <Text as="li" fontSize="sm" color="gray.600">
+            <Text as="li" fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
               Rates are estimates provided for your convenience only. No means represent guaranteed
               returns
             </Text>

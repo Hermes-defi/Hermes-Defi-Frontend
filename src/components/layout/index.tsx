@@ -1,6 +1,5 @@
 import React from "react";
 import { Box, Container, Image, Link, Slide, Stack } from "@chakra-ui/react";
-import { Global } from "@emotion/react";
 import { Navigation } from "./navigation";
 
 const Footer = () => {
@@ -40,14 +39,6 @@ const Footer = () => {
 export const AppLayout: React.FC = ({ children }) => {
   return (
     <Box>
-      <Global
-        styles={{
-          body: {
-            background: "#F7FAFC",
-          },
-        }}
-      />
-
       <Container maxW="container.xl">
         <Navigation />
 

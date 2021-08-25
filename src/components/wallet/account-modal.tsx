@@ -11,6 +11,7 @@ import {
   Button,
   Link,
   useClipboard,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { truncateAddress } from "libs/utils";
 import { FiCopy } from "react-icons/fi";
@@ -33,7 +34,7 @@ export const AccountModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
         <ModalBody pb={6}>
           <Stack spacing={4} borderWidth="1px" borderColor="gray.300" px={3} py={4} rounded="xl">
             <Stack align="center" justify="space-between" direction="row">
-              <Text color="gray.600" fontSize="sm">
+              <Text color={useColorModeValue("gray.600", "gray.300")} fontSize="sm">
                 Connected to MetaMask
               </Text>
               <Button
@@ -52,7 +53,7 @@ export const AccountModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
 
             <Stack spacing={2} direction="row" align="center">
               <Button
-                color="gray.600"
+                color={useColorModeValue("gray.600", "gray.300")}
                 onClick={onCopy}
                 leftIcon={<FiCopy />}
                 size="sm"
@@ -64,7 +65,7 @@ export const AccountModal: React.FC<{ isOpen: boolean; onClose: () => void }> = 
               <Link
                 isExternal
                 href={`${RPC_INFO[DEFAULT_CHAIN_ID].blockExplorerUrls[0]}address/${account}`}
-                color="gray.600"
+                color={useColorModeValue("gray.600", "gray.300")}
                 fontSize="sm"
               >
                 <ExternalLinkIcon mx="2px" />

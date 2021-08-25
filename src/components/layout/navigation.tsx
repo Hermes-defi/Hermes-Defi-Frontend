@@ -1,5 +1,7 @@
 import React from "react";
 import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import { FaSun } from "react-icons/fa";
+import { IoIosMoon } from "react-icons/io";
 import {
   useDisclosure,
   Link,
@@ -22,11 +24,24 @@ import {
   Skeleton,
   Stack,
   Text,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useIrisPrice } from "hooks/prices";
 import { displayCurrency } from "libs/utils";
 import { NavItem, NAV_ITEMS } from "./nav-config";
 import { Wallet } from "components/wallet";
+
+function ColorModeToggle() {
+  const { colorMode, toggleColorMode } = useColorMode();
+  return (
+    <IconButton
+      aria-label="Switch color mode"
+      rounded="full"
+      onClick={toggleColorMode}
+      icon={colorMode === "light" ? <IoIosMoon /> : <FaSun />}
+    />
+  );
+}
 
 const MobileNavItem = ({ label, children, href }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
@@ -137,11 +152,11 @@ export const Navigation = () => {
                     <Link
                       p={2}
                       href={navItem.href ?? ""}
-                      color="gray.600"
+                      color={useColorModeValue("gray.600", "gray.200")}
                       isExternal={navItem.isExternal}
                       _hover={{
                         textDecoration: "none",
-                        color: "gray.800",
+                        color: useColorModeValue("gray.800", "gray.400"),
                       }}
                       {...(navItem.decorate
                         ? {
@@ -151,7 +166,6 @@ export const Navigation = () => {
                         : {})}
                     >
                       {navItem.label}
-                      {navItem.children && <ChevronDownIcon />}
                     </Link>
                   </PopoverTrigger>
 
@@ -160,7 +174,7 @@ export const Navigation = () => {
                       w="auto"
                       border={0}
                       boxShadow="xl"
-                      bg="white"
+                      bg={useColorModeValue("white", "gray.900")}
                       p={4}
                       rounded="xl"
                     >
@@ -225,11 +239,11 @@ export const Navigation = () => {
                     <Link
                       p={2}
                       href={navItem.href ?? "#"}
-                      color="gray.600"
+                      color={useColorModeValue("gray.600", "gray.200")}
                       isExternal={navItem.isExternal}
                       _hover={{
                         textDecoration: "none",
-                        color: "gray.800",
+                        color: useColorModeValue("gray.800", "gray.400"),
                       }}
                       {...(navItem.decorate
                         ? {
@@ -239,7 +253,6 @@ export const Navigation = () => {
                         : {})}
                     >
                       {navItem.label}
-                      {navItem.children && <ChevronDownIcon />}
                     </Link>
                   </PopoverTrigger>
 
@@ -248,7 +261,7 @@ export const Navigation = () => {
                       w="auto"
                       border={0}
                       boxShadow="xl"
-                      bg="white"
+                      bg={useColorModeValue("white", "gray.900")}
                       p={4}
                       rounded="xl"
                     >
@@ -299,8 +312,9 @@ export const Navigation = () => {
         </Flex>
 
         {/* connect wallet */}
-        <Stack ml={{ base: 4, md: 0 }} flex={1} justify={"flex-end"} direction={"row"} spacing={6}>
+        <Stack ml={{ base: 4, md: 0 }} flex={1} justify={"flex-end"} direction={"row"} spacing={2}>
           <Wallet />
+          <ColorModeToggle />
         </Stack>
       </Flex>
 
@@ -330,7 +344,7 @@ export const Navigation = () => {
 
             <Stack
               w="full"
-              bg={useColorModeValue("white", "gray.800")}
+              bg={useColorModeValue("white", "gray.700")}
               p={4}
               display={{ md: "none" }}
             >

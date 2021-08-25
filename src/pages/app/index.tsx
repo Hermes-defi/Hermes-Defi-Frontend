@@ -27,6 +27,7 @@ import {
   Stack,
   Text,
   useBreakpointValue,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
@@ -53,8 +54,14 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        <Box bg="white" rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-          <Heading color="gray.600" fontSize="xl">
+        <Box
+          bg={useColorModeValue("white", "gray.700")}
+          rounded="2xl"
+          boxShadow="base"
+          px={[5, 10]}
+          py={6}
+        >
+          <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
             Farms and Pools
           </Heading>
 
@@ -64,8 +71,7 @@ const Page: React.FC = () => {
                 <Image src="/hermes-logo-1.png" boxSize={12} />
                 <Button
                   onClick={() => addTokenToWallet(defaultContracts.irisToken.address, "IRIS")}
-                  bg="secondary.200"
-                  _hover={{ bg: "secondary.100" }}
+                  colorScheme="secondary"
                   size="sm"
                 >
                   + Add IRIS to Wallet
@@ -80,7 +86,7 @@ const Page: React.FC = () => {
                     </Text>
                   </Skeleton>
 
-                  <Text fontSize={"sm"} color="gray.600">
+                  <Text fontSize={"sm"} color={useColorModeValue("gray.600", "gray.200")}>
                     IRIS to harvest
                   </Text>
                 </Box>
@@ -91,7 +97,7 @@ const Page: React.FC = () => {
                       {displayTokenCurrency(irisInWallet.data, "", true)}
                     </Text>
                   </Skeleton>
-                  <Text fontSize={"sm"} color="gray.600">
+                  <Text fontSize={"sm"} color={useColorModeValue("gray.600", "gray.200")}>
                     IRIS in wallet
                   </Text>
                 </Box>
@@ -193,8 +199,14 @@ const Page: React.FC = () => {
           </SimpleGrid>
         </Box>
 
-        <Box bg="white" rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-          <Heading color="gray.600" fontSize="xl">
+        <Box
+          bg={useColorModeValue("white", "gray.700")}
+          rounded="2xl"
+          boxShadow="base"
+          px={[5, 10]}
+          py={6}
+        >
+          <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
             IRIS stats
           </Heading>
 
@@ -207,7 +219,7 @@ const Page: React.FC = () => {
                       {displayCurrency(irisStats.data?.marketCap)}
                     </Text>
                   </Skeleton>
-                  <Heading mt={1} color="gray.600" fontSize="md">
+                  <Heading mt={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="md">
                     Market Cap
                   </Heading>
                 </Box>
@@ -220,7 +232,7 @@ const Page: React.FC = () => {
                       {displayTokenCurrency(irisStats.data?.maximumSupply, "")}
                     </Text>
                   </Skeleton>
-                  <Heading mt={1} color="gray.600" fontSize="md">
+                  <Heading mt={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="md">
                     Maximum Supply
                   </Heading>
                 </Box>
@@ -233,7 +245,7 @@ const Page: React.FC = () => {
                       {displayNumber("0.4")}
                     </Text>
                   </Skeleton>
-                  <Heading mt={1} color="gray.600" fontSize="md">
+                  <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
                     New IRIS/block
                   </Heading>
                 </Box>
@@ -246,7 +258,7 @@ const Page: React.FC = () => {
                       {displayNumber(irisStats.data?.totalMinted)}
                     </Text>
                   </Skeleton>
-                  <Heading mt={1} color="gray.600" fontSize="md">
+                  <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
                     Total Minted
                   </Heading>
                 </Box>
@@ -259,7 +271,7 @@ const Page: React.FC = () => {
                       {displayNumber(irisStats.data?.circulatingSupply)}
                     </Text>
                   </Skeleton>
-                  <Heading mt={1} color="gray.600" fontSize="md">
+                  <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
                     Circulating Supply
                   </Heading>
                 </Box>
@@ -272,7 +284,7 @@ const Page: React.FC = () => {
                       {displayNumber(irisStats.data?.totalBurned, true)}
                     </Text>
                   </Skeleton>
-                  <Heading mt={1} color="gray.600" fontSize="md">
+                  <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
                     Total Burned
                   </Heading>
                 </Box>
@@ -293,7 +305,7 @@ const Page: React.FC = () => {
                     borderBottomWidth="2px"
                     borderColor="primary.500"
                     mb={[0, 1]}
-                    color="gray.600"
+                    color={useColorModeValue("gray.600", "gray.300")}
                     fontSize="xl"
                   >
                     Total Value Locked
@@ -311,7 +323,7 @@ const Page: React.FC = () => {
                       borderBottomWidth="2px"
                       borderColor="primary.500"
                       mb={1}
-                      color="gray.600"
+                      color={useColorModeValue("gray.600", "gray.300")}
                       fontSize="xl"
                     >
                       Farms
@@ -328,7 +340,7 @@ const Page: React.FC = () => {
                       borderBottomWidth="2px"
                       borderColor="primary.500"
                       mb={1}
-                      color="gray.600"
+                      color={useColorModeValue("gray.600", "gray.300")}
                       fontSize="xl"
                     >
                       Pools
@@ -347,14 +359,14 @@ const Page: React.FC = () => {
                   style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
                   data={chartData.data}
                 >
-                  <Line type="monotone" dataKey="value" stroke="#8884d8" />
-                  <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+                  <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={3} />
+                  <CartesianGrid stroke={useColorModeValue("#ccc", "#555")} strokeDasharray="5 5" />
                   <XAxis style={{ fontSize: "12px" }} dataKey="time" />
                   <YAxis
                     style={{ fontSize: "12px" }}
                     domain={[
-                      Math.min(...(chartData.data || []).map((d: any) => d.value)) - 50000,
-                      Math.max(...(chartData.data || []).map((d: any) => d.value)) + 50000,
+                      Math.min(...(chartData.data || []).map((d: any) => d.value)) - 100000,
+                      Math.max(...(chartData.data || []).map((d: any) => d.value)) + 100000,
                     ]}
                   />
                   <Tooltip />

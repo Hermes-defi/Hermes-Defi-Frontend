@@ -22,6 +22,7 @@ import {
   Stack,
   StackDivider,
   Switch,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { PoolCard } from "components/pool-card";
 import { AppLayout } from "components/layout";
@@ -93,7 +94,11 @@ const Page: React.FC = () => {
             <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
               <Button
                 onClick={() => toggleActive()}
-                color={active ? "gray.800" : "gray.500"}
+                color={
+                  active
+                    ? useColorModeValue("gray.800", "gray.300")
+                    : useColorModeValue("gray.500", "gray.500")
+                }
                 variant="link"
               >
                 <Heading fontSize="xl">Active</Heading>
@@ -101,7 +106,11 @@ const Page: React.FC = () => {
 
               <Button
                 onClick={() => toggleActive()}
-                color={!active ? "gray.800" : "gray.500"}
+                color={
+                  !active
+                    ? useColorModeValue("gray.800", "gray.300")
+                    : useColorModeValue("gray.500", "gray.500")
+                }
                 variant="link"
               >
                 <Heading fontSize="xl">Inactive</Heading>

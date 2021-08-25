@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       case "GET": {
         let start = Date.now();
         let result: any = {};
-        let cache = await redis.get("home/apr_stats");
+        let cache = await redis.get("home/hermes_stats");
         cache = JSON.parse(cache);
 
         if (cache) {
@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         result.latency = Date.now() - start;
 
         // set cache to expire every 60 seconds
-        redis.set("home/apr_stats", JSON.stringify(result.data), "EX", 120);
+        redis.set("home/hermes_stats", JSON.stringify(result.data), "EX", 120);
         return res.send(result);
       }
       default: {

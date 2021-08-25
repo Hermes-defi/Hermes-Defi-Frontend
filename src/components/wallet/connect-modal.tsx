@@ -14,6 +14,7 @@ import {
   Spinner,
   Stack,
   Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { providers } from "ethers";
 import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
@@ -21,38 +22,6 @@ import { injected, SUPPORTED_WALLETS } from "wallet/connectors";
 import { switchNetwork } from "wallet/utils";
 
 const Option: React.FC<any> = ({ name, description, href, iconURL, ...props }) => {
-  if (href) {
-    return (
-      <Link
-        isExternal
-        href={props.disabled ? null : href}
-        fontSize="md"
-        display="inline-flex"
-        alignItems="center"
-        justifyContent="space-between"
-        borderRadius="xl"
-        px={6}
-        py={4}
-        bg="gray.100"
-        borderWidth="1px"
-        borderColor="gray.300"
-        _hover={{ borderColor: "gray.500" }}
-        opacity={props.disabled && 0.4}
-        cursor={props.disabled && "not-allowed"}
-      >
-        <Box align="left">
-          <Text fontWeight="600">{name}</Text>
-          {description && (
-            <Text mt={1} fontWeight="500" fontSize="sm">
-              {description}
-            </Text>
-          )}
-        </Box>
-        <Image src={iconURL} alt={name} boxSize="20px" />
-      </Link>
-    );
-  }
-
   return (
     <Button
       isFullWidth
@@ -65,7 +34,10 @@ const Option: React.FC<any> = ({ name, description, href, iconURL, ...props }) =
       alignItems="center"
       justifyContent="space-between"
       borderRadius="xl"
-      _hover={{ borderColor: "gray.500" }}
+      _hover={{ borderColor: "gray.500", textDecoration: "none" }}
+      as={href ? Link : undefined}
+      href={href}
+      isExternal={!!href}
       {...props}
     >
       <Box align="left">

@@ -11,6 +11,7 @@ import {
   Button,
   Box,
   Input,
+  useColorModeValue,
 } from "@chakra-ui/react";
 import { useWithdraw } from "hooks/pools/actions";
 import { displayTokenCurrency } from "libs/utils";
@@ -32,10 +33,10 @@ export const WithdrawModal: React.FC<Props> = ({ pool, ...props }) => {
         <ModalBody pb={6}>
           <Stack spacing={5}>
             <Stack
-              bg="gray.100"
+              bg={useColorModeValue("gray.100", "gray.800")}
               spacing={4}
               borderWidth="1px"
-              borderColor="gray.300"
+              borderColor={useColorModeValue("gray.300", "gray.500")}
               px={3}
               py={3}
               rounded="xl"
