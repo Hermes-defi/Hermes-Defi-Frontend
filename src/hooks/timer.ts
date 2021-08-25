@@ -4,7 +4,6 @@ import duration from "dayjs/plugin/duration";
 
 dayjs.extend(duration);
 
-// TODO:: THIS SHOULDN'T BE HERE. MOVE TO /hooks folder.
 export function useTimer(initialTime, format = "D[d] H[h] - mm[m] - ss[s]") {
   const [currentTime, setCurrentTime] = useState(null);
 

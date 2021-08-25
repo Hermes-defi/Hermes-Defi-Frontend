@@ -1,12 +1,5 @@
 import defaultContracts from "config/contracts";
 import { BigNumber, constants, Contract, utils } from "ethers";
-import {
-  poolIds,
-  farmIds,
-  farmsDefaultData,
-  poolDefaultData,
-  balancersDefaultData,
-} from "config/pools";
 
 // QUERIES
 export async function getFarmStats(poolContracts: Contract[], farmContracts: Contract[]) {

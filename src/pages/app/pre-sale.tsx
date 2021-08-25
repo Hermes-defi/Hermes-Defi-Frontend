@@ -33,7 +33,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import { useTimer } from "components/timers";
+import { useTimer } from "hooks/timer";
 
 const PresaleCard = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
