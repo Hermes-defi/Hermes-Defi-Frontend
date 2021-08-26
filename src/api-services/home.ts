@@ -205,11 +205,11 @@ export async function getHermesStats() {
     Promise.resolve(new BigNumberJS(0))
   );
 
-  const tvl = totalValueInPools.plus(totalValueInFarms).plus(totalValueInBalancers);
+  const tvl = totalValueInPools.plus(totalValueInFarms);
 
   return {
     totalValueInPools: totalValueInPools.toString(),
-    totalValueInFarms: totalValueInFarms.plus(totalValueInBalancers).toString(),
+    totalValueInFarms: totalValueInFarms.toString(),
     totalValueInBalancers: totalValueInBalancers.toString(),
     tvl: tvl.toString(),
   };

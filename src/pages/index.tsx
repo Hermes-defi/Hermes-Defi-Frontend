@@ -25,6 +25,7 @@ import {
   useBreakpointValue,
   useColorModeValue,
   useDisclosure,
+  useColorMode,
 } from "@chakra-ui/react";
 
 import {
@@ -695,6 +696,11 @@ function Footer() {
 }
 
 const Page = () => {
+  const { setColorMode } = useColorMode();
+  React.useEffect(() => {
+    setColorMode("light");
+  }, []);
+
   return (
     <LightMode>
       <Box
