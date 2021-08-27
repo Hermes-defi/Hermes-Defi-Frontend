@@ -25,6 +25,7 @@ import {
   Stack,
   Text,
   useColorMode,
+  StackDivider,
 } from "@chakra-ui/react";
 import { useIrisPrice } from "hooks/prices";
 import { displayCurrency } from "libs/utils";
@@ -34,12 +35,25 @@ import { Wallet } from "components/wallet";
 function ColorModeToggle() {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <IconButton
-      aria-label="Switch color mode"
-      rounded="full"
-      onClick={toggleColorMode}
-      icon={colorMode === "light" ? <IoIosMoon /> : <FaSun />}
-    />
+    <Stack divider={<StackDivider />} spacing={5} justify="center" direction="row">
+      <IconButton
+        aria-label="Switch color mode"
+        rounded="full"
+        size="sm"
+        onClick={toggleColorMode}
+        isActive={colorMode === "light"}
+        icon={<FaSun />}
+      />
+
+      <IconButton
+        aria-label="Switch color mode"
+        rounded="full"
+        size="sm"
+        onClick={toggleColorMode}
+        isActive={colorMode === "dark"}
+        icon={<IoIosMoon />}
+      />
+    </Stack>
   );
 }
 
@@ -312,7 +326,13 @@ export const Navigation = () => {
         </Flex>
 
         {/* connect wallet */}
-        <Stack ml={{ base: 4, md: 0 }} flex={1} justify={"flex-end"} direction={"row"} spacing={2}>
+        <Stack
+          ml={{ base: 4, md: 0 }}
+          flex={1}
+          justify={"flex-end"}
+          direction={"column"}
+          spacing={2}
+        >
           <Wallet />
           <ColorModeToggle />
         </Stack>

@@ -696,9 +696,12 @@ function Footer() {
 }
 
 const Page = () => {
-  const { setColorMode } = useColorMode();
+  const { colorMode, setColorMode } = useColorMode();
   React.useEffect(() => {
+    const currentColorMode = colorMode;
     setColorMode("light");
+
+    return () => setColorMode(currentColorMode);
   }, []);
 
   return (

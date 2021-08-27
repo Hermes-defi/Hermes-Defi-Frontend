@@ -81,11 +81,8 @@ export async function getReferralCount(referral: Contract, address: string) {
 }
 
 // ACTIONS
-export async function approveLpContract(lpContract: Contract) {
-  const approveTx = await lpContract.approve(
-    defaultContracts.masterChef.address,
-    constants.MaxUint256
-  );
+export async function approveLpContract(lpContract: Contract, address: string) {
+  const approveTx = await lpContract.approve(address, constants.MaxUint256);
   await approveTx.wait();
 }
 

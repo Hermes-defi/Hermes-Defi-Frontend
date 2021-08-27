@@ -4,7 +4,7 @@ import { useActiveWeb3React } from "wallet";
 import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
-import { useApprovePool, useDepositIntoPool } from "hooks/pools/actions";
+import { useApprovePool, useDepositIntoPool, useWithdraw } from "hooks/pools/actions";
 import { PoolInfo } from "config/pools";
 
 import {
@@ -25,26 +25,56 @@ import { UnlockButton } from "./unlock-wallet";
 import { APRModal } from "./modals/roi-modal";
 
 // Pool Actions
-const DepositButton: React.FC<any> = ({ pool, modalProps, ...props }) => {
+const DepositButton: React.FC<{ pool: PoolInfo; primary?: boolean }> = (props) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const depositMutation = useDepositIntoPool();
 
   return (
     <>
-      <Button onClick={onOpen} {...props} />
+      <Button
+        size="sm"
+        bg={props.primary ? "primary.600" : "gray.700"}
+        _hover={{ bg: props.primary ? "primary.500" : "gray.600" }}
+        onClick={onOpen}
+      >
+        {props.children}
+      </Button>
 
-      <DepositModal pool={pool} isOpen={isOpen} onClose={onClose} {...modalProps} />
+      <DepositModal
+        isOpen={isOpen}
+        onClose={onClose}
+        token={props.pool.lpToken}
+        tokenAddress={props.pool.lpAddress}
+        tokenDecimals={props.pool.decimals}
+        isLoading={depositMutation.isLoading}
+        onDeposit={(amount: string) =>
+          depositMutation.mutateAsync({ pid: props.pool.pid, amount }).then(() => onClose())
+        }
+      />
     </>
   );
 };
 
-const UnstakeButton: React.FC<any> = ({ pool, ...props }) => {
+const UnstakeButton: React.FC<{ pool: PoolInfo; primary?: boolean }> = (props) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const withdrawMutation = useWithdraw();
 
   return (
     <>
-      <Button onClick={onOpen} {...props} />
+      <Button size="sm" bg={"gray.700"} _hover={{ bg: "gray.600" }} onClick={onOpen}>
+        {props.children}
+      </Button>
 
-      <WithdrawModal pool={pool} isOpen={isOpen} onClose={onClose} />
+      <WithdrawModal
+        isOpen={isOpen}
+        onClose={onClose}
+        token={props.pool.lpToken}
+        tokenBalance={props.pool.lpStaked}
+        isLoading={withdrawMutation.isLoading}
+        onWithdraw={(amount: string) =>
+          withdrawMutation.mutateAsync({ pid: props.pool.pid, amount }).then(() => onClose())
+        }
+      />
     </>
   );
 };
@@ -91,23 +121,14 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             {pool.hasApprovedPool &&
               (Number(pool.lpStaked) > 0 ? (
                 <>
-                  <UnstakeButton pool={pool} size="sm" bg="gray.700" _hover={{ bg: "gray.600" }}>
-                    -
-                  </UnstakeButton>
+                  <UnstakeButton pool={pool}>-</UnstakeButton>
 
-                  <DepositButton
-                    pool={pool}
-                    size="sm"
-                    bg="primary.600"
-                    _hover={{ bg: "primary.500" }}
-                  >
+                  <DepositButton pool={pool} primary>
                     +
                   </DepositButton>
                 </>
               ) : (
-                <DepositButton pool={pool} size="sm" bg="gray.700" _hover={{ bg: "gray.600" }}>
-                  Stake
-                </DepositButton>
+                <DepositButton pool={pool}>Stake</DepositButton>
               ))}
           </Stack>
         </Stack>

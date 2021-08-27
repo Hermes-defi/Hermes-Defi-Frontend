@@ -1,4 +1,4 @@
-import defaultContracts, { erc20, ContractInfo, uniPair } from "config/contracts";
+import defaultContracts, { erc20, ContractInfo, uniPair, stakePool } from "config/contracts";
 import { utils, providers, constants, Contract } from "ethers";
 import { useCallback } from "react";
 import { useActiveWeb3React } from "wallet";
@@ -72,5 +72,14 @@ export function useUniPair() {
   return (address: string) => {
     const uniPairContractInfo = uniPair(address);
     return contract(uniPairContractInfo);
+  };
+}
+
+export function useStakePoolContract() {
+  const contract = useContract();
+
+  return (address: string) => {
+    const stakePoolContractInfo = stakePool(address);
+    return contract(stakePoolContractInfo);
   };
 }

@@ -3,12 +3,14 @@ import BigNumberJS from "bignumber.js";
 import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { BigNumber, utils } from "ethers";
-import { farmsDefaultData, poolDefaultData, PoolInfo } from "config/pools";
+import { PoolInfo } from "config/pools";
 import { useActiveWeb3React } from "wallet";
-import { useERC20, useMasterChef, useUniPair } from "../contracts";
+import { useERC20, useMasterChef, useStakePoolContract, useUniPair } from "../contracts";
 import { useCallback } from "react";
 import { getPoolApr } from "web3-functions/utils";
 import { fetchBalancerPrice, fetchPairPrice, fetchPrice } from "web3-functions/prices";
+import { StakeInfo } from "config/stake";
+import { useCurrentBlockNumber } from "hooks/wallet";
 
 const IRIS_PER_BLOCK = 0.4;
 export function useFetchPoolData(irisPrice: string) {
@@ -113,6 +115,100 @@ export function useFetchPoolData(irisPrice: string) {
       return poolInfo;
     },
     [account, library, irisPrice]
+  );
+
+  return fetchData;
+}
+
+export function useFetchStakePoolData() {
+  const getLpContract = useERC20();
+  const getStakePoolContract = useStakePoolContract();
+  const currentBlock = useCurrentBlockNumber();
+  const { account, library } = useActiveWeb3React();
+
+  const fetchData = useCallback(
+    async (stakePoolInfo: StakeInfo) => {
+      try {
+        const poolChef = getStakePoolContract(stakePoolInfo.address);
+
+        stakePoolInfo.active = (await poolChef.bonusEndBlock()).sub(currentBlock || 0).gt(0);
+
+        const totalStaked = (await poolChef.totalStakeTokenBalance()).toString();
+
+        stakePoolInfo.totalStaked = utils.formatUnits(
+          totalStaked,
+          stakePoolInfo.stakeToken.decimal
+        );
+
+        // get prices
+        const stakingToken = new Token(
+          DEFAULT_CHAIN_ID,
+          stakePoolInfo.stakeToken.address,
+          stakePoolInfo.stakeToken.decimal,
+          stakePoolInfo.stakeToken.symbol
+        );
+
+        const rewardToken = new Token(
+          DEFAULT_CHAIN_ID,
+          stakePoolInfo.rewardToken.address,
+          stakePoolInfo.rewardToken.decimal,
+          stakePoolInfo.rewardToken.symbol
+        );
+
+        // TOKEN PRICE
+        stakePoolInfo.stakeToken.price = await fetchPrice(stakingToken, library);
+        stakePoolInfo.rewardToken.price = await fetchPrice(rewardToken, library);
+
+        // calculate APR
+        const rewardPerBlock = (await poolChef.rewardPerBlock()).toNumber();
+        const multiplier = (await poolChef.poolInfo()).allocPoint.toNumber();
+        const rewardsPerWeek = rewardPerBlock * (604800 / 2.1);
+        const totalAllocPoints = multiplier;
+
+        const poolRewardsPerWeek = new BigNumberJS(multiplier)
+          .div(totalAllocPoints)
+          .times(rewardsPerWeek)
+          .toNumber();
+
+        stakePoolInfo.apr = getPoolApr(
+          parseFloat(stakePoolInfo.rewardToken.price || "0"),
+          poolRewardsPerWeek,
+          parseFloat(stakePoolInfo.stakeToken.price || "0"),
+          parseFloat(stakePoolInfo.totalStaked || "0")
+        );
+
+        if (account) {
+          let stakeTokenContract = getLpContract(stakePoolInfo.stakeToken.address);
+
+          stakePoolInfo.rewardsEarned = utils.formatUnits(
+            await poolChef.pendingReward(account),
+            stakePoolInfo.rewardToken.decimal
+          );
+
+          const userInfo = await poolChef.userInfo(account);
+
+          stakePoolInfo.userTotalStaked = utils.formatUnits(
+            userInfo.amount,
+            stakePoolInfo.stakeToken.decimal
+          );
+
+          stakePoolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
+
+          const allowance: BigNumber = await stakeTokenContract.allowance(
+            account,
+            stakePoolInfo.address
+          );
+
+          stakePoolInfo.hasApprovedPool = !allowance.isZero();
+        }
+
+        return stakePoolInfo;
+      } catch (e) {
+        console.error(e);
+        return stakePoolInfo;
+      }
+    },
+    [currentBlock, library]
   );
 
   return fetchData;

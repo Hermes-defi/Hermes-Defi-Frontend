@@ -1,4 +1,5 @@
 import { PoolInfo } from "config/pools";
+import { StakeInfo } from "config/stake";
 import { useContext, createContext, Dispatch } from "react";
 
 export const PoolsContext = createContext<[PoolInfo[], Dispatch<{ type: string; payload: any }>]>([
@@ -6,7 +7,11 @@ export const PoolsContext = createContext<[PoolInfo[], Dispatch<{ type: string; 
   () => null,
 ]);
 
-export const poolsReducers = (state: PoolInfo[], actions: { type: string; payload: any }) => {
+export const StakePoolContext = createContext<
+  [StakeInfo[], Dispatch<{ type: string; payload: any }>]
+>([[], () => null]);
+
+export function poolsReducers(state: PoolInfo[], actions: { type: string; payload: any }) {
   switch (actions.type) {
     case "ADD_POOLS": {
       return actions.payload as PoolInfo[];
@@ -36,8 +41,44 @@ export const poolsReducers = (state: PoolInfo[], actions: { type: string; payloa
   }
 
   return state;
-};
+}
+
+export function stakePoolsReducers(state: StakeInfo[], actions: { type: string; payload: any }) {
+  switch (actions.type) {
+    case "ADD_POOLS": {
+      return actions.payload as StakeInfo[];
+    }
+
+    case "APPROVE_CONTRACT": {
+      const { approved, address } = actions.payload;
+
+      // create a new copy of pools
+      const pools = [...state];
+      const poolIdx = pools.findIndex((p) => p.address === address);
+      pools[poolIdx].hasApprovedPool = approved;
+
+      return pools;
+    }
+
+    case "UPDATE_POOL": {
+      const { data, address } = actions.payload;
+
+      // create a new copy of pools
+      const pools = [...state];
+      const poolIdx = pools.findIndex((p) => p.address === address);
+      pools[poolIdx] = data;
+
+      return pools;
+    }
+  }
+
+  return state;
+}
 
 export function usePoolInfo() {
   return useContext(PoolsContext);
+}
+
+export function useStakePoolInfo() {
+  return useContext(StakePoolContext);
 }
