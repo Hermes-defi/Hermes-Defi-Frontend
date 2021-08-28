@@ -159,7 +159,7 @@ export const Navigation = () => {
         {/* desktop navigation */}
         <Flex flex={6} display={{ base: "none", md: "flex" }} justify="center" align="center">
           <Stack flex={1} justify="flex-end" direction={"row"} spacing={4}>
-            {NAV_ITEMS.slice(0, 4).map((navItem: NavItem) => (
+            {NAV_ITEMS.slice(0, 5).map((navItem: NavItem) => (
               <Box key={navItem.label}>
                 <Popover trigger="hover" placement="bottom">
                   <PopoverTrigger>
@@ -246,7 +246,7 @@ export const Navigation = () => {
 
           {/* second nav items */}
           <Stack flex={1} justify="flex-start" direction={"row"} spacing={4}>
-            {NAV_ITEMS.slice(4, NAV_ITEMS.length).map((navItem: NavItem) => (
+            {NAV_ITEMS.slice(5, NAV_ITEMS.length).map((navItem: NavItem) => (
               <Box key={navItem.label}>
                 <Popover trigger="hover" placement="bottom">
                   <PopoverTrigger>

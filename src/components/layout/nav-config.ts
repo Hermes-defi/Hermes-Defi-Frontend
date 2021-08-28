@@ -50,6 +50,11 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
 
   {
+    label: "Stake IRIS",
+    href: "/app/stake",
+  },
+
+  {
     label: "Balancer LPs",
     href: "/app/balancers",
   },

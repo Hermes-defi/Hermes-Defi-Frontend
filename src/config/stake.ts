@@ -10,6 +10,7 @@ export type StakeInfo = {
     address: string;
     symbol: string;
     decimal: number;
+    logo: string;
     price?: string;
   };
 
@@ -17,6 +18,7 @@ export type StakeInfo = {
     address: string;
     symbol: string;
     decimal: number;
+    logo: string;
     price?: string;
   };
 
@@ -37,18 +39,38 @@ export type StakeInfo = {
 export const stakingPools: StakeInfo[] = {
   137: [
     {
-      address: "0xB82bAfDf59167Da04269bdF243E1Bf0D5ac6df13",
+      address: "0x7a99d3c5f6aafa527c7d58d579100284ba5f2d1a",
 
       stakeToken: {
-        address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+        address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
         symbol: "IRIS",
         decimal: 18,
+        logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
-        address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-        symbol: "USDC",
-        decimal: 6,
+        address: "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104",
+        symbol: "KAVIAN",
+        decimal: 18,
+        logo: "/kavian-logo.png",
+      },
+    },
+
+    {
+      address: "0xCa0eC1fAE7335469055A3e8B85a21D4CF6bf3F5d",
+
+      stakeToken: {
+        address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+        symbol: "IRIS",
+        decimal: 18,
+        logo: "/hermes-logo-1.png",
+      },
+
+      rewardToken: {
+        address: "0xf9b4dEFdDe04fe18F5ee6456607F8A2eC9fF6A75",
+        symbol: "SANDMAN",
+        decimal: 18,
+        logo: "/sandman-logo.png",
       },
     },
   ],
