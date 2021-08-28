@@ -7,7 +7,6 @@ import { usePoolInfo, useStakePoolInfo } from "./reducer";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
 import { constants, utils } from "ethers";
 import { useERC20, useMasterChef, useStakePoolContract } from "../contracts";
-import { getReferralAddress } from "../referral";
 import { useFetchPoolData, useFetchStakePoolData } from "./queries";
 import { useIrisPrice } from "hooks/prices";
 import { balancersDefaultData, farmsDefaultData, poolDefaultData } from "config/pools";
@@ -108,7 +107,6 @@ export function useApproveStakePool() {
 }
 
 export function useDepositIntoPool() {
-  const referrer = getReferralAddress();
   const { account } = useActiveWeb3React();
   const [pools, dispatch] = usePoolInfo();
 
@@ -122,13 +120,7 @@ export function useDepositIntoPool() {
       if (!account) throw new Error("No connected account");
 
       const pool = pools.find((p) => p.pid === pid);
-      await depositIntoPool(
-        masterChef,
-        pid,
-        amount,
-        referrer || constants.AddressZero,
-        pool.decimals
-      );
+      await depositIntoPool(masterChef, pid, amount, constants.AddressZero, pool.decimals);
 
       // fetch new pool data
       const poolInfo = [...poolDefaultData, ...farmsDefaultData, ...balancersDefaultData].find(

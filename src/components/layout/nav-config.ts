@@ -60,11 +60,6 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
 
   {
-    label: "Referrals",
-    href: "/app/referrals",
-  },
-
-  {
     label: "Charts",
     children: [
       {

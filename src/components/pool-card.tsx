@@ -23,6 +23,7 @@ import {
 import { AiOutlineCalculator } from "react-icons/ai";
 import { UnlockButton } from "./unlock-wallet";
 import { APRModal } from "./modals/roi-modal";
+import { useIrisPrice } from "hooks/prices";
 
 // Pool Actions
 const DepositButton: React.FC<{ pool: PoolInfo; primary?: boolean }> = (props) => {
@@ -177,12 +178,30 @@ const UserSection: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   );
 };
 
-export function APRCalculator({ pool }: any) {
+function APRCalculator({ pool }: { pool: PoolInfo }) {
   const { isOpen, onClose, onOpen } = useDisclosure();
+  const { data: irisPrice } = useIrisPrice();
+
   return (
     <>
       <Icon onClick={onOpen} mr={1} as={AiOutlineCalculator} />
-      <APRModal pool={pool} isOpen={isOpen} onClose={onClose} />
+      <APRModal
+        isOpen={isOpen}
+        onClose={onClose}
+        aprs={pool.apr}
+        stakeToken={{
+          symbol: pool.lpToken,
+          link: pool.isBalancer
+            ? `https://polygon.balancer.fi/#/pool/${pool.balancerAddress}`
+            : pool.isFarm
+            ? `https://quickswap.exchange/#/add/${pool.pairTokens[0].tokenAddress}/${pool.pairTokens[1].tokenAddress}`
+            : `https://quickswap.exchange/#/swap/${pool.lpAddress}`,
+        }}
+        rewardToken={{
+          symbol: "IRIS",
+          price: irisPrice,
+        }}
+      />
     </>
   );
 }

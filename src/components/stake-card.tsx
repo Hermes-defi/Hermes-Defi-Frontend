@@ -16,17 +16,19 @@ import {
   Button,
   Heading,
   HStack,
+  Icon,
   Image,
   Link,
   Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
+import { AiOutlineCalculator } from "react-icons/ai";
 
+import { APRModal } from "./modals/roi-modal";
 import { DepositModal } from "./modals/deposit-modal";
 import { WithdrawModal } from "./modals/withdraw-modal";
 import { UnlockButton } from "./unlock-wallet";
-import { APRCalculator } from "./pool-card";
 
 import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
 
@@ -169,6 +171,29 @@ const UserSection: React.FC<{ pool: StakeInfo }> = ({ pool }) => {
     </Stack>
   );
 };
+
+export function APRCalculator({ pool }: { pool: StakeInfo }) {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+
+  return (
+    <>
+      <Icon onClick={onOpen} mr={1} as={AiOutlineCalculator} />
+      <APRModal
+        isOpen={isOpen}
+        onClose={onClose}
+        aprs={pool.apr}
+        stakeToken={{
+          symbol: pool.stakeToken.symbol,
+          link: `https://quickswap.exchange/#/swap/${pool.stakeToken.address}`,
+        }}
+        rewardToken={{
+          symbol: pool.rewardToken.symbol,
+          price: pool.rewardToken.price,
+        }}
+      />
+    </>
+  );
+}
 
 export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool }) => {
   return (

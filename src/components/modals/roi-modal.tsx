@@ -13,16 +13,15 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon } from "@chakra-ui/icons";
-import { PoolInfo } from "config/pools";
 import { displayNumber, displayTokenCurrency } from "libs/utils";
-import { useIrisPrice } from "hooks/prices";
 
-export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: PoolInfo }> = ({
-  pool,
-  ...props
-}) => {
-  const irisPrice = useIrisPrice();
-
+export const APRModal: React.FC<{
+  isOpen: boolean;
+  onClose: () => void;
+  aprs: { dailyAPR?: number; yearlyAPR?: number; weeklyAPR?: number };
+  rewardToken: { symbol: string; price: string };
+  stakeToken: { symbol: string; link: string };
+}> = (props) => {
   return (
     <Modal size="sm" isOpen={props.isOpen} onClose={props.onClose} isCentered>
       <ModalOverlay />
@@ -54,7 +53,7 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
               fontWeight="bold"
               fontSize="sm"
             >
-              IRIS per $1000
+              {props.rewardToken.symbol} per $1000
             </Text>
           </Stack>
 
@@ -64,11 +63,11 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 1d
               </Text>
               <Text flex="1" fontSize="sm">
-                {displayNumber(pool.apr?.dailyAPR)}%
+                {displayNumber(props.aprs?.dailyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
                 {displayTokenCurrency(
-                  ((pool.apr?.dailyAPR / 100) * 1000) / parseFloat(irisPrice.data),
+                  ((props.aprs?.dailyAPR / 100) * 1000) / parseFloat(props.rewardToken.price),
                   ""
                 )}
               </Text>
@@ -79,11 +78,11 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 7d
               </Text>
               <Text flex="1" fontSize="sm">
-                {displayNumber(pool.apr?.weeklyAPR)}%
+                {displayNumber(props.aprs?.weeklyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
                 {displayTokenCurrency(
-                  ((pool.apr?.weeklyAPR / 100) * 1000) / parseFloat(irisPrice.data),
+                  ((props.aprs?.weeklyAPR / 100) * 1000) / parseFloat(props.rewardToken.price),
                   ""
                 )}
               </Text>
@@ -94,11 +93,11 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
                 365d
               </Text>
               <Text flex="1" fontSize="sm">
-                {displayNumber(pool.apr?.yearlyAPR)}%
+                {displayNumber(props.aprs?.yearlyAPR)}%
               </Text>
               <Text flex="1" fontSize="sm">
                 {displayTokenCurrency(
-                  ((pool.apr?.yearlyAPR / 100) * 1000) / parseFloat(irisPrice.data),
+                  ((props.aprs?.yearlyAPR / 100) * 1000) / parseFloat(props.rewardToken.price),
                   ""
                 )}
               </Text>
@@ -121,20 +120,14 @@ export const APRModal: React.FC<{ isOpen: boolean; onClose: () => void; pool: Po
           <Stack spacing={2} direction="row" justify="center" align="center">
             <Button
               as={Link}
-              href={
-                pool.isBalancer
-                  ? `https://polygon.balancer.fi/#/pool/${pool.balancerAddress}`
-                  : pool.isFarm
-                  ? `https://quickswap.exchange/#/add/${pool.pairTokens[0].tokenAddress}/${pool.pairTokens[1].tokenAddress}`
-                  : `https://quickswap.exchange/#/swap/${pool.lpAddress}`
-              }
+              href={props.stakeToken.link}
               isExternal
               rightIcon={<ExternalLinkIcon color="primary.500" />}
               size="sm"
               variant="link"
             >
               <Text fontSize="lg" fontWeight="bold" textColor="primary.500">
-                Get {pool.lpToken}
+                Get {props.stakeToken.symbol}
               </Text>
             </Button>
           </Stack>
