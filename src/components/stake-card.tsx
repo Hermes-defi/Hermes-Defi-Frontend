@@ -195,9 +195,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
           boxSize={12}
         />
 
-        <Heading fontSize="3xl">
-          {stakePool.stakeToken.symbol}/{stakePool.rewardToken.symbol}
-        </Heading>
+        <Heading fontSize="3xl">{stakePool.rewardToken.symbol}</Heading>
       </HStack>
 
       {/* pool badges */}
@@ -215,9 +213,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {stakePool.apr
-                ? `${displayNumber(Math.round(stakePool.apr.yearlyAPR), true)}%`
-                : "N/A"}
+              {stakePool.apr ? `${displayNumber(stakePool.apr.yearlyAPR)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -228,9 +224,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {stakePool.apr
-                ? `${displayNumber(Math.round(stakePool.apr.dailyAPR), true)}%`
-                : "N/A"}
+              {stakePool.apr ? `${displayNumber(stakePool.apr.dailyAPR)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>

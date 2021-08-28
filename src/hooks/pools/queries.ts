@@ -162,16 +162,19 @@ export function useFetchStakePoolData() {
         stakePoolInfo.rewardToken.price = await fetchPrice(rewardToken, library);
 
         // calculate APR
-        const rewardPerBlock = (await poolChef.rewardPerBlock()).toNumber();
-        const multiplier = (await poolChef.poolInfo()).allocPoint.toNumber();
-        const rewardsPerWeek = rewardPerBlock * (604800 / 2.1);
-        const totalAllocPoints = multiplier;
+        const rewardPerBlock = utils.formatEther(await poolChef.rewardPerBlock());
+        const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
+        const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(604800 / 2.1).toNumber();
+        const multiplier = (
+          await poolChef.getMultiplier(currentBlock, stakePoolInfo.rewardEndBlock)
+        ).toNumber(); // todo: move to config
 
         const poolRewardsPerWeek = new BigNumberJS(multiplier)
           .div(totalAllocPoints)
           .times(rewardsPerWeek)
           .toNumber();
 
+        console.log({ poolRewardsPerWeek, multiplier });
         stakePoolInfo.apr = getPoolApr(
           parseFloat(stakePoolInfo.rewardToken.price || "0"),
           poolRewardsPerWeek,
