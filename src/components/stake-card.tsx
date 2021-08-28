@@ -16,16 +16,13 @@ import {
   Button,
   Heading,
   HStack,
-  Icon,
   Image,
   Link,
   Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { AiOutlineCalculator } from "react-icons/ai";
 
-import { APRModal } from "./modals/roi-modal";
 import { DepositModal } from "./modals/deposit-modal";
 import { WithdrawModal } from "./modals/withdraw-modal";
 import { UnlockButton } from "./unlock-wallet";
@@ -172,29 +169,6 @@ const UserSection: React.FC<{ pool: StakeInfo }> = ({ pool }) => {
   );
 };
 
-export function APRCalculator({ pool }: { pool: StakeInfo }) {
-  const { isOpen, onClose, onOpen } = useDisclosure();
-
-  return (
-    <>
-      <Icon onClick={onOpen} mr={1} as={AiOutlineCalculator} />
-      <APRModal
-        isOpen={isOpen}
-        onClose={onClose}
-        aprs={pool.apr}
-        stakeToken={{
-          symbol: pool.stakeToken.symbol,
-          link: `https://quickswap.exchange/#/swap/${pool.stakeToken.address}`,
-        }}
-        rewardToken={{
-          symbol: pool.rewardToken.symbol,
-          price: pool.rewardToken.price,
-        }}
-      />
-    </>
-  );
-}
-
 export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool }) => {
   return (
     <Box
@@ -212,24 +186,14 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
     >
       {/* pool name */}
       <HStack align="center" mb={5} spacing={2}>
-        <Box w={12} h={12} pos="relative">
-          <Image
-            pos="absolute"
-            top="5px"
-            left="0"
-            rounded="12px"
-            src={stakePool.stakeToken.logo}
-            boxSize={6}
-          />
-          <Image
-            pos="absolute"
-            bottom="-5px"
-            right="0px"
-            rounded="20px"
-            src={stakePool.rewardToken.logo}
-            boxSize={10}
-          />
-        </Box>
+        <Image
+          border="2px"
+          borderColor="white"
+          bg="white"
+          rounded="24px"
+          src={stakePool.rewardToken.logo}
+          boxSize={12}
+        />
 
         <Heading fontSize="3xl">
           {stakePool.stakeToken.symbol}/{stakePool.rewardToken.symbol}
@@ -250,9 +214,23 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
             APR
           </Text>
           <Box display="flex" alignItems="center">
-            {stakePool.apr && <APRCalculator pool={stakePool} />}
             <Text fontWeight="700" fontSize="sm">
-              {stakePool.apr ? `${displayNumber(Math.round(stakePool.apr.yearlyAPR))}%` : "N/A"}
+              {stakePool.apr
+                ? `${displayNumber(Math.round(stakePool.apr.yearlyAPR), true)}%`
+                : "N/A"}
+            </Text>
+          </Box>
+        </Stack>
+
+        <Stack direction="row" justify="space-between">
+          <Text fontWeight="600" fontSize="sm">
+            Daily ROI
+          </Text>
+          <Box display="flex" alignItems="center">
+            <Text fontWeight="700" fontSize="sm">
+              {stakePool.apr
+                ? `${displayNumber(Math.round(stakePool.apr.dailyAPR), true)}%`
+                : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -262,7 +240,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
             Earn
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            {stakePool.stakeToken.symbol}
+            {stakePool.rewardToken.symbol}
           </Text>
         </Stack>
       </Stack>
@@ -305,6 +283,15 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
                       .toNumber()
                   )
                 : "N/A"}
+            </Text>
+          </Stack>
+
+          <Stack direction="row" justify="space-between">
+            <Text fontWeight="700" fontSize="sm">
+              Reward End Block
+            </Text>
+            <Text fontWeight="700" fontSize="sm">
+              {stakePool.rewardEndBlock}
             </Text>
           </Stack>
         </Stack>

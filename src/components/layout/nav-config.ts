@@ -32,7 +32,7 @@ export const NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
-        label: "Add Liquidity (Balancer)",
+        label: "Liquidity (Balancer)",
         href: "https://polygon.balancer.fi/#/pool/0x7320d680ca9bce8048a286f00a79a2c9f8dcd7b3000100000000000000000044",
         isExternal: true,
       },

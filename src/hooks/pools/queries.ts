@@ -130,8 +130,10 @@ export function useFetchStakePoolData() {
     async (stakePoolInfo: StakeInfo) => {
       try {
         const poolChef = getStakePoolContract(stakePoolInfo.address);
+        const endBlock = await poolChef.bonusEndBlock();
 
-        stakePoolInfo.active = (await poolChef.bonusEndBlock()).sub(currentBlock || 0).gt(0);
+        stakePoolInfo.rewardEndBlock = endBlock.toString();
+        stakePoolInfo.active = endBlock.sub(currentBlock || 0).gt(0);
 
         const totalStaked = (await poolChef.totalStakeTokenBalance()).toString();
 

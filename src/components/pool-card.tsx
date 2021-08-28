@@ -222,6 +222,7 @@ const imageMapper = {
   "w/u/w/b/i bpt": "/WETH__WMATIC__BAL__USDC__IRIS.png",
 };
 
+// TODO: Please refactor
 export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
   const irisCard = pool.pid === 8 || pool.pid === 0 || pool.pid === 12;
   return (

@@ -2,6 +2,7 @@ import { DEFAULT_CHAIN_ID } from "./constants";
 
 export type StakeInfo = {
   address: string;
+  rewardEndBlock?: string;
   active?: boolean;
   isSpecial?: boolean;
 

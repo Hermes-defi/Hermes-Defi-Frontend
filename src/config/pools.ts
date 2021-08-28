@@ -1,6 +1,7 @@
 import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID } from "./constants";
 
+// TODO: refactor to a more simpler model
 export type PoolInfo = {
   // public data
   pid: number;
