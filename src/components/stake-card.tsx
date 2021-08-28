@@ -213,7 +213,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {stakePool.apr ? `${displayNumber(stakePool.apr.yearlyAPR)}%` : "N/A"}
+              {stakePool.apr ? `${displayNumber(stakePool.apr.yearlyAPR, false, 6)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -224,7 +224,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {stakePool.apr ? `${displayNumber(stakePool.apr.dailyAPR)}%` : "N/A"}
+              {stakePool.apr ? `${displayNumber(stakePool.apr.dailyAPR, false, 6)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
