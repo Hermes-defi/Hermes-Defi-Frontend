@@ -104,6 +104,11 @@ export const NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
+        label: "Feedback",
+        href: "https://feedback.hermesdefi.io",
+        isExternal: true,
+      },
+      {
         label: "Pre Sale",
         href: "/app/pre-sale",
       },
