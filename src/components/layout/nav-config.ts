@@ -12,7 +12,11 @@ export const NAV_ITEMS: Array<NavItem> = [
     label: "Home",
     href: "/app",
   },
-
+  {
+    label: "Governance",
+    href: "https://feedback.hermesdefi.io",
+    isExternal: true,
+  },
   {
     label: "Trade",
     children: [
@@ -38,7 +42,6 @@ export const NAV_ITEMS: Array<NavItem> = [
       },
     ],
   },
-
   {
     label: "Farms",
     href: "/app/farms",
@@ -101,11 +104,6 @@ export const NAV_ITEMS: Array<NavItem> = [
       {
         label: "Medium",
         href: "https://medium.com/@HermesDefi",
-        isExternal: true,
-      },
-      {
-        label: "Feedback",
-        href: "https://feedback.hermesdefi.io",
         isExternal: true,
       },
       {
