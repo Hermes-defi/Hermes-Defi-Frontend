@@ -126,6 +126,14 @@ export const poolDefaultData: PoolInfo[] = {
       lpAddress: "0x5ac3ceee2c3e6790cadd6707deb2e87ea83b0631",
       decimals: 9,
     },
+    {
+      pid: 13,
+      multiplier: "5",
+      depositFees: 3,
+      lpToken: "AFK",
+      lpAddress: "0xbc7cB585346f4F59d07121Bb9Ed7358076243539",
+      decimals: 18,
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID];
