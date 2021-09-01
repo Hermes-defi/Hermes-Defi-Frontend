@@ -216,7 +216,7 @@ const imageMapper = {
   usdt: "/usdt-logo.png",
   dai: "/dai-logo.png",
   aes: "/aes-logo.png",
-  afk: "/afk-logo.png",
+  silver: "/silver-logo.png",
   "iris/wmatic": ["/hermes-logo-1.png", "/matic-logo.png"],
   "u/d/m/u bpt": "/USDC__USDT__DAI__miMATIC.png",
   "l/w/b/a bpt": "/AAVEBALLINKETH.png",

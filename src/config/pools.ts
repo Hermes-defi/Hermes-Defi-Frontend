@@ -130,7 +130,7 @@ export const poolDefaultData: PoolInfo[] = {
       pid: 13,
       multiplier: "5",
       depositFees: 3,
-      lpToken: "AFK",
+      lpToken: "SILVER",
       lpAddress: "0xbc7cB585346f4F59d07121Bb9Ed7358076243539",
       decimals: 18,
     },
