@@ -206,26 +206,7 @@ function APRCalculator({ pool }: { pool: PoolInfo }) {
   );
 }
 
-const imageMapper = {
-  iris: "/hermes-logo-1.png",
-  weth: "/eth-logo.png",
-  wbtc: "/btc-logo.png",
-  wmatic: "/matic-logo.png",
-  quick: "/quickswap-logo.jpeg",
-  usdc: "/usdc-logo.png",
-  usdt: "/usdt-logo.png",
-  dai: "/dai-logo.png",
-  aes: "/aes-logo.png",
-  silver: "/silver-logo.png",
-  "iris/wmatic": ["/hermes-logo-1.png", "/matic-logo.png"],
-  "u/d/m/u bpt": "/USDC__USDT__DAI__miMATIC.png",
-  "l/w/b/a bpt": "/AAVEBALLINKETH.png",
-  "w/u/w/b/i bpt": "/WETH__WMATIC__BAL__USDC__IRIS.png",
-};
-
-// TODO: Please refactor
 export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
-  const irisCard = pool.pid === 8 || pool.pid === 0 || pool.pid === 12;
   return (
     <Box
       px={8}
@@ -233,21 +214,23 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={
-        irisCard ? `linear(to-b, primary.300, accent.500)` : `linear(to-t, accent.300, accent.500)`
+        pool.isSpecial
+          ? `linear(to-b, primary.300, accent.500)`
+          : `linear(to-t, accent.300, accent.500)`
       }
       rounded="3xl"
       color="white"
     >
       {/* pool name */}
       <HStack align="center" mb={5} spacing={2}>
-        {Array.isArray(imageMapper[pool.lpToken.toLowerCase()]) ? (
+        {Array.isArray(pool.poolImage) ? (
           <Box w={12} h={12} pos="relative">
             <Image
               pos="absolute"
               top="5px"
               left="0"
               rounded="12px"
-              src={imageMapper[pool.lpToken.toLowerCase()][0]}
+              src={pool.poolImage[0]}
               boxSize={6}
             />
             <Image
@@ -255,7 +238,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               bottom="-5px"
               right="0px"
               rounded="20px"
-              src={imageMapper[pool.lpToken.toLowerCase()][1]}
+              src={pool.poolImage[0]}
               boxSize={10}
             />
           </Box>
@@ -265,7 +248,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
             borderColor="white"
             bg="white"
             rounded="24px"
-            src={imageMapper[pool.lpToken.toLowerCase()]}
+            src={pool.poolImage as string}
             boxSize={12}
           />
         )}

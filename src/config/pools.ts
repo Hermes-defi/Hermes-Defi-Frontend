@@ -1,7 +1,6 @@
 import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID } from "./constants";
 
-// TODO: refactor to a more simpler model
 export type PoolInfo = {
   // public data
   pid: number;
@@ -11,6 +10,8 @@ export type PoolInfo = {
   isBalancer?: boolean;
   active?: boolean;
   farmDx?: string;
+  isSpecial?: boolean;
+  poolImage: string | string[];
 
   // lp data
   lpToken: string;
@@ -35,25 +36,17 @@ export type PoolInfo = {
   lpStaked?: string;
 };
 
-export const poolIds = {
-  137: [0, 1, 2, 3, 4, 5, 6, 7],
-  80001: [1],
-}[DEFAULT_CHAIN_ID];
-
-export const farmIds = {
-  137: [8],
-  80001: [],
-}[DEFAULT_CHAIN_ID];
-
 export const poolDefaultData: PoolInfo[] = {
   137: [
     {
       pid: 0,
       multiplier: "80",
       depositFees: 0,
+      isSpecial: true,
       lpToken: "IRIS",
       lpAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
       decimals: 18,
+      poolImage: "/hermes-logo-1.png",
     },
 
     {
@@ -63,6 +56,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "WETH",
       lpAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
       decimals: 18,
+      poolImage: "/eth-logo.png",
     },
 
     {
@@ -72,6 +66,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "WBTC",
       lpAddress: "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6",
       decimals: 8,
+      poolImage: "/btc-logo.png",
     },
 
     {
@@ -81,6 +76,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "WMATIC",
       lpAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
       decimals: 18,
+      poolImage: "/matic-logo.png",
     },
 
     {
@@ -90,6 +86,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "QUICK",
       lpAddress: "0x831753DD7087CaC61aB5644b308642cc1c33Dc13",
       decimals: 18,
+      poolImage: "/quickswap-logo.jpeg",
     },
 
     {
@@ -99,6 +96,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "USDC",
       lpAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
       decimals: 6,
+      poolImage: "/usdc-logo.png",
     },
 
     {
@@ -108,6 +106,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "USDT",
       lpAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
       decimals: 6,
+      poolImage: "/usdt-logo.png",
     },
 
     {
@@ -117,6 +116,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "DAI",
       lpAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
       decimals: 18,
+      poolImage: "/dai-logo.png",
     },
     {
       pid: 9,
@@ -125,6 +125,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "AES",
       lpAddress: "0x5ac3ceee2c3e6790cadd6707deb2e87ea83b0631",
       decimals: 9,
+      poolImage: "/aes-logo.png",
     },
     {
       pid: 13,
@@ -133,6 +134,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "SILVER",
       lpAddress: "0xbc7cB585346f4F59d07121Bb9Ed7358076243539",
       decimals: 18,
+      poolImage: "/silver-logo.png",
     },
   ],
   80001: [],
@@ -145,9 +147,11 @@ export const farmsDefaultData: PoolInfo[] = {
       multiplier: "160",
       depositFees: 0,
       isFarm: true,
+      isSpecial: true,
       farmDx: "Quickswap",
       lpToken: "IRIS/WMATIC",
       lpAddress: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
+      poolImage: ["/hermes-logo-1.png", "/matic-logo.png"],
       pairTokens: [
         {
           tokenAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
@@ -174,6 +178,7 @@ export const balancersDefaultData: PoolInfo[] = {
       depositFees: 3,
       isBalancer: true,
       farmDx: "Balancer",
+      poolImage: "/USDC__USDT__DAI__miMATIC.png",
       lpToken: "U/D/M/U BPT",
       lpAddress: "0x06df3b2bbb68adc8b0e302443692037ed9f91b42",
       balancerAddress: "0x06df3b2bbb68adc8b0e302443692037ed9f91b42000000000000000000000012",
@@ -207,6 +212,7 @@ export const balancersDefaultData: PoolInfo[] = {
       depositFees: 2,
       isBalancer: true,
       farmDx: "Balancer",
+      poolImage: "/AAVEBALLINKETH.png",
       lpToken: "L/W/B/A BPT",
       lpAddress: "0xce66904b68f1f070332cbc631de7ee98b650b499",
       balancerAddress: "0xce66904b68f1f070332cbc631de7ee98b650b499000100000000000000000009",
@@ -239,7 +245,9 @@ export const balancersDefaultData: PoolInfo[] = {
       multiplier: "60",
       depositFees: 1,
       isBalancer: true,
+      isSpecial: true,
       farmDx: "Balancer",
+      poolImage: "/WETH__WMATIC__BAL__USDC__IRIS.png",
       lpToken: "W/U/W/B/I BPT",
       lpAddress: "0x7320d680ca9bce8048a286f00a79a2c9f8dcd7b3",
       balancerAddress: "0x7320d680ca9bce8048a286f00a79a2c9f8dcd7b3000100000000000000000044",
