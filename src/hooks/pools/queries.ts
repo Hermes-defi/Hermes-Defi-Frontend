@@ -162,22 +162,30 @@ export function useFetchStakePoolData() {
         stakePoolInfo.rewardToken.price = await fetchPrice(rewardToken, library);
 
         // calculate APR
-        const rewardPerBlock = utils.formatEther(await poolChef.rewardPerBlock());
-        const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
-        const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(604800 / 2.1).toNumber();
-        const multiplier = 1000; // todo: move to config
+        if (stakePoolInfo.active) {
+          const rewardPerBlock = utils.formatEther(await poolChef.rewardPerBlock());
+          const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
+          const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(604800 / 2.1).toNumber();
+          const multiplier = 1000; // todo: move to config
 
-        const poolRewardsPerWeek = new BigNumberJS(multiplier)
-          .div(totalAllocPoints)
-          .times(rewardsPerWeek)
-          .toNumber();
+          const poolRewardsPerWeek = new BigNumberJS(multiplier)
+            .div(totalAllocPoints)
+            .times(rewardsPerWeek)
+            .toNumber();
 
-        stakePoolInfo.apr = getPoolApr(
-          parseFloat(stakePoolInfo.rewardToken.price || "0"),
-          poolRewardsPerWeek,
-          parseFloat(stakePoolInfo.stakeToken.price || "0"),
-          parseFloat(stakePoolInfo.totalStaked || "0")
-        );
+          stakePoolInfo.apr = getPoolApr(
+            parseFloat(stakePoolInfo.rewardToken.price || "0"),
+            poolRewardsPerWeek,
+            parseFloat(stakePoolInfo.stakeToken.price || "0"),
+            parseFloat(stakePoolInfo.totalStaked || "0")
+          );
+        } else {
+          stakePoolInfo.apr = {
+            yearlyAPR: 0,
+            weeklyAPR: 0,
+            dailyAPR: 0,
+          };
+        }
 
         if (account) {
           let stakeTokenContract = getLpContract(stakePoolInfo.stakeToken.address);
