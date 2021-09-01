@@ -40,8 +40,8 @@ export type StakeInfo = {
 export const stakingPools: StakeInfo[] = {
   137: [
     {
-      address: "0x7a99d3c5f6aafa527c7d58d579100284ba5f2d1a",
-      active: false,
+      address: "0xFE3583513Ba38B228C7A62B200F71a0ecF337Eb9",
+      active: true,
 
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
