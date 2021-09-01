@@ -3,8 +3,22 @@ import defaultTokens from "config/tokens";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
+import * as Dfyn from "@dfyn/sdk";
 
-export async function fetchPrice(token: Token, library: any) {
+async function fetchCoinGeckoPrice(address: string) {
+  try {
+    const resp = await fetch(
+      `https://api.coingecko.com/api/v3/simple/token_price/polygon-pos?contract_addresses=${address}&vs_currencies=usd`
+    );
+
+    const data = await resp.json();
+    return data[address.toLowerCase()].usd || "0";
+  } catch (err) {
+    return "0";
+  }
+}
+
+async function fetchQuickSwapPrice(token: Token, library: any) {
   const usdc = new Token(
     DEFAULT_CHAIN_ID,
     defaultTokens.usdc.address,
@@ -43,7 +57,8 @@ export async function fetchPrice(token: Token, library: any) {
 
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
-    console.log(`error getting price for ${token.symbol}`, e.message, token);
+    console.log("Error for token", token);
+    // console.log(`error getting price for ${token.symbol}`, e.message, token);
 
     // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
     // please refactor
@@ -55,6 +70,76 @@ export async function fetchPrice(token: Token, library: any) {
 
     return "0";
   }
+}
+
+async function fetchDfynPrice(token_: Token, library: any) {
+  // HACK rewrite token to Dfyn token
+  const token = new Dfyn.Token(DEFAULT_CHAIN_ID, token_.address, token_.decimals, token_.symbol);
+
+  const usdc = new Dfyn.Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.usdc.address,
+    defaultTokens.usdc.decimals,
+    "USDC"
+  );
+
+  try {
+    let route;
+    if (token.symbol !== "WMATIC") {
+      // fetch matic to usdc pair
+      const MaticToUSDCPair = await Dfyn.Fetcher.fetchPairData(
+        Dfyn.WETH[DEFAULT_CHAIN_ID], // points to WMATIC :facepalm:
+        usdc,
+        library
+      );
+
+      // fetch the token to matic pair info
+      const tokenToMatic = await Dfyn.Fetcher.fetchPairData(
+        token,
+        Dfyn.WETH[DEFAULT_CHAIN_ID],
+        library
+      );
+
+      // find a route
+      route = new Dfyn.Route([MaticToUSDCPair, tokenToMatic], usdc);
+    } else {
+      // use only the MATIC-USDC pair to get the price
+      const pair = await Dfyn.Fetcher.fetchPairData(token, usdc, library);
+      route = new Dfyn.Route([pair], usdc);
+    }
+
+    return route.midPrice.invert().toSignificant(6);
+  } catch (e) {
+    console.log(`dfyn - error getting price for ${token.symbol}`, e.message, token);
+
+    // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
+    // please refactor
+    // HACK:: we use this for cases where the we're finding a route for a token to the same token,
+    // so we hack the price to be 1 because TOKEN_A_PRICE === TOKEN_A_PRICE (same token!!!)
+    if (e.message.includes("ADDRESSES")) {
+      return "1";
+    }
+
+    return "0";
+  }
+}
+
+export async function fetchPrice(token: Token, library: any) {
+  // TODO:: refactor please
+  let price = await fetchCoinGeckoPrice(token.address);
+  token.symbol === "SILVER" && console.log("coingecko price", price, token.symbol);
+
+  if (price === "0") {
+    price = await fetchQuickSwapPrice(token, library);
+    token.symbol === "SILVER" && console.log("quickswap price", price, token.symbol);
+  }
+
+  if (price === "0") {
+    price = await fetchDfynPrice(token, library);
+    token.symbol === "SILVER" && console.log("dfyn price", price, token.symbol);
+  }
+
+  return price;
 }
 
 export async function fetchPairPrice(

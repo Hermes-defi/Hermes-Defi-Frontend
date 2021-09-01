@@ -736,6 +736,19 @@
   dependencies:
     "@chakra-ui/utils" "1.8.0"
 
+"@dfyn/sdk@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@dfyn/sdk/-/sdk-0.0.5.tgz#f1f5048af04b7d0ef5adfb1568eb0d45200d5eca"
+  integrity sha512-h1Y88Zm9chajQT1VM4+xdNbaIChfixbwUO4FSE5oWQ8NekkxAATfgcesR8xAQlTRvAIOMdIbEjfMXJQhlzHXqA==
+  dependencies:
+    "@uniswap/v2-core" "^1.0.0"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.1"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+    toformat "^2.0.0"
+
 "@emotion/babel-plugin@^11.3.0":
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.3.0.tgz#3a16850ba04d8d9651f07f3fb674b3436a4fb9d7"
