@@ -2,6 +2,8 @@ import { DEFAULT_CHAIN_ID } from "./constants";
 
 export type StakeInfo = {
   address: string;
+  poolSite: string;
+
   rewardEndBlock?: string;
   active?: boolean;
   isSpecial?: boolean;
@@ -41,6 +43,7 @@ export const stakingPools: StakeInfo[] = {
   137: [
     {
       address: "0xFE3583513Ba38B228C7A62B200F71a0ecF337Eb9",
+      poolSite: "https://kavian.finance/",
       active: true,
 
       stakeToken: {
@@ -61,6 +64,7 @@ export const stakingPools: StakeInfo[] = {
     {
       address: "0x7a99d3c5f6aafa527c7d58d579100284ba5f2d1a",
       active: false,
+      poolSite: "https://kavian.finance/",
 
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
@@ -79,6 +83,7 @@ export const stakingPools: StakeInfo[] = {
 
     {
       address: "0xCa0eC1fAE7335469055A3e8B85a21D4CF6bf3F5d",
+      poolSite: "https://sandman.farm/",
       active: false,
 
       stakeToken: {

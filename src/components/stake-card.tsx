@@ -290,14 +290,20 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
           </Stack>
         </Stack>
 
-        <Link
-          href={`https://polygonscan.com/address/${stakePool.address}`}
-          textDecoration="underline"
-          fontWeight="700"
-          fontSize="sm"
-        >
-          View on Matic
-        </Link>
+        <Stack direction="row" justify="space-between">
+          <Link
+            href={`https://polygonscan.com/address/${stakePool.address}`}
+            textDecoration="underline"
+            fontWeight="700"
+            fontSize="sm"
+          >
+            View on Matic
+          </Link>
+
+          <Link href={stakePool.poolSite} textDecoration="underline" fontWeight="700" fontSize="sm">
+            View Project
+          </Link>
+        </Stack>
       </Box>
     </Box>
   );
