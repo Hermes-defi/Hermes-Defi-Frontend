@@ -284,6 +284,7 @@ export const Navigation = () => {
                           <Link
                             key={child.label}
                             href={child.href}
+                            isExternal={navItem.isExternal}
                             role={"group"}
                             display={"block"}
                             p={2}
