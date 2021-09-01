@@ -57,7 +57,7 @@ function ColorModeToggle() {
   );
 }
 
-const MobileNavItem = ({ label, children, href }: NavItem) => {
+const MobileNavItem = ({ label, children, href, isExternal }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -66,6 +66,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         py={2}
         as={Link}
         href={href ?? "#"}
+        isExternal={isExternal}
         justify={"space-between"}
         align={"center"}
         _hover={{
@@ -97,7 +98,7 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
+              <Link key={child.label} py={2} href={child.href} isExternal={child.isExternal}>
                 {child.label}
               </Link>
             ))}
@@ -197,6 +198,7 @@ export const Navigation = () => {
                           <Link
                             key={child.label}
                             href={child.href}
+                            isExternal={child.isExternal}
                             role={"group"}
                             display={"block"}
                             p={2}
@@ -284,7 +286,7 @@ export const Navigation = () => {
                           <Link
                             key={child.label}
                             href={child.href}
-                            isExternal={navItem.isExternal}
+                            isExternal={child.isExternal}
                             role={"group"}
                             display={"block"}
                             p={2}

@@ -117,7 +117,7 @@ const MobileNavItem = ({ label, children, href, isExternal }: NavItem) => {
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
+              <Link key={child.label} py={2} href={child.href} isExternal={child.isExternal}>
                 {child.label}
               </Link>
             ))}
@@ -212,6 +212,7 @@ function Navigation() {
                             <Link
                               key={child.label}
                               href={child.href}
+                              isExternal={child.isExternal}
                               role={"group"}
                               display={"block"}
                               p={2}
