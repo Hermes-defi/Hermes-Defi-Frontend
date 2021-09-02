@@ -5,6 +5,7 @@ export type StakeInfo = {
   poolSite: string;
 
   rewardEndBlock?: string;
+  isDisabled?: boolean;
   active?: boolean;
   isSpecial?: boolean;
 
@@ -121,4 +122,4 @@ export const stakingPools: StakeInfo[] = {
       },
     },
   ],
-}[DEFAULT_CHAIN_ID];
+}[DEFAULT_CHAIN_ID].filter((p: StakeInfo) => !p.isDisabled);

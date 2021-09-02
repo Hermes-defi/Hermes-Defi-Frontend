@@ -6,9 +6,11 @@ export type PoolInfo = {
   pid: number;
   multiplier: string;
   depositFees: number;
+  isDisabled?: boolean;
+  active?: boolean;
+
   isFarm?: boolean;
   isBalancer?: boolean;
-  active?: boolean;
   farmDx?: string;
   isSpecial?: boolean;
   poolImage: string | string[];
@@ -145,9 +147,19 @@ export const poolDefaultData: PoolInfo[] = {
       decimals: 18,
       poolImage: "/fish-logo.svg",
     },
+    {
+      pid: 15,
+      isDisabled: true,
+      multiplier: "5",
+      depositFees: 2,
+      lpToken: "FISH",
+      lpAddress: "0x3a3df212b7aa91aa0402b9035b098891d276572b",
+      decimals: 18,
+      poolImage: "/fish-logo.svg",
+    },
   ],
   80001: [],
-}[DEFAULT_CHAIN_ID];
+}[DEFAULT_CHAIN_ID].filter((p: PoolInfo) => !p.isDisabled);
 
 export const farmsDefaultData: PoolInfo[] = {
   137: [
@@ -177,7 +189,7 @@ export const farmsDefaultData: PoolInfo[] = {
     },
   ],
   80001: [],
-}[DEFAULT_CHAIN_ID];
+}[DEFAULT_CHAIN_ID].filter((p: PoolInfo) => !p.isDisabled);
 
 export const balancersDefaultData: PoolInfo[] = {
   137: [
@@ -290,4 +302,4 @@ export const balancersDefaultData: PoolInfo[] = {
       decimals: 18,
     },
   ],
-}[DEFAULT_CHAIN_ID];
+}[DEFAULT_CHAIN_ID].filter((p: PoolInfo) => !p.isDisabled);
