@@ -141,7 +141,7 @@ export const poolDefaultData: PoolInfo[] = {
       multiplier: "5",
       depositFees: 2,
       lpToken: "FISH",
-      lpAddress: "0xbc7cB585346f4F59d07121Bb9Ed7358076243539",
+      lpAddress: "0x3a3df212b7aa91aa0402b9035b098891d276572b",
       decimals: 18,
       poolImage: "/fish-logo.svg",
     },

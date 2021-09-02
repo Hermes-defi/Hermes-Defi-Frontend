@@ -100,5 +100,25 @@ export const stakingPools: StakeInfo[] = {
         logo: "/sandman-logo.png",
       },
     },
+
+    {
+      address: "0x0F7B6984900A40a5A7Ae3dF41b2919d36cBa9815",
+      poolSite: "https://gamma.polypulsar.farm/",
+      active: true,
+
+      stakeToken: {
+        address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+        symbol: "IRIS",
+        decimal: 18,
+        logo: "/hermes-logo-1.png",
+      },
+
+      rewardToken: {
+        address: "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51",
+        symbol: "GBNT",
+        decimal: 18,
+        logo: "/sandman-logo.png",
+      },
+    },
   ],
 }[DEFAULT_CHAIN_ID];

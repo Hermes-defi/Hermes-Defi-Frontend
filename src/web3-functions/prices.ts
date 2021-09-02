@@ -5,6 +5,23 @@ import { DEFAULT_CHAIN_ID } from "config/constants";
 import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
 import * as Dfyn from "@dfyn/sdk";
 
+const amms = {
+  "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1": "quickswap", // iris
+  "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
+  "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc
+  "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "coingecko", // wmatic
+  "0x831753DD7087CaC61aB5644b308642cc1c33Dc13": "coingecko", // quick
+  "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174": "coingecko", // usdc
+  "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": "coingecko", // usdt
+  "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "coingecko", // dai
+  "0x5ac3ceee2c3e6790cadd6707deb2e87ea83b0631": "quickswap", // aes
+  "0xbc7cB585346f4F59d07121Bb9Ed7358076243539": "dfyn", // silver
+  "0x3a3df212b7aa91aa0402b9035b098891d276572b": "quickswap", // fish
+  "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104": "quickswap", // kavian
+  "0xf9b4dEFdDe04fe18F5ee6456607F8A2eC9fF6A75": "quickswap", // sandman
+  "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51": "polycat", // GBNT
+};
+
 async function fetchCoinGeckoPrice(address: string) {
   try {
     const resp = await fetch(
@@ -124,21 +141,50 @@ async function fetchDfynPrice(token_: Token, library: any) {
   }
 }
 
+async function fetchPolycatPrice(address: string) {
+  try {
+    const resp = await fetch(
+      "https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `{
+            tokenDayDatas ( 
+              orderBy: date,
+              orderDirection: desc,
+              where: { 
+                token: "${address.toLowerCase()}" 
+              } 
+            ){
+              id
+              date
+              priceUSD
+            }
+          }`,
+        }),
+      }
+    );
+
+    const { data } = await resp.json();
+    return new BigNumberJS(data.tokenDayDatas[0].priceUSD).toPrecision(6).toString();
+  } catch (err) {
+    console.log(err);
+    return "0";
+  }
+}
+
 export async function fetchPrice(token: Token, library: any) {
-  // TODO:: refactor please
-  let price = await fetchCoinGeckoPrice(token.address);
-  token.symbol === "SILVER" && console.log("coingecko price", price, token.symbol);
+  const ammsFetcher = {
+    coingecko: (t: Token) => fetchCoinGeckoPrice(t.address),
+    quickswap: (t: Token) => fetchQuickSwapPrice(t, library),
+    dfyn: (t: Token) => fetchDfynPrice(t, library),
+    polycat: (t: Token) => fetchPolycatPrice(t.address),
+  };
 
-  if (price === "0") {
-    price = await fetchQuickSwapPrice(token, library);
-    token.symbol === "SILVER" && console.log("quickswap price", price, token.symbol);
-  }
-
-  if (price === "0") {
-    price = await fetchDfynPrice(token, library);
-    token.symbol === "SILVER" && console.log("dfyn price", price, token.symbol);
-  }
-
+  let price = await ammsFetcher[amms[token.address]](token);
   return price;
 }
 
