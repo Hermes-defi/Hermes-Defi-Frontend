@@ -117,7 +117,7 @@ export const stakingPools: StakeInfo[] = {
         address: "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51",
         symbol: "GBNT",
         decimal: 18,
-        logo: "/sandman-logo.png",
+        logo: "/gbnt-logo.png",
       },
     },
   ],
