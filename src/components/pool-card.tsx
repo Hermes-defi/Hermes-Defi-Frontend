@@ -238,7 +238,7 @@ export const PoolCard: React.FC<{ pool: PoolInfo }> = ({ pool }) => {
               bottom="-5px"
               right="0px"
               rounded="20px"
-              src={pool.poolImage[0]}
+              src={pool.poolImage[1]}
               boxSize={10}
             />
           </Box>

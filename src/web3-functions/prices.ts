@@ -14,9 +14,9 @@ const amms = {
   "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174": "coingecko", // usdc
   "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": "coingecko", // usdt
   "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "coingecko", // dai
-  "0x5ac3ceee2c3e6790cadd6707deb2e87ea83b0631": "quickswap", // aes
+  "0x5aC3ceEe2C3E6790cADD6707Deb2E87EA83b0631": "quickswap", // aes
   "0xbc7cB585346f4F59d07121Bb9Ed7358076243539": "dfyn", // silver
-  "0x3a3df212b7aa91aa0402b9035b098891d276572b": "quickswap", // fish
+  "0x3a3Df212b7AA91Aa0402B9035b098891d276572B": "quickswap", // fish
   "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104": "quickswap", // kavian
   "0xf9b4dEFdDe04fe18F5ee6456607F8A2eC9fF6A75": "quickswap", // sandman
   "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51": "polycat", // GBNT
@@ -185,7 +185,11 @@ export async function fetchPrice(token: Token, library: any) {
   };
 
   try {
-    let price = await ammsFetcher[amms[token.address]](token);
+    const amm = Object.entries(amms).find(
+      ([k]) => k.toLowerCase() === token.address.toLowerCase()
+    )[1];
+
+    let price = await ammsFetcher[amm](token);
     return price;
   } catch (e) {
     console.log(e);
