@@ -184,8 +184,13 @@ export async function fetchPrice(token: Token, library: any) {
     polycat: (t: Token) => fetchPolycatPrice(t.address),
   };
 
-  let price = await ammsFetcher[amms[token.address]](token);
-  return price;
+  try {
+    let price = await ammsFetcher[amms[token.address]](token);
+    return price;
+  } catch (e) {
+    console.log(e);
+    return "0";
+  }
 }
 
 export async function fetchPairPrice(
