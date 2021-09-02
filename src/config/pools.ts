@@ -136,6 +136,15 @@ export const poolDefaultData: PoolInfo[] = {
       decimals: 18,
       poolImage: "/silver-logo.png",
     },
+    {
+      pid: 14,
+      multiplier: "5",
+      depositFees: 2,
+      lpToken: "FISH",
+      lpAddress: "0xbc7cB585346f4F59d07121Bb9Ed7358076243539",
+      decimals: 18,
+      poolImage: "/fish-logo.svg",
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID];
