@@ -149,7 +149,6 @@ export const poolDefaultData: PoolInfo[] = {
     },
     {
       pid: 15,
-      isDisabled: true,
       multiplier: "3",
       depositFees: 2,
       lpToken: "KAVIAN",
