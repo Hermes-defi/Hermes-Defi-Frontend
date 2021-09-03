@@ -154,7 +154,7 @@ export const poolDefaultData: PoolInfo[] = {
       lpToken: "KAVIAN",
       lpAddress: "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104",
       decimals: 18,
-      poolImage: "/kavian-logo.svg",
+      poolImage: "/kavian-logo.png",
     },
   ],
   80001: [],
