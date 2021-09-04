@@ -124,7 +124,7 @@ export const stakingPools: StakeInfo[] = {
 
     {
       address: "0x0F7B6984900A40a5A7Ae3dF41b2919d36cBa9815",
-      poolSite: "https://gamma.polypulsar.farm/",
+      poolSite: "https://www.centre.io/usdc",
       active: true,
       isDisabled: true,
 
