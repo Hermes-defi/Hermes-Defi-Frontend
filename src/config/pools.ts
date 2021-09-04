@@ -192,7 +192,6 @@ export const farmsDefaultData: PoolInfo[] = {
       depositFees: 0,
       isFarm: true,
       isSpecial: true,
-      isDisabled: true,
       farmDx: "Quickswap",
       lpToken: "IRIS/KOGECOIN",
       lpAddress: "0x302f7e9bb5b5ac673ac537f464a1b7a36bbbabfa",
