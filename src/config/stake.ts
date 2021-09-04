@@ -121,5 +121,26 @@ export const stakingPools: StakeInfo[] = {
         logo: "/gbnt-logo.png",
       },
     },
+
+    {
+      address: "0x0F7B6984900A40a5A7Ae3dF41b2919d36cBa9815",
+      poolSite: "https://gamma.polypulsar.farm/",
+      active: true,
+      isDisabled: true,
+
+      stakeToken: {
+        address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+        symbol: "IRIS",
+        decimal: 18,
+        logo: "/hermes-logo-1.png",
+      },
+
+      rewardToken: {
+        address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+        symbol: "USDC",
+        decimal: 6,
+        logo: "/usdc-logo.png",
+      },
+    },
   ],
 }[DEFAULT_CHAIN_ID].filter((p: StakeInfo) => !p.isDisabled);

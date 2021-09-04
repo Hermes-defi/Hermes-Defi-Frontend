@@ -20,6 +20,7 @@ const amms = {
   "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104": "quickswap", // kavian
   "0xf9b4dEFdDe04fe18F5ee6456607F8A2eC9fF6A75": "quickswap", // sandman
   "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51": "polycat", // GBNT
+  "0x13748d548D95D78a3c83fe3F32604B4796CFfa23": "coingecko", // koge
 };
 
 async function fetchCoinGeckoPrice(address: string) {

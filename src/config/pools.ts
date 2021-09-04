@@ -186,6 +186,31 @@ export const farmsDefaultData: PoolInfo[] = {
       ],
       decimals: 18,
     },
+    {
+      pid: 16,
+      multiplier: "60",
+      depositFees: 0,
+      isFarm: true,
+      isSpecial: true,
+      isDisabled: true,
+      farmDx: "Quickswap",
+      lpToken: "IRIS/KOGECOIN",
+      lpAddress: "0x302f7e9bb5b5ac673ac537f464a1b7a36bbbabfa",
+      poolImage: ["/hermes-logo-1.png", "/koge-logo.png"],
+      pairTokens: [
+        {
+          tokenAddress: "0x13748d548D95D78a3c83fe3F32604B4796CFfa23",
+          tokenDecimals: 9,
+          tokenName: "KOGECOIN",
+        },
+        {
+          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          tokenDecimals: 18,
+          tokenName: "IRIS",
+        },
+      ],
+      decimals: 18,
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((p: PoolInfo) => !p.isDisabled);
