@@ -195,7 +195,7 @@ export const farmsDefaultData: PoolInfo[] = {
       farmDx: "Quickswap",
       lpToken: "IRIS/KOGECOIN",
       lpAddress: "0x302f7e9bb5b5ac673ac537f464a1b7a36bbbabfa",
-      poolImage: ["/hermes-logo-1.png", "/koge-logo.png"],
+      poolImage: ["/hermes-logo-1.png", "/koge-logo.jpeg"],
       pairTokens: [
         {
           tokenAddress: "0x13748d548D95D78a3c83fe3F32604B4796CFfa23",
