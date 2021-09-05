@@ -163,7 +163,10 @@ export function useFetchStakePoolData() {
 
         // calculate APR
         if (stakePoolInfo.active) {
-          const rewardPerBlock = utils.formatEther(await poolChef.rewardPerBlock());
+          const rewardPerBlock = utils.formatUnits(
+            await poolChef.rewardPerBlock(),
+            rewardToken.decimals
+          );
           const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
           const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(604800 / 2.1).toNumber();
           const multiplier = 1000; // todo: move to config
