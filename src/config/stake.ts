@@ -105,7 +105,7 @@ export const stakingPools: StakeInfo[] = {
     {
       address: "0x0F7B6984900A40a5A7Ae3dF41b2919d36cBa9815",
       poolSite: "https://gamma.polypulsar.farm/",
-      active: true,
+      active: false,
 
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
