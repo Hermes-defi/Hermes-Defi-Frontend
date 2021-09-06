@@ -116,11 +116,13 @@ const Page: React.FC = () => {
               </Flex>
             )}
 
-            <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
+            <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
               {pools.map((pool) => (
-                <StakePoolCard key={pool.address} stakePool={pool} />
+                <Box key={pool.address} w={80} pt="40px">
+                  <StakePoolCard key={pool.address} stakePool={pool} />
+                </Box>
               ))}
-            </SimpleGrid>
+            </Stack>
           </Container>
         </Stack>
       </AppLayout>
