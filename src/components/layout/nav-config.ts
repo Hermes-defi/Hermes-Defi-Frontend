@@ -75,6 +75,11 @@ export const NAV_ITEMS: Array<NavItem> = [
         href: "https://dex.guru/token/0xdab35042e63e93cc8556c9bae482e5415b5ac4b1-polygon",
         isExternal: true,
       },
+      {
+        label: "Arken",
+        href: "https://swap.arken.finance/tokens/polygon/0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+        isExternal: true,
+      },
     ],
   },
 

@@ -2158,6 +2158,11 @@ aria-hidden@^1.1.1:
   dependencies:
     tslib "^1.0.0"
 
+arken-widget@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/arken-widget/-/arken-widget-1.0.4.tgz#f53cb7cce88231436e4dfa148725e0eaa36f8eb1"
+  integrity sha512-5jIL7WmIa5FTOjMCEHuVNTvLRiTatW3oYjQQY+GUkfuD1/6xaGKyq2cb8pqjT4NusNXsBIjOVFWDLIoomdMJTQ==
+
 arrify@^2.0.0, arrify@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-2.0.1.tgz#c9655e9331e0abcd588d2a7cad7e9956f66701fa"
