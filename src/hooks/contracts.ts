@@ -57,6 +57,12 @@ export function useRedeem() {
   return contract(defaultContracts.redeem);
 }
 
+export function useERC20_v2(address: string) {
+  const contract = useContract();
+  const erc20ContractInfo = erc20(address);
+  return contract(erc20ContractInfo);
+}
+
 export function useERC20() {
   const contract = useContract();
 
