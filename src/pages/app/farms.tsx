@@ -16,6 +16,8 @@ import {
   StackDivider,
   Switch,
   useColorModeValue,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { FarmCard } from "components/farm-card";
 
@@ -23,7 +25,7 @@ const Page: React.FC = () => {
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
   const [active, toggleActive] = useToggle(true);
 
-  const farmsResp = useFetchFarms({ active, stakedOnly });
+  const farmsResp = useFetchFarms();
   const isLoading = !farmsResp.every((f) => f.data);
 
   let farms = farmsResp
@@ -81,11 +83,13 @@ const Page: React.FC = () => {
               <Spinner size="xl" />
             </Flex>
           ) : (
-            <HStack spacing="40px" justifyContent="center">
+            <Wrap justify="center" spacing="40px">
               {farms.map(({ data }: any) => (
-                <FarmCard key={data.pid} farm={data} />
+                <WrapItem key={data.pid}>
+                  <FarmCard key={data.pid} farm={data} />
+                </WrapItem>
               ))}
-            </HStack>
+            </Wrap>
           )}
         </Container>
       </Stack>

@@ -16,6 +16,8 @@ import {
   StackDivider,
   Switch,
   useColorModeValue,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import { StakePoolCard } from "components/stake-card";
 import { AppLayout } from "components/layout";
@@ -82,11 +84,13 @@ const Page: React.FC = () => {
               <Spinner size="xl" />
             </Flex>
           ) : (
-            <HStack spacing="40px" justifyContent="center">
+            <Wrap justify="center" spacing="40px">
               {pools.map(({ data }: any) => (
-                <StakePoolCard key={data.address} stakePool={data} />
+                <WrapItem key={data.address}>
+                  <StakePoolCard stakePool={data} />
+                </WrapItem>
               ))}
-            </HStack>
+            </Wrap>
           )}
         </Container>
       </Stack>

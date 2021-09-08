@@ -31,14 +31,14 @@ export function useBalance() {
 
 export function useCurrentBlockNumber() {
   const { library } = useActiveWeb3React();
-  const [blockNumber, setBlockNumber] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      const blockNumber = await library.getBlockNumber();
-      setBlockNumber(blockNumber);
-    })();
-  }, [library]);
+  const { data } = useQuery(
+    ["currentBlock"],
+    () => {
+      return library.getBlockNumber();
+    },
+    { staleTime: 0 }
+  );
 
-  return blockNumber;
+  return data;
 }

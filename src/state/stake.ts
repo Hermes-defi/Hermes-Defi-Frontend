@@ -115,11 +115,13 @@ function useFetchStakingPoolRequest() {
 
 export function useFetchStakePools() {
   const fetchStakingPoolRq = useFetchStakingPoolRequest();
+  const currentBlock = useCurrentBlockNumber();
   const { account } = useActiveWeb3React();
 
   const farmQueries = useQueries(
     stakingPools.map((stakePool) => {
       return {
+        enabled: !!currentBlock,
         queryKey: ["stake-pool", stakePool.address, account],
         queryFn: () => fetchStakingPoolRq(stakePool),
       };
