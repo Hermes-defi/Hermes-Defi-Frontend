@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js";
 import { Farm } from "config/farms";
 
 import { useActiveWeb3React } from "wallet";
+import { useIrisPrice } from "hooks/prices";
 import { useApproveFarm, useDepositIntoFarm, useWithdrawFromFarm } from "state/farms";
 
 import {
@@ -15,10 +16,15 @@ import {
   Link,
   Button,
   useDisclosure,
+  Badge,
+  Icon,
 } from "@chakra-ui/react";
+import { AiOutlineCalculator } from "react-icons/ai";
+
 import { UnlockButton } from "./unlock-wallet";
 import { WithdrawModal } from "./modals/withdraw-modal";
 import { DepositModal } from "./modals/deposit-modal";
+import { APRModal } from "./modals/roi-modal";
 
 import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
 
@@ -174,6 +180,30 @@ const UserSection: React.FC<{ farm: Farm }> = ({ farm }) => {
   );
 };
 
+function APRCalculator({ farm }: { farm: Farm }) {
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const { data: irisPrice } = useIrisPrice();
+
+  return (
+    <>
+      <Icon onClick={onOpen} mr={1} as={AiOutlineCalculator} />
+      <APRModal
+        isOpen={isOpen}
+        onClose={onClose}
+        aprs={farm.apr}
+        stakeToken={{
+          symbol: farm.stakeToken.symbol,
+          link: `https://quickswap.exchange/#/add/${farm.pairs[0].tokenAddress}/${farm.pairs[1].tokenAddress}`,
+        }}
+        rewardToken={{
+          symbol: "IRIS",
+          price: irisPrice,
+        }}
+      />
+    </>
+  );
+}
+
 export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
   return (
     <Box
@@ -214,13 +244,24 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
         <Heading fontSize="3xl">{farm.stakeToken.symbol}</Heading>
       </HStack>
 
-      {/* <HStack mb={6} spacing={2}>
-          {farm.badge.map((badge) => (
-            <Badge key={badge} boxShadow="md" px={2} rounded="lg" colorScheme="black">
-              {badge}
-            </Badge>
-          ))}
-        </HStack> */}
+      <HStack mb={6} spacing={2}>
+        {farm.multiplier && (
+          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="gray">
+            {farm.multiplier}x
+          </Badge>
+        )}
+
+        {!farm.depositFees && (
+          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="green">
+            No Fees
+          </Badge>
+        )}
+        {farm.farmDx && (
+          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="gray">
+            {farm.farmDx}
+          </Badge>
+        )}
+      </HStack>
 
       <Stack mb={6}>
         <Stack direction="row" justify="space-between">
@@ -228,7 +269,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
             APR
           </Text>
           <Box display="flex" alignItems="center">
-            {/* {farm.apr && <APRCalculator farm={farm} />} */}
+            {farm.apr && <APRCalculator farm={farm} />}
             <Text fontWeight="700" fontSize="sm">
               {farm.apr ? `${displayNumber(Math.round(farm.apr.yearlyAPR))}%` : "N/A"}
             </Text>

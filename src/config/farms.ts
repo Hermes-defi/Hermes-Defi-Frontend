@@ -11,7 +11,7 @@ export type Farm = {
   isDisabled?: boolean;
   isActive?: boolean;
 
-  badge?: string[];
+  farmDx?: string;
 
   // lp data
   stakeToken: {
@@ -50,7 +50,7 @@ export const farms: Farm[] = {
       depositFees: 0,
 
       isSpecial: true,
-      badge: ["Quickswap"],
+      farmDx: "Quickswap",
 
       stakeToken: {
         address: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
@@ -78,7 +78,7 @@ export const farms: Farm[] = {
       depositFees: 0,
 
       isSpecial: true,
-      badge: ["Quickswap"],
+      farmDx: "Quickswap",
 
       stakeToken: {
         address: "0x302f7e9bb5b5ac673ac537f464a1b7a36bbbabfa",

@@ -29,11 +29,6 @@ function useFetchFarmRequest() {
     newFarm.multiplier = masterChefInfo.allocPoint.toString();
     newFarm.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
 
-    newFarm.badge = (newFarm.badge || []).concat(`${newFarm.multiplier}x`);
-    if (newFarm.depositFees === 0) {
-      newFarm.badge.push("No Fees");
-    }
-
     newFarm.isActive = masterChefInfo.allocPoint.toString() !== "0";
 
     // Token data
