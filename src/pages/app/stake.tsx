@@ -1,16 +1,9 @@
-import React, { useReducer } from "react";
+import React from "react";
 
-import { useActiveWeb3React } from "wallet";
-import { useQuery } from "react-query";
 import { useToggle } from "react-use";
-import { useFetchStakePoolData } from "hooks/pools/queries";
-import { useIrisPrice } from "hooks/prices";
-
-import { StakeInfo, stakingPools } from "config/stake";
-import { StakePoolContext, stakePoolsReducers } from "hooks/pools/reducer";
+import { useFetchStakePools } from "state/stake";
 
 import {
-  Box,
   Button,
   Container,
   Flex,
@@ -18,7 +11,6 @@ import {
   FormLabel,
   Heading,
   HStack,
-  SimpleGrid,
   Spinner,
   Stack,
   StackDivider,
@@ -29,104 +21,76 @@ import { StakePoolCard } from "components/stake-card";
 import { AppLayout } from "components/layout";
 
 const Page: React.FC = () => {
-  const { data: irisPrice } = useIrisPrice();
-  const { account } = useActiveWeb3React();
-  const fetchPoolData = useFetchStakePoolData();
-
-  // page display actions
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
   const [active, toggleActive] = useToggle(true);
 
-  const [state, dispatch] = useReducer(stakePoolsReducers, [] as StakeInfo[]);
+  const stakeResp = useFetchStakePools();
+  const isLoading = !stakeResp.every((s) => s.data);
 
-  const poolQuery = useQuery(
-    ["pools", account, irisPrice],
-
-    async (): Promise<StakeInfo[]> => {
-      return Promise.all(
-        stakingPools.map(async (pool) => {
-          return fetchPoolData(pool);
-        })
-      );
-    },
-
-    {
-      enabled: !!irisPrice,
-
-      onSuccess: (data) => {
-        dispatch({ type: "ADD_POOLS", payload: data });
-      },
-    }
-  );
-
-  let pools = state
-    .filter((pool) => pool.active === active)
-    .filter((pool) => (stakedOnly ? pool.hasStaked === stakedOnly : true));
+  let pools = stakeResp
+    .filter((pool: any) => pool.data?.active === active)
+    .filter((pool: any) => (stakedOnly ? pool.data?.hasStaked === stakedOnly : true));
 
   return (
-    <StakePoolContext.Provider value={[state, dispatch]}>
-      <AppLayout>
-        <Stack align="center" spacing={10} py={10}>
-          <HStack spacing={14} align="center" justify="center">
-            <FormControl w="auto" display="flex" alignItems="center">
-              <Switch
-                isChecked={stakedOnly}
-                onChange={() => toggleStakedOnly()}
-                id="staked-only"
-                mt={1}
-                mb={0}
-                mr={3}
-              />
-              <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
-                Staked Only
-              </FormLabel>
-            </FormControl>
+    <AppLayout>
+      <Stack align="center" spacing={10} py={10}>
+        <HStack spacing={14} align="center" justify="center">
+          <FormControl w="auto" display="flex" alignItems="center">
+            <Switch
+              isChecked={stakedOnly}
+              onChange={() => toggleStakedOnly()}
+              id="staked-only"
+              mt={1}
+              mb={0}
+              mr={3}
+            />
+            <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
+              Staked Only
+            </FormLabel>
+          </FormControl>
 
-            <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
-              <Button
-                onClick={() => toggleActive()}
-                color={
-                  active
-                    ? useColorModeValue("gray.800", "gray.300")
-                    : useColorModeValue("gray.500", "gray.500")
-                }
-                variant="link"
-              >
-                <Heading fontSize="xl">Active</Heading>
-              </Button>
+          <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
+            <Button
+              onClick={() => toggleActive()}
+              color={
+                active
+                  ? useColorModeValue("gray.800", "gray.300")
+                  : useColorModeValue("gray.500", "gray.500")
+              }
+              variant="link"
+            >
+              <Heading fontSize="xl">Active</Heading>
+            </Button>
 
-              <Button
-                onClick={() => toggleActive()}
-                color={
-                  !active
-                    ? useColorModeValue("gray.800", "gray.300")
-                    : useColorModeValue("gray.500", "gray.500")
-                }
-                variant="link"
-              >
-                <Heading fontSize="xl">Inactive</Heading>
-              </Button>
-            </HStack>
+            <Button
+              onClick={() => toggleActive()}
+              color={
+                !active
+                  ? useColorModeValue("gray.800", "gray.300")
+                  : useColorModeValue("gray.500", "gray.500")
+              }
+              variant="link"
+            >
+              <Heading fontSize="xl">Inactive</Heading>
+            </Button>
           </HStack>
+        </HStack>
 
-          <Container align="center" maxWidth="container.lg">
-            {poolQuery.isLoading && !poolQuery.data && (
-              <Flex mt={16} align="center" justify="center">
-                <Spinner size="xl" />
-              </Flex>
-            )}
-
-            <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
-              {pools.map((pool) => (
-                <Box key={pool.address} w={80} pt="40px">
-                  <StakePoolCard key={pool.address} stakePool={pool} />
-                </Box>
+        <Container align="center" maxWidth="container.lg">
+          {isLoading ? (
+            <Flex mt={16} align="center" justify="center">
+              <Spinner size="xl" />
+            </Flex>
+          ) : (
+            <HStack spacing="40px" justifyContent="center">
+              {pools.map(({ data }: any) => (
+                <StakePoolCard key={data.address} stakePool={data} />
               ))}
-            </Stack>
-          </Container>
-        </Stack>
-      </AppLayout>
-    </StakePoolContext.Provider>
+            </HStack>
+          )}
+        </Container>
+      </Stack>
+    </AppLayout>
   );
 };
 

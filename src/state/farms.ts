@@ -99,7 +99,7 @@ function useFetchFarmRequest() {
   };
 }
 
-export function useFetchFarms(filters: { active: boolean; stakedOnly: boolean }) {
+export function useFetchFarms() {
   const irisPrice = useIrisPrice();
   const fetchFarmRq = useFetchFarmRequest();
   const { account } = useActiveWeb3React();

@@ -3,11 +3,7 @@ import { BigNumber } from "bignumber.js";
 
 import { StakeInfo } from "config/stake";
 
-import {
-  useApproveStakePool,
-  useDepositIntoStakePool,
-  useStakeWithdraw,
-} from "hooks/pools/actions";
+import { useApproveStakePool, useDepositIntoStakePool, useStakeWithdraw } from "state/stake";
 import { useActiveWeb3React } from "wallet";
 
 import {
@@ -174,6 +170,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
     <Box
       px={8}
       py={4}
+      w="19rem"
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={
