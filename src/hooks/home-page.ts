@@ -78,7 +78,7 @@ export function useIrisStats() {
 
 export function useFarmAPRStats() {
   const farmsResp = useFetchFarms();
-  const isLoading = !farmsResp.every((f) => f.data);
+  const isLoading = farmsResp.every((f) => f.status === "loading");
 
   const aprs = farmsResp.map((f) => (f.data as Farm)?.apr.yearlyAPR);
   const maxApr = Math.max(...aprs);
@@ -88,7 +88,7 @@ export function useFarmAPRStats() {
 
 export function usePoolsAPRStats() {
   const poolsResp = useFetchPools();
-  const isLoading = !poolsResp.every((p) => p.data);
+  const isLoading = poolsResp.every((p) => p.status === "loading");
 
   const aprs = poolsResp.map((p) => (p.data as Pool)?.apr.yearlyAPR);
   const maxApr = Math.max(...aprs);
@@ -98,7 +98,7 @@ export function usePoolsAPRStats() {
 
 export function useTotalInFarms() {
   const farmsResp = useFetchFarms();
-  const isLoading = !farmsResp.every((f) => f.data);
+  const isLoading = farmsResp.every((f) => f.status === "loading");
 
   const data = farmsResp.reduce((total, farmResp) => {
     const farm = farmResp.data as Farm;
@@ -119,7 +119,7 @@ export function useTotalInFarms() {
 
 export function useTotalInPools() {
   const poolsResp = useFetchPools();
-  const isLoading = !poolsResp.every((f) => f.data);
+  const isLoading = poolsResp.every((f) => f.status === "loading");
 
   const data = poolsResp.reduce((total, poolResp) => {
     const pool = poolResp.data as Pool;
@@ -140,7 +140,7 @@ export function useTotalInPools() {
 
 export function useTotalInBalancers() {
   const balsResp = useFetchBalancers();
-  const isLoading = !balsResp.every((f) => f.data);
+  const isLoading = balsResp.every((f) => f.status === "loading");
 
   const data = balsResp.reduce((total, balResp) => {
     const bal = balResp.data as Balancer;

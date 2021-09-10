@@ -27,7 +27,7 @@ const Page: React.FC = () => {
   const [active, toggleActive] = useToggle(true);
 
   const stakeResp = useFetchStakePools();
-  const isLoading = !stakeResp.every((s) => s.data);
+  const isLoading = stakeResp.every((s) => s.status === "loading");
 
   let pools = stakeResp
     .filter((pool: any) => pool.data?.active === active)

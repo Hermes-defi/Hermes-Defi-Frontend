@@ -91,7 +91,7 @@ export function useFetchPools() {
     pools.map((farm) => {
       return {
         enabled: !!irisPrice.data,
-        queryKey: ["pool", farm.pid, account, irisPrice.data],
+        queryKey: ["pool", farm.pid, account],
         queryFn: () => fetchPoolRq(farm),
       };
     })
@@ -164,6 +164,7 @@ export function useDepositIntoPool() {
       if (!account) throw new Error("No connected account");
 
       const pool = queryClient.getQueryData<Pool>(["pool", id, account]);
+      console.log(pool);
       await depositIntoPool(
         masterChef,
         id,

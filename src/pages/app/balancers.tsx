@@ -27,7 +27,7 @@ const Page: React.FC = () => {
   const [active, toggleActive] = useToggle(true);
 
   const balancersResp = useFetchBalancers();
-  const isLoading = !balancersResp.every((f) => f.data);
+  const isLoading = balancersResp.every((f) => f.status === "loading");
 
   let balancers = balancersResp
     .filter((bal: any) => bal.data?.isActive === active)

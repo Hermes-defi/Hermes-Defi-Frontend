@@ -26,7 +26,7 @@ const Page: React.FC = () => {
   const [active, toggleActive] = useToggle(true);
 
   const farmsResp = useFetchFarms();
-  const isLoading = !farmsResp.every((f) => f.data);
+  const isLoading = farmsResp.every((f) => f.status === "loading");
 
   let farms = farmsResp
     .filter((farm: any) => farm.data?.isActive === active)
