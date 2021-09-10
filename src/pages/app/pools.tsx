@@ -1,13 +1,7 @@
-import React, { useReducer } from "react";
+import React from "react";
 
-import { useActiveWeb3React } from "wallet";
-import { useQuery } from "react-query";
 import { useToggle } from "react-use";
-import { useFetchPoolData } from "hooks/pools/queries";
-import { useIrisPrice } from "hooks/prices";
-
-import { poolDefaultData, PoolInfo } from "config/pools";
-import { PoolsContext, poolsReducers } from "hooks/pools/reducer";
+import { useFetchPools } from "state/pools";
 
 import {
   Button,
@@ -17,123 +11,90 @@ import {
   FormLabel,
   Heading,
   HStack,
-  SimpleGrid,
   Spinner,
   Stack,
   StackDivider,
   Switch,
   useColorModeValue,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
-import { PoolCard } from "components/pool-card";
+import { PoolCard } from "components/cards/pool-card";
 import { AppLayout } from "components/layout";
 
 const Page: React.FC = () => {
-  const { data: irisPrice } = useIrisPrice();
-  const { account } = useActiveWeb3React();
-  const fetchPoolData = useFetchPoolData(irisPrice);
-
-  // page display actions
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
   const [active, toggleActive] = useToggle(true);
 
-  const [state, dispatch] = useReducer(poolsReducers, [] as PoolInfo[]);
+  const poolsResp = useFetchPools();
+  const isLoading = !poolsResp.every((f) => f.data);
 
-  const poolQuery = useQuery(
-    ["pools", account, irisPrice],
-
-    async (): Promise<PoolInfo[]> => {
-      return Promise.all(
-        poolDefaultData.map(async (pool) => {
-          return fetchPoolData(pool);
-        })
-      );
-    },
-
-    {
-      enabled: !!irisPrice,
-
-      onSuccess: (data) => {
-        dispatch({ type: "ADD_POOLS", payload: data });
-      },
-
-      onError: ({ message, data }) => {
-        // toast({
-        //   status: "error",
-        //   position: "top-right",
-        //   title: "Error fetching pools",
-        //   description: data?.message || message,
-        //   isClosable: true,
-        // });
-      },
-    }
-  );
-
-  let pools = state
-    .filter((pool) => pool.active === active)
-    .filter((pool) => (stakedOnly ? pool.hasStaked === stakedOnly : true));
+  let pools = poolsResp
+    .filter((pool: any) => pool.data?.isActive === active)
+    .filter((pool: any) => (stakedOnly ? pool.data?.hasStaked === stakedOnly : true));
 
   return (
-    <PoolsContext.Provider value={[state, dispatch]}>
-      <AppLayout>
-        <Stack align="center" spacing={10} py={10}>
-          <HStack spacing={14} align="center" justify="center">
-            <FormControl w="auto" display="flex" alignItems="center">
-              <Switch
-                isChecked={stakedOnly}
-                onChange={() => toggleStakedOnly()}
-                id="staked-only"
-                mt={1}
-                mb={0}
-                mr={3}
-              />
-              <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
-                Staked Only
-              </FormLabel>
-            </FormControl>
+    <AppLayout>
+      <Stack align="center" spacing={10} py={10}>
+        <HStack spacing={14} align="center" justify="center">
+          <FormControl w="auto" display="flex" alignItems="center">
+            <Switch
+              isChecked={stakedOnly}
+              onChange={() => toggleStakedOnly()}
+              id="staked-only"
+              mt={1}
+              mb={0}
+              mr={3}
+            />
+            <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
+              Staked Only
+            </FormLabel>
+          </FormControl>
 
-            <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
-              <Button
-                onClick={() => toggleActive()}
-                color={
-                  active
-                    ? useColorModeValue("gray.800", "gray.300")
-                    : useColorModeValue("gray.500", "gray.500")
-                }
-                variant="link"
-              >
-                <Heading fontSize="xl">Active</Heading>
-              </Button>
+          <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
+            <Button
+              onClick={() => toggleActive()}
+              color={
+                active
+                  ? useColorModeValue("gray.800", "gray.300")
+                  : useColorModeValue("gray.500", "gray.500")
+              }
+              variant="link"
+            >
+              <Heading fontSize="xl">Active</Heading>
+            </Button>
 
-              <Button
-                onClick={() => toggleActive()}
-                color={
-                  !active
-                    ? useColorModeValue("gray.800", "gray.300")
-                    : useColorModeValue("gray.500", "gray.500")
-                }
-                variant="link"
-              >
-                <Heading fontSize="xl">Inactive</Heading>
-              </Button>
-            </HStack>
+            <Button
+              onClick={() => toggleActive()}
+              color={
+                !active
+                  ? useColorModeValue("gray.800", "gray.300")
+                  : useColorModeValue("gray.500", "gray.500")
+              }
+              variant="link"
+            >
+              <Heading fontSize="xl">Inactive</Heading>
+            </Button>
           </HStack>
+        </HStack>
 
-          <Container align="center" maxWidth="container.lg">
-            {poolQuery.isLoading && !poolQuery.data && (
-              <Flex mt={16} align="center" justify="center">
-                <Spinner size="xl" />
-              </Flex>
-            )}
-
-            <SimpleGrid spacing="40px" alignItems="center" columns={[1, 3]}>
-              {pools.map((pool) => (
-                <PoolCard pool={pool} key={pool.pid} />
+        <Container align="center" maxWidth="container.lg">
+          {isLoading ? (
+            <Flex mt={16} align="center" justify="center">
+              <Spinner size="xl" />
+            </Flex>
+          ) : (
+            <Wrap justify="center" spacing="40px">
+              {pools.map(({ data }: any) => (
+                <WrapItem key={data.pid}>
+                  <PoolCard key={data.pid} pool={data} />
+                </WrapItem>
               ))}
-            </SimpleGrid>
-          </Container>
-        </Stack>
-      </AppLayout>
-    </PoolsContext.Provider>
+            </Wrap>
+          )}
+        </Container>
+      </Stack>
+    </AppLayout>
   );
 };
 

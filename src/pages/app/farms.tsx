@@ -19,7 +19,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { FarmCard } from "components/farm-card";
+import { FarmCard } from "components/cards/farm-card";
 
 const Page: React.FC = () => {
   const [stakedOnly, toggleStakedOnly] = useToggle(false);

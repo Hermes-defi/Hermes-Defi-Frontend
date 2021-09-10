@@ -1,130 +1,118 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
-import { useMasterChef, useUniPair } from "hooks/contracts";
+import { useERC20, useMasterChef } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
 import { useIrisPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
-import { Farm, farms } from "config/farms";
+import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
 import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID, irisPerBlock } from "config/constants";
-import { fetchPairPrice } from "web3-functions/prices";
+import { fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
 
-function useFetchFarmRequest() {
+function useFetchPoolsRequest() {
   const irisPrice = useIrisPrice();
   const masterChef = useMasterChef();
-  const getPairContract = useUniPair();
+  const getLpContract = useERC20();
   const { account, library } = useActiveWeb3React();
 
-  return async (farm: Farm) => {
-    const newFarm = farm;
+  return async (pool: Pool) => {
+    const newPool = pool;
 
     // Farm data
-    let masterChefInfo = await masterChef.poolInfo(farm.pid);
+    let masterChefInfo = await masterChef.poolInfo(pool.pid);
 
-    newFarm.multiplier = masterChefInfo.allocPoint.toString();
-    newFarm.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
+    newPool.multiplier = masterChefInfo.allocPoint.toString();
+    newPool.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
 
-    newFarm.isActive = masterChefInfo.allocPoint.toString() !== "0";
+    newPool.isActive = masterChefInfo.allocPoint.toString() !== "0";
 
     // Token data
-    newFarm.stakeToken.address = masterChefInfo.lpToken;
-    const lpContract = getPairContract(newFarm.stakeToken.address);
+    newPool.stakeToken.address = masterChefInfo.lpToken;
+    const lpContract = getLpContract(newPool.stakeToken.address);
 
-    newFarm.totalStaked = utils.formatUnits(
+    newPool.totalStaked = utils.formatUnits(
       await lpContract.balanceOf(masterChef.address),
-      newFarm.stakeToken.decimals
+      newPool.stakeToken.decimals
     );
 
-    const totalSupply = utils.formatUnits(
-      await lpContract.totalSupply(),
-      newFarm.stakeToken.decimals
-    );
-
-    const token0 = new Token(
+    const token = new Token(
       DEFAULT_CHAIN_ID,
-      newFarm.pairs[0].tokenAddress,
-      newFarm.pairs[0].tokenDecimals,
-      newFarm.pairs[0].tokenName
+      newPool.stakeToken.address,
+      newPool.stakeToken.decimals,
+      newPool.stakeToken.symbol
     );
 
-    const token1 = new Token(
-      DEFAULT_CHAIN_ID,
-      newFarm.pairs[1].tokenAddress,
-      newFarm.pairs[1].tokenDecimals,
-      newFarm.pairs[1].tokenName
-    );
-
-    newFarm.stakeToken.price = await fetchPairPrice(token0, token1, totalSupply, library);
+    newPool.stakeToken.price = await fetchPrice(token, library);
 
     // APR data
     const rewardsPerWeek = irisPerBlock * (604800 / 2.1);
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
-    const poolRewardsPerWeek = new BigNumberJS(newFarm.multiplier)
+    const poolRewardsPerWeek = new BigNumberJS(newPool.multiplier)
       .div(totalAllocPoints)
       .times(rewardsPerWeek)
       .toNumber();
 
-    newFarm.apr = getPoolApr(
+    newPool.apr = getPoolApr(
       parseFloat(irisPrice.data || "0"),
       poolRewardsPerWeek,
-      parseFloat(newFarm.stakeToken.price || "0"),
-      parseFloat(newFarm.totalStaked || "0")
+      parseFloat(newPool.stakeToken.price || "0"),
+      parseFloat(newPool.totalStaked || "0")
     );
 
     // USER data
     if (account) {
-      newFarm.rewardsEarned = utils.formatEther(await masterChef.pendingIris(farm.pid, account));
+      newPool.rewardsEarned = utils.formatEther(await masterChef.pendingIris(pool.pid, account));
 
-      const userInfo = await masterChef.userInfo(farm.pid, account);
+      const userInfo = await masterChef.userInfo(pool.pid, account);
 
-      newFarm.userTotalStaked = utils.formatUnits(userInfo.amount, newFarm.stakeToken.decimals);
-      newFarm.hasStaked = !(userInfo.amount as BigNumber).isZero();
+      newPool.userTotalStaked = utils.formatUnits(userInfo.amount, newPool.stakeToken.decimals);
+      newPool.hasStaked = !(userInfo.amount as BigNumber).isZero();
 
       const allowance: BigNumber = await lpContract.allowance(account, masterChef.address);
-      newFarm.hasApprovedPool = !allowance.isZero();
+      newPool.hasApprovedPool = !allowance.isZero();
     }
 
-    return newFarm;
+    return newPool;
   };
 }
 
-export function useFetchFarms() {
+export function useFetchPools() {
   const irisPrice = useIrisPrice();
-  const fetchFarmRq = useFetchFarmRequest();
+  const fetchPoolRq = useFetchPoolsRequest();
   const { account } = useActiveWeb3React();
 
-  const farmQueries = useQueries(
-    farms.map((farm) => {
+  const poolQueries = useQueries(
+    pools.map((farm) => {
       return {
         enabled: !!irisPrice.data,
-        queryKey: ["farm", farm.pid, account],
-        queryFn: () => fetchFarmRq(farm),
+        queryKey: ["pool", farm.pid, account],
+        queryFn: () => fetchPoolRq(farm),
       };
     })
   );
 
-  return farmQueries;
+  return poolQueries;
 }
 
-export function useApproveFarm() {
+export function useApprovePool() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const masterChef = useMasterChef();
-  const getPairContract = useUniPair();
+  const getLpContract = useERC20();
   const toast = useToast();
 
   const approveMutation = useMutation(
     async (pid: number) => {
       if (!account) throw new Error("No connected account");
 
-      const farm = queryClient.getQueryData<Farm>(["farm", pid, account]);
-      const lpContract = getPairContract(farm.stakeToken.address);
+      const pool = queryClient.getQueryData<Pool>(["pool", pid, account]);
+      const lpContract = getLpContract(pool.stakeToken.address);
 
       await approveLpContract(lpContract, masterChef.address);
       return pid;
@@ -132,17 +120,17 @@ export function useApproveFarm() {
 
     {
       onSuccess: (pid) => {
-        const farm = queryClient.getQueryData<Farm>(["farm", pid, account]);
+        const pool = queryClient.getQueryData<Pool>(["pool", pid, account]);
 
-        queryClient.setQueryData(["farm", pid, account], {
-          ...farm,
+        queryClient.setQueryData(["pool", pid, account], {
+          ...pool,
           hasApprovedPool: true,
         });
 
         ReactGA.event({
           category: "Approval",
-          action: `Approving ${farm.stakeToken.symbol}`,
-          label: farm.stakeToken.symbol,
+          action: `Approving ${pool.stakeToken.symbol}`,
+          label: pool.stakeToken.symbol,
         });
       },
 
@@ -165,7 +153,7 @@ export function useApproveFarm() {
   return approveMutation;
 }
 
-export function useDepositIntoFarm() {
+export function useDepositIntoPool() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const masterChef = useMasterChef();
@@ -175,32 +163,30 @@ export function useDepositIntoFarm() {
     async ({ id, amount }: { id: number; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const farm = queryClient.getQueryData<Farm>(["farm", id, account]);
+      const pool = queryClient.getQueryData<Pool>(["pool", id, account]);
       await depositIntoPool(
         masterChef,
         id,
         amount,
         constants.AddressZero,
-        farm.stakeToken.decimals
+        pool.stakeToken.decimals
       );
     },
     {
       onSuccess: (_, { id, amount }) => {
-        const farm = queryClient.getQueryData<Farm>(["farm", id, account]);
-        queryClient.invalidateQueries(["farm", id, account]);
+        const pool = queryClient.getQueryData<Pool>(["pool", id, account]);
+        queryClient.invalidateQueries(["pool", id, account]);
 
         ReactGA.event({
           category: "Deposits",
-          action: `Depositing ${farm.stakeToken.symbol}`,
+          action: `Depositing ${pool.stakeToken.symbol}`,
           value: parseInt(amount, 10),
-          label: farm.stakeToken.symbol,
+          label: pool.stakeToken.symbol,
         });
       },
 
       onError: ({ data }) => {
-        console.error(`[useDepositIntoPool][error] general error`, {
-          data,
-        });
+        console.error(`[useDeposit][error] general error`, { data });
 
         toast({
           title: "Error depositing token",
@@ -216,7 +202,7 @@ export function useDepositIntoFarm() {
   return depositMutation;
 }
 
-export function useWithdrawFromFarm() {
+export function useWithdrawFromPool() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const masterChef = useMasterChef();
@@ -226,26 +212,24 @@ export function useWithdrawFromFarm() {
     async ({ id, amount }: { id: number; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const farm = queryClient.getQueryData<Farm>(["farm", id, account]);
-      await withdrawFromPool(masterChef, id, amount, farm.stakeToken.decimals);
+      const pool = queryClient.getQueryData<Pool>(["pool", id, account]);
+      await withdrawFromPool(masterChef, id, amount, pool.stakeToken.decimals);
     },
     {
       onSuccess: (_, { amount, id }) => {
-        const farm = queryClient.getQueryData<Farm>(["farm", id, account]);
-        queryClient.invalidateQueries(["farm", id, account]);
+        const pool = queryClient.getQueryData<Pool>(["pool", id, account]);
+        queryClient.invalidateQueries(["pool", id, account]);
 
         ReactGA.event({
           category: "Withdrawals",
-          action: `Withdrawing ${farm.stakeToken.symbol}`,
+          action: `Withdrawing ${pool.stakeToken.symbol}`,
           value: parseInt(amount, 10),
-          label: farm.stakeToken.symbol,
+          label: pool.stakeToken.symbol,
         });
       },
 
       onError: ({ data }) => {
-        console.error(`[useWithdraw][error] general error`, {
-          data,
-        });
+        console.error(`[useWithdraw][error] general error`, { data });
 
         toast({
           title: "Error withdrawing token",

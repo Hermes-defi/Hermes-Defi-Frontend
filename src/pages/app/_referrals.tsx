@@ -4,7 +4,7 @@ import { AppLayout } from "components/layout";
 import { Box, Stack, Container, Text, useClipboard, Button, useToast } from "@chakra-ui/react";
 import { FiCopy } from "react-icons/fi";
 import { useActiveWeb3React } from "wallet";
-import { UnlockButton } from "components/unlock-wallet";
+import { UnlockButton } from "components/wallet/unlock-wallet";
 import { useReferral } from "hooks/contracts";
 import { useQuery } from "react-query";
 import { getReferralCount } from "web3-functions";

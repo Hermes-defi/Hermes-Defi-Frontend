@@ -191,19 +191,19 @@ export function useDepositIntoStakePool() {
   const toast = useToast();
 
   const depositMutation = useMutation(
-    async ({ address, amount }: { address: string; amount: string }) => {
+    async ({ id, amount }: { id: string; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", address, account]);
+      const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
       const poolChef = getStakePoolContract(pool.address);
 
       const tx = await poolChef.deposit(utils.parseUnits(amount, pool.stakeToken.decimal));
       await tx.wait();
     },
     {
-      onSuccess: (_, { address, amount }) => {
-        const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", address, account]);
-        queryClient.invalidateQueries(["stake-pool", address, account]);
+      onSuccess: (_, { id, amount }) => {
+        const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
+        queryClient.invalidateQueries(["stake-pool", id, account]);
 
         ReactGA.event({
           category: "Deposits",
@@ -239,19 +239,19 @@ export function useStakeWithdraw() {
   const toast = useToast();
 
   const withdrawMutation = useMutation(
-    async ({ address, amount }: { address: string; amount: string }) => {
+    async ({ id, amount }: { id: string; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", address, account]);
+      const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
       const poolChef = getStakePoolContract(pool.address);
 
       const tx = await poolChef.withdraw(utils.parseUnits(amount, pool.stakeToken.decimal));
       await tx.wait();
     },
     {
-      onSuccess: (_, { address, amount }) => {
-        const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", address, account]);
-        queryClient.invalidateQueries(["stake-pool", address, account]);
+      onSuccess: (_, { id, amount }) => {
+        const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
+        queryClient.invalidateQueries(["stake-pool", id, account]);
 
         ReactGA.event({
           category: "Withdrawals",

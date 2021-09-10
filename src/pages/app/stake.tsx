@@ -19,7 +19,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { StakePoolCard } from "components/stake-card";
+import { StakePoolCard } from "components/cards/stake-card";
 import { AppLayout } from "components/layout";
 
 const Page: React.FC = () => {

@@ -17,7 +17,7 @@ import { useActiveWeb3React } from "wallet";
 import { AppLayout } from "components/layout";
 import { BuyMaticModal } from "components/modals/buy-matic-modal";
 import { SwapFenixModal } from "components/modals/swap-fenix-modal";
-import { UnlockButton } from "components/unlock-wallet";
+import { UnlockButton } from "components/wallet/unlock-wallet";
 
 import {
   Box,
