@@ -105,7 +105,6 @@ export const farms: Farm[] = {
       multiplier: "160",
       depositFees: 0,
 
-      isDisabled: true,
       isSpecial: true,
       farmDx: "dfyn",
 
