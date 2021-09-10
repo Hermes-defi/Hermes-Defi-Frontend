@@ -5,13 +5,16 @@ import defaultContracts from "config/contracts";
 import { addTokenToWallet } from "wallet/utils";
 import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
 import {
-  useAPRStats,
+  useFarmAPRStats,
+  usePoolsAPRStats,
+  useTotalInBalancers,
+  useTotalInFarms,
+  useTotalInPools,
   useHarvestAll,
-  useHermesStats,
   useIrisData,
   useIrisStats,
   useTvlChart,
-} from "hooks/home";
+} from "hooks/home-page";
 
 import { AppLayout } from "components/layout";
 import { ArkenWidget } from "arken-widget";
@@ -44,9 +47,13 @@ import {
 
 const Page: React.FC = () => {
   const irisStats = useIrisStats();
-  const hermesStats = useHermesStats();
+  const farmStats = useTotalInFarms();
+  const balStats = useTotalInBalancers();
+  const poolStats = useTotalInPools();
 
-  const maxAPRs = useAPRStats();
+  const [isFarmAprLoading, farmApr] = useFarmAPRStats();
+  const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
+
   const { irisInWallet, irisToHarvest } = useIrisData();
   const chartData = useTvlChart();
 
@@ -146,9 +153,9 @@ const Page: React.FC = () => {
                   <Text fontSize={["xl", "sm"]} fontWeight="700">
                     Earn Upto
                   </Text>
-                  <Skeleton isLoaded={!!maxAPRs.data}>
+                  <Skeleton isLoaded={!isFarmAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {displayNumber(Math.round(maxAPRs.data && maxAPRs.data[0]), true)}%
+                      {displayNumber(farmApr as number, true)}%
                     </Text>{" "}
                   </Skeleton>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
@@ -185,9 +192,9 @@ const Page: React.FC = () => {
                   <Text fontSize={["xl", "sm"]} fontWeight="700">
                     Earn Upto
                   </Text>
-                  <Skeleton isLoaded={!!maxAPRs.data}>
+                  <Skeleton isLoaded={!isPoolAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {displayNumber(Math.round(maxAPRs.data && maxAPRs.data[1]), true)}%
+                      {displayNumber(poolApr as number, true)}%
                     </Text>{" "}
                   </Skeleton>
 
@@ -260,7 +267,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber("0.4")}
+                      {displayNumber("0.4", false, 1)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
@@ -328,9 +335,13 @@ const Page: React.FC = () => {
                   >
                     Total Value Locked
                   </Heading>
-                  <Skeleton isLoaded={!!hermesStats.data}>
+                  <Skeleton
+                    isLoaded={!farmStats.isLoading && !poolStats.isLoading && !balStats.isLoading}
+                  >
                     <Text fontSize="3xl" fontWeight="700">
-                      {displayCurrency(hermesStats.data?.tvl)}
+                      {displayCurrency(
+                        farmStats.data.plus(poolStats.data).plus(balStats.data).toNumber()
+                      )}
                     </Text>
                   </Skeleton>
                 </div>
@@ -346,9 +357,9 @@ const Page: React.FC = () => {
                     >
                       Farms
                     </Heading>
-                    <Skeleton isLoaded={!!hermesStats.data}>
+                    <Skeleton isLoaded={!farmStats.isLoading}>
                       <Text fontSize="2xl" fontWeight="700">
-                        {displayCurrency(hermesStats.data?.totalValueInFarms)}
+                        {displayCurrency(farmStats.data.toNumber())}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -363,9 +374,9 @@ const Page: React.FC = () => {
                     >
                       Pools
                     </Heading>
-                    <Skeleton isLoaded={!!hermesStats.data}>
+                    <Skeleton isLoaded={!poolStats.isLoading}>
                       <Text fontSize="2xl" fontWeight="700">
-                        {displayCurrency(hermesStats.data?.totalValueInPools)}
+                        {displayCurrency(poolStats.data.toNumber())}
                       </Text>
                     </Skeleton>
                   </Box>

@@ -41,7 +41,7 @@ import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
 import { useIrisPrice } from "hooks/prices";
-import { useHermesStats } from "hooks/home";
+import { useTotalInFarms, useTotalInBalancers, useTotalInPools } from "hooks/home-page";
 
 // NAVIGATION
 interface NavItem {
@@ -328,7 +328,9 @@ function Header() {
 // NUMBERS
 const DappStats = () => {
   const { data: irisPrice } = useIrisPrice();
-  const hermesStats = useHermesStats();
+  const farmStats = useTotalInFarms();
+  const balStats = useTotalInBalancers();
+  const poolStats = useTotalInPools();
 
   return (
     <SimpleGrid columns={[2, 4]} spacing={[8, 14]}>
@@ -340,24 +342,14 @@ const DappStats = () => {
       </Box>
 
       <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">
-          {displayCurrency(
-            Math.round(parseFloat(hermesStats.data?.totalValueInFarms || "0")),
-            true
-          )}
-        </Heading>
+        <Heading size="2xl">{displayCurrency(Math.round(farmStats.data.toNumber()), true)}</Heading>
         <Text color="gray.700" size="sm">
           Total in Farms
         </Text>
       </Box>
 
       <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">
-          {displayCurrency(
-            Math.round(parseFloat(hermesStats.data?.totalValueInPools || "0")),
-            true
-          )}
-        </Heading>
+        <Heading size="2xl">{displayCurrency(Math.round(poolStats.data.toNumber()), true)}</Heading>
         <Text color="gray.700" size="sm">
           Total in Pools
         </Text>
@@ -365,7 +357,10 @@ const DappStats = () => {
 
       <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
-          {displayCurrency(Math.round(parseFloat(hermesStats.data?.tvl || "0")), true)}
+          {displayCurrency(
+            Math.round(farmStats.data.plus(poolStats.data).plus(balStats.data).toNumber()),
+            true
+          )}
         </Heading>
         <Text color="gray.700" size="sm">
           Total Value Locked

@@ -191,5 +191,3 @@ export const pools: Pool[] = {
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);
-
-export const balancersDefaultData = [];
