@@ -45,6 +45,7 @@ export function useIrisStats() {
 
   const irisStats = useQuery({
     enabled: !!irisPrice.data,
+    refetchInterval: 0.5 * 60 * 1000,
     queryKey: ["irisStats", irisPrice.data],
     queryFn: async () => {
       const maximumSupply = 1_000_000;

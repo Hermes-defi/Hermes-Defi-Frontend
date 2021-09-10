@@ -103,7 +103,7 @@ export function useFetchFarms() {
     farms.map((farm) => {
       return {
         enabled: !!irisPrice.data,
-        queryKey: ["farm", farm.pid, account],
+        queryKey: ["farm", farm.pid, account, irisPrice.data],
         queryFn: () => fetchFarmRq(farm),
       };
     })

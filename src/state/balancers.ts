@@ -83,7 +83,7 @@ export function useFetchBalancers() {
     balancers.map((bal) => {
       return {
         enabled: !!irisPrice.data,
-        queryKey: ["balancer", bal.pid, account],
+        queryKey: ["balancer", bal.pid, account, irisPrice.data],
         queryFn: () => fetchBalRq(bal),
       };
     })

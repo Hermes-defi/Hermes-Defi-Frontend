@@ -91,7 +91,7 @@ export function useFetchPools() {
     pools.map((farm) => {
       return {
         enabled: !!irisPrice.data,
-        queryKey: ["pool", farm.pid, account],
+        queryKey: ["pool", farm.pid, account, irisPrice.data],
         queryFn: () => fetchPoolRq(farm),
       };
     })
