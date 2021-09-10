@@ -145,14 +145,14 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
         </Heading>
 
         <Stack mb={5}>
-          {/**<Stack direction="row" justify="space-between">
+          <Stack direction="row" justify="space-between">
             <Text fontWeight="700" fontSize="sm">
               LP Token Price
             </Text>
             <Text fontWeight="700" fontSize="sm">
               {displayCurrency(farm.stakeToken.price || 0)}
             </Text>
-          </Stack>**/}
+          </Stack>
 
           <Stack direction="row" justify="space-between">
             <Text fontWeight="700" fontSize="sm">
