@@ -50,7 +50,7 @@ export const farms: Farm[] = {
       depositFees: 0,
 
       isSpecial: true,
-      farmDx: "Quickswap",
+      farmDx: "quickswap",
 
       stakeToken: {
         address: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
@@ -78,7 +78,7 @@ export const farms: Farm[] = {
       depositFees: 0,
 
       isSpecial: true,
-      farmDx: "Quickswap",
+      farmDx: "quickswap",
 
       stakeToken: {
         address: "0x302f7e9bb5b5ac673ac537f464a1b7a36bbbabfa",
@@ -92,6 +92,35 @@ export const farms: Farm[] = {
           tokenAddress: "0x13748d548D95D78a3c83fe3F32604B4796CFfa23",
           tokenDecimals: 9,
           tokenName: "KOGECOIN",
+        },
+        {
+          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          tokenDecimals: 18,
+          tokenName: "IRIS",
+        },
+      ],
+    },
+    {
+      pid: 17,
+      multiplier: "160",
+      depositFees: 0,
+
+      isDisabled: true,
+      isSpecial: true,
+      farmDx: "dfyn",
+
+      stakeToken: {
+        address: "0x277d9b07671eb9ac0d5d63e15beedc0adbe3e9fd",
+        symbol: "IRIS/USDC",
+        decimals: 18,
+        logo: ["/hermes-logo-1.png", "/usdc-logo.png"],
+      },
+
+      pairs: [
+        {
+          tokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+          tokenDecimals: 6,
+          tokenName: "USDC",
         },
         {
           tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",

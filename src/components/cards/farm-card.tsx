@@ -10,6 +10,13 @@ import { UserSection } from "components/helpers/user-section";
 
 import { displayCurrency, displayNumber } from "libs/utils";
 
+const ammLinkMapper = {
+  quickswap: (token0: string, token1: string) =>
+    `https://quickswap.exchange/#/add/${token0}/${token1}`,
+  dfyn: (token0: string, token1: string) =>
+    `https://exchange.dfyn.network//#/add/${token0}/${token1}`,
+};
+
 export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
   const approveMutation = useApproveFarm();
   const depositMutation = useDepositIntoFarm();
@@ -84,7 +91,10 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
               <IrisAPRCalculator
                 apr={farm.apr}
                 tokenSymbol={farm.stakeToken.symbol}
-                tokenLink={`https://quickswap.exchange/#/add/${farm.pairs[0].tokenAddress}/${farm.pairs[1].tokenAddress}`}
+                tokenLink={ammLinkMapper[farm.farmDx](
+                  farm.pairs[0].tokenAddress,
+                  farm.pairs[1].tokenAddress
+                )}
               />
             )}
             <Text fontWeight="700" fontSize="sm">
@@ -149,7 +159,10 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
               Deposit
             </Text>
             <Link
-              href={`https://quickswap.exchange/#/add/${farm.pairs[0].tokenAddress}/${farm.pairs[1].tokenAddress}`}
+              href={ammLinkMapper[farm.farmDx](
+                farm.pairs[0].tokenAddress,
+                farm.pairs[1].tokenAddress
+              )}
               isExternal
               fontWeight="700"
               fontSize="sm"
