@@ -202,13 +202,14 @@ export async function fetchPairPrice(
   token0: Token,
   token1: Token,
   totalSupply: string,
-  library: any
+  library: any,
+  amm: any
 ) {
   // price of an lp token is [ totalValueOrLP / tokenSupplyOfLPToken ]
   const token0Price = await fetchPrice(token0, library);
   const token1Price = await fetchPrice(token1, library);
 
-  const pair = await Fetcher.fetchPairData(token0, token1, library);
+  const pair = await (amm === "dfyn" ? Dfyn.Fetcher : Fetcher).fetchPairData(token0, token1, library);
   const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
   const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
 
