@@ -19,7 +19,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { PoolCard } from "components/cards/pool-card";
+import { BalancerCard } from "components/cards/balancer-card";
 import { AppLayout } from "components/layout";
 
 const Page: React.FC = () => {
@@ -87,7 +87,7 @@ const Page: React.FC = () => {
             <Wrap justify="center" spacing="40px">
               {balancers.map(({ data }: any) => (
                 <WrapItem key={data.pid}>
-                  <PoolCard key={data.pid} pool={data} />
+                  <BalancerCard key={data.pid} balancer={data} />
                 </WrapItem>
               ))}
             </Wrap>
