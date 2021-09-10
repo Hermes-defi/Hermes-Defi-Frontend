@@ -59,7 +59,7 @@ function useFetchFarmRequest() {
       newFarm.pairs[1].tokenName
     );
 
-    newFarm.stakeToken.price = await fetchPairPrice(token0, token1, totalSupply, library);
+    newFarm.stakeToken.price = await fetchPairPrice(token0, token1, totalSupply, library, farm.farmDx);
 
     // APR data
     const rewardsPerWeek = irisPerBlock * (604800 / 2.1);
