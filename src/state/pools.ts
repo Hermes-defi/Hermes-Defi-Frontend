@@ -164,7 +164,6 @@ export function useDepositIntoPool() {
       if (!account) throw new Error("No connected account");
 
       const pool = queryClient.getQueryData<Pool>(["pool", id, account]);
-      console.log(pool);
       await depositIntoPool(
         masterChef,
         id,
