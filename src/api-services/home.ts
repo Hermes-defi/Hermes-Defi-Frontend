@@ -61,7 +61,7 @@ export async function getHermesStats() {
       farm.pairs[1].tokenName
     );
 
-    const tokenPrice = await fetchPairPrice(token0, token1, totalSupply, provider);
+    const tokenPrice = await fetchPairPrice(token0, token1, totalSupply, provider, farm.farmDx);
 
     const total = await _total;
     const poolPrice = new BigNumberJS(
