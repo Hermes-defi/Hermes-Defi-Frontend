@@ -127,6 +127,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
           id={farm.pid}
           canCompound={farm.stakeToken.symbol.toLowerCase() === "iris"}
           stakeToken={farm.stakeToken}
+          rewardToken={{ symbol: "Iris" }}
           rewardsEarned={farm.rewardsEarned}
           hasApprovedPool={farm.hasApprovedPool}
           userTotalStaked={farm.userTotalStaked}

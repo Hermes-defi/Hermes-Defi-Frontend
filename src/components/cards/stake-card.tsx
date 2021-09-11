@@ -95,6 +95,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
             ...stakePool.stakeToken,
             decimals: stakePool.stakeToken.decimal,
           }}
+          rewardToken={stakePool.rewardToken}
           rewardsEarned={stakePool.rewardsEarned}
           hasApprovedPool={stakePool.hasApprovedPool}
           userTotalStaked={stakePool.userTotalStaked}

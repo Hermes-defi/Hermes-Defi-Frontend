@@ -89,6 +89,9 @@ type IProps = {
   id: number | string;
   canCompound: boolean;
 
+  rewardToken: {
+    symbol: string;
+  };
   stakeToken: {
     symbol: string;
     address: string;
@@ -163,11 +166,7 @@ export const UserSection: React.FC<IProps> = (props) => {
                   </DepositButton>
                 </>
               ) : (
-                <DepositButton
-                  id={props.id}
-                  stakeToken={props.stakeToken}
-                  deposit={props.deposit}
-                >
+                <DepositButton id={props.id} stakeToken={props.stakeToken} deposit={props.deposit}>
                   Stake
                 </DepositButton>
               ))}
@@ -177,7 +176,7 @@ export const UserSection: React.FC<IProps> = (props) => {
 
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          Iris Earned
+          {props.rewardToken.symbol} Earned
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">

@@ -106,6 +106,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
           id={pool.pid}
           canCompound={pool.stakeToken.symbol.toLowerCase() === "iris"}
           stakeToken={pool.stakeToken}
+          rewardToken={{ symbol: "Iris" }}
           rewardsEarned={pool.rewardsEarned}
           hasApprovedPool={pool.hasApprovedPool}
           userTotalStaked={pool.userTotalStaked}

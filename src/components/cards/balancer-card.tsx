@@ -116,6 +116,7 @@ export const BalancerCard: React.FC<{ balancer: Balancer }> = ({ balancer }) => 
           id={balancer.pid}
           canCompound={balancer.stakeToken.symbol.toLowerCase() === "iris"}
           stakeToken={balancer.stakeToken}
+          rewardToken={{ symbol: "Iris" }}
           rewardsEarned={balancer.rewardsEarned}
           hasApprovedPool={balancer.hasApprovedPool}
           userTotalStaked={balancer.userTotalStaked}
