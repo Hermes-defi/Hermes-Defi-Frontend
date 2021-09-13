@@ -21,6 +21,8 @@ const amms = {
   "0xf9b4dEFdDe04fe18F5ee6456607F8A2eC9fF6A75": "quickswap", // sandman
   "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51": "polycat", // GBNT
   "0x13748d548D95D78a3c83fe3F32604B4796CFfa23": "coingecko", // koge
+  "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97": "dfyn", // dfyn
+  "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4": "dfyn", // router
 };
 
 async function fetchCoinGeckoPrice(address: string) {
@@ -208,16 +210,15 @@ export async function fetchPairPrice(
   // price of an lp token is [ totalValueOrLP / tokenSupplyOfLPToken ]
   const token0Price = await fetchPrice(token0, library);
   const token1Price = await fetchPrice(token1, library);
-  
+
   let pair;
   if (amm === "dfyn") {
-     const t0 = new Dfyn.Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol)
-     const t1 = new Dfyn.Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol)
+    const t0 = new Dfyn.Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
+    const t1 = new Dfyn.Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
 
-     pair = await Dfyn.Fetcher.fetchPairData(t0, t1, library);
-  }
-  else {
-      pair = await Fetcher.fetchPairData(token0, token1, library);
+    pair = await Dfyn.Fetcher.fetchPairData(t0, t1, library);
+  } else {
+    pair = await Fetcher.fetchPairData(token0, token1, library);
   }
   const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
   const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting

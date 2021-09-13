@@ -146,12 +146,12 @@ export const farms: Farm[] = {
 
       pairs: [
         {
-          tokenAddress: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
+          tokenAddress: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
           tokenDecimals: 18,
           tokenName: "ROUTE",
         },
         {
-          tokenAddress: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
+          tokenAddress: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
           tokenDecimals: 18,
           tokenName: "DFYN",
         },
