@@ -10,19 +10,17 @@ import { UserSection } from "components/helpers/user-section";
 
 import { displayCurrency, displayNumber } from "libs/utils";
 
-const ammLinkMapper = {
-  quickswap: (token0: string, token1: string) =>
-    `https://quickswap.exchange/#/add/${token0}/${token1}`,
-  dfyn: (token0: string, token1: string) =>
-    `https://exchange.dfyn.network//#/add/${token0}/${token1}`,
-};
-
 export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
   const approveMutation = useApproveFarm();
   const depositMutation = useDepositIntoFarm();
   const harvestMutation = useDepositIntoFarm();
   const compoundMutation = useDepositIntoFarm();
   const withdrawMutation = useWithdrawFromFarm();
+
+  const lpLink = {
+    quickswap: `https://quickswap.exchange/#/add/${farm.pairs[0].tokenAddress}/${farm.pairs[1].tokenAddress}`,
+    dfyn: `https://info.dfyn.network/pair/${farm.stakeToken.address}`,
+  };
 
   return (
     <Box
@@ -91,10 +89,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
               <IrisAPRCalculator
                 apr={farm.apr}
                 tokenSymbol={farm.stakeToken.symbol}
-                tokenLink={ammLinkMapper[farm.farmDx](
-                  farm.pairs[0].tokenAddress,
-                  farm.pairs[1].tokenAddress
-                )}
+                tokenLink={lpLink[farm.farmDx]}
               />
             )}
             <Text fontWeight="700" fontSize="sm">
@@ -159,15 +154,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
             <Text fontWeight="700" fontSize="sm">
               Deposit
             </Text>
-            <Link
-              href={ammLinkMapper[farm.farmDx](
-                farm.pairs[0].tokenAddress,
-                farm.pairs[1].tokenAddress
-              )}
-              isExternal
-              fontWeight="700"
-              fontSize="sm"
-            >
+            <Link href={lpLink[farm.farmDx]} isExternal fontWeight="700" fontSize="sm">
               {farm.stakeToken.symbol}
             </Link>
           </Stack>

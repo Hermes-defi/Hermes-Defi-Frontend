@@ -141,7 +141,7 @@ export const farms: Farm[] = {
         address: "0xb0dc320ea9eea823a150763abb4a7ba8286cd08b",
         symbol: "ROUTER/DFYN",
         decimals: 18,
-        logo: ["/router-logo.png", "/dfyn-logo.png"],
+        logo: ["/router-logo.png", "/dfyn-logo.svg"],
       },
 
       pairs: [
