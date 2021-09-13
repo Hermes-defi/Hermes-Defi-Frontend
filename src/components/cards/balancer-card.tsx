@@ -166,7 +166,7 @@ export const BalancerCard: React.FC<{ balancer: Balancer }> = ({ balancer }) => 
         </Stack>
 
         <Link
-          href={`https://polygonscan.com/token/${balancer.stakeToken.price}`}
+          href={`https://polygonscan.com/token/${balancer.stakeToken.address}`}
           textDecoration="underline"
           fontWeight="700"
           fontSize="sm"

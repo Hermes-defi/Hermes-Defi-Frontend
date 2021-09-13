@@ -154,7 +154,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
         </Stack>
 
         <Link
-          href={`https://polygonscan.com/token/${pool.stakeToken.price}`}
+          href={`https://polygonscan.com/token/${pool.stakeToken.address}`}
           textDecoration="underline"
           fontWeight="700"
           fontSize="sm"
