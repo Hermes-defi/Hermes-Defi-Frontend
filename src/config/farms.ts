@@ -128,6 +128,36 @@ export const farms: Farm[] = {
         },
       ],
     },
+
+    {
+      pid: 18,
+      multiplier: "45",
+      depositFees: 2,
+
+      isSpecial: false,
+      isDisabled: true,
+      farmDx: "dfyn",
+
+      stakeToken: {
+        address: "0xb0dc320ea9eea823a150763abb4a7ba8286cd08b",
+        symbol: "ROUTER/DFYN",
+        decimals: 18,
+        logo: ["/router-logo.png", "/dfyn-logo.png"],
+      },
+
+      pairs: [
+        {
+          tokenAddress: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
+          tokenDecimals: 18,
+          tokenName: "ROUTE",
+        },
+        {
+          tokenAddress: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
+          tokenDecimals: 18,
+          tokenName: "DFYN",
+        },
+      ],
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((farm: Farm) => !farm.isDisabled);
