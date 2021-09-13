@@ -135,7 +135,6 @@ export const farms: Farm[] = {
       depositFees: 2,
 
       isSpecial: false,
-      isDisabled: true,
       farmDx: "dfyn",
 
       stakeToken: {
