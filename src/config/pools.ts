@@ -209,7 +209,7 @@ export const pools: Pool[] = {
         address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
         symbol: "DFYN",
         decimals: 18,
-        logo: "/dfyn-logo.png",
+        logo: "/dfyn-logo.svg",
       },
     },
   ],
