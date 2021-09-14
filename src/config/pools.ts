@@ -188,6 +188,32 @@ export const pools: Pool[] = {
         logo: "/kavian-logo.png",
       },
     },
+    {
+      pid: 19,
+      multiplier: "8",
+      depositFees: 2,
+      isDisabled: true,
+
+      stakeToken: {
+        address: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
+        symbol: "ROUTER",
+        decimals: 18,
+        logo: "/router-logo.png",
+      },
+    },
+    {
+      pid: 20,
+      multiplier: "8",
+      depositFees: 2,
+      isDisabled: true,
+
+      stakeToken: {
+        address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
+        symbol: "DFYN",
+        decimals: 18,
+        logo: "/dfyn-logo.png",
+      },
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);
