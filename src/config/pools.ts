@@ -192,7 +192,6 @@ export const pools: Pool[] = {
       pid: 19,
       multiplier: "8",
       depositFees: 2,
-      isDisabled: true,
 
       stakeToken: {
         address: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
@@ -205,7 +204,6 @@ export const pools: Pool[] = {
       pid: 20,
       multiplier: "8",
       depositFees: 2,
-      isDisabled: true,
 
       stakeToken: {
         address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
