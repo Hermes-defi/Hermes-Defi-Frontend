@@ -6,6 +6,7 @@ import RedeemABI from "config/abis/Redeem.json";
 import ERC20ABI from "config/abis/ERC20.json";
 import UNIPAIRABI from "config/abis/UNIPAIR.json";
 import StakePoolABI from "config/abis/StakePool.json";
+import VaultABI from "config/abis/Vault.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -25,6 +26,11 @@ export const uniPair: (address: string) => ContractInfo = (address: string) => (
 
 export const stakePool: (address: string) => ContractInfo = (address: string) => ({
   abi: StakePoolABI,
+  address,
+});
+
+export const vault: (address: string) => ContractInfo = (address: string) => ({
+  abi: VaultABI,
   address,
 });
 

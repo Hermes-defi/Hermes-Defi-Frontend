@@ -88,6 +88,7 @@ const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
 type IProps = {
   id: number | string;
   canCompound: boolean;
+  disableRewards?: boolean;
 
   rewardToken: {
     symbol: string;
@@ -98,14 +99,14 @@ type IProps = {
     decimals: number;
   };
 
-  rewardsEarned: string;
+  rewardsEarned?: string;
   hasApprovedPool: boolean;
   userTotalStaked: string;
 
   approve: UseMutationResult;
   deposit: UseMutationResult;
   withdraw: UseMutationResult;
-  harvest: UseMutationResult;
+  harvest?: UseMutationResult;
   compound?: UseMutationResult;
 };
 export const UserSection: React.FC<IProps> = (props) => {
@@ -119,10 +120,7 @@ export const UserSection: React.FC<IProps> = (props) => {
     <Stack spacing={4}>
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          {props.userTotalStaked
-            ? displayTokenCurrency(props.userTotalStaked, props.stakeToken.symbol)
-            : `N/A ${props.stakeToken.symbol}`}{" "}
-          Staked
+          {props.stakeToken.symbol} Staked
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">
@@ -174,45 +172,47 @@ export const UserSection: React.FC<IProps> = (props) => {
         </Stack>
       </Box>
 
-      <Box align="left">
-        <Text mb={1} fontWeight="600" fontSize="sm">
-          {props.rewardToken.symbol} Earned
-        </Text>
-
-        <Stack align="center" direction="row" justify="space-between">
-          <Text fontWeight="700" fontSize="2xl">
-            {props.rewardsEarned ? displayTokenCurrency(props.rewardsEarned, "") : "N/A"}
+      {!props.disableRewards && (
+        <Box align="left">
+          <Text mb={1} fontWeight="600" fontSize="sm">
+            {props.rewardToken.symbol} Earned
           </Text>
 
-          {props.hasApprovedPool && (
-            <Stack direction="row">
-              <Button
-                isLoading={props.harvest.isLoading}
-                onClick={() => props.harvest.mutate({ id: props.id, amount: "0" })}
-                size="xs"
-                bg="gray.700"
-                _hover={{ bg: "gray.600" }}
-              >
-                Harvest
-              </Button>
+          <Stack align="center" direction="row" justify="space-between">
+            <Text fontWeight="700" fontSize="2xl">
+              {props.rewardsEarned ? displayTokenCurrency(props.rewardsEarned, "") : "N/A"}
+            </Text>
 
-              {props.canCompound && (
+            {props.hasApprovedPool && (
+              <Stack direction="row">
                 <Button
-                  isLoading={props.compound?.isLoading}
-                  onClick={() =>
-                    props.compound?.mutate({ id: props.id, amount: props.rewardsEarned })
-                  }
+                  isLoading={props.harvest.isLoading}
+                  onClick={() => props.harvest.mutate({ id: props.id, amount: "0" })}
                   size="xs"
                   bg="gray.700"
                   _hover={{ bg: "gray.600" }}
                 >
-                  Compound
+                  Harvest
                 </Button>
-              )}
-            </Stack>
-          )}
-        </Stack>
-      </Box>
+
+                {props.canCompound && (
+                  <Button
+                    isLoading={props.compound?.isLoading}
+                    onClick={() =>
+                      props.compound?.mutate({ id: props.id, amount: props.rewardsEarned })
+                    }
+                    size="xs"
+                    bg="gray.700"
+                    _hover={{ bg: "gray.600" }}
+                  >
+                    Compound
+                  </Button>
+                )}
+              </Stack>
+            )}
+          </Stack>
+        </Box>
+      )}
     </Stack>
   );
 };
