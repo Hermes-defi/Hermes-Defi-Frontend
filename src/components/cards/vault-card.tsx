@@ -25,12 +25,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
       py={4}
       w="19rem"
       bg="accent.500"
-      boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
-      bgGradient={
-        vault.isSpecial
-          ? `linear(to-b, primary.300, accent.500)`
-          : `linear(to-t, accent.300, accent.500)`
-      }
+      boxShadow="rgb(84 158 171 / 65%) 0px 25px 50px -12px"
+      bgGradient={`linear(to-b, pink.300, primary.500)`}
       rounded="3xl"
       color="white"
     >
