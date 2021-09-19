@@ -28,7 +28,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={(() => {
         if (stakePool.isSpecial) return "linear(to-b, primary.300, accent.500)";
-        if (isVaultToken) return "linear(to-b, primary.300, pink.500)";
+        if (isVaultToken) return "linear(to-b, primary.500, pink.300)";
 
         return "linear(to-t, accent.300, accent.500)";
       })()}
@@ -51,9 +51,15 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
 
       {/* pool badges */}
       <HStack mb={6} spacing={2}>
-        <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white">
-          Stake IRIS
-        </Badge>
+        {isVaultToken ? (
+          <Badge textTransform="capitalize" boxShadow="md" px={2} rounded="lg" colorScheme="white">
+            Stake godIRISWMATIC
+          </Badge>
+        ) : (
+          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white">
+            Stake IRIS
+          </Badge>
+        )}
       </HStack>
 
       {/* pool details */}
