@@ -32,7 +32,7 @@ export const NAV_ITEMS: Array<NavItem> = [
         href: "/app/vaults",
       },
       {
-        label: "Stake godIRISWMATIC",
+        label: "Stake god",
         href: "/app/vault-stake",
       },
       {
