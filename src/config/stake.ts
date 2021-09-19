@@ -144,3 +144,27 @@ export const stakingPools: StakeInfo[] = {
     },
   ],
 }[DEFAULT_CHAIN_ID].filter((p: StakeInfo) => !p.isDisabled);
+
+export const vaultStakingPools: StakeInfo[] = {
+  137: [
+    {
+      address: "0x7164F49cfA6152119009c600e0c3DA736F6cdC6f",
+      poolSite: "https://hermesdefi.io/",
+      active: true,
+
+      stakeToken: {
+        address: "0xcbd7b263460ad4807deadad3858de6654f082ca4",
+        symbol: "godIRIS/WMATIC",
+        decimal: 18,
+        logo: "/hermes-logo-1.png",
+      },
+
+      rewardToken: {
+        address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+        symbol: "WMATIC",
+        decimal: 18,
+        logo: "/matic-logo.png",
+      },
+    },
+  ],
+}[DEFAULT_CHAIN_ID].filter((p: StakeInfo) => !p.isDisabled);

@@ -7,7 +7,7 @@ import { useToast } from "@chakra-ui/react";
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
-import { StakeInfo, stakingPools } from "config/stake";
+import { StakeInfo, stakingPools, vaultStakingPools } from "config/stake";
 import { BigNumber, utils } from "ethers";
 import { Token } from "quickswap-sdk";
 import { approveLpContract } from "web3-functions";
@@ -120,6 +120,24 @@ export function useFetchStakePools() {
 
   const farmQueries = useQueries(
     stakingPools.map((stakePool) => {
+      return {
+        enabled: !!currentBlock,
+        queryKey: ["stake-pool", stakePool.address, account],
+        queryFn: () => fetchStakingPoolRq(stakePool),
+      };
+    })
+  );
+
+  return farmQueries;
+}
+
+export function useFetchVaultStakePools() {
+  const fetchStakingPoolRq = useFetchStakingPoolRequest();
+  const currentBlock = useCurrentBlockNumber();
+  const { account } = useActiveWeb3React();
+
+  const farmQueries = useQueries(
+    vaultStakingPools.map((stakePool) => {
       return {
         enabled: !!currentBlock,
         queryKey: ["stake-pool", stakePool.address, account],

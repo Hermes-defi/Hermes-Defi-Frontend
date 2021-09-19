@@ -10,7 +10,10 @@ import { UserSection } from "components/helpers/user-section";
 
 import { displayCurrency, displayNumber } from "libs/utils";
 
-export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool }) => {
+export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: boolean }> = ({
+  stakePool,
+  isVaultToken,
+}) => {
   const approveMutation = useApproveStakePool();
   const harvestMutation = useDepositIntoStakePool();
   const depositMutation = useDepositIntoStakePool();
@@ -23,11 +26,12 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo }> = ({ stakePool })
       w="19rem"
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
-      bgGradient={
-        stakePool.isSpecial
-          ? `linear(to-b, primary.300, accent.500)`
-          : `linear(to-t, accent.300, accent.500)`
-      }
+      bgGradient={(() => {
+        if (stakePool.isSpecial) return "linear(to-b, primary.300, accent.500)";
+        if (isVaultToken) return "linear(to-b, primary.300, pink.500)";
+
+        return "linear(to-t, accent.300, accent.500)";
+      })()}
       rounded="3xl"
       color="white"
     >
