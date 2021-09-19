@@ -53,7 +53,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
       <HStack mb={6} spacing={2}>
         {isVaultToken ? (
           <Badge textTransform="capitalize" boxShadow="md" px={2} rounded="lg" colorScheme="white">
-            Stake godIRISWMATIC
+            Stake god
           </Badge>
         ) : (
           <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white">
