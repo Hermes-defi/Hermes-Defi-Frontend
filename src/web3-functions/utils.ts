@@ -1,3 +1,10 @@
+import BigNumberJS from "bignumber.js";
+import { irisPerBlock, secondsPerBlock, secondsPerYear } from "config/constants";
+
+export function compound(r, n = 365, t = 1, c = 1) {
+  return (1 + (r * c) / n) ** (n * t) - 1;
+}
+
 export function getPoolApr(
   rewardTokenPrice: number,
   poolRewardsPerWeek: number,
@@ -14,6 +21,38 @@ export function getPoolApr(
     weeklyAPR,
     dailyAPR,
     yearlyAPR,
+  };
+}
+
+export async function getApy({
+  address,
+  multiplier,
+  totalAllocPoints,
+  depositFees,
+  stakeTokenPrice,
+  totalStakedInFarm,
+}: any) {
+  const PERFORMANCE_FEE = 0.0075;
+  const SHARE_AFTER_PERFORMANCE_FEE = 1 - PERFORMANCE_FEE;
+  const BASE_HPY = 4890;
+
+  const poolBlockRewards = new BigNumberJS(irisPerBlock)
+    .times(multiplier)
+    .dividedBy(totalAllocPoints)
+    .times(1 - (depositFees ?? 0));
+
+  const yearlyRewards = poolBlockRewards.dividedBy(secondsPerBlock).times(secondsPerYear);
+  const yearlyRewardsInUsd = yearlyRewards.times(stakeTokenPrice);
+
+  const totalStakedInUSD = new BigNumberJS(totalStakedInFarm).times(stakeTokenPrice);
+  const simpleApr = yearlyRewardsInUsd.dividedBy(totalStakedInUSD);
+
+  const vaultApr = simpleApr.times(SHARE_AFTER_PERFORMANCE_FEE);
+  const vaultApy = compound(simpleApr, BASE_HPY, 1, SHARE_AFTER_PERFORMANCE_FEE);
+
+  return {
+    yearly: new BigNumberJS(vaultApy).times(100).toString(),
+    daily: new BigNumberJS(vaultApr).dividedBy(365).times(100).toString(),
   };
 }
 

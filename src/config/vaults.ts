@@ -2,6 +2,7 @@ import { DEFAULT_CHAIN_ID } from "./constants";
 
 export type Vault = {
   address: string;
+  stratAddress: string;
   amm: string;
   depositFees: number;
   withdrawFees: number;
@@ -46,10 +47,11 @@ export const vaults: Vault[] = {
   137: [
     {
       address: "0xCBd7b263460ad4807dEAdAd3858DE6654f082cA4",
+      stratAddress: "0xd74941d4f9202d7e4c550d344507298a4e3ed2dd",
       isActive: true,
       amm: "quickswap",
       depositFees: 0,
-      withdrawFees: 0.1,
+      withdrawFees: 0,
       farmPid: 8,
 
       stakeToken: {

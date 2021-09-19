@@ -13,6 +13,31 @@ export const NAV_ITEMS: Array<NavItem> = [
     href: "/app",
   },
   {
+    label: "Products",
+    children: [
+      {
+        label: "Farms",
+        href: "/app/farms",
+      },
+      {
+        label: "Pools",
+        href: "/app/pools",
+      },
+      {
+        label: "Stake IRIS",
+        href: "/app/stake",
+      },
+      {
+        label: "Vaults",
+        href: "/app/vaults",
+      },
+      {
+        label: "Balancer LPs",
+        href: "/app/balancers",
+      },
+    ],
+  },
+  {
     label: "Governance",
     href: "https://feedback.hermesdefi.io",
     isExternal: true,
@@ -53,26 +78,6 @@ export const NAV_ITEMS: Array<NavItem> = [
     ],
   },
   {
-    label: "Farms",
-    href: "/app/farms",
-  },
-
-  {
-    label: "Pools",
-    href: "/app/pools",
-  },
-
-  {
-    label: "Stake IRIS",
-    href: "/app/stake",
-  },
-
-  {
-    label: "Balancer LPs",
-    href: "/app/balancers",
-  },
-
-  {
     label: "Charts",
     children: [
       {
@@ -94,7 +99,7 @@ export const NAV_ITEMS: Array<NavItem> = [
   },
 
   {
-    label: "More",
+    label: "Community",
     children: [
       {
         label: "Docs",

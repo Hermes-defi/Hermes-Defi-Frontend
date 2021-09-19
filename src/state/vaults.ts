@@ -7,11 +7,13 @@ import { useToast } from "@chakra-ui/react";
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Vault, vaults } from "config/vaults";
-import { BigNumber, constants, utils } from "ethers";
+import { farms } from "config/farms";
+import { BigNumber, utils } from "ethers";
 import { Token } from "quickswap-sdk";
-import { DEFAULT_CHAIN_ID, irisPerBlock, secondsPerBlock } from "config/constants";
+import { DEFAULT_CHAIN_ID, irisPerBlock, secondsPerBlock, secondsPerWeek } from "config/constants";
 import { fetchPairPrice } from "web3-functions/prices";
-import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
+import { approveLpContract } from "web3-functions";
+import { getPoolApr } from "web3-functions/utils";
 
 function useFetchVaultsRequest() {
   const masterChef = useMasterChef();
@@ -57,28 +59,54 @@ function useFetchVaultsRequest() {
         vault.amm
       );
 
-      // caculate apy
+      // apr
+      const rewardsPerWeek = irisPerBlock * (secondsPerWeek / secondsPerBlock);
       const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
-      const masterChefInfo = await masterChef.poolInfo(vault.farmPid);
-      const multiplier = masterChefInfo.allocPoint.toString();
-      const depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
+      // caculate apy
+      const vaultFarm = farms.find((f) => f.pid === vault.farmPid);
+      const farmInfo = await masterChef.poolInfo(vault.farmPid);
 
-      const poolBlockRewards = new BigNumberJS(irisPerBlock)
-        .times(multiplier)
-        .dividedBy(totalAllocPoints)
-        .times(1 - (depositFees ?? 0));
+      const multiplier = farmInfo.allocPoint.toString();
+      const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
+      const farmLpContract = getPairContract(farmInfo.lpToken);
 
-      const secondsPerYear = 31536000;
-      const yearlyRewards = poolBlockRewards.dividedBy(secondsPerBlock).times(secondsPerYear);
-      const yearlyRewardsInUsd = yearlyRewards.times(vault.stakeToken.price).toString();
+      const totalStakedInFarm = utils.formatUnits(
+        await farmLpContract.balanceOf(masterChef.address),
+        vaultFarm.stakeToken.decimals
+      );
 
-      const totalStakedInUSD = new BigNumberJS(vault.totalStaked).times(vault.stakeToken.price);
-      const apy = new BigNumberJS(yearlyRewardsInUsd).dividedBy(totalStakedInUSD);
+      const poolRewardsPerWeek = new BigNumberJS(multiplier)
+        .div(totalAllocPoints)
+        .times(rewardsPerWeek)
+        .times(1 - (depositFees ?? 0))
+        .toNumber();
+
+      const apr = getPoolApr(
+        parseFloat(vault.stakeToken.price),
+        poolRewardsPerWeek,
+        parseFloat(vault.stakeToken.price),
+        parseFloat(totalStakedInFarm)
+      );
+
+      const apy = (() => {
+        const r = apr.yearlyAPR / 100;
+        const n = 4890;
+        const t = 1;
+        const c = 1 - 0.0075;
+
+        const v = new BigNumberJS(r).times(c);
+        const v1 = v.dividedBy(n);
+
+        const pow = new BigNumberJS(n).times(t);
+        const f = v1.plus(1).pow(pow);
+
+        return f.times(100).toString();
+      })();
 
       vault.apy = {
-        yearly: apy.toString(),
-        daily: apy.dividedBy(365).toString(),
+        yearly: apy,
+        daily: apr.dailyAPR.toString(),
       };
 
       // USER data
