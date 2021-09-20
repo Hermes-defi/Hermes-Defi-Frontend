@@ -111,10 +111,15 @@ function useFetchVaultsRequest() {
 
       // USER data
       if (account) {
-        const userStaked = await vaultContract.balanceOf(account);
-        vault.userTotalStaked = utils.formatUnits(userStaked, vault.stakeToken.decimals);
+        let userShares = await vaultContract.balanceOf(account);
+        let pricePerShare = await vaultContract.getPricePerFullShare();
 
-        vault.hasStaked = !(userStaked as BigNumber).isZero();
+        userShares = utils.formatUnits(userShares, vault.stakeToken.decimals);
+        pricePerShare = utils.formatEther(pricePerShare);
+
+        vault.userTotalStaked = new BigNumberJS(userShares).times(pricePerShare).toString();
+
+        vault.hasStaked = !BigNumber.from(vault.userTotalStaked).isZero();
 
         const allowance: BigNumber = await lpContract.allowance(account, vault.address);
         vault.hasApprovedPool = !allowance.isZero();
