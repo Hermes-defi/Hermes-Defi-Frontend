@@ -124,9 +124,14 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           disableRewards
           canCompound={false}
           stakeToken={vault.stakeToken}
+          unstakeToken={{
+            address: vault.address,
+            ...vault.rewardToken,
+          }}
           rewardToken={{ symbol: vault.rewardToken.symbol }}
           hasApprovedPool={vault.hasApprovedPool}
           userTotalStaked={vault.userTotalStaked}
+          userAvailableToUnstake={vault.userAvailableToUnstake}
           approve={approveMutation}
           deposit={depositMutation}
           withdraw={withdrawMutation}

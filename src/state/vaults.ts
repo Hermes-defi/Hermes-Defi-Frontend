@@ -118,6 +118,7 @@ function useFetchVaultsRequest() {
         pricePerShare = utils.formatEther(pricePerShare);
 
         vault.userTotalStaked = new BigNumberJS(userShares).times(pricePerShare).toString();
+        vault.userAvailableToUnstake = new BigNumberJS(userShares).toFixed(5).toString();
 
         vault.hasStaked = !new BigNumberJS(vault.userTotalStaked).isZero();
 
@@ -258,7 +259,7 @@ export function useWithdrawFromVault() {
   const toast = useToast();
 
   const withdrawMutation = useMutation(
-    async ({ id, amount }: { id: number; amount: string }) => {
+    async ({ id, amount }: { id: string; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
       const vault = queryClient.getQueryData<Vault>(["vault", id, account]);

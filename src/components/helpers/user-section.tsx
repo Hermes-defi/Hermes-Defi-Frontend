@@ -93,7 +93,14 @@ type IProps = {
   rewardToken: {
     symbol: string;
   };
+
   stakeToken: {
+    symbol: string;
+    address: string;
+    decimals: number;
+  };
+
+  unstakeToken?: {
     symbol: string;
     address: string;
     decimals: number;
@@ -102,6 +109,7 @@ type IProps = {
   rewardsEarned?: string;
   hasApprovedPool: boolean;
   userTotalStaked: string;
+  userAvailableToUnstake?: string;
 
   approve: UseMutationResult;
   deposit: UseMutationResult;
@@ -147,8 +155,8 @@ export const UserSection: React.FC<IProps> = (props) => {
                 <>
                   <UnstakeButton
                     id={props.id}
-                    stakeToken={props.stakeToken}
-                    userTotalStaked={props.userTotalStaked}
+                    stakeToken={props.unstakeToken || props.stakeToken}
+                    userTotalStaked={props.userAvailableToUnstake || props.userTotalStaked}
                     withdraw={props.withdraw}
                   >
                     -

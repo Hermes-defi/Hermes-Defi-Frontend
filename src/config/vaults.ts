@@ -42,6 +42,7 @@ export type Vault = {
   hasStaked?: boolean;
   hasApprovedPool?: boolean;
   userTotalStaked?: string;
+  userAvailableToUnstake?: string;
 };
 
 export const vaults: Vault[] = {
