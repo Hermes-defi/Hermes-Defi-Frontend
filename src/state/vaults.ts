@@ -93,7 +93,7 @@ function useFetchVaultsRequest() {
         const r = apr.yearlyAPR / 100;
         const n = 4890;
         const t = 1;
-        const c = 1 - 0.0075;
+        const c = 1 - vault.performanceFee;
 
         const v = new BigNumberJS(r).times(c);
         const v1 = v.dividedBy(n);

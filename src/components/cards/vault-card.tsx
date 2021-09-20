@@ -107,6 +107,15 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             {vault.withdrawFees}%
           </Text>
         </Stack>
+
+        <Stack direction="row" justify="space-between">
+          <Text fontWeight="600" fontSize="sm">
+            Perfomance Fees
+          </Text>
+          <Text fontWeight="700" fontSize="sm">
+            {vault.performanceFee * 100}%
+          </Text>
+        </Stack>
       </Stack>
 
       <Stack mb={8}>
@@ -164,7 +173,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
         </Stack>
 
         <Link
-          href={`https://polygonscan.com/${vault.address}`}
+          href={`https://polygonscan.com/address/${vault.address}`}
           textDecoration="underline"
           fontWeight="700"
           fontSize="sm"

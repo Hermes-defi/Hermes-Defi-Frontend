@@ -7,6 +7,7 @@ export type Vault = {
   depositFees: number;
   withdrawFees: number;
   farmPid: number;
+  performanceFee: number;
 
   isDisabled?: boolean;
   isActive?: boolean;
@@ -52,6 +53,7 @@ export const vaults: Vault[] = {
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,
+      performanceFee: 0.0075,
       farmPid: 8,
 
       stakeToken: {
