@@ -119,7 +119,7 @@ function useFetchVaultsRequest() {
 
         vault.userTotalStaked = new BigNumberJS(userShares).times(pricePerShare).toString();
 
-        vault.hasStaked = !BigNumber.from(vault.userTotalStaked).isZero();
+        vault.hasStaked = !new BigNumberJS(vault.userTotalStaked).isZero();
 
         const allowance: BigNumber = await lpContract.allowance(account, vault.address);
         vault.hasApprovedPool = !allowance.isZero();
