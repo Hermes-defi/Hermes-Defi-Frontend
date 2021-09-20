@@ -137,7 +137,7 @@ export function useFetchVaultStakePools() {
   return vaultStakeQueries;
 }
 
-export function useApproveStakePool() {
+export function useApproveVaultStakePool() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const getLpContract = useERC20();
@@ -194,7 +194,7 @@ export function useApproveStakePool() {
   return approveMutation;
 }
 
-export function useDepositIntoStakePool() {
+export function useDepositIntoVaultStakePool() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const getStakePoolContract = useStakePoolContract();
@@ -242,7 +242,7 @@ export function useDepositIntoStakePool() {
   return depositMutation;
 }
 
-export function useStakeWithdraw() {
+export function useVaultStakeWithdraw() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const getStakePoolContract = useStakePoolContract();

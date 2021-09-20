@@ -3,18 +3,22 @@ import { BigNumber } from "bignumber.js";
 
 import { VaultStakeInfo } from "config/vault-stake";
 
-import { useApproveStakePool, useDepositIntoStakePool, useStakeWithdraw } from "state/stake";
+import {
+  useApproveVaultStakePool,
+  useDepositIntoVaultStakePool,
+  useVaultStakeWithdraw,
+} from "state/stake-vault";
 
 import { Badge, Box, Heading, HStack, Image, Link, Stack, Text } from "@chakra-ui/react";
 import { UserSection } from "components/helpers/user-section";
 
-import { displayCurrency, displayNumber } from "libs/utils";
+import { displayNumber } from "libs/utils";
 
 export const VaultStakePoolCard: React.FC<{ stakePool: VaultStakeInfo }> = ({ stakePool }) => {
-  const approveMutation = useApproveStakePool();
-  const harvestMutation = useDepositIntoStakePool();
-  const depositMutation = useDepositIntoStakePool();
-  const withdrawMutation = useStakeWithdraw();
+  const approveMutation = useApproveVaultStakePool();
+  const harvestMutation = useDepositIntoVaultStakePool();
+  const depositMutation = useDepositIntoVaultStakePool();
+  const withdrawMutation = useVaultStakeWithdraw();
 
   return (
     <Box
