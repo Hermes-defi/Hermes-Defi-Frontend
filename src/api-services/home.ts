@@ -1,5 +1,6 @@
 import defaultContracts from "config/contracts";
 import ERC20_ABI from "config/abis/ERC20.json";
+import VAULT_ABI from "config/abis/Vault.json";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { ethers, utils } from "ethers";
@@ -10,6 +11,7 @@ import { fetchBalancerPrice, fetchPairPrice, fetchPrice } from "web3-functions/p
 import { Pool, pools } from "config/pools";
 import { Farm, farms } from "config/farms";
 import { Balancer, balancers } from "config/balancers";
+import { vaults, Vault } from "config/vaults";
 
 const provider = new ethers.providers.JsonRpcProvider(RPC_URLS[DEFAULT_CHAIN_ID]);
 
@@ -90,12 +92,53 @@ export async function getHermesStats() {
     Promise.resolve(new BigNumberJS(0))
   );
 
-  const tvl = totalValueInPools.plus(totalValueInFarms).plus(totalValueInBalancers);
+  const totalValueInVaults = await vaults.reduce(
+    async (_total: Promise<BigNumberJS>, vault: Vault) => {
+      const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
+      const lpContract = new ethers.Contract(vault.stakeToken.address, ERC20_ABI, provider);
+
+      const totalLpStaked = await vaultContract.balance();
+      const totalSupply = utils.formatUnits(
+        await lpContract.totalSupply(),
+        vault.stakeToken.decimals
+      );
+
+      const token0 = new Token(
+        DEFAULT_CHAIN_ID,
+        vault.pairs[0].tokenAddress,
+        vault.pairs[0].tokenDecimals,
+        vault.pairs[0].tokenName
+      );
+
+      const token1 = new Token(
+        DEFAULT_CHAIN_ID,
+        vault.pairs[1].tokenAddress,
+        vault.pairs[1].tokenDecimals,
+        vault.pairs[1].tokenName
+      );
+
+      const tokenPrice = await fetchPairPrice(token0, token1, totalSupply, provider, vault.amm);
+
+      const total = await _total;
+      const poolPrice = new BigNumberJS(
+        utils.formatUnits(totalLpStaked, vault.stakeToken.decimals)
+      ).multipliedBy(tokenPrice);
+
+      return total.plus(poolPrice);
+    },
+    Promise.resolve(new BigNumberJS(0))
+  );
+
+  const tvl = totalValueInPools
+    .plus(totalValueInFarms)
+    .plus(totalValueInBalancers)
+    .plus(totalValueInVaults);
 
   return {
     totalValueInPools: totalValueInPools.toString(),
     totalValueInFarms: totalValueInFarms.toString(),
     totalValueInBalancers: totalValueInBalancers.toString(),
+    totalValueInVaults: totalValueInVaults.toString(),
     tvl: tvl.toString(),
   };
 }

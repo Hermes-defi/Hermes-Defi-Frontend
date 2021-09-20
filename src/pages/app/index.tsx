@@ -14,6 +14,7 @@ import {
   useIrisData,
   useIrisStats,
   useTvlChart,
+  useTotalInVaults,
 } from "hooks/home-page";
 
 import { AppLayout } from "components/layout";
@@ -50,6 +51,7 @@ const Page: React.FC = () => {
   const farmStats = useTotalInFarms();
   const balStats = useTotalInBalancers();
   const poolStats = useTotalInPools();
+  const vaultStats = useTotalInVaults();
 
   const [isFarmAprLoading, farmApr] = useFarmAPRStats();
   const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
@@ -340,7 +342,11 @@ const Page: React.FC = () => {
                   >
                     <Text fontSize="3xl" fontWeight="700">
                       {displayCurrency(
-                        farmStats.data.plus(poolStats.data).plus(balStats.data).toNumber()
+                        farmStats.data
+                          .plus(poolStats.data)
+                          .plus(balStats.data)
+                          .plus(vaultStats.data)
+                          .toNumber()
                       )}
                     </Text>
                   </Skeleton>

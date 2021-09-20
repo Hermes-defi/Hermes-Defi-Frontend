@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useToggle } from "react-use";
-import { useFetchVaultStakePools } from "state/stake";
+import { useFetchVaultStakePools } from "state/stake-vault";
 
 import {
   Button,
@@ -19,7 +19,7 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { StakePoolCard } from "components/cards/stake-card";
+import { VaultStakePoolCard } from "components/cards/stake-vault-card";
 import { AppLayout } from "components/layout";
 
 const Page: React.FC = () => {
@@ -87,7 +87,7 @@ const Page: React.FC = () => {
             <Wrap justify="center" spacing="40px">
               {pools.map(({ data }: any) => (
                 <WrapItem key={data.address}>
-                  <StakePoolCard stakePool={data} isVaultToken />
+                  <VaultStakePoolCard stakePool={data} />
                 </WrapItem>
               ))}
             </Wrap>

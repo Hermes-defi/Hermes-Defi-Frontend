@@ -12,7 +12,9 @@ import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
 import { useIrisPrice } from "hooks/prices";
 import { useFetchFarms } from "state/farms";
+import { useFetchVaults } from "state/vaults";
 import { Farm, farms } from "config/farms";
+import { Vault } from "config/vaults";
 import { useFetchPools } from "state/pools";
 import { useFetchBalancers } from "state/balancers";
 import { Balancer, balancers } from "config/balancers";
@@ -94,6 +96,27 @@ export function usePoolsAPRStats() {
   const maxApr = Math.max(...aprs);
 
   return [isLoading, maxApr];
+}
+
+export function useTotalInVaults() {
+  const vaultsResp = useFetchVaults();
+  const isLoading = vaultsResp.every((f) => f.status === "loading");
+
+  const data = vaultsResp.reduce((total, vaultResp) => {
+    const vault = vaultResp.data as Vault;
+    if (!vault) return new BigNumberJS(0);
+
+    const totalLockedInVaults = new BigNumberJS(vault?.totalStaked).multipliedBy(
+      vault?.stakeToken.price
+    );
+
+    return total.plus(totalLockedInVaults);
+  }, new BigNumberJS(0));
+
+  return {
+    data,
+    isLoading,
+  };
 }
 
 export function useTotalInFarms() {

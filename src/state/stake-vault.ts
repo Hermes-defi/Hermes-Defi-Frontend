@@ -7,20 +7,20 @@ import { useToast } from "@chakra-ui/react";
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
-import { StakeInfo, stakingPools } from "config/stake";
+import { VaultStakeInfo, vaultStakingPools } from "config/vault-stake";
 import { BigNumber, utils } from "ethers";
 import { Token } from "quickswap-sdk";
 import { approveLpContract } from "web3-functions";
 import { fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 
-function useFetchStakingPoolRequest() {
+function useFetchVaultStakingPoolRequest() {
   const getLpContract = useERC20();
   const getStakePoolContract = useStakePoolContract();
   const currentBlock = useCurrentBlockNumber();
   const { account, library } = useActiveWeb3React();
 
-  return async (stakePoolInfo: StakeInfo) => {
+  return async (stakePoolInfo: VaultStakeInfo) => {
     try {
       const poolChef = getStakePoolContract(stakePoolInfo.address);
       const endBlock = await poolChef.bonusEndBlock();
@@ -48,7 +48,6 @@ function useFetchStakingPoolRequest() {
       );
 
       // TOKEN PRICE
-      stakePoolInfo.stakeToken.price = await fetchPrice(stakingToken, library);
       stakePoolInfo.rewardToken.price = await fetchPrice(rewardToken, library);
 
       // calculate APR
@@ -95,6 +94,13 @@ function useFetchStakingPoolRequest() {
           stakePoolInfo.stakeToken.decimal
         );
 
+        stakePoolInfo.poolShare = new BigNumberJS(stakePoolInfo.userTotalStaked)
+          .dividedBy(stakePoolInfo.totalStaked)
+          .times(100)
+          .toString();
+
+        console.log(stakePoolInfo.poolShare);
+
         stakePoolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
 
         const allowance: BigNumber = await stakeTokenContract.allowance(
@@ -113,22 +119,22 @@ function useFetchStakingPoolRequest() {
   };
 }
 
-export function useFetchStakePools() {
-  const fetchStakingPoolRq = useFetchStakingPoolRequest();
+export function useFetchVaultStakePools() {
+  const fetchStakingPoolRq = useFetchVaultStakingPoolRequest();
   const currentBlock = useCurrentBlockNumber();
   const { account } = useActiveWeb3React();
 
-  const farmQueries = useQueries(
-    stakingPools.map((stakePool) => {
+  const vaultStakeQueries = useQueries(
+    vaultStakingPools.map((stakePool) => {
       return {
         enabled: !!currentBlock,
-        queryKey: ["stake-pool", stakePool.address, account],
+        queryKey: ["vault-stake-pool", stakePool.address, account],
         queryFn: () => fetchStakingPoolRq(stakePool),
       };
     })
   );
 
-  return farmQueries;
+  return vaultStakeQueries;
 }
 
 export function useApproveStakePool() {
@@ -141,7 +147,7 @@ export function useApproveStakePool() {
     async (address: string) => {
       if (!account) throw new Error("No connected account");
 
-      const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", address, account]);
+      const pool = queryClient.getQueryData<VaultStakeInfo>(["vault-stake-pool", address, account]);
       const lpContract = getLpContract(pool.stakeToken.address);
 
       await approveLpContract(lpContract, pool.address);
@@ -150,16 +156,20 @@ export function useApproveStakePool() {
 
     {
       onSuccess: (address) => {
-        const stakePool = queryClient.getQueryData<StakeInfo>(["stake-pool", address, account]);
+        const stakePool = queryClient.getQueryData<VaultStakeInfo>([
+          "vault-stake-pool",
+          address,
+          account,
+        ]);
 
-        queryClient.setQueryData(["stake-pool", address, account], {
+        queryClient.setQueryData(["vault-stake-pool", address, account], {
           ...stakePool,
           hasApprovedPool: true,
         });
 
         const token = stakePool?.stakeToken.symbol;
         ReactGA.event({
-          category: "Staking Pool Approval",
+          category: "Vault Staking Pool Approval",
           action: `Approving ${token}`,
           label: token,
         });
@@ -194,7 +204,7 @@ export function useDepositIntoStakePool() {
     async ({ id, amount }: { id: string; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
+      const pool = queryClient.getQueryData<VaultStakeInfo>(["vault-stake-pool", id, account]);
       const poolChef = getStakePoolContract(pool.address);
 
       const tx = await poolChef.deposit(utils.parseUnits(amount, pool.stakeToken.decimal));
@@ -202,8 +212,8 @@ export function useDepositIntoStakePool() {
     },
     {
       onSuccess: (_, { id, amount }) => {
-        const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
-        queryClient.invalidateQueries(["stake-pool", id, account]);
+        const pool = queryClient.getQueryData<VaultStakeInfo>(["vault-stake-pool", id, account]);
+        queryClient.invalidateQueries(["vault-stake-pool", id, account]);
 
         ReactGA.event({
           category: "Deposits",
@@ -242,7 +252,7 @@ export function useStakeWithdraw() {
     async ({ id, amount }: { id: string; amount: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
+      const pool = queryClient.getQueryData<VaultStakeInfo>(["vault-stake-pool", id, account]);
       const poolChef = getStakePoolContract(pool.address);
 
       const tx = await poolChef.withdraw(utils.parseUnits(amount, pool.stakeToken.decimal));
@@ -250,8 +260,8 @@ export function useStakeWithdraw() {
     },
     {
       onSuccess: (_, { id, amount }) => {
-        const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
-        queryClient.invalidateQueries(["stake-pool", id, account]);
+        const pool = queryClient.getQueryData<VaultStakeInfo>(["vault-stake-pool", id, account]);
+        queryClient.invalidateQueries(["vault-stake-pool", id, account]);
 
         ReactGA.event({
           category: "Withdrawals",
