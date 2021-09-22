@@ -41,7 +41,12 @@ import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
 import { useIrisPrice } from "hooks/prices";
-import { useTotalInFarms, useTotalInBalancers, useTotalInPools } from "hooks/home-page";
+import {
+  useTotalInFarms,
+  useTotalInBalancers,
+  useTotalInPools,
+  useTotalInVaults,
+} from "hooks/home-page";
 
 // NAVIGATION
 interface NavItem {
@@ -58,19 +63,19 @@ const NAV_ITEMS: Array<NavItem> = [
     label: "Info",
     children: [
       {
+        label: "Coinmarketcap",
+        isExternal: true,
+        href: "https://coinmarketcap.com/currencies/hermes-defi/",
+      },
+      {
+        label: "Coingecko",
+        isExternal: true,
+        href: "https://www.coingecko.com/en/coins/iris-token",
+      },
+      {
         label: "Vfat-tools",
         isExternal: true,
         href: "https://vfat.tools/polygon/hermes/",
-      },
-      {
-        label: "Ape O'Clock",
-        isExternal: true,
-        href: "https://www.apeoclock.com/launch/hermes-defi-presale/",
-      },
-      {
-        label: "Gemtools",
-        isExternal: true,
-        href: "https://gemtools.netlify.app/",
       },
     ],
   },
@@ -331,34 +336,50 @@ const DappStats = () => {
   const farmStats = useTotalInFarms();
   const balStats = useTotalInBalancers();
   const poolStats = useTotalInPools();
+  const vaultStats = useTotalInVaults();
 
   return (
-    <SimpleGrid columns={[2, 4]} spacing={[8, 14]}>
-      <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
+    <SimpleGrid columns={[2, 5]} spacing={[8, 14]}>
+      <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">{irisPrice ? displayCurrency(irisPrice) : "N/A"}</Heading>
         <Text color="gray.700" size="sm">
           $IRIS Price
         </Text>
       </Box>
 
-      <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
+        <Heading size="2xl">
+          {displayCurrency(Math.round(vaultStats.data.toNumber()), true)}
+        </Heading>
+        <Text color="gray.700" size="sm">
+          Total in Vaults
+        </Text>
+      </Box>
+
+      <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">{displayCurrency(Math.round(farmStats.data.toNumber()), true)}</Heading>
         <Text color="gray.700" size="sm">
           Total in Farms
         </Text>
       </Box>
 
-      <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">{displayCurrency(Math.round(poolStats.data.toNumber()), true)}</Heading>
         <Text color="gray.700" size="sm">
           Total in Pools
         </Text>
       </Box>
 
-      <Box boxShadow="2xl" px={[3, 16]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
           {displayCurrency(
-            Math.round(farmStats.data.plus(poolStats.data).plus(balStats.data).toNumber()),
+            Math.round(
+              farmStats.data
+                .plus(poolStats.data)
+                .plus(balStats.data)
+                .plus(vaultStats.data)
+                .toNumber()
+            ),
             true
           )}
         </Heading>
