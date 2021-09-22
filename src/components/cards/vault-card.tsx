@@ -55,11 +55,6 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
       </HStack>
 
       <HStack mb={6} spacing={2}>
-        {!vault.depositFees && (
-          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="green">
-            No Fees
-          </Badge>
-        )}
         {vault.amm && (
           <Badge boxShadow="md" px={2} rounded="lg" colorScheme="gray">
             {vault.amm}

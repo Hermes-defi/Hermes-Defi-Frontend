@@ -157,6 +157,35 @@ export const farms: Farm[] = {
         },
       ],
     },
+
+    {
+      pid: 21,
+      multiplier: "20",
+      depositFees: 0,
+
+      isSpecial: true,
+      farmDx: "quickswap",
+
+      stakeToken: {
+        address: "0x8bd49c0106da8618128e56f57e0d4b8d820d9d72",
+        symbol: "IRIS/TETU",
+        decimals: 18,
+        logo: ["/hermes-logo-1.png", "/tetu-logo.svg"],
+      },
+
+      pairs: [
+        {
+          tokenAddress: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+          tokenDecimals: 18,
+          tokenName: "IRIS",
+        },
+        {
+          tokenAddress: "0x255707b70bf90aa112006e1b07b9aea6de021424",
+          tokenDecimals: 18,
+          tokenName: "TETU",
+        },
+      ],
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((farm: Farm) => !farm.isDisabled);

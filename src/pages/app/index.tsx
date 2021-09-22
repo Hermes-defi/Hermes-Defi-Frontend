@@ -325,7 +325,7 @@ const Page: React.FC = () => {
                 justify="space-between"
                 direction={["column", "row"]}
                 spacing={[6, 0]}
-                ml={12}
+                ml={[0, 12]}
               >
                 <div>
                   <Heading
@@ -352,7 +352,24 @@ const Page: React.FC = () => {
                   </Skeleton>
                 </div>
 
-                <Stack spacing={[5, 10]} direction="row">
+                <Stack spacing={[5, 10]} direction={["column", "row"]}>
+                  <Box align={["left", "center"]}>
+                    <Heading
+                      borderBottomWidth="2px"
+                      borderColor="primary.500"
+                      mb={1}
+                      color={useColorModeValue("gray.600", "gray.300")}
+                      fontSize="xl"
+                    >
+                      Vaults
+                    </Heading>
+                    <Skeleton isLoaded={!farmStats.isLoading}>
+                      <Text fontSize="2xl" fontWeight="700">
+                        {displayCurrency(vaultStats.data.toNumber())}
+                      </Text>
+                    </Skeleton>
+                  </Box>
+
                   <Box align={["left", "center"]}>
                     <Heading
                       borderBottomWidth="2px"
@@ -389,7 +406,10 @@ const Page: React.FC = () => {
                 </Stack>
               </Stack>
 
-              <ResponsiveContainer width={useBreakpointValue({ base: 340, md: 800 })} height="80%">
+              <ResponsiveContainer
+                width={useBreakpointValue({ base: "100%", md: 800 })}
+                height={useBreakpointValue({ base: 340, md: "80%" })}
+              >
                 <LineChart
                   style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
                   data={chartData.data}
