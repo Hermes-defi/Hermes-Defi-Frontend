@@ -11,11 +11,9 @@ const getFarmWithTradingFeesApy = ({
   tradingApr,
   compoundingsPerYear,
   t,
-  shareAfterBeefyPerformanceFee,
+  shareAfterPerformanceFee,
 }) => {
-  const farmApy = farmApr
-    ? compound(farmApr, compoundingsPerYear, t, shareAfterBeefyPerformanceFee)
-    : 0;
+  const farmApy = farmApr ? compound(farmApr, compoundingsPerYear, t, shareAfterPerformanceFee) : 0;
   const tradingApy = tradingApr ? compound(tradingApr, compoundingsPerYear, t, 1) : 0; // no fee on trading
   const finalAPY = (1 + farmApy) * (1 + tradingApy) - 1;
   return finalAPY;
@@ -75,29 +73,33 @@ export function getPoolApr(
 export async function getVaultApy({
   address,
   multiplier,
+  tokenPerBlock,
   totalAllocPoints,
   depositFees,
-  irisTokenPrice,
-  stakeTokenPrice,
+  performanceFee,
+  rewardToken,
+  stakeToken,
   totalStakedInFarm,
 }: any) {
   const BASE_HPY = 4890;
   const QUICK_LPF = 0.0025;
-  const PERFORMANCE_FEE = 0.0075;
+  const PERFORMANCE_FEE = performanceFee;
   const SHARE_AFTER_PERFORMANCE_FEE = 1 - PERFORMANCE_FEE;
 
   // get trading apr of farm
   const tradingFeeApr = await getTradingFeeApr(address, QUICK_LPF);
 
   // get farm apr from masterChef
-  const totalStakedInUSD = new BigNumberJS(totalStakedInFarm).times(stakeTokenPrice);
-  const poolBlockRewards = new BigNumberJS(utils.parseEther(`${irisPerBlock}`).toString())
+  const totalStakedInUSD = new BigNumberJS(totalStakedInFarm).times(stakeToken.price);
+  const poolBlockRewards = new BigNumberJS(tokenPerBlock)
     .times(multiplier)
     .dividedBy(totalAllocPoints)
     .times(1 - (depositFees ?? 0));
 
   const yearlyRewards = poolBlockRewards.dividedBy(secondsPerBlock).times(secondsPerYear);
-  const yearlyRewardsInUsd = yearlyRewards.times(irisTokenPrice).dividedBy("1e18");
+  const yearlyRewardsInUsd = yearlyRewards
+    .times(rewardToken.price)
+    .dividedBy(`1e${rewardToken.decimals}`);
 
   const simpleApr = yearlyRewardsInUsd.dividedBy(totalStakedInUSD);
 
@@ -111,8 +113,18 @@ export async function getVaultApy({
     tradingApr: tradingFeeApr.toNumber(),
     compoundingsPerYear: BASE_HPY,
     t: 1,
-    shareAfterBeefyPerformanceFee: SHARE_AFTER_PERFORMANCE_FEE,
+    shareAfterPerformanceFee: SHARE_AFTER_PERFORMANCE_FEE,
   });
+
+  // console.log({
+  //   totalApy: totalApy,
+  //   vaultApy: vaultApy,
+  //   vaultApr,
+  //   poolBlockRewards: poolBlockRewards.valueOf(),
+  //   yearlyRewardsInUsd: yearlyRewardsInUsd.valueOf(),
+  //   yearlyRewards: yearlyRewards.valueOf(),
+  //   tradingFeeApr: tradingFeeApr.valueOf(),
+  // });
 
   return {
     tradingApr: tradingFeeApr.toNumber(),

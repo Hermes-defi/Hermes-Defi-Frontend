@@ -4,7 +4,6 @@ import VAULT_ABI from "config/abis/Vault.json";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { ethers, utils } from "ethers";
-import { Token } from "quickswap-sdk";
 import { RPC_URLS } from "wallet/connectors";
 import { fetchBalancerPrice, fetchPairPrice, fetchPrice } from "web3-functions/prices";
 
@@ -17,7 +16,7 @@ const provider = new ethers.providers.JsonRpcProvider(RPC_URLS[DEFAULT_CHAIN_ID]
 
 export async function getIrisPrice() {
   const irisPrice = await fetchPrice(
-    new Token(DEFAULT_CHAIN_ID, defaultContracts.irisToken.address, 18, "IRIS"),
+    { address: defaultContracts.irisToken.address, decimals: 18, symbol: "IRIS" },
     provider
   );
 
@@ -32,8 +31,10 @@ export async function getHermesStats() {
     const tokenDecimal = await lpContract.decimals();
     const tokenSymbol = await lpContract.symbol();
 
-    const token = new Token(DEFAULT_CHAIN_ID, lpContract.address, tokenDecimal, tokenSymbol);
-    const tokenPrice = await fetchPrice(token, provider);
+    const tokenPrice = await fetchPrice(
+      { address: lpContract.address, decimals: tokenDecimal, symbol: tokenSymbol },
+      provider
+    );
 
     const total = await _total;
     const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(
@@ -49,21 +50,13 @@ export async function getHermesStats() {
     const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
     const totalSupply = utils.formatUnits(await lpContract.totalSupply(), farm.stakeToken.decimals);
 
-    const token0 = new Token(
-      DEFAULT_CHAIN_ID,
-      farm.pairs[0].tokenAddress,
-      farm.pairs[0].tokenDecimals,
-      farm.pairs[0].tokenName
+    const tokenPrice = await fetchPairPrice(
+      farm.pairs[0],
+      farm.pairs[1],
+      totalSupply,
+      provider,
+      farm.farmDx
     );
-
-    const token1 = new Token(
-      DEFAULT_CHAIN_ID,
-      farm.pairs[1].tokenAddress,
-      farm.pairs[1].tokenDecimals,
-      farm.pairs[1].tokenName
-    );
-
-    const tokenPrice = await fetchPairPrice(token0, token1, totalSupply, provider, farm.farmDx);
 
     const total = await _total;
     const poolPrice = new BigNumberJS(
@@ -103,21 +96,13 @@ export async function getHermesStats() {
         vault.stakeToken.decimals
       );
 
-      const token0 = new Token(
-        DEFAULT_CHAIN_ID,
-        vault.pairs[0].tokenAddress,
-        vault.pairs[0].tokenDecimals,
-        vault.pairs[0].tokenName
+      const tokenPrice = await fetchPairPrice(
+        vault.pairs[0],
+        vault.pairs[1],
+        totalSupply,
+        provider,
+        vault.amm
       );
-
-      const token1 = new Token(
-        DEFAULT_CHAIN_ID,
-        vault.pairs[1].tokenAddress,
-        vault.pairs[1].tokenDecimals,
-        vault.pairs[1].tokenName
-      );
-
-      const tokenPrice = await fetchPairPrice(token0, token1, totalSupply, provider, vault.amm);
 
       const total = await _total;
       const poolPrice = new BigNumberJS(

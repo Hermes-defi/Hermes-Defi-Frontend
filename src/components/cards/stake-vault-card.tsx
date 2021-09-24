@@ -91,10 +91,7 @@ export const VaultStakePoolCard: React.FC<{ stakePool: VaultStakeInfo }> = ({ st
         <UserSection
           id={stakePool.address}
           canCompound={false}
-          stakeToken={{
-            ...stakePool.stakeToken,
-            decimals: stakePool.stakeToken.decimal,
-          }}
+          stakeToken={stakePool.stakeToken}
           rewardToken={stakePool.rewardToken}
           rewardsEarned={stakePool.rewardsEarned}
           hasApprovedPool={stakePool.hasApprovedPool}

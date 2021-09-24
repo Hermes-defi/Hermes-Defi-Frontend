@@ -13,7 +13,7 @@ export type StakeInfo = {
   stakeToken: {
     address: string;
     symbol: string;
-    decimal: number;
+    decimals: number;
     logo: string;
     price?: string;
   };
@@ -21,7 +21,7 @@ export type StakeInfo = {
   rewardToken: {
     address: string;
     symbol: string;
-    decimal: number;
+    decimals: number;
     logo: string;
     price?: string;
   };
@@ -50,14 +50,14 @@ export const stakingPools: StakeInfo[] = {
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
         symbol: "IRIS",
-        decimal: 18,
+        decimals: 18,
         logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
         address: "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104",
         symbol: "KAVIAN",
-        decimal: 18,
+        decimals: 18,
         logo: "/kavian-logo.png",
       },
     },
@@ -70,14 +70,14 @@ export const stakingPools: StakeInfo[] = {
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
         symbol: "IRIS",
-        decimal: 18,
+        decimals: 18,
         logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
         address: "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104",
         symbol: "KAVIAN (old)",
-        decimal: 18,
+        decimals: 18,
         logo: "/kavian-logo.png",
       },
     },
@@ -90,14 +90,14 @@ export const stakingPools: StakeInfo[] = {
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
         symbol: "IRIS",
-        decimal: 18,
+        decimals: 18,
         logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
         address: "0xf9b4dEFdDe04fe18F5ee6456607F8A2eC9fF6A75",
         symbol: "SANDMAN",
-        decimal: 18,
+        decimals: 18,
         logo: "/sandman-logo.png",
       },
     },
@@ -110,14 +110,14 @@ export const stakingPools: StakeInfo[] = {
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
         symbol: "IRIS",
-        decimal: 18,
+        decimals: 18,
         logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
         address: "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51",
         symbol: "GBNT",
-        decimal: 18,
+        decimals: 18,
         logo: "/gbnt-logo.png",
       },
     },
@@ -131,14 +131,14 @@ export const stakingPools: StakeInfo[] = {
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
         symbol: "IRIS",
-        decimal: 18,
+        decimals: 18,
         logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
         address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
         symbol: "USDC",
-        decimal: 6,
+        decimals: 6,
         logo: "/usdc-logo.png",
       },
     },
@@ -155,14 +155,14 @@ export const vaultStakingPools: StakeInfo[] = {
       stakeToken: {
         address: "0xcbd7b263460ad4807deadad3858de6654f082ca4",
         symbol: "godIRIS/WMATIC",
-        decimal: 18,
+        decimals: 18,
         logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
         address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
         symbol: "WMATIC",
-        decimal: 18,
+        decimals: 18,
         logo: "/matic-logo.png",
       },
     },

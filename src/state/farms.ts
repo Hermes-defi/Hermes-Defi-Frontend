@@ -45,21 +45,13 @@ function useFetchFarmRequest() {
       newFarm.stakeToken.decimals
     );
 
-    const token0 = new Token(
-      DEFAULT_CHAIN_ID,
-      newFarm.pairs[0].tokenAddress,
-      newFarm.pairs[0].tokenDecimals,
-      newFarm.pairs[0].tokenName
+    newFarm.stakeToken.price = await fetchPairPrice(
+      newFarm.pairs[0],
+      newFarm.pairs[1],
+      totalSupply,
+      library,
+      farm.farmDx
     );
-
-    const token1 = new Token(
-      DEFAULT_CHAIN_ID,
-      newFarm.pairs[1].tokenAddress,
-      newFarm.pairs[1].tokenDecimals,
-      newFarm.pairs[1].tokenName
-    );
-
-    newFarm.stakeToken.price = await fetchPairPrice(token0, token1, totalSupply, library, farm.farmDx);
 
     // APR data
     const rewardsPerWeek = irisPerBlock * (604800 / 2.1);

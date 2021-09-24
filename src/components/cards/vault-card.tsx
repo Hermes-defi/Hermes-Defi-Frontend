@@ -15,7 +15,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   const withdrawMutation = useWithdrawFromVault();
 
   const lpLink = {
-    quickswap: `https://quickswap.exchange/#/add/${vault.pairs[0].tokenAddress}/${vault.pairs[1].tokenAddress}`,
+    quickswap: `https://quickswap.exchange/#/add/${vault.pairs[0].address}/${vault.pairs[1].address}`,
     dfyn: `https://info.dfyn.network/pair/${vault.stakeToken.address}`,
   };
 
@@ -69,7 +69,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {vault.apy ? `${displayNumber(vault.apy.yearly)}%` : "N/A"}
+              {vault.apy ? `${displayNumber(vault.apy.yearly, true)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>

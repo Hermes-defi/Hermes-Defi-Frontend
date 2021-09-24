@@ -14,7 +14,7 @@ export type VaultStakeInfo = {
   stakeToken: {
     address: string;
     symbol: string;
-    decimal: number;
+    decimals: number;
     logo: string;
     price?: string;
   };
@@ -22,7 +22,7 @@ export type VaultStakeInfo = {
   rewardToken: {
     address: string;
     symbol: string;
-    decimal: number;
+    decimals: number;
     logo: string;
     price?: string;
   };
@@ -53,14 +53,14 @@ export const vaultStakingPools: VaultStakeInfo[] = {
       stakeToken: {
         address: "0xcbd7b263460ad4807deadad3858de6654f082ca4",
         symbol: "godIRIS/WMATIC",
-        decimal: 18,
+        decimals: 18,
         logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
         address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
         symbol: "WMATIC",
-        decimal: 18,
+        decimals: 18,
         logo: "/matic-logo.png",
       },
     },

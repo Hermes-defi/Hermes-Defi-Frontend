@@ -8,8 +8,7 @@ import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
-import { Token } from "quickswap-sdk";
-import { DEFAULT_CHAIN_ID, irisPerBlock } from "config/constants";
+import { irisPerBlock } from "config/constants";
 import { fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
@@ -40,14 +39,7 @@ function useFetchPoolsRequest() {
       newPool.stakeToken.decimals
     );
 
-    const token = new Token(
-      DEFAULT_CHAIN_ID,
-      newPool.stakeToken.address,
-      newPool.stakeToken.decimals,
-      newPool.stakeToken.symbol
-    );
-
-    newPool.stakeToken.price = await fetchPrice(token, library);
+    newPool.stakeToken.price = await fetchPrice(newPool.stakeToken, library);
 
     // APR data
     const rewardsPerWeek = irisPerBlock * (604800 / 2.1);

@@ -18,7 +18,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
   const withdrawMutation = useWithdrawFromFarm();
 
   const lpLink = {
-    quickswap: `https://quickswap.exchange/#/add/${farm.pairs[0].tokenAddress}/${farm.pairs[1].tokenAddress}`,
+    quickswap: `https://quickswap.exchange/#/add/${farm.pairs[0].address}/${farm.pairs[1].address}`,
     dfyn: `https://info.dfyn.network/pair/${farm.stakeToken.address}`,
   };
 

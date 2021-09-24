@@ -18,6 +18,7 @@ const amms = {
   "0xbc7cB585346f4F59d07121Bb9Ed7358076243539": "dfyn", // silver
   "0x3a3Df212b7AA91Aa0402B9035b098891d276572B": "quickswap", // fish
   "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104": "quickswap", // kavian
+  "0x9a33bac266b02faff8fa566c8cb5da08820e28ba": "quickswap", // kavianl2
   "0xf9b4dEFdDe04fe18F5ee6456607F8A2eC9fF6A75": "quickswap", // sandman
   "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51": "polycat", // GBNT
   "0x13748d548D95D78a3c83fe3F32604B4796CFfa23": "coingecko", // koge
@@ -38,13 +39,18 @@ async function fetchCoinGeckoPrice(address: string) {
   }
 }
 
-async function fetchQuickSwapPrice(token: Token, library: any) {
+async function fetchQuickSwapPrice(
+  _token: { address: string; decimals: number; symbol: string },
+  library: any
+) {
   const usdc = new Token(
     DEFAULT_CHAIN_ID,
     defaultTokens.usdc.address,
     defaultTokens.usdc.decimals,
     "USDC"
   );
+
+  const token = new Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
 
   try {
     let route;
@@ -63,18 +69,6 @@ async function fetchQuickSwapPrice(token: Token, library: any) {
       route = new Route([pair], usdc);
     }
 
-    // const trade = new Trade(
-    //   route,
-    //   new TokenAmount(usdc, utils.parseUnits("1", 6).toString()),
-    //   TradeType.EXACT_INPUT
-    // );
-
-    // console.log({
-    //   tokenSymbol: tokenSymbol,
-    //   price: route.midPrice.toSignificant(6),
-    //   priceInvert: route.midPrice.invert().toSignificant(6),
-    // });
-
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
     console.log("Error for token", token);
@@ -92,9 +86,11 @@ async function fetchQuickSwapPrice(token: Token, library: any) {
   }
 }
 
-async function fetchDfynPrice(token_: Token, library: any) {
-  // HACK rewrite token to Dfyn token
-  const token = new Dfyn.Token(DEFAULT_CHAIN_ID, token_.address, token_.decimals, token_.symbol);
+async function fetchDfynPrice(
+  _token: { address: string; decimals: number; symbol: string },
+  library: any
+) {
+  const token = new Dfyn.Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
 
   const usdc = new Dfyn.Token(
     DEFAULT_CHAIN_ID,
@@ -179,12 +175,18 @@ async function fetchPolycatPrice(address: string) {
   }
 }
 
-export async function fetchPrice(token: Token, library: any) {
+export async function fetchPrice(
+  token: { address: string; decimals: number; symbol: string },
+  library: any
+) {
   const ammsFetcher = {
-    coingecko: (t: Token) => fetchCoinGeckoPrice(t.address),
-    quickswap: (t: Token) => fetchQuickSwapPrice(t, library),
-    dfyn: (t: Token) => fetchDfynPrice(t, library),
-    polycat: (t: Token) => fetchPolycatPrice(t.address),
+    coingecko: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchCoinGeckoPrice(t.address),
+    quickswap: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchQuickSwapPrice(t, library),
+    dfyn: (t: { address: string; decimals: number; symbol: string }) => fetchDfynPrice(t, library),
+    polycat: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchPolycatPrice(t.address),
   };
 
   try {
@@ -201,8 +203,8 @@ export async function fetchPrice(token: Token, library: any) {
 }
 
 export async function fetchPairPrice(
-  token0: Token,
-  token1: Token,
+  token0: { address: string; decimals: number; symbol: string },
+  token1: { address: string; decimals: number; symbol: string },
   totalSupply: string,
   library: any,
   amm?: any
@@ -218,7 +220,10 @@ export async function fetchPairPrice(
 
     pair = await Dfyn.Fetcher.fetchPairData(t0, t1, library);
   } else {
-    pair = await Fetcher.fetchPairData(token0, token1, library);
+    const t0 = new Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
+    const t1 = new Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
+
+    pair = await Fetcher.fetchPairData(t0, t1, library);
   }
   const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
   const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting

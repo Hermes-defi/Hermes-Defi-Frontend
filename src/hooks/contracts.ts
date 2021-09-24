@@ -103,3 +103,14 @@ export function useHermesNftContract() {
   const contract = useContract();
   return contract(defaultContracts.hermesNft);
 }
+
+export function useCustomMasterChef() {
+  const contract = useContract();
+
+  return (address: string) => {
+    return contract({
+      abi: defaultContracts.masterChef.abi,
+      address,
+    });
+  };
+}

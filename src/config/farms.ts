@@ -23,9 +23,9 @@ export type Farm = {
   };
 
   pairs: {
-    tokenAddress: string;
-    tokenDecimals: number;
-    tokenName: string;
+    address: string;
+    decimals: number;
+    symbol: string;
   }[];
 
   totalStaked?: string;
@@ -61,14 +61,14 @@ export const farms: Farm[] = {
 
       pairs: [
         {
-          tokenAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-          tokenDecimals: 18,
-          tokenName: "WMATIC",
+          address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+          decimals: 18,
+          symbol: "WMATIC",
         },
         {
-          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
-          tokenDecimals: 18,
-          tokenName: "IRIS",
+          address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          decimals: 18,
+          symbol: "IRIS",
         },
       ],
     },
@@ -89,14 +89,14 @@ export const farms: Farm[] = {
 
       pairs: [
         {
-          tokenAddress: "0x13748d548D95D78a3c83fe3F32604B4796CFfa23",
-          tokenDecimals: 9,
-          tokenName: "KOGECOIN",
+          address: "0x13748d548D95D78a3c83fe3F32604B4796CFfa23",
+          decimals: 9,
+          symbol: "KOGECOIN",
         },
         {
-          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
-          tokenDecimals: 18,
-          tokenName: "IRIS",
+          address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          decimals: 18,
+          symbol: "IRIS",
         },
       ],
     },
@@ -117,14 +117,14 @@ export const farms: Farm[] = {
 
       pairs: [
         {
-          tokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
-          tokenDecimals: 6,
-          tokenName: "USDC",
+          address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+          decimals: 6,
+          symbol: "USDC",
         },
         {
-          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
-          tokenDecimals: 18,
-          tokenName: "IRIS",
+          address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          decimals: 18,
+          symbol: "IRIS",
         },
       ],
     },
@@ -146,14 +146,14 @@ export const farms: Farm[] = {
 
       pairs: [
         {
-          tokenAddress: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
-          tokenDecimals: 18,
-          tokenName: "ROUTE",
+          address: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
+          decimals: 18,
+          symbol: "ROUTE",
         },
         {
-          tokenAddress: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
-          tokenDecimals: 18,
-          tokenName: "DFYN",
+          address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
+          decimals: 18,
+          symbol: "DFYN",
         },
       ],
     },
@@ -175,14 +175,14 @@ export const farms: Farm[] = {
 
       pairs: [
         {
-          tokenAddress: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
-          tokenDecimals: 18,
-          tokenName: "IRIS",
+          address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+          decimals: 18,
+          symbol: "IRIS",
         },
         {
-          tokenAddress: "0x255707b70bf90aa112006e1b07b9aea6de021424",
-          tokenDecimals: 18,
-          tokenName: "TETU",
+          address: "0x255707b70bf90aa112006e1b07b9aea6de021424",
+          decimals: 18,
+          symbol: "TETU",
         },
       ],
     },

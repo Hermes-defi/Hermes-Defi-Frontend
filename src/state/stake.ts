@@ -6,10 +6,8 @@ import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
-import { DEFAULT_CHAIN_ID } from "config/constants";
 import { StakeInfo, stakingPools } from "config/stake";
 import { BigNumber, utils } from "ethers";
-import { Token } from "quickswap-sdk";
 import { approveLpContract } from "web3-functions";
 import { fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
@@ -30,32 +28,17 @@ function useFetchStakingPoolRequest() {
 
       const totalStaked = (await poolChef.totalStakeTokenBalance()).toString();
 
-      stakePoolInfo.totalStaked = utils.formatUnits(totalStaked, stakePoolInfo.stakeToken.decimal);
-
-      // get prices
-      const stakingToken = new Token(
-        DEFAULT_CHAIN_ID,
-        stakePoolInfo.stakeToken.address,
-        stakePoolInfo.stakeToken.decimal,
-        stakePoolInfo.stakeToken.symbol
-      );
-
-      const rewardToken = new Token(
-        DEFAULT_CHAIN_ID,
-        stakePoolInfo.rewardToken.address,
-        stakePoolInfo.rewardToken.decimal,
-        stakePoolInfo.rewardToken.symbol
-      );
+      stakePoolInfo.totalStaked = utils.formatUnits(totalStaked, stakePoolInfo.stakeToken.decimals);
 
       // TOKEN PRICE
-      stakePoolInfo.stakeToken.price = await fetchPrice(stakingToken, library);
-      stakePoolInfo.rewardToken.price = await fetchPrice(rewardToken, library);
+      stakePoolInfo.stakeToken.price = await fetchPrice(stakePoolInfo.stakeToken, library);
+      stakePoolInfo.rewardToken.price = await fetchPrice(stakePoolInfo.rewardToken, library);
 
       // calculate APR
       if (stakePoolInfo.active) {
         const rewardPerBlock = utils.formatUnits(
           await poolChef.rewardPerBlock(),
-          rewardToken.decimals
+          stakePoolInfo.rewardToken.decimals
         );
         const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
         const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(604800 / 2.1).toNumber();
@@ -85,14 +68,14 @@ function useFetchStakingPoolRequest() {
 
         stakePoolInfo.rewardsEarned = utils.formatUnits(
           await poolChef.pendingReward(account),
-          stakePoolInfo.rewardToken.decimal
+          stakePoolInfo.rewardToken.decimals
         );
 
         const userInfo = await poolChef.userInfo(account);
 
         stakePoolInfo.userTotalStaked = utils.formatUnits(
           userInfo.amount,
-          stakePoolInfo.stakeToken.decimal
+          stakePoolInfo.stakeToken.decimals
         );
 
         stakePoolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
@@ -197,7 +180,7 @@ export function useDepositIntoStakePool() {
       const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
       const poolChef = getStakePoolContract(pool.address);
 
-      const tx = await poolChef.deposit(utils.parseUnits(amount, pool.stakeToken.decimal));
+      const tx = await poolChef.deposit(utils.parseUnits(amount, pool.stakeToken.decimals));
       await tx.wait();
     },
     {
@@ -245,7 +228,7 @@ export function useStakeWithdraw() {
       const pool = queryClient.getQueryData<StakeInfo>(["stake-pool", id, account]);
       const poolChef = getStakePoolContract(pool.address);
 
-      const tx = await poolChef.withdraw(utils.parseUnits(amount, pool.stakeToken.decimal));
+      const tx = await poolChef.withdraw(utils.parseUnits(amount, pool.stakeToken.decimals));
       await tx.wait();
     },
     {

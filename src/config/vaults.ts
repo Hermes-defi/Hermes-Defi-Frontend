@@ -1,17 +1,31 @@
 import { DEFAULT_CHAIN_ID } from "./constants";
+import defaultContracts from "./contracts";
 
 export type Vault = {
   address: string;
   stratAddress: string;
+
+  masterChefAddress: string;
+  farmPid: number;
+  tokenPerBlock: string;
+
   amm: string;
+
   depositFees: number;
   withdrawFees: number;
-  farmPid: number;
   performanceFee: number;
 
   isDisabled?: boolean;
   isActive?: boolean;
   isSpecial?: boolean;
+
+  projectToken: {
+    address: string;
+    symbol: string;
+    decimals: number;
+    logo: string | string[];
+    price?: string;
+  };
 
   stakeToken: {
     address: string;
@@ -27,9 +41,9 @@ export type Vault = {
   };
 
   pairs: {
-    tokenAddress: string;
-    tokenDecimals: number;
-    tokenName: string;
+    address: string;
+    decimals: number;
+    symbol: string;
   }[];
 
   totalStaked?: string;
@@ -50,12 +64,22 @@ export const vaults: Vault[] = {
     {
       address: "0xCBd7b263460ad4807dEAdAd3858DE6654f082cA4",
       stratAddress: "0xd74941d4f9202d7e4c550d344507298a4e3ed2dd",
+      masterChefAddress: defaultContracts.masterChef.address,
+      farmPid: 8,
+      tokenPerBlock: "400000000000000000",
+
       isActive: true,
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,
       performanceFee: 0.0075,
-      farmPid: 8,
+
+      projectToken: {
+        address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+        symbol: "IRIS",
+        decimals: 18,
+        logo: "/hermes-logo-1.png",
+      },
 
       stakeToken: {
         address: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
@@ -71,14 +95,60 @@ export const vaults: Vault[] = {
 
       pairs: [
         {
-          tokenAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-          tokenDecimals: 18,
-          tokenName: "WMATIC",
+          address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+          decimals: 18,
+          symbol: "WMATIC",
         },
         {
-          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
-          tokenDecimals: 18,
-          tokenName: "IRIS",
+          address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          decimals: 18,
+          symbol: "IRIS",
+        },
+      ],
+    },
+
+    {
+      address: "0x75fd7fa818f0d970668dca795b7d79508776a5b1",
+      stratAddress: "0x570d669b8e2751dfe65bbdd4db3b34b53c9c6d6f",
+      masterChefAddress: "0xB664c98548CEbf7024F899e32E467dff00311918",
+      farmPid: 1,
+      tokenPerBlock: "150000000000000000",
+
+      isActive: true,
+      amm: "quickswap",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.0075,
+
+      projectToken: {
+        address: "0x9a33bac266b02faff8fa566c8cb5da08820e28ba",
+        symbol: "KAVIANL2",
+        decimals: 18,
+        logo: "/kavian-logo.png",
+      },
+
+      stakeToken: {
+        address: "0xca2cfc8bf76d9d8eb08e824ee6278f7b885c3b70",
+        symbol: "KAVIANL2/WMATIC",
+        decimals: 18,
+        logo: ["/kavian-logo.png", "/matic-logo.png"],
+      },
+
+      rewardToken: {
+        symbol: "godKAVIANL2/WMATIC",
+        decimals: 18,
+      },
+
+      pairs: [
+        {
+          address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+          decimals: 18,
+          symbol: "WMATIC",
+        },
+        {
+          address: "0x9a33bac266b02faff8fa566c8cb5da08820e28ba",
+          decimals: 18,
+          symbol: "KAVIANL2",
         },
       ],
     },

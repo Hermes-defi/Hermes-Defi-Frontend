@@ -1,5 +1,5 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
-import { useMasterChef, useUniPair, useVaultContract } from "hooks/contracts";
+import { useCustomMasterChef, useUniPair, useVaultContract } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
 import { useIrisPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
@@ -9,22 +9,19 @@ import BigNumberJS from "bignumber.js";
 import { Vault, vaults } from "config/vaults";
 import { farms } from "config/farms";
 import { BigNumber, utils } from "ethers";
-import { Token } from "quickswap-sdk";
-import { DEFAULT_CHAIN_ID, irisPerBlock, secondsPerBlock, secondsPerWeek } from "config/constants";
-import { fetchPairPrice } from "web3-functions/prices";
+import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
 import { getVaultApy } from "web3-functions/utils";
-import { getApy } from "web3-functions/apy";
 
 function useFetchVaultsRequest() {
-  const irisPrice = useIrisPrice();
-  const masterChef = useMasterChef();
+  const getMasterChef = useCustomMasterChef();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
   const { account, library } = useActiveWeb3React();
 
   return async (vault: Vault) => {
     try {
+      const masterChef = getMasterChef(vault.masterChefAddress);
       const vaultContract = getVaultContract(vault.address);
 
       vault.totalStaked = utils.formatUnits(
@@ -32,38 +29,25 @@ function useFetchVaultsRequest() {
         vault.stakeToken.decimals
       );
 
-      // get price
+      // get prices
       const lpContract = getPairContract(vault.stakeToken.address);
       const totalSupply = utils.formatUnits(
         await lpContract.totalSupply(),
         vault.stakeToken.decimals
       );
 
-      const token0 = new Token(
-        DEFAULT_CHAIN_ID,
-        vault.pairs[0].tokenAddress,
-        vault.pairs[0].tokenDecimals,
-        vault.pairs[0].tokenName
-      );
-
-      const token1 = new Token(
-        DEFAULT_CHAIN_ID,
-        vault.pairs[1].tokenAddress,
-        vault.pairs[1].tokenDecimals,
-        vault.pairs[1].tokenName
-      );
-
       vault.stakeToken.price = await fetchPairPrice(
-        token0,
-        token1,
+        vault.pairs[0],
+        vault.pairs[1],
         totalSupply,
         library,
         vault.amm
       );
 
+      vault.projectToken.price = await fetchPrice(vault.projectToken, library);
+
       // caculate apy
       const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
-      const vaultFarm = farms.find((f) => f.pid === vault.farmPid);
       const farmInfo = await masterChef.poolInfo(vault.farmPid);
 
       const multiplier = farmInfo.allocPoint.toString();
@@ -72,16 +56,18 @@ function useFetchVaultsRequest() {
 
       const totalStakedInFarm = utils.formatUnits(
         await farmLpContract.balanceOf(masterChef.address),
-        vaultFarm.stakeToken.decimals
+        await farmLpContract.decimals()
       );
 
       const apy = await getVaultApy({
         address: farmLpContract.address,
         multiplier,
+        tokenPerBlock: vault.tokenPerBlock,
         totalAllocPoints,
         depositFees,
-        irisTokenPrice: irisPrice.data,
-        stakeTokenPrice: vault.stakeToken.price,
+        performanceFee: vault.performanceFee,
+        rewardToken: vault.projectToken,
+        stakeToken: vault.stakeToken,
         totalStakedInFarm,
       });
 
