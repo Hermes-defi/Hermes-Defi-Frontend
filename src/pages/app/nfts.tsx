@@ -94,7 +94,7 @@ const Page: React.FC = () => {
                 size="lg"
                 colorScheme="primary"
               >
-                Buy a Hermes Hero
+                Buy a Hermes Hero for 150 $IRIS
               </Button>
               <BuyNftModal
                 isOpen={isOpen}
