@@ -13,9 +13,11 @@ import { Token } from "quickswap-sdk";
 import { DEFAULT_CHAIN_ID, irisPerBlock, secondsPerBlock, secondsPerWeek } from "config/constants";
 import { fetchPairPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
-import { getPoolApr } from "web3-functions/utils";
+import { getVaultApy } from "web3-functions/utils";
+import { getApy } from "web3-functions/apy";
 
 function useFetchVaultsRequest() {
+  const irisPrice = useIrisPrice();
   const masterChef = useMasterChef();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
@@ -59,11 +61,8 @@ function useFetchVaultsRequest() {
         vault.amm
       );
 
-      // apr
-      const rewardsPerWeek = irisPerBlock * (secondsPerWeek / secondsPerBlock);
-      const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
-
       // caculate apy
+      const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
       const vaultFarm = farms.find((f) => f.pid === vault.farmPid);
       const farmInfo = await masterChef.poolInfo(vault.farmPid);
 
@@ -76,37 +75,19 @@ function useFetchVaultsRequest() {
         vaultFarm.stakeToken.decimals
       );
 
-      const poolRewardsPerWeek = new BigNumberJS(multiplier)
-        .div(totalAllocPoints)
-        .times(rewardsPerWeek)
-        .times(1 - (depositFees ?? 0))
-        .toNumber();
-
-      const apr = getPoolApr(
-        parseFloat(vault.stakeToken.price),
-        poolRewardsPerWeek,
-        parseFloat(vault.stakeToken.price),
-        parseFloat(totalStakedInFarm)
-      );
-
-      const apy = (() => {
-        const r = apr.yearlyAPR / 100;
-        const n = 4890;
-        const t = 1;
-        const c = 1 - vault.performanceFee;
-
-        const v = new BigNumberJS(r).times(c);
-        const v1 = v.dividedBy(n);
-
-        const pow = new BigNumberJS(n).times(t);
-        const f = v1.plus(1).pow(pow);
-
-        return f.times(100).toString();
-      })();
+      const apy = await getVaultApy({
+        address: farmLpContract.address,
+        multiplier,
+        totalAllocPoints,
+        depositFees,
+        irisTokenPrice: irisPrice.data,
+        stakeTokenPrice: vault.stakeToken.price,
+        totalStakedInFarm,
+      });
 
       vault.apy = {
-        yearly: apy,
-        daily: apr.dailyAPR.toString(),
+        yearly: apy.totalApy * 100,
+        daily: (apy.vaultApr / 365) * 100,
       };
 
       // USER data

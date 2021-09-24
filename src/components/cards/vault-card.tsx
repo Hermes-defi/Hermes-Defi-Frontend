@@ -69,7 +69,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {vault.apy ? `${displayNumber(vault.apy.yearly, true)}%` : "N/A"}
+              {vault.apy ? `${displayNumber(vault.apy.yearly)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -80,7 +80,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {vault.apy ? `${displayNumber(vault.apy.daily, true, 3)}%` : "N/A"}
+              {vault.apy ? `${displayNumber(vault.apy.daily, false, 3)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>

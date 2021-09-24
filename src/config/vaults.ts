@@ -35,8 +35,8 @@ export type Vault = {
   totalStaked?: string;
 
   apy?: {
-    yearly: string;
-    daily: string;
+    yearly: number;
+    daily: number;
   };
 
   hasStaked?: boolean;

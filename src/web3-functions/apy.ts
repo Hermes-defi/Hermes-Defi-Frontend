@@ -1,25 +1,7 @@
 import BigNumberJS from "bignumber.js";
-import { utils } from "ethers";
 import { irisPerBlock, secondsPerBlock, secondsPerYear } from "config/constants";
-
-export function compound(r, n = 365, t = 1, c = 1) {
-  return (1 + (r * c) / n) ** (n * t) - 1;
-}
-
-const getFarmWithTradingFeesApy = ({
-  farmApr,
-  tradingApr,
-  compoundingsPerYear,
-  t,
-  shareAfterBeefyPerformanceFee,
-}) => {
-  const farmApy = farmApr
-    ? compound(farmApr, compoundingsPerYear, t, shareAfterBeefyPerformanceFee)
-    : 0;
-  const tradingApy = tradingApr ? compound(tradingApr, compoundingsPerYear, t, 1) : 0; // no fee on trading
-  const finalAPY = (1 + farmApy) * (1 + tradingApy) - 1;
-  return finalAPY;
-};
+import { utils } from "ethers";
+import { compound } from "./utils";
 
 async function getTradingFeeApr(address: string, lpFee: number) {
   try {
@@ -52,27 +34,22 @@ async function getTradingFeeApr(address: string, lpFee: number) {
   }
 }
 
-export function getPoolApr(
-  rewardTokenPrice: number,
-  poolRewardsPerWeek: number,
-  poolTokenPrice: number,
-  totalStaked: number
-) {
-  const rewardPerWeekInUSD = poolRewardsPerWeek * rewardTokenPrice;
-  console.log(rewardPerWeekInUSD);
-  const totalStakedInUSD = totalStaked * poolTokenPrice;
-  const weeklyAPR = (rewardPerWeekInUSD / totalStakedInUSD) * 100;
-  const dailyAPR = weeklyAPR / 7;
-  const yearlyAPR = weeklyAPR * 52;
+const getFarmWithTradingFeesApy = ({
+  farmApr,
+  tradingApr,
+  compoundingsPerYear,
+  t,
+  shareAfterBeefyPerformanceFee,
+}) => {
+  const farmApy = farmApr
+    ? compound(farmApr, compoundingsPerYear, t, shareAfterBeefyPerformanceFee)
+    : 0;
+  const tradingApy = tradingApr ? compound(tradingApr, compoundingsPerYear, t, 1) : 0; // no fee on trading
+  const finalAPY = (1 + farmApy) * (1 + tradingApy) - 1;
+  return finalAPY;
+};
 
-  return {
-    weeklyAPR,
-    dailyAPR,
-    yearlyAPR,
-  };
-}
-
-export async function getVaultApy({
+export async function getApy({
   address,
   multiplier,
   totalAllocPoints,
