@@ -82,8 +82,6 @@ function useFetchVaultStakingPoolRequest() {
           .times(100)
           .toString();
 
-        console.log(stakePoolInfo.poolShare);
-
         stakePoolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
 
         const allowance: BigNumber = await stakeTokenContract.allowance(

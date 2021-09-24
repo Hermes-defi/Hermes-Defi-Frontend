@@ -57,7 +57,6 @@ export function getPoolApr(
   totalStaked: number
 ) {
   const rewardPerWeekInUSD = poolRewardsPerWeek * rewardTokenPrice;
-  console.log(rewardPerWeekInUSD);
   const totalStakedInUSD = totalStaked * poolTokenPrice;
   const weeklyAPR = (rewardPerWeekInUSD / totalStakedInUSD) * 100;
   const dailyAPR = weeklyAPR / 7;

@@ -64,5 +64,26 @@ export const vaultStakingPools: VaultStakeInfo[] = {
         logo: "/matic-logo.png",
       },
     },
+
+    {
+      address: "0x55C105e676BDe6cfaA95dd4A95760afCeAea44f4",
+      vaultAddress: "0x75fd7fa818f0d970668dca795b7d79508776a5b1",
+      poolSite: "https://kavian.finance",
+      active: true,
+
+      stakeToken: {
+        address: "0x75fd7fa818f0d970668dca795b7d79508776a5b1",
+        symbol: "godKAVIANL2/WMATIC",
+        decimals: 18,
+        logo: "/kavian-logo.png",
+      },
+
+      rewardToken: {
+        address: "0x9a33bac266b02faff8fa566c8cb5da08820e28ba",
+        symbol: "KAVIANL2",
+        decimals: 18,
+        logo: "/kavian-logo.png",
+      },
+    },
   ],
 }[DEFAULT_CHAIN_ID].filter((p: VaultStakeInfo) => !p.isDisabled);
