@@ -14,7 +14,7 @@ export const UnlockButton = (props) => {
         colorScheme="primary"
         {...props}
       >
-        Unlock
+        Unlock Wallet
       </Button>
 
       <WalletModal isOpen={isOpen} onClose={onClose} />

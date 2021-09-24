@@ -7,6 +7,7 @@ import ERC20ABI from "config/abis/ERC20.json";
 import UNIPAIRABI from "config/abis/UNIPAIR.json";
 import StakePoolABI from "config/abis/StakePool.json";
 import VaultABI from "config/abis/Vault.json";
+import HermesNFTABI from "config/abis/HermesNFT.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -34,7 +35,7 @@ export const vault: (address: string) => ContractInfo = (address: string) => ({
   address,
 });
 
-export default {
+const defaultContracts = {
   referral: {
     address: {
       137: "0xDC99FE88118CdE8316df10Eb16c722C3967e73Fd",
@@ -70,4 +71,13 @@ export default {
     }[DEFAULT_CHAIN_ID],
     abi: RedeemABI,
   },
+  hermesNft: {
+    address: {
+      137: "0x6011b77d2dcba999f837d6609124fbcdc4ac3a4e",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: HermesNFTABI,
+  },
 };
+
+export default defaultContracts;

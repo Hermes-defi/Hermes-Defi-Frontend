@@ -98,3 +98,8 @@ export function useVaultContract() {
     return contract(vaultInfo);
   };
 }
+
+export function useHermesNftContract() {
+  const contract = useContract();
+  return contract(defaultContracts.hermesNft);
+}

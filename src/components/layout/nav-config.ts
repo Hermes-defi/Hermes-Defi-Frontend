@@ -42,6 +42,11 @@ export const NAV_ITEMS: Array<NavItem> = [
     ],
   },
   {
+    label: "NFT",
+    href: "/app/nfts",
+    isExternal: true,
+  },
+  {
     label: "Governance",
     href: "https://feedback.hermesdefi.io",
     isExternal: true,
