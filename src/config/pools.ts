@@ -212,6 +212,19 @@ export const pools: Pool[] = {
         logo: "/dfyn-logo.svg",
       },
     },
+    {
+      pid: 22,
+      multiplier: "2",
+      depositFees: 2,
+      isDisabled: true,
+
+      stakeToken: {
+        address: "0x8a953cfe442c5e8855cc6c61b1293fa648bae472",
+        symbol: "PolyDoge",
+        decimals: 18,
+        logo: "/polydoge-logo.png",
+      },
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);
