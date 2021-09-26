@@ -24,6 +24,9 @@ const amms = {
   "0x13748d548D95D78a3c83fe3F32604B4796CFfa23": "coingecko", // koge
   "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97": "dfyn", // dfyn
   "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4": "dfyn", // router
+  "0x255707b70bf90aa112006e1b07b9aea6de021424": "quickswap", // tetu
+  "0x40ed0565ecfb14ebcdfe972624ff2364933a8ce3": "polycat", // GPUL
+  "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f": "polycat", // wise
 };
 
 async function fetchCoinGeckoPrice(address: string) {
@@ -209,32 +212,89 @@ export async function fetchPairPrice(
   library: any,
   amm?: any
 ) {
-  // price of an lp token is [ totalValueOrLP / tokenSupplyOfLPToken ]
   const token0Price = await fetchPrice(token0, library);
   const token1Price = await fetchPrice(token1, library);
 
-  let pair;
-  if (amm === "dfyn") {
-    const t0 = new Dfyn.Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
-    const t1 = new Dfyn.Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
+  const getPrice = {
+    quickswap: async () => {
+      const t0 = new Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
+      const t1 = new Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
 
-    pair = await Dfyn.Fetcher.fetchPairData(t0, t1, library);
-  } else {
-    const t0 = new Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
-    const t1 = new Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
+      const pair = await Fetcher.fetchPairData(t0, t1, library);
 
-    pair = await Fetcher.fetchPairData(t0, t1, library);
-  }
-  const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
-  const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
+      const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
+      const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
 
-  const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
-  const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
+      const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
+      const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
 
-  const tvl = token0Total.plus(token1Total);
-  const price = tvl.dividedBy(new BigNumberJS(totalSupply));
+      const tvl = token0Total.plus(token1Total);
+      const price = tvl.dividedBy(new BigNumberJS(totalSupply));
 
-  return price.toString();
+      return price.toString();
+    },
+
+    dfyn: async () => {
+      const t0 = new Dfyn.Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
+      const t1 = new Dfyn.Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
+
+      const pair = await Dfyn.Fetcher.fetchPairData(t0, t1, library);
+
+      const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
+      const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
+
+      const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
+      const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
+
+      const tvl = token0Total.plus(token1Total);
+      const price = tvl.dividedBy(new BigNumberJS(totalSupply));
+
+      return price.toString();
+    },
+
+    polycat: async () => {
+      try {
+        const resp = await fetch(
+          "https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              query: `{
+                pairs (where: { token0: "${token0.address.toLowerCase()}", token1: "${token1.address.toLowerCase()}"}) {
+                  id
+                  reserve0
+                  reserve1
+                }
+              }`,
+            }),
+          }
+        );
+
+        const { data } = await resp.json();
+
+        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(
+          new BigNumberJS(token0Price)
+        );
+
+        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(
+          new BigNumberJS(token1Price)
+        );
+
+        const tvl = token0Total.plus(token1Total);
+        const price = tvl.dividedBy(new BigNumberJS(totalSupply));
+
+        return price.toString();
+      } catch (err) {
+        console.log(err);
+        return "0";
+      }
+    },
+  }[amm];
+
+  return await getPrice();
 }
 
 export async function fetchBalancerPrice(balancerId: string) {

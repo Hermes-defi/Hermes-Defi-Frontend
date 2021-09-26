@@ -152,6 +152,98 @@ export const vaults: Vault[] = {
         },
       ],
     },
+
+    {
+      address: "0x483a58Fd4B023CAE2789cd1E1e5F6F52f93df2C7",
+      stratAddress: "0x050170ec42eE569512F5077f736c8fd2D41E7983",
+      masterChefAddress: "0xA375495919205251a05f3B259B4D3cc30a4d3ED5",
+      farmPid: 1,
+      tokenPerBlock: "8000000000000000000",
+
+      isActive: true,
+      amm: "polycat",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.0075,
+
+      projectToken: {
+        address: "0x40ed0565ecfb14ebcdfe972624ff2364933a8ce3",
+        symbol: "GPUL",
+        decimals: 18,
+        logo: "/gbnt-logo.png",
+      },
+
+      stakeToken: {
+        address: "0xd883c361d1e8a7e1f77d38e0a6e45d897006b798",
+        symbol: "GBNT/WMATIC",
+        decimals: 18,
+        logo: ["/gbnt-logo.png", "/matic-logo.png"],
+      },
+
+      rewardToken: {
+        symbol: "godGBNT/WMATIC",
+        decimals: 18,
+      },
+
+      pairs: [
+        {
+          address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+          decimals: 18,
+          symbol: "WMATIC",
+        },
+        {
+          address: "0x8c9aaca6e712e2193acccbac1a024e09fb226e51",
+          decimals: 18,
+          symbol: "GBNT",
+        },
+      ],
+    },
+
+    {
+      address: "0xD4d9a3A705ace962F0813ff0E27c965E1b76357D",
+      stratAddress: "0x9291569366739EbA4F9eD8d91794A67EfD26bA65",
+      masterChefAddress: "0x62BA727e2449EE3BE0573b4b102D7090c5977BFB",
+      farmPid: 17,
+      tokenPerBlock: "7000000000000000",
+
+      isActive: true,
+      amm: "polycat",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.0075,
+
+      projectToken: {
+        address: "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f",
+        symbol: "WISE",
+        decimals: 18,
+        logo: "/wise-logo.png",
+      },
+
+      stakeToken: {
+        address: "0xB20E03CC86C0d74bF06CD6f31C57cf7c7ba90bED",
+        symbol: "WISE/USDC",
+        decimals: 18,
+        logo: ["/wise-logo.png", "/usdc-logo.png"],
+      },
+
+      rewardToken: {
+        symbol: "godWISE/USDC",
+        decimals: 18,
+      },
+
+      pairs: [
+        {
+          address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+          decimals: 6,
+          symbol: "USDC",
+        },
+        {
+          address: "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f",
+          decimals: 18,
+          symbol: "WISE",
+        },
+      ],
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((vault: Vault) => !vault.isDisabled);

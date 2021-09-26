@@ -85,5 +85,47 @@ export const vaultStakingPools: VaultStakeInfo[] = {
         logo: "/kavian-logo.png",
       },
     },
+
+    {
+      address: "0xf4DE1F2773B94cd898eE67C193fE65D6Ff11B16A",
+      vaultAddress: "0x483a58Fd4B023CAE2789cd1E1e5F6F52f93df2C7",
+      poolSite: "https://gamma.polypulsar.farm/",
+      active: true,
+
+      stakeToken: {
+        address: "0x483a58Fd4B023CAE2789cd1E1e5F6F52f93df2C7",
+        symbol: "godGBNT/WMATIC",
+        decimals: 18,
+        logo: "/gbnt-logo.png",
+      },
+
+      rewardToken: {
+        address: "0x8c9aaca6e712e2193acccbac1a024e09fb226e51",
+        symbol: "GBNT",
+        decimals: 18,
+        logo: "/gbnt-logo.png",
+      },
+    },
+
+    {
+      address: "0x4C9152B6e5Cb375e9Dc0Dcd4A8b9d2a87382CC8f",
+      vaultAddress: "0xD4d9a3A705ace962F0813ff0E27c965E1b76357D",
+      poolSite: "https://polywise.finance/",
+      active: true,
+
+      stakeToken: {
+        address: "0xD4d9a3A705ace962F0813ff0E27c965E1b76357D",
+        symbol: "godWISE/USDC",
+        decimals: 18,
+        logo: "/wise-logo.png",
+      },
+
+      rewardToken: {
+        address: "0x4c19DdeebAF84cA3A255730295AD9d824D4Ff51f",
+        symbol: "WISE",
+        decimals: 18,
+        logo: "/wise-logo.png",
+      },
+    },
   ],
 }[DEFAULT_CHAIN_ID].filter((p: VaultStakeInfo) => !p.isDisabled);
