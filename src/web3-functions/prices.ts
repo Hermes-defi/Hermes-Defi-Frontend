@@ -27,6 +27,7 @@ const amms = {
   "0x255707b70bf90aa112006e1b07b9aea6de021424": "quickswap", // tetu
   "0x40ed0565ecfb14ebcdfe972624ff2364933a8ce3": "polycat", // GPUL
   "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f": "polycat", // wise
+  "0x8a953cfe442c5e8855cc6c61b1293fa648bae472": "quickswap", // polydoge
 };
 
 async function fetchCoinGeckoPrice(address: string) {
