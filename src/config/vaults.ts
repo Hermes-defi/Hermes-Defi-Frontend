@@ -246,14 +246,13 @@ export const vaults: Vault[] = {
     },
 
     {
-      address: "",
+      address: "0x4806743912E5b4Aeb0426671d1F307FC3372642d",
       stratAddress: "0x72b7Ea43ce4bE6876475F4ef0b29cCC11984e5e8",
       masterChefAddress: "0x62BA727e2449EE3BE0573b4b102D7090c5977BFB",
       farmPid: 2,
       tokenPerBlock: "7000000000000000",
 
       isActive: true,
-      isDisabled: true,
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,

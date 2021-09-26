@@ -130,13 +130,12 @@ export const vaultStakingPools: VaultStakeInfo[] = {
 
     {
       address: "0x5F97b2297220c53B5F96217a87F4e9eCb4e38076",
-      vaultAddress: "",
+      vaultAddress: "0x4806743912E5b4Aeb0426671d1F307FC3372642d",
       poolSite: "https://polywise.finance/",
       active: true,
-      isDisabled: true,
 
       stakeToken: {
-        address: "",
+        address: "0x4806743912E5b4Aeb0426671d1F307FC3372642d",
         symbol: "godWISE/WMATIC",
         decimals: 18,
         logo: "/wise-logo.png",
