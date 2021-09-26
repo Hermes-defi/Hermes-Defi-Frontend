@@ -244,6 +244,53 @@ export const vaults: Vault[] = {
         },
       ],
     },
+
+    {
+      address: "",
+      stratAddress: "0x72b7Ea43ce4bE6876475F4ef0b29cCC11984e5e8",
+      masterChefAddress: "0x62BA727e2449EE3BE0573b4b102D7090c5977BFB",
+      farmPid: 2,
+      tokenPerBlock: "7000000000000000",
+
+      isActive: true,
+      isDisabled: true,
+      amm: "quickswap",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.0075,
+
+      projectToken: {
+        address: "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f",
+        symbol: "WISE",
+        decimals: 18,
+        logo: "/wise-logo.png",
+      },
+
+      stakeToken: {
+        address: "0x89d97d96fA57A83e285a5D1709Fc5345C8e92d94",
+        symbol: "WISE/WMATIC",
+        decimals: 18,
+        logo: ["/wise-logo.png", "/matic-logo.png"],
+      },
+
+      rewardToken: {
+        symbol: "godWISE/WMATIC",
+        decimals: 18,
+      },
+
+      pairs: [
+        {
+          address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+          decimals: 18,
+          symbol: "WMATIC",
+        },
+        {
+          address: "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f",
+          decimals: 18,
+          symbol: "WISE",
+        },
+      ],
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((vault: Vault) => !vault.isDisabled);

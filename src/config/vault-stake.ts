@@ -127,5 +127,27 @@ export const vaultStakingPools: VaultStakeInfo[] = {
         logo: "/wise-logo.png",
       },
     },
+
+    {
+      address: "0x5F97b2297220c53B5F96217a87F4e9eCb4e38076",
+      vaultAddress: "",
+      poolSite: "https://polywise.finance/",
+      active: true,
+      isDisabled: true,
+
+      stakeToken: {
+        address: "",
+        symbol: "godWISE/WMATIC",
+        decimals: 18,
+        logo: "/wise-logo.png",
+      },
+
+      rewardToken: {
+        address: "0x4c19DdeebAF84cA3A255730295AD9d824D4Ff51f",
+        symbol: "WISE",
+        decimals: 18,
+        logo: "/wise-logo.png",
+      },
+    },
   ],
 }[DEFAULT_CHAIN_ID].filter((p: VaultStakeInfo) => !p.isDisabled);
