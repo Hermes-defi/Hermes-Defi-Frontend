@@ -216,7 +216,6 @@ export const pools: Pool[] = {
       pid: 22,
       multiplier: "2",
       depositFees: 2,
-      isDisabled: true,
 
       stakeToken: {
         address: "0x8a953cfe442c5e8855cc6c61b1293fa648bae472",
