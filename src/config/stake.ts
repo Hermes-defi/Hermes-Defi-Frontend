@@ -125,7 +125,7 @@ export const stakingPools: StakeInfo[] = {
     {
       address: "0x768cc7c311Bf62d63FeBEA5bAf798AFEEa4D09AE",
       poolSite: "https://www.centre.io/usdc",
-      active: true,
+      active: false,
       isSpecial: true,
 
       stakeToken: {
@@ -142,28 +142,25 @@ export const stakingPools: StakeInfo[] = {
         logo: "/usdc-logo.png",
       },
     },
-  ],
-}[DEFAULT_CHAIN_ID].filter((p: StakeInfo) => !p.isDisabled);
 
-export const vaultStakingPools: StakeInfo[] = {
-  137: [
     {
-      address: "0x7164F49cfA6152119009c600e0c3DA736F6cdC6f",
-      poolSite: "https://hermesdefi.io/",
+      address: "0xFf11555aedf0cDCA44cA587AeAf7FF4b7F7CD32D",
+      poolSite: "https://www.centre.io/usdc",
       active: true,
+      isSpecial: true,
 
       stakeToken: {
-        address: "0xcbd7b263460ad4807deadad3858de6654f082ca4",
-        symbol: "godIRIS/WMATIC",
+        address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+        symbol: "IRIS",
         decimals: 18,
         logo: "/hermes-logo-1.png",
       },
 
       rewardToken: {
-        address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-        symbol: "WMATIC",
-        decimals: 18,
-        logo: "/matic-logo.png",
+        address: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+        symbol: "USDC",
+        decimals: 6,
+        logo: "/usdc-logo.png",
       },
     },
   ],
