@@ -175,14 +175,14 @@ export const farms: Farm[] = {
 
       pairs: [
         {
-          address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
-          decimals: 18,
-          symbol: "IRIS",
-        },
-        {
           address: "0x255707b70bf90aa112006e1b07b9aea6de021424",
           decimals: 18,
           symbol: "TETU",
+        },
+        {
+          address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+          decimals: 18,
+          symbol: "IRIS",
         },
       ],
     },
