@@ -55,12 +55,14 @@ type IUnstakeProps = {
   primary?: boolean;
 
   id: string | number;
+  hasWithdrawAll?: boolean;
   userTotalStaked: string;
   stakeToken: {
     symbol: string;
   };
 
   withdraw: UseMutationResult;
+  withdrawAll?: UseMutationResult;
 };
 const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
@@ -74,9 +76,11 @@ const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
       <WithdrawModal
         isOpen={isOpen}
         onClose={onClose}
+        hasWithdrawAll={props.hasWithdrawAll}
         token={props.stakeToken.symbol}
         tokenBalance={props.userTotalStaked}
         isLoading={props.withdraw.isLoading}
+        onWithdrawAll={() => props.withdrawAll.mutateAsync({ id: props.id }).then(() => onClose())}
         onWithdraw={(amount: string) =>
           props.withdraw.mutateAsync({ amount, id: props.id }).then(() => onClose())
         }
@@ -89,6 +93,7 @@ type IProps = {
   id: number | string;
   canCompound: boolean;
   disableRewards?: boolean;
+  hasWithdrawAll?: boolean;
 
   rewardToken: {
     symbol: string;
@@ -114,6 +119,7 @@ type IProps = {
   approve: UseMutationResult;
   deposit: UseMutationResult;
   withdraw: UseMutationResult;
+  withdrawAll?: UseMutationResult;
   harvest?: UseMutationResult;
   compound?: UseMutationResult;
 };
@@ -155,9 +161,11 @@ export const UserSection: React.FC<IProps> = (props) => {
                 <>
                   <UnstakeButton
                     id={props.id}
+                    hasWithdrawAll={props.hasWithdrawAll}
                     stakeToken={props.unstakeToken || props.stakeToken}
                     userTotalStaked={props.userAvailableToUnstake || props.userTotalStaked}
                     withdraw={props.withdraw}
+                    withdrawAll={props.withdrawAll}
                   >
                     -
                   </UnstakeButton>

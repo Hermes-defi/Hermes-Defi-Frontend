@@ -2,7 +2,12 @@ import React from "react";
 import BigNumber from "bignumber.js";
 import { Vault } from "config/vaults";
 
-import { useApproveVault, useDepositIntoVault, useWithdrawFromVault } from "state/vaults";
+import {
+  useApproveVault,
+  useDepositIntoVault,
+  useWithdrawAllFromVault,
+  useWithdrawFromVault,
+} from "state/vaults";
 
 import { Box, HStack, Heading, Image, Stack, Text, Link, Badge } from "@chakra-ui/react";
 import { UserSection } from "components/helpers/user-section";
@@ -13,6 +18,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   const approveMutation = useApproveVault();
   const depositMutation = useDepositIntoVault();
   const withdrawMutation = useWithdrawFromVault();
+  const withdrawAllMutation = useWithdrawAllFromVault();
 
   const lpLink = {
     quickswap: `https://quickswap.exchange/#/add/${vault.pairs[0].address}/${vault.pairs[1].address}`,
@@ -117,6 +123,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
         <UserSection
           id={vault.address}
           disableRewards
+          hasWithdrawAll
           canCompound={false}
           stakeToken={vault.stakeToken}
           unstakeToken={{
@@ -130,6 +137,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           approve={approveMutation}
           deposit={depositMutation}
           withdraw={withdrawMutation}
+          withdrawAll={withdrawAllMutation}
         />
       </Stack>
 

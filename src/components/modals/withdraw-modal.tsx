@@ -18,8 +18,10 @@ import { displayTokenCurrency } from "libs/utils";
 type Props = {
   isOpen: boolean;
   isLoading: boolean;
+  hasWithdrawAll?: boolean;
   onClose: () => void;
   onWithdraw: (amount: string) => void;
+  onWithdrawAll?: () => void;
   token: string;
   tokenBalance: string;
 };
@@ -82,20 +84,39 @@ export const WithdrawModal: React.FC<Props> = (props) => {
               </Box>
             </Stack>
 
-            <Button
-              onClick={() => {
-                props.onWithdraw(amount);
-                setAmount("");
-              }}
-              isLoading={props.isLoading}
-              fontSize="md"
-              size="lg"
-              variant="solid"
-              colorScheme="accent"
-              isFullWidth
-            >
-              Unstake
-            </Button>
+            <Stack direction="row" justify="space-between">
+              <Button
+                onClick={() => {
+                  props.onWithdraw(amount);
+                  setAmount("");
+                }}
+                isLoading={props.isLoading}
+                fontSize="md"
+                size="lg"
+                variant="solid"
+                colorScheme="accent"
+                isFullWidth
+              >
+                Unstake
+              </Button>
+
+              {props.hasWithdrawAll && (
+                <Button
+                  onClick={() => {
+                    props.onWithdrawAll();
+                    setAmount("");
+                  }}
+                  isLoading={props.isLoading}
+                  fontSize="md"
+                  size="lg"
+                  variant="solid"
+                  colorScheme="accent"
+                  isFullWidth
+                >
+                  Unstake All
+                </Button>
+              )}
+            </Stack>
           </Stack>
         </ModalBody>
       </ModalContent>

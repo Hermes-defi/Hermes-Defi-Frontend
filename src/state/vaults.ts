@@ -266,3 +266,50 @@ export function useWithdrawFromVault() {
 
   return withdrawMutation;
 }
+
+export function useWithdrawAllFromVault() {
+  const { account } = useActiveWeb3React();
+  const queryClient = useQueryClient();
+  const getVaultContract = useVaultContract();
+  const toast = useToast();
+
+  const withdrawMutation = useMutation(
+    async ({ id }: { id: string }) => {
+      if (!account) throw new Error("No connected account");
+
+      const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+      const vaultContract = getVaultContract(vault.address);
+
+      const tx = await vaultContract.withdrawAll();
+      await tx.wait();
+    },
+    {
+      onSuccess: (_, { id }) => {
+        const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+        queryClient.invalidateQueries(["vault", id, account]);
+
+        ReactGA.event({
+          category: "Withdrawals",
+          action: `Withdrawing ${vault.stakeToken.symbol} from vault`,
+          label: vault.stakeToken.symbol,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[useWithdraw][error] general error`, {
+          data,
+        });
+
+        toast({
+          title: "Error withdrawing token",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return withdrawMutation;
+}
