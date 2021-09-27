@@ -129,7 +129,7 @@ export const vaultStakingPools: VaultStakeInfo[] = {
     },
 
     {
-      address: "0x5F97b2297220c53B5F96217a87F4e9eCb4e38076",
+      address: "0xBD47b8f61120b0A963d6e2cA14589901afFBD912",
       vaultAddress: "0x4806743912E5b4Aeb0426671d1F307FC3372642d",
       poolSite: "https://polywise.finance/",
       active: true,
