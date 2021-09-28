@@ -112,7 +112,7 @@ export const vaults: Vault[] = {
       stratAddress: "0x570d669b8e2751dfe65bbdd4db3b34b53c9c6d6f",
       masterChefAddress: "0xB664c98548CEbf7024F899e32E467dff00311918",
       farmPid: 1,
-      tokenPerBlock: "150000000000000000",
+      tokenPerBlock: "80000000000000000",
 
       isActive: true,
       amm: "quickswap",
