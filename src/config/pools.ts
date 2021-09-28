@@ -224,6 +224,18 @@ export const pools: Pool[] = {
         logo: "/polydoge-logo.png",
       },
     },
+    {
+      pid: 23,
+      multiplier: "1",
+      depositFees: 2,
+
+      stakeToken: {
+        address: "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51",
+        symbol: "GBNT",
+        decimals: 18,
+        logo: "/gbnt-logo.png",
+      },
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);

@@ -139,7 +139,7 @@ export const UserSection: React.FC<IProps> = (props) => {
 
         <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="700" fontSize="2xl">
-            {props.userTotalStaked ? displayTokenCurrency(props.userTotalStaked, "", true) : "N/A"}
+            {props.userTotalStaked ? displayTokenCurrency(props.userTotalStaked, "") : "N/A"}
           </Text>
 
           <Stack direction="row">
