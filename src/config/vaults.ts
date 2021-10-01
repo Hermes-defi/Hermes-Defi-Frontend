@@ -326,13 +326,13 @@ export const vaults: Vault[] = {
 
       stakeToken: {
         address: "0xb0dc320ea9eea823a150763abb4a7ba8286cd08b",
-        symbol: "ROUTER/DFYN",
+        symbol: "ROUTE/DFYN",
         decimals: 18,
         logo: ["/router-logo.png", "/dfyn-logo.svg"],
       },
 
       rewardToken: {
-        symbol: "godROUTER/DFYN",
+        symbol: "godROUTE/DFYN",
         decimals: 18,
       },
 
