@@ -5,9 +5,10 @@ export type Vault = {
   address: string;
   stratAddress: string;
 
-  masterChefAddress: string;
-  farmPid: number;
-  tokenPerBlock: string;
+  masterChefAddress?: string;
+  farmAddress?: string;
+  farmPid?: number;
+  tokenPerBlock?: string;
 
   amm: string;
 
@@ -19,13 +20,20 @@ export type Vault = {
   isActive?: boolean;
   isSpecial?: boolean;
 
-  projectToken: {
+  projectToken?: {
     address: string;
     symbol: string;
     decimals: number;
     logo: string | string[];
     price?: string;
   };
+
+  dfynRewardTokens?: {
+    address: string;
+    symbol: string;
+    decimals: number;
+    price?: string;
+  }[];
 
   stakeToken: {
     address: string;
@@ -287,6 +295,57 @@ export const vaults: Vault[] = {
           address: "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f",
           decimals: 18,
           symbol: "WISE",
+        },
+      ],
+    },
+
+    {
+      address: "0xD55D83f4f3c67E02B6a37E9eAd2396B9a5C9E3F9",
+      stratAddress: "0xA94c29711dE2250c026E7d420124E9fD59155F32",
+
+      farmAddress: "0xe194f2cB4da23B1FB26B41Eb818d25d9FC7367f2",
+
+      isActive: true,
+      amm: "dfyn",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.03,
+
+      dfynRewardTokens: [
+        {
+          address: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
+          decimals: 18,
+          symbol: "ROUTE",
+        },
+        {
+          address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
+          decimals: 18,
+          symbol: "DFYN",
+        },
+      ],
+
+      stakeToken: {
+        address: "0xb0dc320ea9eea823a150763abb4a7ba8286cd08b",
+        symbol: "ROUTER/DFYN",
+        decimals: 18,
+        logo: ["/router-logo.png", "/dfyn-logo.svg"],
+      },
+
+      rewardToken: {
+        symbol: "godROUTER/DFYN",
+        decimals: 18,
+      },
+
+      pairs: [
+        {
+          address: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
+          decimals: 18,
+          symbol: "ROUTE",
+        },
+        {
+          address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
+          decimals: 18,
+          symbol: "DFYN",
         },
       ],
     },

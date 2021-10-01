@@ -1,5 +1,10 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
-import { useCustomMasterChef, useUniPair, useVaultContract } from "hooks/contracts";
+import {
+  useCustomMasterChef,
+  useUniPair,
+  useVaultContract,
+  useDfynFarmContract,
+} from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
 import { useIrisPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
@@ -11,17 +16,17 @@ import { farms } from "config/farms";
 import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
-import { getVaultApy } from "web3-functions/utils";
+import { getVaultApy, getVaultDualApy } from "web3-functions/utils";
 
 function useFetchVaultsRequest() {
   const getMasterChef = useCustomMasterChef();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
+  const getDfynFarmContract = useDfynFarmContract();
   const { account, library } = useActiveWeb3React();
 
   return async (vault: Vault) => {
     try {
-      const masterChef = getMasterChef(vault.masterChefAddress);
       const vaultContract = getVaultContract(vault.address);
 
       vault.totalStaked = utils.formatUnits(
@@ -44,37 +49,76 @@ function useFetchVaultsRequest() {
         vault.amm
       );
 
-      vault.projectToken.price = await fetchPrice(vault.projectToken, library);
+      if (vault.amm === "dfyn") {
+        vault.dfynRewardTokens[0].price = await fetchPrice(vault.dfynRewardTokens[0], library);
+        vault.dfynRewardTokens[1].price = await fetchPrice(vault.dfynRewardTokens[1], library);
 
-      // caculate apy
-      const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
-      const farmInfo = await masterChef.poolInfo(vault.farmPid);
+        const dfynFarm = getDfynFarmContract(vault.farmAddress);
 
-      const multiplier = farmInfo.allocPoint.toString();
-      const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
-      const farmLpContract = getPairContract(farmInfo.lpToken);
+        const token0RewardRate = (
+          await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[0].address)
+        ).toString();
 
-      const totalStakedInFarm = utils.formatUnits(
-        await farmLpContract.balanceOf(masterChef.address),
-        await farmLpContract.decimals()
-      );
+        const token1RewardRate = (
+          await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[1].address)
+        ).toString();
 
-      const apy = await getVaultApy({
-        address: farmLpContract.address,
-        multiplier,
-        tokenPerBlock: vault.tokenPerBlock,
-        totalAllocPoints,
-        depositFees,
-        performanceFee: vault.performanceFee,
-        rewardToken: vault.projectToken,
-        stakeToken: vault.stakeToken,
-        totalStakedInFarm,
-      });
+        const totalStakedInFarm = utils.formatUnits(
+          await lpContract.balanceOf(dfynFarm.address),
+          await lpContract.decimals()
+        );
 
-      vault.apy = {
-        yearly: apy.totalApy * 100,
-        daily: (apy.vaultApr / 365) * 100,
-      };
+        const apy = await getVaultDualApy({
+          address: vault.stakeToken.address,
+          stakePrice: vault.stakeToken.price,
+          totalStakedInFarm,
+          token0RewardRate,
+          token0Price: vault.dfynRewardTokens[0].price,
+          token0Decimals: vault.dfynRewardTokens[0].decimals,
+          token1RewardRate,
+          token1Price: vault.dfynRewardTokens[1].price,
+          token1Decimals: vault.dfynRewardTokens[1].decimals,
+          performanceFee: vault.performanceFee,
+        });
+
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: (apy.vaultApr / 365) * 100,
+        };
+      } else {
+        const masterChef = getMasterChef(vault.masterChefAddress);
+        vault.projectToken.price = await fetchPrice(vault.projectToken, library);
+
+        // caculate apy
+        const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
+        const farmInfo = await masterChef.poolInfo(vault.farmPid);
+
+        const multiplier = farmInfo.allocPoint.toString();
+        const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
+        const farmLpContract = getPairContract(farmInfo.lpToken);
+
+        const totalStakedInFarm = utils.formatUnits(
+          await farmLpContract.balanceOf(masterChef.address),
+          await farmLpContract.decimals()
+        );
+
+        const apy = await getVaultApy({
+          address: farmLpContract.address,
+          multiplier,
+          tokenPerBlock: vault.tokenPerBlock,
+          totalAllocPoints,
+          depositFees,
+          performanceFee: vault.performanceFee,
+          rewardToken: vault.projectToken,
+          stakeToken: vault.stakeToken,
+          totalStakedInFarm,
+        });
+
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: (apy.vaultApr / 365) * 100,
+        };
+      }
 
       // USER data
       if (account) {

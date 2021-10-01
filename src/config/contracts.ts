@@ -7,6 +7,7 @@ import ERC20ABI from "config/abis/ERC20.json";
 import UNIPAIRABI from "config/abis/UNIPAIR.json";
 import StakePoolABI from "config/abis/StakePool.json";
 import VaultABI from "config/abis/Vault.json";
+import DfynFarmABI from "config/abis/DfynFarm.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
@@ -32,6 +33,11 @@ export const stakePool: (address: string) => ContractInfo = (address: string) =>
 
 export const vault: (address: string) => ContractInfo = (address: string) => ({
   abi: VaultABI,
+  address,
+});
+
+export const dfynFarm: (address: string) => ContractInfo = (address: string) => ({
+  abi: DfynFarmABI,
   address,
 });
 
