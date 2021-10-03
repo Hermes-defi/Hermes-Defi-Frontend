@@ -28,7 +28,7 @@ function useFetchBalancersRequest() {
     newBal.multiplier = masterChefInfo.allocPoint.toString();
     newBal.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
 
-    newBal.isActive = masterChefInfo.allocPoint.toString() !== "0";
+    // newBal.isActive = masterChefInfo.allocPoint.toString() !== "0";
 
     // Token data
     newBal.stakeToken.address = masterChefInfo.lpToken;
