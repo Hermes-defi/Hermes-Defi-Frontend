@@ -50,6 +50,7 @@ export const balancers: Balancer[] = {
       multiplier: "15",
       depositFees: 3,
 
+      isActive: false,
       farmDx: "Balancer",
 
       stakeToken: {
@@ -89,6 +90,7 @@ export const balancers: Balancer[] = {
       multiplier: "30",
       depositFees: 2,
 
+      isActive: false,
       farmDx: "Balancer",
 
       stakeToken: {
@@ -128,6 +130,7 @@ export const balancers: Balancer[] = {
       multiplier: "60",
       depositFees: 1,
 
+      isActive: false,
       isSpecial: true,
       farmDx: "Balancer",
 
