@@ -29,7 +29,7 @@ function useFetchFarmRequest() {
     newFarm.multiplier = masterChefInfo.allocPoint.toString();
     newFarm.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
 
-    newFarm.isActive = masterChefInfo.allocPoint.toString() !== "0";
+    // newFarm.isActive = masterChefInfo.allocPoint.toString() !== "0";
 
     // Token data
     newFarm.stakeToken.address = masterChefInfo.lpToken;
@@ -62,12 +62,18 @@ function useFetchFarmRequest() {
       .times(rewardsPerWeek)
       .toNumber();
 
-    newFarm.apr = getPoolApr(
-      parseFloat(irisPrice.data || "0"),
-      poolRewardsPerWeek,
-      parseFloat(newFarm.stakeToken.price || "0"),
-      parseFloat(newFarm.totalStaked || "0")
-    );
+    newFarm.apr = newFarm.isActive
+      ? getPoolApr(
+          parseFloat(irisPrice.data || "0"),
+          poolRewardsPerWeek,
+          parseFloat(newFarm.stakeToken.price || "0"),
+          parseFloat(newFarm.totalStaked || "0")
+        )
+      : {
+          yearlyAPR: 0,
+          dailyAPR: 0,
+          weeklyAPR: 0,
+        };
 
     // USER data
     if (account) {

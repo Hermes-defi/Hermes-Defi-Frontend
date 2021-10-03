@@ -28,7 +28,7 @@ function useFetchPoolsRequest() {
     newPool.multiplier = masterChefInfo.allocPoint.toString();
     newPool.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
 
-    newPool.isActive = masterChefInfo.allocPoint.toString() !== "0";
+    // newPool.isActive = masterChefInfo.allocPoint.toString() !== "0";
 
     // Token data
     newPool.stakeToken.address = masterChefInfo.lpToken;
@@ -50,12 +50,18 @@ function useFetchPoolsRequest() {
       .times(rewardsPerWeek)
       .toNumber();
 
-    newPool.apr = getPoolApr(
-      parseFloat(irisPrice.data || "0"),
-      poolRewardsPerWeek,
-      parseFloat(newPool.stakeToken.price || "0"),
-      parseFloat(newPool.totalStaked || "0")
-    );
+    newPool.apr = newPool.isActive
+      ? getPoolApr(
+          parseFloat(irisPrice.data || "0"),
+          poolRewardsPerWeek,
+          parseFloat(newPool.stakeToken.price || "0"),
+          parseFloat(newPool.totalStaked || "0")
+        )
+      : {
+          yearlyAPR: 0,
+          dailyAPR: 0,
+          weeklyAPR: 0,
+        };
 
     // USER data
     if (account) {

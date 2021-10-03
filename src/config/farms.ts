@@ -49,6 +49,7 @@ export const farms: Farm[] = {
       multiplier: "160",
       depositFees: 0,
 
+      isActive: false,
       isSpecial: true,
       farmDx: "quickswap",
 
@@ -77,6 +78,7 @@ export const farms: Farm[] = {
       multiplier: "60",
       depositFees: 0,
 
+      isActive: false,
       isSpecial: true,
       farmDx: "quickswap",
 
@@ -105,6 +107,7 @@ export const farms: Farm[] = {
       multiplier: "160",
       depositFees: 0,
 
+      isActive: false,
       isSpecial: true,
       farmDx: "dfyn",
 
@@ -134,6 +137,7 @@ export const farms: Farm[] = {
       multiplier: "45",
       depositFees: 2,
 
+      isActive: false,
       isSpecial: false,
       farmDx: "dfyn",
 
@@ -163,6 +167,7 @@ export const farms: Farm[] = {
       multiplier: "20",
       depositFees: 0,
 
+      isActive: false,
       isSpecial: true,
       farmDx: "quickswap",
 
