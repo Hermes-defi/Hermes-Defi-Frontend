@@ -148,5 +148,25 @@ export const vaultStakingPools: VaultStakeInfo[] = {
         logo: "/wise-logo.png",
       },
     },
+    {
+      address: "0xCdb60931E3eE9A08015E153368ba20B28B7FD82A",
+      vaultAddress: "0x4806743912E5b4Aeb0426671d1F307FC3372642d",
+      poolSite: "https://polywise.finance/",
+      active: true,
+
+      stakeToken: {
+        address: "0x4806743912E5b4Aeb0426671d1F307FC3372642d",
+        symbol: "godWISE/WMATIC",
+        decimals: 18,
+        logo: "/wise-logo.png",
+      },
+
+      rewardToken: {
+        address: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+        symbol: "USDC",
+        decimals: 6,
+        logo: "/usdc-logo.png",
+      },
+    },
   ],
 }[DEFAULT_CHAIN_ID].filter((p: VaultStakeInfo) => !p.isDisabled);

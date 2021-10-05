@@ -54,7 +54,7 @@ export const VaultStakePoolCard: React.FC<{ stakePool: VaultStakeInfo }> = ({ st
 
       {/* pool details */}
       <Stack mb={6}>
-        {/* <Stack direction="row" justify="space-between">
+        <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
             APR
           </Text>
@@ -63,7 +63,7 @@ export const VaultStakePoolCard: React.FC<{ stakePool: VaultStakeInfo }> = ({ st
               {stakePool.apr ? `${displayNumber(stakePool.apr.yearlyAPR, false, 6)}%` : "N/A"}
             </Text>
           </Box>
-        </Stack> */}
+        </Stack>
 
         <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">

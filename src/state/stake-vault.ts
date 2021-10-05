@@ -1,19 +1,22 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
-import { useERC20, useStakePoolContract } from "hooks/contracts";
+import { useERC20, useStakePoolContract, useUniPair, useVaultContract } from "hooks/contracts";
 import { useCurrentBlockNumber } from "hooks/wallet";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { VaultStakeInfo, vaultStakingPools } from "config/vault-stake";
+import { vaults } from "config/vaults";
 import { BigNumber, utils } from "ethers";
 import { approveLpContract } from "web3-functions";
-import { fetchPrice } from "web3-functions/prices";
+import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 
 function useFetchVaultStakingPoolRequest() {
   const getLpContract = useERC20();
+  const getVaultContract = useVaultContract();
+  const getPairContract = useUniPair();
   const getStakePoolContract = useStakePoolContract();
   const currentBlock = useCurrentBlockNumber();
   const { account, library } = useActiveWeb3React();
@@ -39,21 +42,45 @@ function useFetchVaultStakingPoolRequest() {
           await poolChef.rewardPerBlock(),
           stakePoolInfo.rewardToken.decimals
         );
-        const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
-        const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(604800 / 2.1).toNumber();
-        const multiplier = 1000; // todo: move to config
+        const rewardYearly = new BigNumberJS(rewardPerBlock).times(3600).times(24).times(365);
+        const rewardYearlyUsd = rewardYearly.times(stakePoolInfo.rewardToken.price);
 
-        const poolRewardsPerWeek = new BigNumberJS(multiplier)
-          .div(totalAllocPoints)
-          .times(rewardsPerWeek)
-          .toNumber();
+        // get vault details
+        const poolVault = vaults.find((v) => v.address === stakePoolInfo.vaultAddress);
+        const poolVaultContract = getVaultContract(poolVault.address);
 
-        stakePoolInfo.apr = getPoolApr(
-          parseFloat(stakePoolInfo.rewardToken.price || "0"),
-          poolRewardsPerWeek,
-          parseFloat(stakePoolInfo.stakeToken.price || "0"),
-          parseFloat(stakePoolInfo.totalStaked || "0")
+        const pricePerShare = utils.formatUnits(await poolVaultContract.getPricePerFullShare(), 18);
+        const lpContract = getPairContract(poolVault.stakeToken.address);
+        const vaultTotalSupply = utils.formatUnits(
+          await lpContract.totalSupply(),
+          poolVault.stakeToken.decimals
         );
+        const depositTokenPrice = await fetchPairPrice(
+          poolVault.pairs[0],
+          poolVault.pairs[1],
+          vaultTotalSupply,
+          library,
+          poolVault.amm
+        );
+
+        const depositTokenStaked = new BigNumberJS(stakePoolInfo.totalStaked);
+        let depositTokenStakedUsd = depositTokenStaked
+          .times(depositTokenPrice)
+          .times(pricePerShare);
+
+        const apr = rewardYearlyUsd.dividedBy(depositTokenStakedUsd).toNumber();
+        stakePoolInfo.apr = {
+          yearlyAPR: apr * 100,
+          weeklyAPR: 0,
+          dailyAPR: 0,
+        };
+        // console.log({
+        //   apr: apr.valueOf(),
+        //   rewardYearlyUsd: rewardYearlyUsd.valueOf(),
+        //   depositTokenStakedUsd: depositTokenStakedUsd.valueOf(),
+        //   depositTokenPrice: depositTokenPrice,
+        //   pricePerShare,
+        // });
       } else {
         stakePoolInfo.apr = {
           yearlyAPR: 0,
