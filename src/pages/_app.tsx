@@ -11,7 +11,6 @@ import { Web3ReactProvider } from "@web3-react/core";
 import { Web3ReactManager } from "components/web3-manager";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import { useSetReferralCookie } from "hooks/referral";
 
 const Web3ReactProviderDefault = dynamic(() => import("components/web3-network"), {
   ssr: false,
@@ -104,9 +103,6 @@ function MetaTags() {
 }
 
 function MyApp({ Component, pageProps }) {
-  // check for referral query and store it in cookie
-  useSetReferralCookie();
-
   const router = useRouter();
   useEffect(() => {
     if (process.env.NODE_ENV === "production") {
