@@ -375,21 +375,21 @@ const Page: React.FC = () => {
             <Heading fontSize="3xl">Hermes Timeline</Heading>
 
             <Stack>
-              <Text fontSize="sm">
-                <del>1. Pre-sale starts at block #17694679</del>
-              </Text>
+              <Text fontSize="sm">1. First round starts at block #</Text>
 
-              <Text fontSize="sm">
-                <del>2. Pre-sale ends at block #17812497</del>
-              </Text>
+              <Text fontSize="sm">2. First round ends at block #</Text>
 
-              <Text fontSize="sm">
-                <del>3. Liquidity added on Quickswap at block #17891042</del>
-              </Text>
+              <Text fontSize="sm">3. Second round starts at block #</Text>
 
-              <Text fontSize="sm">4. Swap opens (swap FENIX to IRIS ) at block #17894314</Text>
+              <Text fontSize="sm">4. Second round ends at block #</Text>
 
-              <Text fontSize="sm">5. Farming starts (Masterchef) at block #17969588</Text>
+              <Text fontSize="sm">5. Waiting room at block #</Text>
+
+              <Text fontSize="sm">6. Liquidity added at block #</Text>
+
+              <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #</Text>
+
+              <Text fontSize="sm">8. Farming starts at block #</Text>
             </Stack>
 
             <Text fontSize="sm">
@@ -397,9 +397,9 @@ const Page: React.FC = () => {
               <Link
                 isExternal
                 color="blue.600"
-                href="https://hermes-defi.gitbook.io/hermes-finance/launch/pre-sale-fenix-2"
+                href="https://hermes-defi.gitbook.io/apollo/launch/time-sequence-and-how-to"
               >
-                https://hermes-defi.gitbook.io/hermes-finance/launch/pre-sale-fenix-2
+                https://hermes-defi.gitbook.io/apollo/launch/time-sequence-and-how-to
               </Link>
             </Text>
 
@@ -412,11 +412,17 @@ const Page: React.FC = () => {
               <Heading fontSize="xl">How To</Heading>
 
               <Text fontSize="sm">
-                1. Purchase FENIX with MATIC using the FENIX token Pre-sale Contract
+                1. Purchase pAPOLLO with USDC + IRIS using the First Round Pre-sale Contract
               </Text>
 
               <Text fontSize="sm">
-                2. Swap FENIX for IRIS using the Reedem Contract (Swap Contract)
+                2. Purchase pAPOLLO with USDC + IRIS using the Second Round Pre-sale Contract
+              </Text>
+
+              <Text fontSize="sm">3. Enjoy the waiting room</Text>
+
+              <Text fontSize="sm">
+                4. Swap pAPOLLO for APOLLO using the Reedem Contract (Swap Contract)
               </Text>
             </Stack>
           </Stack>
