@@ -559,21 +559,21 @@ const Page = () => {
             <Heading fontSize="3xl">Apollo Timeline</Heading>
 
             <Stack>
-              <Text fontSize="sm">1. First round starts at block #</Text>
+              <Text fontSize="sm">1. First round starts at block </Text>
 
-              <Text fontSize="sm">2. First round ends at block #</Text>
+              <Text fontSize="sm">2. First round ends at block </Text>
 
-              <Text fontSize="sm">3. Second round starts at block #</Text>
+              <Text fontSize="sm">3. Second round starts at block </Text>
 
-              <Text fontSize="sm">4. Second round ends at block #</Text>
+              <Text fontSize="sm">4. Second round ends at block </Text>
 
-              <Text fontSize="sm">5. Waiting room at block #</Text>
+              <Text fontSize="sm">5. Waiting room at block </Text>
 
-              <Text fontSize="sm">6. Liquidity added at block #</Text>
+              <Text fontSize="sm">6. Liquidity added at block </Text>
 
-              <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #</Text>
+              <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block </Text>
 
-              <Text fontSize="sm">8. Farming starts at block #</Text>
+              <Text fontSize="sm">8. Farming starts at block</Text>
             </Stack>
 
             <Text fontSize="sm">
