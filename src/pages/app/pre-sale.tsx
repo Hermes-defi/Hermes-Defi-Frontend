@@ -58,7 +58,7 @@ const PresaleCard = () => {
         spacing={6}
         boxShadow="lg"
         rounded="3xl"
-        bg="seconday.400"
+        bg="secondary.400"
         color="white"
       >
         <Box>
