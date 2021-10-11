@@ -9,6 +9,7 @@ import StakePoolABI from "config/abis/StakePool.json";
 import VaultABI from "config/abis/Vault.json";
 import DfynFarmABI from "config/abis/DfynFarm.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
+import pAPOLLO from "config/abis/pApollo.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -83,6 +84,27 @@ const defaultContracts = {
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: HermesNFTABI,
+  },
+  apolloPresaleFirstRound: {
+    address: {
+      137: "0x5161f2e24B9cEB5828e399d560142D1Bd5BeB486",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: pAPOLLO,
+  },
+  apolloPresaleSecondRound: {
+    address: {
+      137: "0xA8074eC902247DC071EFD5681c3b2Eb264075494",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: pAPOLLO,
+  },
+  pApollo: {
+    address: {
+      137: "0xE644Be5D4d5E7f16F0039cD67BCd438D1A62ef13",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: ERC20ABI,
   },
 };
 

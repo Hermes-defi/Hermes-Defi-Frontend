@@ -10,14 +10,16 @@ import {
   swapFenix,
 } from "web3-functions";
 import { useFenix, useRedeem, useIrisToken } from "hooks/contracts";
-import { blockToTimestamp, displayCurrency } from "libs/utils";
+import { blockToTimestamp, displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
 import { useCurrentBlockNumber } from "hooks/wallet";
 import { useActiveWeb3React } from "wallet";
+import { useBuyPApollo, usePresaleApproveToken, usePresaleInfo } from "state/pre-sale";
 
 import { AppLayout } from "components/layout";
 import { BuyMaticModal } from "components/modals/buy-matic-modal";
 import { SwapFenixModal } from "components/modals/swap-fenix-modal";
 import { UnlockButton } from "components/wallet/unlock-wallet";
+import { BuypApolloModal } from "components/modals/buy-pApollo";
 
 import {
   Box,
@@ -26,7 +28,6 @@ import {
   Heading,
   HStack,
   Link,
-  SimpleGrid,
   Skeleton,
   Stack,
   Text,
@@ -36,6 +37,189 @@ import {
 import { useTimer } from "hooks/timer";
 
 const PresaleCard = () => {
+  const { account } = useActiveWeb3React();
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const queryResp = usePresaleInfo("v1");
+  const isLoaded = !!queryResp.data;
+
+  const approveIrisMutation = usePresaleApproveToken("v1");
+  const approveUsdcMutation = usePresaleApproveToken("v1");
+
+  const buyApollo = useBuyPApollo("v1");
+
+  return (
+    <>
+      <Stack
+        h="100%"
+        justify="space-between"
+        px={8}
+        py={8}
+        spacing={6}
+        boxShadow="lg"
+        rounded="3xl"
+        bg="accent.500"
+        color="white"
+      >
+        <Box>
+          <HStack mb={6}>
+            <Text fontWeight="700" fontSize="3xl">
+              pAPOLLO pre-sale #1
+            </Text>
+          </HStack>
+
+          {/* pool details */}
+          <Stack mb={6}>
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                IRIS/USDC Ratio
+              </Text>
+
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  50:50
+                </Text>
+              </Skeleton>
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                Max pAPOLLO available
+              </Text>
+
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {displayCurrency(4000, true)}
+                </Text>
+              </Skeleton>
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                Max pAPOLLO to be purchased (whitelist)
+              </Text>
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {displayCurrency(6000, true)}
+                </Text>
+              </Skeleton>
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                pAPOLLO price
+              </Text>
+
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {displayCurrency(1.2)}
+                </Text>
+              </Skeleton>
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                pAPOLLO remaining
+              </Text>
+
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {displayTokenCurrency(queryResp.data?.pApolloRemaining, "pAPOLLO", true)}
+                </Text>
+              </Skeleton>
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                Presale starts
+              </Text>
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {`Block ${queryResp.data?.startBlock}`}
+                </Text>
+              </Skeleton>
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                Presale ends
+              </Text>
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {`Block ${queryResp.data?.endBlock}`}
+                </Text>
+              </Skeleton>
+            </Stack>
+          </Stack>
+        </Box>
+
+        {/* actions */}
+        <Stack mt="auto" mb={8}>
+          {!account && (
+            <UnlockButton
+              isFullWidth
+              onClick={onOpen}
+              bg="gray.700"
+              size="lg"
+              fontSize="md"
+              _hover={{ bg: "gray.600" }}
+            />
+          )}
+
+          {!queryResp.data?.irisApproved && (
+            <Button
+              isFullWidth
+              onClick={() => approveIrisMutation.mutate("iris")}
+              isLoading={approveIrisMutation.isLoading}
+              bg="gray.700"
+              size="lg"
+              fontSize="md"
+              _hover={{ bg: "gray.600" }}
+            >
+              Approve IRIS
+            </Button>
+          )}
+
+          {!queryResp.data?.usdcApproved && (
+            <Button
+              isFullWidth
+              onClick={() => approveUsdcMutation.mutate("usdc")}
+              isLoading={approveUsdcMutation.isLoading}
+              bg="gray.700"
+              size="lg"
+              fontSize="md"
+              _hover={{ bg: "gray.600" }}
+            >
+              Approve USDC
+            </Button>
+          )}
+
+          {queryResp.data?.irisApproved && queryResp.data?.usdcApproved && (
+            <Button
+              isFullWidth
+              onClick={onOpen}
+              bg="gray.700"
+              size="lg"
+              fontSize="md"
+              _hover={{ bg: "gray.600" }}
+            >
+              Buy pAPOLLO with IRIS/USDC
+            </Button>
+          )}
+        </Stack>
+      </Stack>
+
+      <BuypApolloModal
+        isOpen={isOpen}
+        onClose={onClose}
+        version={"v1"}
+        isLoading={buyApollo.isLoading}
+        onPurchase={buyApollo.mutateAsync}
+      />
+    </>
+  );
+};
+
+const _PresaleCard = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const toast = useToast();
 
@@ -90,9 +274,8 @@ const PresaleCard = () => {
         color="white"
       >
         <Box>
-          {/* pool name */}
           <HStack mb={6}>
-            <Heading>Fenix pre-sale contract</Heading>
+            <Heading>pApollo pre-sale contract</Heading>
           </HStack>
 
           {/* pool details */}
@@ -372,7 +555,7 @@ const Page: React.FC = () => {
       <Stack align="center" spacing={10} py={10}>
         <Container align="center" maxWidth="container.lg">
           <Stack mb={7} spacing={5}>
-            <Heading fontSize="3xl">Hermes Timeline</Heading>
+            <Heading fontSize="3xl">Apollo Timeline</Heading>
 
             <Stack>
               <Text fontSize="sm">1. First round starts at block #</Text>
@@ -428,7 +611,7 @@ const Page: React.FC = () => {
           </Stack>
 
           <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
-            {/* <PresaleCard /> */}
+            <PresaleCard />
             {/* <Box w="md">
               <RedeemCard />
             </Box> */}

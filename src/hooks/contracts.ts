@@ -130,3 +130,17 @@ export function useCustomMasterChef() {
     });
   };
 }
+
+export function usePresaleContract(version: "v1" | "v2") {
+  const contract = useContract();
+  return contract(
+    version === "v1"
+      ? defaultContracts.apolloPresaleFirstRound
+      : defaultContracts.apolloPresaleSecondRound
+  );
+}
+
+export function usePApollo() {
+  const contract = useContract();
+  return contract(defaultContracts.pApollo);
+}
