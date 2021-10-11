@@ -214,7 +214,7 @@ export const vaults: Vault[] = {
       farmPid: 17,
       tokenPerBlock: "7000000000000000",
 
-      isActive: true,
+      isActive: false,
       amm: "polycat",
       depositFees: 0,
       withdrawFees: 0,
@@ -260,7 +260,7 @@ export const vaults: Vault[] = {
       farmPid: 2,
       tokenPerBlock: "7000000000000000",
 
-      isActive: true,
+      isActive: false,
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,
