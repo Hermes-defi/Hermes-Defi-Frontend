@@ -123,7 +123,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={Component.theme || theme}>
       <GlobalHead />
       <MetaTags />
 

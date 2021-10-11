@@ -35,6 +35,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useTimer } from "hooks/timer";
+import { l2Theme } from "theme";
 
 const PresaleCard = () => {
   const { account } = useActiveWeb3React();
@@ -57,7 +58,7 @@ const PresaleCard = () => {
         spacing={6}
         boxShadow="lg"
         rounded="3xl"
-        bg="accent.500"
+        bg="seconday.400"
         color="white"
       >
         <Box>
@@ -184,10 +185,10 @@ const PresaleCard = () => {
               isFullWidth
               onClick={() => approveUsdcMutation.mutate("usdc")}
               isLoading={approveUsdcMutation.isLoading}
-              bg="gray.700"
+              bg="secondary.400"
               size="lg"
               fontSize="md"
-              _hover={{ bg: "gray.600" }}
+              _hover={{ bg: "secondary.400" }}
             >
               Approve USDC
             </Button>
@@ -549,7 +550,7 @@ const RedeemCard = () => {
   );
 };
 
-const Page: React.FC = () => {
+const Page = () => {
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>
@@ -621,5 +622,7 @@ const Page: React.FC = () => {
     </AppLayout>
   );
 };
+
+Page.theme = l2Theme;
 
 export default Page;

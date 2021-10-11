@@ -134,7 +134,7 @@ export const Navigation = () => {
             justify="center"
             direction="row"
           >
-            <Image boxSize="40px" src="/hermes-logo-1.png" alt="Hermes Logo" />
+            <Image boxSize="40px" src="/apollo-logo.png" alt="Hermes Logo" />
             <Heading
               fontSize={{ base: "3xl", md: "4xl" }}
               color={useColorModeValue("gray.800", "white")}
@@ -242,7 +242,7 @@ export const Navigation = () => {
           {/* destop logo */}
           <Stack mx={12} align="center" justify="center" direction="row">
             <Link href="/">
-              <Image boxSize="60px" src="/hermes-logo-1.png" alt="Hermes Logo" />
+              <Image boxSize="60px" src="/apollo-logo.png" alt="Hermes Logo" />
             </Link>
           </Stack>
 
@@ -356,7 +356,7 @@ export const Navigation = () => {
           <Stack align="center" direction="column" spacing={5} pt={14} pb={5}>
             <Stack mx={12} align="center" justify="center" direction="row">
               <Link href="/">
-                <Image boxSize="100px" src="/hermes-logo-1.png" alt="Hermes Logo" />
+                <Image boxSize="100px" src="/apollo-logo.png" alt="Hermes Logo" />
               </Link>
             </Stack>
 
