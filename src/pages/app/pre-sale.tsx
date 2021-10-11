@@ -185,10 +185,10 @@ const PresaleCard = () => {
               isFullWidth
               onClick={() => approveUsdcMutation.mutate("usdc")}
               isLoading={approveUsdcMutation.isLoading}
-              bg="secondary.400"
+              bg="gray.400"
               size="lg"
               fontSize="md"
-              _hover={{ bg: "secondary.400" }}
+              _hover={{ bg: "gray.400" }}
             >
               Approve USDC
             </Button>
