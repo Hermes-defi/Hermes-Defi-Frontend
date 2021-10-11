@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Container, Image, Link, Slide, Stack } from "@chakra-ui/react";
+import { Box, Container, Image, Link, Slide, Stack, Text } from "@chakra-ui/react";
 import { Navigation } from "./navigation";
 
 const Footer = () => {
@@ -9,27 +9,38 @@ const Footer = () => {
         display={["none", "flex"]}
         direction="row"
         align="flex-end"
-        justify="flex-end"
+        justify="space-between"
         py={4}
         px={6}
         bg="transparent"
         shadow="md"
       >
-        <Link href="https://paladinsec.co/projects/hermes-defi/">
-          <Image
-            w={24}
-            src="https://paladinsec.co/pld/assets/audited-by-paladin-standard.svg"
-            alt="Paladin Logo"
-          />
-        </Link>
+        <Stack>
+          <Text lineHeight="1.5">Partnerships:</Text>
 
-        <Stack as={Link} href="https://rugdoc.io/project/hermes-defi/">
-          <Image w={24} src="/rugdoc-kyc.png" alt="Rugdoc Logo" />
-          <Image
-            w={24}
-            src="https://rugdoc.io/assets/2021/05/rugdoc-review-badge-for-light-bg.svg"
-            alt="Rugdoc Logo"
-          />
+          <Stack spacing={5} direction="row">
+            <Image w={20} src="/iron-logo.png" alt="Iron Finance Logo" />
+            <Image w={20} src="/dfyn-logo.svg" alt="Dfyn Logo" />
+          </Stack>
+        </Stack>
+
+        <Stack direction="row" align="flex-end" justify="flex-end">
+          <Link href="https://paladinsec.co/projects/hermes-defi/">
+            <Image
+              w={24}
+              src="https://paladinsec.co/pld/assets/audited-by-paladin-standard.svg"
+              alt="Paladin Logo"
+            />
+          </Link>
+
+          <Stack as={Link} href="https://rugdoc.io/project/hermes-defi/">
+            <Image w={24} src="/rugdoc-kyc.png" alt="Rugdoc Logo" />
+            <Image
+              w={24}
+              src="https://rugdoc.io/assets/2021/05/rugdoc-review-badge-for-light-bg.svg"
+              alt="Rugdoc Logo"
+            />
+          </Stack>
         </Stack>
       </Stack>
     </Slide>
