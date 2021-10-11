@@ -51,6 +51,11 @@ export const NAV_ITEMS: Array<NavItem> = [
     isExternal: true,
   },
   {
+    label: "Presale",
+    href: "/app/pre-sale",
+    decorate: true,
+  },
+  {
     label: "Trade",
     children: [
       {
