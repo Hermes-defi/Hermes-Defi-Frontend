@@ -41,7 +41,6 @@ export const apolloStakingPools: ApolloStakeInfo[] = {
       address: "0x948bc903a311D42a003FC9b39F90cF27aCcEbD4A",
       poolSite: "https://dfyn.network/",
       active: true,
-      isDisabled: true,
 
       stakeToken: {
         address: "0xe644be5d4d5e7f16f0039cd67bcd438d1a62ef13",
@@ -61,7 +60,6 @@ export const apolloStakingPools: ApolloStakeInfo[] = {
       address: "0x077E13f5e25E94bc1429AC24200F8a0a21AD390A",
       poolSite: "https://www.xdollar.fi/",
       active: true,
-      isDisabled: true,
 
       stakeToken: {
         address: "0xe644be5d4d5e7f16f0039cd67bcd438d1a62ef13",
