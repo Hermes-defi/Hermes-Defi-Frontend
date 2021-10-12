@@ -20,7 +20,7 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { ApoolStakePoolCard } from "components/cards/stake-apollo";
-import { AppLayout } from "components/layout";
+import { ApolloAppLayout } from "components/layout";
 import { l2Theme } from "theme";
 
 const Page = () => {
@@ -35,7 +35,7 @@ const Page = () => {
     .filter((pool: any) => (stakedOnly ? pool.data?.hasStaked === stakedOnly : true));
 
   return (
-    <AppLayout>
+    <ApolloAppLayout>
       <Stack align="center" spacing={10} py={10}>
         <HStack spacing={14} align="center" justify="center">
           <FormControl w="auto" display="flex" alignItems="center">
@@ -95,7 +95,7 @@ const Page = () => {
           )}
         </Container>
       </Stack>
-    </AppLayout>
+    </ApolloAppLayout>
   );
 };
 
