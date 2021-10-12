@@ -15,7 +15,7 @@ import { useCurrentBlockNumber } from "hooks/wallet";
 import { useActiveWeb3React } from "wallet";
 import { useBuyPApollo, usePresaleApproveToken, usePresaleInfo } from "state/pre-sale";
 
-import { AppLayout } from "components/layout";
+import { ApolloAppLayout } from "components/layout";
 import { BuyMaticModal } from "components/modals/buy-matic-modal";
 import { SwapFenixModal } from "components/modals/swap-fenix-modal";
 import { UnlockButton } from "components/wallet/unlock-wallet";
@@ -64,7 +64,7 @@ const PresaleCard = () => {
         <Box>
           <HStack mb={6}>
             <Text fontWeight="700" fontSize="3xl">
-              pAPOLLO pre-sale #1
+              pAPOLLO pre-sale #2
             </Text>
           </HStack>
 
@@ -77,7 +77,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  50:50
+                  80:20
                 </Text>
               </Skeleton>
             </Stack>
@@ -89,18 +89,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(4000, true)}
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                Max pAPOLLO to be purchased (whitelist)
-              </Text>
-              <Skeleton isLoaded={isLoaded}>
-                <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(6000, true)}
+                  {displayCurrency(8000, true)}
                 </Text>
               </Skeleton>
             </Stack>
@@ -112,7 +101,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(1.2)}
+                  {displayCurrency(2.2)}
                 </Text>
               </Skeleton>
             </Stack>
@@ -552,7 +541,7 @@ const RedeemCard = () => {
 
 const Page = () => {
   return (
-    <AppLayout>
+    <ApolloAppLayout>
       <Stack align="center" spacing={10} py={10}>
         <Container align="center" maxWidth="container.lg">
           <Stack mb={7} spacing={5}>
@@ -619,7 +608,7 @@ const Page = () => {
           </Stack>
         </Container>
       </Stack>
-    </AppLayout>
+    </ApolloAppLayout>
   );
 };
 

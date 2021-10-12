@@ -72,7 +72,7 @@ export const apolloStakingPools: ApolloStakeInfo[] = {
         address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
         symbol: "XUSD",
         decimals: 18,
-        logo: "/xusd-logo.svg",
+        logo: "/xusd-logo.png",
       },
     },
   ],
