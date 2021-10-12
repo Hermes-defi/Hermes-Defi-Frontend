@@ -40,13 +40,13 @@ import { l2Theme } from "theme";
 const PresaleCard = () => {
   const { account } = useActiveWeb3React();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const queryResp = usePresaleInfo("v1");
+  const queryResp = usePresaleInfo("v2");
   const isLoaded = !!queryResp.data;
 
-  const approveIrisMutation = usePresaleApproveToken("v1");
-  const approveUsdcMutation = usePresaleApproveToken("v1");
+  const approveIrisMutation = usePresaleApproveToken("v2");
+  const approveUsdcMutation = usePresaleApproveToken("v2");
 
-  const buyApollo = useBuyPApollo("v1");
+  const buyApollo = useBuyPApollo("v2");
 
   return (
     <>
@@ -58,7 +58,7 @@ const PresaleCard = () => {
         spacing={6}
         boxShadow="lg"
         rounded="3xl"
-        bg="secondary.400"
+        bg="secondary.300"
         color="white"
       >
         <Box>
@@ -185,7 +185,7 @@ const PresaleCard = () => {
               isFullWidth
               onClick={() => approveUsdcMutation.mutate("usdc")}
               isLoading={approveUsdcMutation.isLoading}
-              bg="gray.400"
+              bg="gray.700"
               size="lg"
               fontSize="md"
               _hover={{ bg: "gray.400" }}
@@ -559,21 +559,21 @@ const Page = () => {
             <Heading fontSize="3xl">Apollo Timeline</Heading>
 
             <Stack>
-              <Text fontSize="sm">1. First round starts at block </Text>
+              <Text fontSize="sm">1. Presale First round starts</Text>
 
-              <Text fontSize="sm">2. First round ends at block </Text>
+              <Text fontSize="sm">2. Presale First round ends</Text>
 
-              <Text fontSize="sm">3. Second round starts at block </Text>
+              <Text fontSize="sm">3. Presale Second round starts</Text>
 
-              <Text fontSize="sm">4. Second round ends at block </Text>
+              <Text fontSize="sm">4. Presale Second round ends</Text>
 
-              <Text fontSize="sm">5. Waiting room at block </Text>
+              <Text fontSize="sm">5. Waiting room</Text>
 
-              <Text fontSize="sm">6. Liquidity added at block </Text>
+              <Text fontSize="sm">6. Liquidity added</Text>
 
-              <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block </Text>
+              <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) </Text>
 
-              <Text fontSize="sm">8. Farming starts at block</Text>
+              <Text fontSize="sm">8. Farming starts</Text>
             </Stack>
 
             <Text fontSize="sm">

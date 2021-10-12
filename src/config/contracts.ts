@@ -94,7 +94,7 @@ const defaultContracts = {
   },
   apolloPresaleSecondRound: {
     address: {
-      137: "0x7d0Ce4987FbE54f2233738E954E05C18704C3f6D",
+      137: "0xe08fA8F2b3531e82a6Bef397C5FA64c5d9d7B889",
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: pAPOLLO,
