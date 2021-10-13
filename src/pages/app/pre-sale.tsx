@@ -384,7 +384,12 @@ const Page = () => {
     <ApolloAppLayout>
       <Stack align="center" spacing={10} py={5}>
         <Container maxWidth="container.lg">
-          <Stack spacing={10} direction="row" align="flex-start" justify="space-between">
+          <Stack
+            spacing={10}
+            direction={["column-reverse", "row"]}
+            align="flex-start"
+            justify="space-between"
+          >
             <Stack flex={1}>
               <PresaleCard />
             </Stack>
