@@ -406,15 +406,17 @@ const Page = () => {
                   <del>2. Presale First round ends</del>
                 </Text>
 
-                <Text fontSize="sm">3. Waiting room. Ongoing</Text>
+                <Text fontSize="sm">
+                  3. Waiting room. Ongoing (<Link href="/apollo/app/waiting-room">here</Link>)
+                </Text>
 
                 <Text fontSize="sm">4. Presale Second round starts at block #20151640</Text>
 
                 <Text fontSize="sm">5. Presale Second round ends at block #20223640</Text>
 
-                <Text fontSize="sm">6. Liquidity added at block #tbd</Text>
+                <Text fontSize="sm">6. Liquidity added at block #20220426</Text>
 
-                <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #tbd</Text>
+                <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #20223426</Text>
 
                 <Text fontSize="sm">8. Farming starts at block #20259426</Text>
               </Stack>
