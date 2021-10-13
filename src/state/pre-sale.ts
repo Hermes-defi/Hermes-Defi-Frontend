@@ -55,16 +55,18 @@ export function usePresaleQuote(version: "v1" | "v2", amount) {
   return useQuery({
     queryKey: ["apollo-presale-quote", account, amount],
     queryFn: async () => {
-      const data: any = {};
+      const resp = await presaleContract.quoteAmounts(utils.parseEther(amount), account);
 
-      const resp = await presaleContract.quoteAmounts(amount, account);
+      console.log(resp);
+      const amountInIRIS = utils.formatEther(resp.amountIRIS.toString());
+      const amountInUSDC = utils.formatUnits(resp.inUsdc.toString(), 6);
 
-      const amountInIRIS = resp.amountIRIS.toString();
-      const amountInUSDC = resp.inUsdc.toString();
-
-      return data;
+      return {
+        amountInIRIS,
+        amountInUSDC,
+      };
     },
-    enabled: !!account,
+    enabled: !!account && !!amount.length,
     refetchInterval: 0.5 * 60 * 1000,
   });
 }

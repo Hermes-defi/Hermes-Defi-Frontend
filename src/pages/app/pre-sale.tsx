@@ -201,7 +201,7 @@ const PresaleCard = () => {
       <BuypApolloModal
         isOpen={isOpen}
         onClose={onClose}
-        version={"v1"}
+        version={"v2"}
         isLoading={buyApollo.isLoading}
         onPurchase={buyApollo.mutateAsync}
       />
@@ -416,7 +416,7 @@ const Page = () => {
 
                 <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #tbd</Text>
 
-                <Text fontSize="sm">8. Farming starts at block #tbd</Text>
+                <Text fontSize="sm">8. Farming starts at block #20259426</Text>
               </Stack>
 
               <Text fontSize="sm">

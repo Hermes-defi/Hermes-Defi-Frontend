@@ -12,6 +12,7 @@ import {
   Box,
   Input,
   useColorModeValue,
+  Skeleton,
 } from "@chakra-ui/react";
 import { useBalance, useTokenBalance } from "hooks/wallet";
 import { displayTokenCurrency } from "libs/utils";
@@ -28,7 +29,7 @@ type Props = {
 };
 export const BuypApolloModal: React.FC<Props> = (props) => {
   const [amount, setAmount] = useState("");
-  // const quotes = usePresaleQuote(props.version, "50");
+  const quotes = usePresaleQuote(props.version, amount);
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -73,13 +74,35 @@ export const BuypApolloModal: React.FC<Props> = (props) => {
               </Box>
             </Stack>
 
+            <Stack>
+              <div>
+                <Text fontSize="xs">IRIS amount:</Text>
+
+                <Skeleton isLoaded={!!quotes.data}>
+                  <Text fontSize="sm" fontWeight="bold" as="span">
+                    {displayTokenCurrency(quotes.data?.amountInIRIS, "IRIS")}
+                  </Text>
+                </Skeleton>
+              </div>
+
+              <div>
+                <Text fontSize="xs">USDC amount:</Text>
+                <Skeleton isLoaded={!!quotes.data}>
+                  <Text fontSize="sm" fontWeight="bold" as="span">
+                    {displayTokenCurrency(quotes.data?.amountInUSDC, "USDC")}
+                  </Text>
+                </Skeleton>
+              </div>
+            </Stack>
+
             <Button
               onClick={() => props.onPurchase(amount).then(() => setAmount(""))}
+              disabled={!quotes.data}
               isLoading={props.isLoading}
               fontSize="md"
               size="lg"
               variant="solid"
-              colorScheme="accent"
+              colorScheme="secondary"
               isFullWidth
             >
               Purchase
