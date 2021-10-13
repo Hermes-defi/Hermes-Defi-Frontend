@@ -51,7 +51,6 @@ const PresaleCard = () => {
   return (
     <>
       <Stack
-        h="100%"
         justify="space-between"
         px={8}
         py={8}
@@ -59,6 +58,7 @@ const PresaleCard = () => {
         boxShadow="lg"
         rounded="3xl"
         bg="secondary.300"
+        bgGradient="linear(to-b, secondary.300, secondary.200)"
         color="white"
       >
         <Box>
@@ -101,7 +101,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(2.2)}
+                  {displayCurrency(1.4)}
                 </Text>
               </Skeleton>
             </Stack>
@@ -204,166 +204,6 @@ const PresaleCard = () => {
         version={"v1"}
         isLoading={buyApollo.isLoading}
         onPurchase={buyApollo.mutateAsync}
-      />
-    </>
-  );
-};
-
-const _PresaleCard = () => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const toast = useToast();
-
-  const queryClient = useQueryClient();
-  const fenixContract = useFenix();
-  const currentBlock = useCurrentBlockNumber();
-  const { account } = useActiveWeb3React();
-
-  const presaleInfo = useQuery(["presale-info", currentBlock], async () => {
-    return getPresaleInfo(fenixContract, currentBlock);
-  });
-
-  const purchaseFenixMutation = useMutation(
-    (amount: string) => purchaseFenix(fenixContract, amount),
-    {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries("presale-info");
-        await queryClient.invalidateQueries(["tokenBalance", account, fenixContract.address]);
-        onClose();
-      },
-
-      onError: ({ data, message }) => {
-        toast({
-          status: "error",
-          position: "top-right",
-          title: "Error purchasing FENIX",
-          description: data?.message || message,
-          isClosable: true,
-        });
-        onClose();
-      },
-    }
-  );
-
-  const timeToStartPresale = presaleInfo.data?.presaleStartBlock.sub(currentBlock || 0).toNumber();
-  const timeToEndPresale = presaleInfo.data?.presaleEndBlock.sub(currentBlock || 0).toNumber();
-
-  const presaleStartTimer = useTimer(blockToTimestamp(timeToStartPresale || 0));
-  const presaleEndsTimer = useTimer(blockToTimestamp(timeToEndPresale || 0));
-
-  return (
-    <>
-      <Stack
-        h="100%"
-        justify="space-between"
-        px={8}
-        py={8}
-        spacing={6}
-        boxShadow="lg"
-        rounded="3xl"
-        bg="accent.500"
-        color="white"
-      >
-        <Box>
-          <HStack mb={6}>
-            <Heading>pApollo pre-sale contract</Heading>
-          </HStack>
-
-          {/* pool details */}
-          <Stack mb={6}>
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                Fenix remaining
-              </Text>
-
-              <Skeleton isLoaded={!!presaleInfo.data?.fenixRemaining}>
-                <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(presaleInfo.data?.fenixRemaining, true)}
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                FENIX/MATIC Ratio
-              </Text>
-
-              <Skeleton isLoaded={!!presaleInfo.data?.fenixPrice}>
-                <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(presaleInfo.data?.fenixPrice, true)} : 1
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                Max Fenix available
-              </Text>
-
-              <Skeleton isLoaded={!!presaleInfo.data?.maxFenix}>
-                <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(presaleInfo.data?.maxFenix, true)}
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                Max Fenix to be purchased
-              </Text>
-              <Skeleton isLoaded={!!presaleInfo.data?.maxFenixToPurchase}>
-                <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(presaleInfo.data?.maxFenixToPurchase, true)}
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                Presale starts
-              </Text>
-              <Skeleton isLoaded={!!presaleInfo.data}>
-                <Text fontWeight="700" fontSize="sm">
-                  {presaleStartTimer || `Block ${presaleInfo.data?.presaleStartBlock.toNumber()}`}
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                Presale ends
-              </Text>
-              <Skeleton isLoaded={!!presaleInfo.data}>
-                <Text fontWeight="700" fontSize="sm">
-                  {presaleEndsTimer || `Block ${presaleInfo.data?.presaleEndBlock.toNumber()}`}
-                </Text>
-              </Skeleton>
-            </Stack>
-          </Stack>
-        </Box>
-
-        {/* actions */}
-        <Stack mt="auto" mb={8}>
-          <Button
-            isFullWidth
-            onClick={onOpen}
-            isDisabled={
-              presaleInfo.data?.presaleStartBlock > 0 || presaleInfo.data?.presaleEndBlock < 0
-            }
-            bg="gray.700"
-            size="lg"
-            fontSize="md"
-            _hover={{ bg: "gray.600" }}
-          >
-            Buy FENIX with MATIC
-          </Button>
-        </Stack>
-      </Stack>
-
-      <BuyMaticModal
-        isOpen={isOpen}
-        onClose={onClose}
-        isLoading={purchaseFenixMutation.isLoading}
-        onPurchase={purchaseFenixMutation.mutateAsync}
       />
     </>
   );
@@ -542,69 +382,72 @@ const RedeemCard = () => {
 const Page = () => {
   return (
     <ApolloAppLayout>
-      <Stack align="center" spacing={10} py={10}>
-        <Container align="center" maxWidth="container.lg">
-          <Stack mb={7} spacing={5}>
-            <Heading fontSize="3xl">Apollo Timeline</Heading>
-
-            <Stack>
-              <Text fontSize="sm">1. Presale First round starts</Text>
-
-              <Text fontSize="sm">2. Presale First round ends</Text>
-
-              <Text fontSize="sm">3. Presale Second round starts</Text>
-
-              <Text fontSize="sm">4. Presale Second round ends</Text>
-
-              <Text fontSize="sm">5. Waiting room</Text>
-
-              <Text fontSize="sm">6. Liquidity added</Text>
-
-              <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) </Text>
-
-              <Text fontSize="sm">8. Farming starts</Text>
+      <Stack align="center" spacing={10} py={5}>
+        <Container maxWidth="container.lg">
+          <Stack spacing={10} direction="row" align="flex-start" justify="space-between">
+            <Stack flex={1}>
+              <PresaleCard />
             </Stack>
 
-            <Text fontSize="sm">
-              For more details visit:{" "}
-              <Link
-                isExternal
-                color="blue.600"
-                href="https://hermes-defi.gitbook.io/apollo/launch/time-sequence-and-how-to"
-              >
-                https://hermes-defi.gitbook.io/apollo/launch/time-sequence-and-how-to
-              </Link>
-            </Text>
+            <Stack flex={1} mb={7} spacing={4}>
+              <Heading fontSize="3xl">Apollo Timeline</Heading>
 
-            <Text fontSize="sm">
-              The volatility of the blocks in Polygon is very high. We recommend reviewing them to
-              check the times.
-            </Text>
+              <Stack>
+                <Text fontSize="sm">
+                  <del>1. Presale First round. Done</del>
+                </Text>
 
-            <Stack>
-              <Heading fontSize="xl">How To</Heading>
+                <Text fontSize="sm">
+                  <del>2. Presale First round ends</del>
+                </Text>
+
+                <Text fontSize="sm">3. Waiting room. Ongoing</Text>
+
+                <Text fontSize="sm">4. Presale Second round starts at block #20151640</Text>
+
+                <Text fontSize="sm">5. Presale Second round ends at block #20223640</Text>
+
+                <Text fontSize="sm">6. Liquidity added at block #tbd</Text>
+
+                <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #tbd</Text>
+
+                <Text fontSize="sm">8. Farming starts at block #tbd</Text>
+              </Stack>
 
               <Text fontSize="sm">
-                1. Purchase pAPOLLO with USDC + IRIS using the First Round Pre-sale Contract
+                For more details visit:{" "}
+                <Link
+                  isExternal
+                  color="blue.600"
+                  href="https://hermes-defi.gitbook.io/apollo/launch/time-sequence-and-how-to"
+                >
+                  https://hermes-defi.gitbook.io/apollo/launch/time-sequence-and-how-to
+                </Link>
               </Text>
 
               <Text fontSize="sm">
-                2. Purchase pAPOLLO with USDC + IRIS using the Second Round Pre-sale Contract
+                The volatility of the blocks in Polygon is very high. We recommend reviewing them to
+                check the times.
               </Text>
 
-              <Text fontSize="sm">3. Enjoy the waiting room</Text>
+              <Stack>
+                <Heading fontSize="xl">How To</Heading>
 
-              <Text fontSize="sm">
-                4. Swap pAPOLLO for APOLLO using the Reedem Contract (Swap Contract)
-              </Text>
+                <Text fontSize="sm">
+                  1. Purchase pAPOLLO with USDC + IRIS using the First Round Pre-sale Contract
+                </Text>
+
+                <Text fontSize="sm">
+                  2. Purchase pAPOLLO with USDC + IRIS using the Second Round Pre-sale Contract
+                </Text>
+
+                <Text fontSize="sm">3. Enjoy the waiting room</Text>
+
+                <Text fontSize="sm">
+                  4. Swap pAPOLLO for APOLLO using the Reedem Contract (Swap Contract)
+                </Text>
+              </Stack>
             </Stack>
-          </Stack>
-
-          <Stack wrap="wrap" spacing="40px" direction="row" justify="center" alignItems="center">
-            <PresaleCard />
-            {/* <Box w="md">
-              <RedeemCard />
-            </Box> */}
           </Stack>
         </Container>
       </Stack>
