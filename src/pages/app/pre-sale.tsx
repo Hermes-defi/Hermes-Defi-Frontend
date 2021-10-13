@@ -84,18 +84,6 @@ const PresaleCard = () => {
 
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                Max pAPOLLO available
-              </Text>
-
-              <Skeleton isLoaded={isLoaded}>
-                <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(80000, true)}
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
                 pAPOLLO price
               </Text>
 
