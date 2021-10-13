@@ -72,7 +72,7 @@ const PresaleCard = () => {
           <Stack mb={6}>
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                IRIS/USDC Ratio
+                USDC/IRIS Ratio
               </Text>
 
               <Skeleton isLoaded={isLoaded}>

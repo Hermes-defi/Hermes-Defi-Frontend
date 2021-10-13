@@ -76,7 +76,7 @@ export const BuypApolloModal: React.FC<Props> = (props) => {
 
             <Stack>
               <div>
-                <Text fontSize="xs">IRIS amount:</Text>
+                <Text fontSize="xs">IRIS amount (20%):</Text>
 
                 <Skeleton isLoaded={!!quotes.data}>
                   <Text fontSize="sm" fontWeight="bold" as="span">
@@ -86,7 +86,7 @@ export const BuypApolloModal: React.FC<Props> = (props) => {
               </div>
 
               <div>
-                <Text fontSize="xs">USDC amount:</Text>
+                <Text fontSize="xs">USDC amount (80%):</Text>
                 <Skeleton isLoaded={!!quotes.data}>
                   <Text fontSize="sm" fontWeight="bold" as="span">
                     {displayTokenCurrency(quotes.data?.amountInUSDC, "USDC")}
