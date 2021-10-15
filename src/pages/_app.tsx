@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import theme from "theme";
 import Head from "next/head";
@@ -104,12 +104,15 @@ function MetaTags() {
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
+  const [layer, setLayer] = React.useState(Component.layer);
+
   useEffect(() => {
     if (process.env.NODE_ENV === "production") {
       ReactGA.initialize("UA-200856510-2");
     }
 
     const handleRouteChange = (url: string) => {
+      setLayer(Component.layer);
       ReactGA.pageview(url);
     };
 
@@ -123,7 +126,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <LayerProvider defaultValue={Component.layer || "l1"}>
+    <LayerProvider value={{ layer, setLayer: (v: string) => setLayer(v) }}>
       <GlobalHead />
       <MetaTags />
 

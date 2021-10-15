@@ -32,11 +32,9 @@ export const LayerManager = ({ children }) => {
   return <ChakraProvider theme={layer === "l2" ? l2Theme : theme}>{children}</ChakraProvider>;
 };
 
-export const LayerProvider = ({ children, defaultValue }) => {
-  const [layer, setLayer] = React.useState(defaultValue);
-
+export const LayerProvider = ({ children, value }) => {
   return (
-    <LayerToogleContext.Provider value={{ layer, setLayer: (v) => setLayer(v) }}>
+    <LayerToogleContext.Provider value={value}>
       <LayerManager>{children}</LayerManager>
     </LayerToogleContext.Provider>
   );
