@@ -1,23 +1,13 @@
 import React from "react";
 
-import defaultContracts from "config/contracts";
+import { apolloContracts } from "config/contracts";
 
 import { addTokenToWallet } from "wallet/utils";
 import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
-import {
-  useFarmAPRStats,
-  usePoolsAPRStats,
-  useTotalInBalancers,
-  useTotalInFarms,
-  useTotalInPools,
-  useHarvestAll,
-  useIrisData,
-  useIrisStats,
-  useTvlChart,
-  useTotalInVaults,
-} from "hooks/home-page";
+import { useTotalInBalancers, useTotalInFarms, useTotalInPools, useTvlChart, useTotalInVaults } from "hooks/home-page";
+import { useAccountApolloData, useApolloStats, useFarmAPRStats, usePoolsAPRStats, useHarvestAll } from "state/home";
 
-import { ApolloAppLayout } from "components/layout";
+import { AppLayout } from "components/layout";
 import {
   Box,
   Button,
@@ -35,19 +25,15 @@ import {
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
-import {
-  ResponsiveContainer,
-  CartesianGrid,
-  Line,
-  LineChart,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
-import { l2Theme } from "theme";
+import { ResponsiveContainer, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
+import { apolloPerBlock } from "config/constants";
 
 const Page = () => {
-  const irisStats = useIrisStats();
+  const { apolloInWallet, apolloToHarvest } = useAccountApolloData();
+  const harvestAll = useHarvestAll(apolloToHarvest.data);
+
+  const apolloStats = useApolloStats();
+
   const farmStats = useTotalInFarms();
   const balStats = useTotalInBalancers();
   const poolStats = useTotalInPools();
@@ -56,31 +42,22 @@ const Page = () => {
   const [isFarmAprLoading, farmApr] = useFarmAPRStats();
   const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
 
-  const { irisInWallet, irisToHarvest } = useIrisData();
   const chartData = useTvlChart();
 
-  const harvestAll = useHarvestAll(irisToHarvest.data);
-
   return (
-    <ApolloAppLayout>
+    <AppLayout>
       <Stack spacing={10} py={10}>
-        <Box
-          bg={useColorModeValue("white", "gray.700")}
-          rounded="2xl"
-          boxShadow="base"
-          px={[5, 10]}
-          py={6}
-        >
+        <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
             Farms and Pools
           </Heading>
 
-          <SimpleGrid templateColumns={{ base: "1fr", md: "1.2fr 1fr 2fr" }} spacing={[5, 10]}>
+          <Stack direction={["column", "row"]} justify="space-between" spacing={[5, 10]}>
             <Stack mt={10} align="stretch" spacing={10}>
               <Stack spacing={4} justify={["center", ""]} align="center" direction="row">
                 <Image src="/apollo-logo.png" boxSize={12} />
                 <Button
-                  onClick={() => addTokenToWallet(defaultContracts.irisToken.address, "IRIS")}
+                  onClick={() => addTokenToWallet(apolloContracts.apolloToken.address, "APOLLO")}
                   colorScheme="secondary"
                   size="sm"
                 >
@@ -90,9 +67,9 @@ const Page = () => {
 
               <Stack justify={["center", ""]} direction="row" spacing={10}>
                 <Box align="center">
-                  <Skeleton isLoaded={!!irisToHarvest.data}>
+                  <Skeleton isLoaded={!!apolloToHarvest.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">
-                      {displayTokenCurrency(irisToHarvest.data, "", true)}
+                      {displayTokenCurrency(apolloToHarvest.data, "", true)}
                     </Text>
                   </Skeleton>
 
@@ -102,9 +79,9 @@ const Page = () => {
                 </Box>
 
                 <Box align="center">
-                  <Skeleton isLoaded={!!irisInWallet.data}>
+                  <Skeleton isLoaded={!!apolloInWallet.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">
-                      {displayTokenCurrency(irisInWallet.data, "", true)}
+                      {displayTokenCurrency(apolloInWallet.data, "", true)}
                     </Text>
                   </Skeleton>
                   <Text fontSize={"sm"} color={useColorModeValue("gray.600", "gray.200")}>
@@ -114,7 +91,7 @@ const Page = () => {
               </Stack>
 
               <Button
-                isLoading={harvestAll.isLoading && !harvestAll.isSuccess}
+                isLoading={harvestAll.isLoading}
                 onClick={() => harvestAll.mutate()}
                 rounded="xl"
                 colorScheme="primary"
@@ -123,8 +100,6 @@ const Page = () => {
                 Harvest All
               </Button>
             </Stack>
-
-            <Box />
 
             <Stack spacing={[5, 14]} direction={{ base: "column", md: "row" }}>
               <Stack
@@ -206,27 +181,21 @@ const Page = () => {
                 </Box>
               </Stack>
             </Stack>
-          </SimpleGrid>
+          </Stack>
         </Box>
 
-        <Box
-          bg={useColorModeValue("white", "gray.700")}
-          rounded="2xl"
-          boxShadow="base"
-          px={[5, 10]}
-          py={6}
-        >
+        <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
-            IRIS stats
+            APOLLO stats
           </Heading>
 
           <Stack mt={[6, 0]} direction={["column-reverse", "row"]} spacing={10}>
             <SimpleGrid columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!apolloStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency(irisStats.data?.marketCap)}
+                      {displayCurrency(apolloStats.data?.marketCap)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="md">
@@ -237,9 +206,9 @@ const Page = () => {
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!apolloStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayTokenCurrency(irisStats.data?.maximumSupply, "")}
+                      {displayTokenCurrency(apolloStats.data?.maximumSupply, "")}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="md">
@@ -250,22 +219,22 @@ const Page = () => {
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!apolloStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber("0.4", false, 1)}
+                      {displayNumber(apolloPerBlock, false, 1)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
-                    New IRIS/block
+                    New APOLLO/block
                   </Heading>
                 </Box>
               </Box>
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!apolloStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber(irisStats.data?.totalMinted)}
+                      {displayNumber(apolloStats.data?.totalMinted)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
@@ -276,9 +245,9 @@ const Page = () => {
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!apolloStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber(irisStats.data?.circulatingSupply)}
+                      {displayNumber(apolloStats.data?.circulatingSupply)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
@@ -289,9 +258,9 @@ const Page = () => {
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!apolloStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber(irisStats.data?.totalBurned, true)}
+                      {displayNumber(apolloStats.data?.totalBurned, true)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
@@ -320,16 +289,10 @@ const Page = () => {
                   >
                     Total Value Locked
                   </Heading>
-                  <Skeleton
-                    isLoaded={!farmStats.isLoading && !poolStats.isLoading && !balStats.isLoading}
-                  >
+                  <Skeleton isLoaded={!farmStats.isLoading && !poolStats.isLoading && !balStats.isLoading}>
                     <Text fontSize="3xl" fontWeight="700">
                       {displayCurrency(
-                        farmStats.data
-                          .plus(poolStats.data)
-                          .plus(balStats.data)
-                          .plus(vaultStats.data)
-                          .toNumber()
+                        farmStats.data.plus(poolStats.data).plus(balStats.data).plus(vaultStats.data).toNumber()
                       )}
                     </Text>
                   </Skeleton>
@@ -393,10 +356,7 @@ const Page = () => {
                 width={useBreakpointValue({ base: "100%", md: 800 })}
                 height={useBreakpointValue({ base: 340, md: "80%" })}
               >
-                <LineChart
-                  style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
-                  data={chartData.data}
-                >
+                <LineChart style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }} data={chartData.data}>
                   <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={3} />
                   <CartesianGrid stroke={useColorModeValue("#ccc", "#555")} strokeDasharray="5 5" />
                   <XAxis style={{ fontSize: "12px" }} dataKey="time" />
@@ -414,9 +374,9 @@ const Page = () => {
           </Stack>
         </Box>
       </Stack>
-    </ApolloAppLayout>
+    </AppLayout>
   );
 };
 
-Page.theme = l2Theme;
+Page.layer = "l2";
 export default Page;

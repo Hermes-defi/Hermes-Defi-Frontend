@@ -12,10 +12,11 @@ const LayerToogleContext = React.createContext<{
 
 // hooks
 export const useLayer = () => React.useContext(LayerToogleContext).layer;
-export const useLayerValue = (values: { l1: any; l2: any }) => {
+export const useLayerValue = (l1Value: any, l2Value: any) => {
   const layer = useLayer();
-  return values[layer];
+  return layer === "l1" ? l1Value : l2Value;
 };
+
 export const useLayerToggle = () => {
   const layer = useLayer();
   return () => React.useContext(LayerToogleContext).setLayer(layer === "l1" ? "l2" : "l1");

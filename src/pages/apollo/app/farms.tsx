@@ -1,8 +1,8 @@
 import React from "react";
-
 import { useToggle } from "react-use";
-import { useFetchStakePools } from "state/stake-apollo";
+import { useFetchFarms } from "state/farms";
 
+import { AppLayout } from "components/layout";
 import {
   Button,
   Container,
@@ -19,19 +19,18 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { ApoolStakePoolCard } from "components/cards/stake-apollo";
-import { AppLayout } from "components/layout";
+import { FarmCard } from "components/cards/farm-card";
 
 const Page = () => {
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
   const [active, toggleActive] = useToggle(true);
 
-  const stakeResp = useFetchStakePools();
-  const isLoading = stakeResp.every((s) => s.status === "loading");
+  const farmsResp = useFetchFarms();
+  const isLoading = farmsResp.every((f) => f.status === "loading");
 
-  let pools = stakeResp
-    .filter((pool: any) => pool.data?.active === active)
-    .filter((pool: any) => (stakedOnly ? pool.data?.hasStaked === stakedOnly : true));
+  let farms = farmsResp
+    .filter((farm: any) => farm.data?.isActive === active)
+    .filter((farm: any) => (stakedOnly ? farm.data?.hasStaked === stakedOnly : true));
 
   return (
     <AppLayout>
@@ -70,9 +69,9 @@ const Page = () => {
             </Flex>
           ) : (
             <Wrap justify="center" spacing="40px">
-              {pools.map(({ data }: any) => (
-                <WrapItem key={data.address}>
-                  <ApoolStakePoolCard stakePool={data} />
+              {farms.map(({ data }: any) => (
+                <WrapItem key={data.pid}>
+                  <FarmCard key={data.pid} farm={data} />
                 </WrapItem>
               ))}
             </Wrap>

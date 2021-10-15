@@ -10,6 +10,7 @@ import VaultABI from "config/abis/Vault.json";
 import DfynFarmABI from "config/abis/DfynFarm.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
 import pAPOLLO from "config/abis/pApollo.json";
+import ApolloTokenABI from "config/abis/ApolloToken.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -42,7 +43,7 @@ export const dfynFarm: (address: string) => ContractInfo = (address: string) => 
   address,
 });
 
-const defaultContracts = {
+export const irisContracts = {
   referral: {
     address: {
       137: "0xDC99FE88118CdE8316df10Eb16c722C3967e73Fd",
@@ -108,4 +109,21 @@ const defaultContracts = {
   },
 };
 
-export default defaultContracts;
+export const apolloContracts = {
+  masterChef: {
+    address: {
+      137: "0x12c147e5f46E167008A93A18153b054c70515Aa7",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: MasterChefABI,
+  },
+  apolloToken: {
+    address: {
+      137: "0x64b4d9B111BcA3c7C2d24bc73136d30Bbaca0067",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: ApolloTokenABI,
+  },
+};
+
+export default irisContracts;

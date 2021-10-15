@@ -1,7 +1,7 @@
 import React from "react";
 
 import { useToggle } from "react-use";
-import { useFetchStakePools } from "state/stake-apollo";
+import { useFetchPools } from "state/pools";
 
 import {
   Button,
@@ -19,18 +19,18 @@ import {
   Wrap,
   WrapItem,
 } from "@chakra-ui/react";
-import { ApoolStakePoolCard } from "components/cards/stake-apollo";
+import { PoolCard } from "components/cards/pool-card";
 import { AppLayout } from "components/layout";
 
 const Page = () => {
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
   const [active, toggleActive] = useToggle(true);
 
-  const stakeResp = useFetchStakePools();
-  const isLoading = stakeResp.every((s) => s.status === "loading");
+  const poolsResp = useFetchPools();
+  const isLoading = poolsResp.every((f) => f.status === "loading");
 
-  let pools = stakeResp
-    .filter((pool: any) => pool.data?.active === active)
+  let pools = poolsResp
+    .filter((pool: any) => pool.data?.isActive === active)
     .filter((pool: any) => (stakedOnly ? pool.data?.hasStaked === stakedOnly : true));
 
   return (
@@ -71,8 +71,8 @@ const Page = () => {
           ) : (
             <Wrap justify="center" spacing="40px">
               {pools.map(({ data }: any) => (
-                <WrapItem key={data.address}>
-                  <ApoolStakePoolCard stakePool={data} />
+                <WrapItem key={data.pid}>
+                  <PoolCard key={data.pid} pool={data} />
                 </WrapItem>
               ))}
             </Wrap>

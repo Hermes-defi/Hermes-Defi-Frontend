@@ -6,11 +6,11 @@ import dynamic from "next/dynamic";
 import * as ethers from "ethers";
 import ReactGA from "react-ga";
 import { Global } from "@emotion/react";
-import { ChakraProvider } from "@chakra-ui/react";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3ReactManager } from "components/web3-manager";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { LayerProvider } from "components/layer-manager";
 
 const Web3ReactProviderDefault = dynamic(() => import("components/web3-network"), {
   ssr: false,
@@ -123,7 +123,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ChakraProvider theme={Component.theme || theme}>
+    <LayerProvider defaultValue={Component.layer || "l1"}>
       <GlobalHead />
       <MetaTags />
 
@@ -136,9 +136,9 @@ function MyApp({ Component, pageProps }) {
           </Web3ReactProviderDefault>
         </Web3ReactProvider>
 
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
-    </ChakraProvider>
+    </LayerProvider>
   );
 }
 

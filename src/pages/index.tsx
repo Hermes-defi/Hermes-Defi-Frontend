@@ -329,27 +329,27 @@ const DappStats = () => {
 
       <Stack direction="row" justify="space-between" align="center" spacing={8}>
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
-          <Heading size="2xl">{irisPrice ? displayCurrency(irisPrice) : "N/A"}</Heading>
+          <Heading size="2xl">{irisPrice ? displayCurrency(0) : "N/A"}</Heading>
           <Text color="gray.700" size="sm">
             $APOLLO Price
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
-          <Heading size="2xl">{displayCurrency(Math.round(vaultStats.data.toNumber()), true)}</Heading>
+          <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" size="sm">
             Total in Vaults
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
-          <Heading size="2xl">{displayCurrency(Math.round(vaultStats.data.toNumber()), true)}</Heading>
+          <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" size="sm">
             Total in Pools
           </Text>
         </Box>
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
-          <Heading size="2xl">{displayCurrency(Math.round(vaultStats.data.toNumber()), true)}</Heading>
+          <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" size="sm">
             Total in Farms
           </Text>
