@@ -123,7 +123,7 @@ function MyApp({ Component, pageProps }) {
   }, []);
 
   return (
-    <ChakraProvider theme={Component.theme || theme}>
+    <ChakraProvider theme={theme}>
       <GlobalHead />
       <MetaTags />
 
@@ -136,7 +136,7 @@ function MyApp({ Component, pageProps }) {
           </Web3ReactProviderDefault>
         </Web3ReactProvider>
 
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraProvider>
   );
