@@ -3,39 +3,38 @@ import { Box, Container, Image, Link, Slide, Stack, Text } from "@chakra-ui/reac
 import { Navigation } from "./navigation";
 import { L1_NAV_ITEMS, L2_NAV_ITEMS } from "./nav-config";
 import { useIrisPrice } from "hooks/prices";
-import { useLayer, useLayerValue } from "components/layer-manager";
 
 export const AppLayout: React.FC = ({ children }) => {
-  const layer = useLayer();
   const { data: irisPrice } = useIrisPrice();
 
   return (
     <Box>
       <Container maxW="container.xl">
-        <Navigation
-          tokenPrice={irisPrice}
-          logo={useLayerValue("/hermes-logo-1.png", "/apollo-logo.png")}
-          navItems={useLayerValue(L1_NAV_ITEMS, L2_NAV_ITEMS)}
-        />
+        <Navigation tokenPrice={irisPrice} logo="/hermes-logo-1.png" navItems={L1_NAV_ITEMS} />
 
         {children}
 
-        <>
-          <Box display={["none", "block"]} pos="fixed" bottom={5} pt={14} left={10}>
-            <Stack>
-              <Text fontSize="xs" lineHeight="1.5">
-                Partnerships:
-              </Text>
+        <Box pt={14}>
+          <Slide direction="bottom" in style={{ zIndex: 10 }}>
+            <Stack
+              display={["none", "flex"]}
+              direction="row"
+              align="flex-end"
+              justify="space-between"
+              py={4}
+              px={6}
+              bg="transparent"
+              shadow="md"
+            >
+              <Stack>
+                <Text lineHeight="1.5">Partnerships:</Text>
 
-              <Stack spacing={5} direction="row">
-                <Image w={12} objectFit="contain" src="/iron-logo.png" alt="Iron Finance Logo" />
-                <Image w={12} objectFit="contain" src="/dfyn-logo.svg" alt="Dfyn Logo" />
+                <Stack spacing={5} direction="row">
+                  <Image w={20} src="/iron-logo.png" alt="Iron Finance Logo" />
+                  <Image w={20} src="/dfyn-logo.svg" alt="Dfyn Logo" />
+                </Stack>
               </Stack>
-            </Stack>
-          </Box>
 
-          {layer === "l1" && (
-            <Box display={["none", "block"]} pos="fixed" bottom={5} pt={14} right={10}>
               <Stack direction="row" align="flex-end" justify="flex-end">
                 <Link href="https://paladinsec.co/projects/hermes-defi/">
                   <Image
@@ -54,9 +53,9 @@ export const AppLayout: React.FC = ({ children }) => {
                   />
                 </Stack>
               </Stack>
-            </Box>
-          )}
-        </>
+            </Stack>
+          </Slide>
+        </Box>
       </Container>
     </Box>
   );

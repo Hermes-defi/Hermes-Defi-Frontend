@@ -20,7 +20,8 @@ import {
   WrapItem,
 } from "@chakra-ui/react";
 import { ApoolStakePoolCard } from "components/cards/stake-apollo";
-import { AppLayout } from "components/layout";
+import { ApolloAppLayout } from "components/layout";
+import { l2Theme } from "theme";
 
 const Page = () => {
   const [stakedOnly, toggleStakedOnly] = useToggle(false);
@@ -34,11 +35,18 @@ const Page = () => {
     .filter((pool: any) => (stakedOnly ? pool.data?.hasStaked === stakedOnly : true));
 
   return (
-    <AppLayout>
+    <ApolloAppLayout>
       <Stack align="center" spacing={10} py={10}>
         <HStack spacing={14} align="center" justify="center">
           <FormControl w="auto" display="flex" alignItems="center">
-            <Switch isChecked={stakedOnly} onChange={() => toggleStakedOnly()} id="staked-only" mt={1} mb={0} mr={3} />
+            <Switch
+              isChecked={stakedOnly}
+              onChange={() => toggleStakedOnly()}
+              id="staked-only"
+              mt={1}
+              mb={0}
+              mr={3}
+            />
             <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
               Staked Only
             </FormLabel>
@@ -47,7 +55,11 @@ const Page = () => {
           <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
             <Button
               onClick={() => toggleActive()}
-              color={active ? useColorModeValue("gray.800", "gray.300") : useColorModeValue("gray.500", "gray.500")}
+              color={
+                active
+                  ? useColorModeValue("gray.800", "gray.300")
+                  : useColorModeValue("gray.500", "gray.500")
+              }
               variant="link"
             >
               <Heading fontSize="xl">Active</Heading>
@@ -55,7 +67,11 @@ const Page = () => {
 
             <Button
               onClick={() => toggleActive()}
-              color={!active ? useColorModeValue("gray.800", "gray.300") : useColorModeValue("gray.500", "gray.500")}
+              color={
+                !active
+                  ? useColorModeValue("gray.800", "gray.300")
+                  : useColorModeValue("gray.500", "gray.500")
+              }
               variant="link"
             >
               <Heading fontSize="xl">Inactive</Heading>
@@ -79,9 +95,9 @@ const Page = () => {
           )}
         </Container>
       </Stack>
-    </AppLayout>
+    </ApolloAppLayout>
   );
 };
 
-Page.layer = "l2";
+Page.theme = l2Theme;
 export default Page;

@@ -1,13 +1,10 @@
-import { useLayerValue } from "components/layer-manager";
-import {
+import defaultContracts, {
   erc20,
   ContractInfo,
   uniPair,
   stakePool,
   vault,
   dfynFarm,
-  irisContracts,
-  apolloContracts,
 } from "config/contracts";
 import { utils, providers, constants, Contract } from "ethers";
 import { useCallback } from "react";
@@ -44,32 +41,27 @@ export function useContract() {
 
 export function useMasterChef() {
   const contract = useContract();
-  return contract(useLayerValue(irisContracts.masterChef, apolloContracts.masterChef));
+  return contract(defaultContracts.masterChef);
 }
 
 export function useIrisToken() {
   const contract = useContract();
-  return contract(irisContracts.irisToken);
-}
-
-export function useApolloToken() {
-  const contract = useContract();
-  return contract(apolloContracts.apolloToken);
+  return contract(defaultContracts.irisToken);
 }
 
 export function useReferral() {
   const contract = useContract();
-  return contract(irisContracts.referral);
+  return contract(defaultContracts.referral);
 }
 
 export function useFenix() {
   const contract = useContract();
-  return contract(irisContracts.fenixToken);
+  return contract(defaultContracts.fenixToken);
 }
 
 export function useRedeem() {
   const contract = useContract();
-  return contract(irisContracts.redeem);
+  return contract(defaultContracts.redeem);
 }
 
 export function useERC20_v2(address: string) {
@@ -125,7 +117,7 @@ export function useDfynFarmContract() {
 
 export function useHermesNftContract() {
   const contract = useContract();
-  return contract(irisContracts.hermesNft);
+  return contract(defaultContracts.hermesNft);
 }
 
 export function useCustomMasterChef() {
@@ -133,7 +125,7 @@ export function useCustomMasterChef() {
 
   return (address: string) => {
     return contract({
-      abi: irisContracts.masterChef.abi,
+      abi: defaultContracts.masterChef.abi,
       address,
     });
   };
@@ -141,10 +133,14 @@ export function useCustomMasterChef() {
 
 export function usePresaleContract(version: "v1" | "v2") {
   const contract = useContract();
-  return contract(version === "v1" ? irisContracts.apolloPresaleFirstRound : irisContracts.apolloPresaleSecondRound);
+  return contract(
+    version === "v1"
+      ? defaultContracts.apolloPresaleFirstRound
+      : defaultContracts.apolloPresaleSecondRound
+  );
 }
 
 export function usePApollo() {
   const contract = useContract();
-  return contract(irisContracts.pApollo);
+  return contract(defaultContracts.pApollo);
 }

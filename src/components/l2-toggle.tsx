@@ -12,11 +12,10 @@ const LayerToogleContext = React.createContext<{
 
 // hooks
 export const useLayer = () => React.useContext(LayerToogleContext).layer;
-export const useLayerValue = (l1Value: any, l2Value: any) => {
+export const useLayerValue = (values: { l1: any; l2: any }) => {
   const layer = useLayer();
-  return layer === "l1" ? l1Value : l2Value;
+  return values[layer];
 };
-
 export const useLayerToggle = () => {
   const layer = useLayer();
   return () => React.useContext(LayerToogleContext).setLayer(layer === "l1" ? "l2" : "l1");
@@ -32,9 +31,11 @@ export const LayerManager = ({ children }) => {
   return <ChakraProvider theme={layer === "l2" ? l2Theme : theme}>{children}</ChakraProvider>;
 };
 
-export const LayerProvider = ({ children, value }) => {
+export const LayerProvider = ({ children, defaultValue }) => {
+  const [layer, setLayer] = React.useState(defaultValue);
+
   return (
-    <LayerToogleContext.Provider value={value}>
+    <LayerToogleContext.Provider value={{ layer, setLayer: (v) => setLayer(v) }}>
       <LayerManager>{children}</LayerManager>
     </LayerToogleContext.Provider>
   );

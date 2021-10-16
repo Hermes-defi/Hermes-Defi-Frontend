@@ -35,21 +35,13 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Governance",
-    href: "https://snapshot.org/#/hermesdefi.eth",
+    href: "https://feedback.hermesdefi.io",
     isExternal: true,
   },
   {
-    label: "Layers",
-    children: [
-      {
-        label: "Iris",
-        href: "/app",
-      },
-      {
-        label: "Apollo",
-        href: "/apollo/app",
-      },
-    ],
+    label: "Presale",
+    href: "/app/pre-sale",
+    decorate: true,
   },
   {
     label: "Trade",
@@ -208,19 +200,6 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
         label: "Medium",
         href: "https://medium.com/@HermesDefi",
         isExternal: true,
-      },
-    ],
-  },
-  {
-    label: "Layers",
-    children: [
-      {
-        label: "Iris",
-        href: "/app",
-      },
-      {
-        label: "Apollo",
-        href: "/apollo/app",
       },
     ],
   },

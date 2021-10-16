@@ -47,8 +47,6 @@ This is the way the project is structured
 
 ##### Extra Notes on architecture
 
-###### Outdated
-
 This application doesn't use redux for state management, therefore all data are fetched when the
 page loads. For the farm related pages (pool, farms, balancers) the data is fetched in the page and
 are passed down using reducers and context, this is to make action side-effects easier to do. All 3 farm related pages
