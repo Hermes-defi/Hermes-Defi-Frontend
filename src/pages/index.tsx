@@ -296,7 +296,7 @@ const DappStats = () => {
           py={10}
           rounded="md"
           bgColor="secondary.200"
-          bgGradient="linear(to-r, primaryL2.300, secondaryL2.200)"
+          bgGradient="linear(to-r, primary.300, secondaryL2.200)"
           align="center"
         >
           <Heading size="2xl">
@@ -328,27 +328,27 @@ const DappStats = () => {
       </Stack>
 
       <Stack direction="row" justify="space-between" align="center" spacing={8}>
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
+        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{irisPrice ? displayCurrency(0) : "N/A"}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             $APOLLO Price
           </Text>
         </Box>
 
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
+        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Vaults
           </Text>
         </Box>
 
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
+        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Pools
           </Text>
         </Box>
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
+        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Farms
