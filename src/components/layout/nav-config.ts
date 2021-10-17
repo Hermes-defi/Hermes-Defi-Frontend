@@ -39,8 +39,8 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
     isExternal: true,
   },
   {
-    label: "Presale",
-    href: "/app/pre-sale",
+    label: "Pre-sale",
+    href: "https://apollo.hermesdefi.io/app/pre-sale",
     decorate: true,
   },
   {

@@ -27,7 +27,9 @@ export const AppLayout: React.FC = ({ children }) => {
               shadow="md"
             >
               <Stack>
-                <Text lineHeight="1.5">Partnerships:</Text>
+                <Text fontSize="sm" lineHeight="1.5">
+                  Partnerships:
+                </Text>
 
                 <Stack spacing={5} direction="row">
                   <Image w={20} src="/iron-logo.png" alt="Iron Finance Logo" />

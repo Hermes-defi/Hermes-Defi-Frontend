@@ -102,7 +102,7 @@ function MetaTags() {
   );
 }
 
-function MyApp({ Component, pageProps }) {
+function App({ Component, pageProps }) {
   const router = useRouter();
   useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -142,4 +142,4 @@ function MyApp({ Component, pageProps }) {
   );
 }
 
-export default MyApp;
+export default App;
