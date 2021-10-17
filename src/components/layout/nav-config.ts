@@ -32,6 +32,10 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
         href: "/app/bank",
       },
       {
+        label: "Iris Vaults",
+        href: "https://hermesdefi.io/app/vaults",
+      },
+      {
         label: "Stake pAPOLLO",
         href: "/app/waiting-room",
       },
@@ -44,6 +48,21 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
   {
     label: "Charts",
     children: [],
+  },
+  {
+    label: "Layers",
+    children: [
+      {
+        label: "Iris",
+        href: "https://hermesdefi.io/app",
+        isExternal: true,
+      },
+      {
+        label: "Apollo",
+        href: "https://apollo.hermesdefi.io/app",
+        isExternal: true,
+      },
+    ],
   },
   {
     label: "Community",
