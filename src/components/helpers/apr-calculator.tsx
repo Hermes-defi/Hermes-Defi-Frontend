@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Icon, useDisclosure } from "@chakra-ui/react";
-import { useIrisPrice } from "hooks/prices";
+import { useApolloPrice } from "hooks/prices";
 
 import { APRModal } from "components/modals/roi-modal";
 
@@ -19,7 +19,7 @@ type IProps = {
 
 export function IrisAPRCalculator({ apr, tokenLink, tokenSymbol }: IProps) {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { data: irisPrice } = useIrisPrice();
+  const { data: irisPrice } = useApolloPrice();
 
   return (
     <>

@@ -1,4 +1,5 @@
 import ApolloABI from "config/abis/ApolloABI.json";
+import IrisABI from "config/abis/IrisABI.json";
 import MasterChefABI from "config/abis/MasterChef.json";
 import ReferralABI from "config/abis/Referral.json";
 import FenixABI from "config/abis/Fenix.json";
@@ -56,6 +57,13 @@ const defaultContracts = {
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: MasterChefABI,
+  },
+  irisToken: {
+    address: {
+      137: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+      80001: "0x5EB25908Abf8764CB101bE704d6Bb4a8d5254f72",
+    }[DEFAULT_CHAIN_ID],
+    abi: IrisABI,
   },
   apolloToken: {
     address: {

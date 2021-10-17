@@ -28,25 +28,14 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 
-import {
-  ChevronDownIcon,
-  ChevronRightIcon,
-  CloseIcon,
-  HamburgerIcon,
-  ExternalLinkIcon,
-} from "@chakra-ui/icons";
+import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import { RiWaterFlashFill, RiRoadMapFill, RiBookOpenFill } from "react-icons/ri";
 import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
 import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
-import { useIrisPrice } from "hooks/prices";
-import {
-  useTotalInFarms,
-  useTotalInBalancers,
-  useTotalInPools,
-  useTotalInVaults,
-} from "hooks/home-page";
+import { useApolloPrice } from "hooks/prices";
+import { useTotalInFarms, useTotalInBalancers, useTotalInPools, useTotalInVaults } from "hooks/home-page";
 
 // NAVIGATION
 interface NavItem {
@@ -137,13 +126,7 @@ function Navigation() {
 
   return (
     <Box>
-      <Flex
-        color={useColorModeValue("gray.600", "white")}
-        minH="60px"
-        p={5}
-        px={{ base: 0, md: 5 }}
-        align="center"
-      >
+      <Flex color={useColorModeValue("gray.600", "white")} minH="60px" p={5} px={{ base: 0, md: 5 }} align="center">
         {/* mobile menu */}
         <Flex ml={-2} display={{ base: "flex", md: "none" }}>
           <IconButton
@@ -161,10 +144,7 @@ function Navigation() {
             <a>
               <Stack direction="row" spacing={3}>
                 <Image boxSize="40px" src="/hermes-logo-1.png" alt="Hermes Logo" />
-                <Heading
-                  textAlign={{ base: "center", md: "left" }}
-                  color={useColorModeValue("gray.800", "white")}
-                >
+                <Heading textAlign={{ base: "center", md: "left" }} color={useColorModeValue("gray.800", "white")}>
                   Hermes
                 </Heading>
               </Stack>
@@ -197,21 +177,12 @@ function Navigation() {
                           : {})}
                       >
                         <span>{navItem.label}</span>
-                        {navItem.isExternal && (
-                          <ExternalLinkIcon mt="-1px" mx="4px" boxSize="14px" />
-                        )}
+                        {navItem.isExternal && <ExternalLinkIcon mt="-1px" mx="4px" boxSize="14px" />}
                       </Flex>
                     </PopoverTrigger>
 
                     {navItem.children && (
-                      <PopoverContent
-                        w="auto"
-                        border={0}
-                        boxShadow="xl"
-                        bg="white"
-                        p={4}
-                        rounded="xl"
-                      >
+                      <PopoverContent w="auto" border={0} boxShadow="xl" bg="white" p={4} rounded="xl">
                         <Stack>
                           {navItem.children.map((child) => (
                             <Link
@@ -300,9 +271,7 @@ function Header() {
             Always one step further
           </Heading>
 
-          <Text color={"gray.500"}>
-            Safe, transparent and fast. A platform at the level of the gods.
-          </Text>
+          <Text color={"gray.500"}>Safe, transparent and fast. A platform at the level of the gods.</Text>
         </Stack>
 
         <Stack direction="row" spacing={5} align="center" alignSelf="center" position="relative">
@@ -314,10 +283,7 @@ function Header() {
             </a>
           </NextLink>
 
-          <NextLink
-            href="https://hermes-defi.gitbook.io/hermes-finance/bonus/litepaper-final"
-            passHref
-          >
+          <NextLink href="https://hermes-defi.gitbook.io/hermes-finance/bonus/litepaper-final" passHref>
             <a>
               <Button isFullWidth variant="outline" colorScheme="secondary" size="lg">
                 Litepaper
@@ -332,7 +298,7 @@ function Header() {
 
 // NUMBERS
 const DappStats = () => {
-  const { data: irisPrice } = useIrisPrice();
+  const { data: irisPrice } = useApolloPrice();
   const farmStats = useTotalInFarms();
   const balStats = useTotalInBalancers();
   const poolStats = useTotalInPools();
@@ -348,9 +314,7 @@ const DappStats = () => {
       </Box>
 
       <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
-        <Heading size="2xl">
-          {displayCurrency(Math.round(vaultStats.data.toNumber()), true)}
-        </Heading>
+        <Heading size="2xl">{displayCurrency(Math.round(vaultStats.data.toNumber()), true)}</Heading>
         <Text color="gray.700" size="sm">
           Total in Vaults
         </Text>
@@ -373,13 +337,7 @@ const DappStats = () => {
       <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
           {displayCurrency(
-            Math.round(
-              farmStats.data
-                .plus(poolStats.data)
-                .plus(balStats.data)
-                .plus(vaultStats.data)
-                .toNumber()
-            ),
+            Math.round(farmStats.data.plus(poolStats.data).plus(balStats.data).plus(vaultStats.data).toNumber()),
             true
           )}
         </Heading>
@@ -409,8 +367,8 @@ function Services() {
             </Heading>
 
             <Text>
-              Facilitates trading on Decentralized Exchages and provide liquidity through a
-              collection of funds locked in a smart contract.
+              Facilitates trading on Decentralized Exchages and provide liquidity through a collection of funds locked
+              in a smart contract.
             </Text>
           </Box>
         </Box>
@@ -424,8 +382,8 @@ function Services() {
             </Heading>
 
             <Text>
-              Way of providing financial services to users through smart contracts. Existing DeFi
-              projects aim to provide higher annualized earnings for specific currencies.
+              Way of providing financial services to users through smart contracts. Existing DeFi projects aim to
+              provide higher annualized earnings for specific currencies.
             </Text>
           </Box>
         </Box>
@@ -525,11 +483,7 @@ function Security() {
           align="center"
           textAlign="center"
         >
-          <Image
-            size="lg"
-            src="https://paladinsec.co/pld/assets/audited-by-paladin-standard.svg"
-            alt="Rugdoc Logo"
-          />
+          <Image size="lg" src="https://paladinsec.co/pld/assets/audited-by-paladin-standard.svg" alt="Rugdoc Logo" />
         </Flex>
       </Stack>
 
@@ -572,10 +526,7 @@ function News() {
 // FOOTER
 function Footer() {
   return (
-    <Box
-      bg={useColorModeValue("gray.50", "gray.900")}
-      color={useColorModeValue("gray.700", "gray.200")}
-    >
+    <Box bg={useColorModeValue("gray.50", "gray.900")} color={useColorModeValue("gray.700", "gray.200")}>
       <Container as={Stack} maxW={"6xl"} py={10}>
         <SimpleGrid templateColumns={{ sm: "1fr 1fr", md: "2fr 2fr 1fr 1fr 1fr" }} spacing={8}>
           {/* footer info*/}
@@ -583,18 +534,15 @@ function Footer() {
             <Box>
               <Stack direction="row" spacing={3}>
                 <Image boxSize="40px" src="/hermes-logo-1.png" alt="Hermes Logo" />
-                <Heading
-                  textAlign={{ base: "center", md: "left" }}
-                  color={useColorModeValue("gray.800", "white")}
-                >
+                <Heading textAlign={{ base: "center", md: "left" }} color={useColorModeValue("gray.800", "white")}>
                   Hermes
                 </Heading>
               </Stack>
             </Box>
 
             <Text fontSize={"sm"}>
-              Hermes Finance is the Olympus of Defi. Our friendly community is building a
-              decentralized and proactive platform at the forefront of modern day finance. <br />
+              Hermes Finance is the Olympus of Defi. Our friendly community is building a decentralized and proactive
+              platform at the forefront of modern day finance. <br />
               Join us!
             </Text>
           </Stack>
@@ -606,35 +554,17 @@ function Footer() {
               Community
             </Text>
 
-            <Stack
-              as={Link}
-              isExternal
-              href="https://twitter.com/hermesdefi"
-              direction="row"
-              align="center"
-            >
+            <Stack as={Link} isExternal href="https://twitter.com/hermesdefi" direction="row" align="center">
               <Icon color="twitter.500" as={FaTwitter} />
               <Text>Twitter</Text>
             </Stack>
 
-            <Stack
-              as={Link}
-              isExternal
-              href="https://medium.com/@HermesDefi"
-              direction="row"
-              align="center"
-            >
+            <Stack as={Link} isExternal href="https://medium.com/@HermesDefi" direction="row" align="center">
               <Icon color="gray.900" as={FaMedium} />
               <Text>Medium</Text>
             </Stack>
 
-            <Stack
-              as={Link}
-              isExternal
-              href="https://t.me/hermesdefinance"
-              direction="row"
-              align="center"
-            >
+            <Stack as={Link} isExternal href="https://t.me/hermesdefinance" direction="row" align="center">
               <Icon color="telegram.500" as={FaTelegram} />
               <Text>Telegram</Text>
             </Stack>
@@ -656,13 +586,7 @@ function Footer() {
               <Text>Docs</Text>
             </Stack>
 
-            <Stack
-              as={Link}
-              isExternal
-              href="https://github.com/Hermes-defi"
-              direction="row"
-              align="center"
-            >
+            <Stack as={Link} isExternal href="https://github.com/Hermes-defi" direction="row" align="center">
               <Icon color="gray.700" as={FaGithub} />
               <Text>Github</Text>
             </Stack>
@@ -695,13 +619,7 @@ function Footer() {
               Contact
             </Text>
 
-            <Stack
-              as={Link}
-              isExternal
-              href="mailto:contact@hermesdefi.io"
-              direction="row"
-              align="center"
-            >
+            <Stack as={Link} isExternal href="mailto:contact@hermesdefi.io" direction="row" align="center">
               <Icon color="gray.700" as={MdEmail} />
               <Text>contact@hermesdefi.io</Text>
             </Stack>
