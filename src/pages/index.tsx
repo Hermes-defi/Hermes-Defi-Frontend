@@ -314,14 +314,14 @@ const DappStats = () => {
       <Stack direction="row" justify="space-between" align="center" spacing={8}>
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{irisPrice ? displayCurrency(irisPrice) : "N/A"}</Heading>
-          <Text color="gray.700" size="sm">
+          <Text color="gray.700" fontSize="sm" fontWeight="600">
             $IRIS Price
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(vaultStats.data.toNumber()), true)}</Heading>
-          <Text color="gray.700" size="sm">
+          <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Vaults
           </Text>
         </Box>
@@ -330,27 +330,27 @@ const DappStats = () => {
       <Stack direction="row" justify="space-between" align="center" spacing={8}>
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
           <Heading size="2xl">{irisPrice ? displayCurrency(0) : "N/A"}</Heading>
-          <Text color="gray.700" size="sm">
+          <Text color="gray.700" fontSize="sm" fontWeight="600">
             $APOLLO Price
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
-          <Text color="gray.700" size="sm">
+          <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Vaults
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
-          <Text color="gray.700" size="sm">
+          <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Pools
           </Text>
         </Box>
         <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondaryL2.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
-          <Text color="gray.700" size="sm">
+          <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Farms
           </Text>
         </Box>
