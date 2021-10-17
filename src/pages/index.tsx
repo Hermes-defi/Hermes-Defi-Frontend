@@ -50,19 +50,14 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: "Info",
-    children: [
-      {
-        label: "Coinmarketcap",
-        isExternal: true,
-        href: "https://coinmarketcap.com/currencies/hermes-defi/",
-      },
-      {
-        label: "Coingecko",
-        isExternal: true,
-        href: "https://www.coingecko.com/en/coins/iris-token",
-      },
-    ],
+    label: "Coinmarketcap",
+    isExternal: true,
+    href: "https://coinmarketcap.com/currencies/hermes-defi/",
+  },
+  {
+    label: "Coingecko",
+    isExternal: true,
+    href: "https://www.coingecko.com/en/coins/iris-token",
   },
 ];
 
@@ -155,7 +150,7 @@ function Navigation() {
                   <Popover trigger={"hover"} placement={"bottom"}>
                     <PopoverTrigger>
                       <Flex
-                        p={2}
+                        p={5}
                         as={Link}
                         href={navItem.href ?? "#"}
                         align="center"
@@ -173,7 +168,6 @@ function Navigation() {
                           : {})}
                       >
                         <span>{navItem.label}</span>
-                        {navItem.isExternal && <ExternalLinkIcon mt="-1px" mx="4px" boxSize="14px" />}
                       </Flex>
                     </PopoverTrigger>
 
