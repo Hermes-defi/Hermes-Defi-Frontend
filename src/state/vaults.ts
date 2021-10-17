@@ -1,18 +1,12 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
-import {
-  useCustomMasterChef,
-  useUniPair,
-  useVaultContract,
-  useDfynFarmContract,
-} from "hooks/contracts";
+import { useCustomMasterChef, useUniPair, useVaultContract, useDfynFarmContract } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
-import { useIrisPrice } from "hooks/prices";
+import { useApolloPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Vault, vaults } from "config/vaults";
-import { farms } from "config/farms";
 import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
@@ -29,25 +23,13 @@ function useFetchVaultsRequest() {
     try {
       const vaultContract = getVaultContract(vault.address);
 
-      vault.totalStaked = utils.formatUnits(
-        await vaultContract.balance(),
-        vault.stakeToken.decimals
-      );
+      vault.totalStaked = utils.formatUnits(await vaultContract.balance(), vault.stakeToken.decimals);
 
       // get prices
       const lpContract = getPairContract(vault.stakeToken.address);
-      const totalSupply = utils.formatUnits(
-        await lpContract.totalSupply(),
-        vault.stakeToken.decimals
-      );
+      const totalSupply = utils.formatUnits(await lpContract.totalSupply(), vault.stakeToken.decimals);
 
-      vault.stakeToken.price = await fetchPairPrice(
-        vault.pairs[0],
-        vault.pairs[1],
-        totalSupply,
-        library,
-        vault.amm
-      );
+      vault.stakeToken.price = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, library, vault.amm);
 
       if (vault.isActive) {
         if (vault.amm === "dfyn") {
@@ -56,13 +38,9 @@ function useFetchVaultsRequest() {
 
           const dfynFarm = getDfynFarmContract(vault.farmAddress);
 
-          const token0RewardRate = (
-            await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[0].address)
-          ).toString();
+          const token0RewardRate = (await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[0].address)).toString();
 
-          const token1RewardRate = (
-            await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[1].address)
-          ).toString();
+          const token1RewardRate = (await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[1].address)).toString();
 
           const totalStakedInFarm = utils.formatUnits(
             await lpContract.balanceOf(dfynFarm.address),
@@ -153,14 +131,14 @@ function useFetchVaultsRequest() {
 }
 
 export function useFetchVaults() {
-  const irisPrice = useIrisPrice();
+  const apolloPrice = useApolloPrice();
   const fetchVaultRq = useFetchVaultsRequest();
   const { account } = useActiveWeb3React();
 
   const vaultQueries = useQueries(
     vaults.map((vault) => {
       return {
-        enabled: !!irisPrice.data,
+        enabled: !!apolloPrice.data,
         queryKey: ["vault", vault.address, account],
         queryFn: () => fetchVaultRq(vault),
       };

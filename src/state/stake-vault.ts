@@ -11,7 +11,6 @@ import { vaults } from "config/vaults";
 import { BigNumber, utils } from "ethers";
 import { approveLpContract } from "web3-functions";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
-import { getPoolApr } from "web3-functions/utils";
 
 function useFetchVaultStakingPoolRequest() {
   const getLpContract = useERC20();
@@ -38,10 +37,7 @@ function useFetchVaultStakingPoolRequest() {
 
       // calculate APR
       if (stakePoolInfo.active) {
-        const rewardPerBlock = utils.formatUnits(
-          await poolChef.rewardPerBlock(),
-          stakePoolInfo.rewardToken.decimals
-        );
+        const rewardPerBlock = utils.formatUnits(await poolChef.rewardPerBlock(), stakePoolInfo.rewardToken.decimals);
         const rewardYearly = new BigNumberJS(rewardPerBlock).times(3600).times(24).times(365);
         const rewardYearlyUsd = rewardYearly.times(stakePoolInfo.rewardToken.price);
 
@@ -51,10 +47,7 @@ function useFetchVaultStakingPoolRequest() {
 
         const pricePerShare = utils.formatUnits(await poolVaultContract.getPricePerFullShare(), 18);
         const lpContract = getPairContract(poolVault.stakeToken.address);
-        const vaultTotalSupply = utils.formatUnits(
-          await lpContract.totalSupply(),
-          poolVault.stakeToken.decimals
-        );
+        const vaultTotalSupply = utils.formatUnits(await lpContract.totalSupply(), poolVault.stakeToken.decimals);
         const depositTokenPrice = await fetchPairPrice(
           poolVault.pairs[0],
           poolVault.pairs[1],
@@ -64,9 +57,7 @@ function useFetchVaultStakingPoolRequest() {
         );
 
         const depositTokenStaked = new BigNumberJS(stakePoolInfo.totalStaked);
-        let depositTokenStakedUsd = depositTokenStaked
-          .times(depositTokenPrice)
-          .times(pricePerShare);
+        let depositTokenStakedUsd = depositTokenStaked.times(depositTokenPrice).times(pricePerShare);
 
         const apr = rewardYearlyUsd.dividedBy(depositTokenStakedUsd).toNumber();
         stakePoolInfo.apr = {
@@ -99,10 +90,7 @@ function useFetchVaultStakingPoolRequest() {
 
         const userInfo = await poolChef.userInfo(account);
 
-        stakePoolInfo.userTotalStaked = utils.formatUnits(
-          userInfo.amount,
-          stakePoolInfo.stakeToken.decimals
-        );
+        stakePoolInfo.userTotalStaked = utils.formatUnits(userInfo.amount, stakePoolInfo.stakeToken.decimals);
 
         stakePoolInfo.poolShare = new BigNumberJS(stakePoolInfo.userTotalStaked)
           .dividedBy(stakePoolInfo.totalStaked)
@@ -111,10 +99,7 @@ function useFetchVaultStakingPoolRequest() {
 
         stakePoolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
 
-        const allowance: BigNumber = await stakeTokenContract.allowance(
-          account,
-          stakePoolInfo.address
-        );
+        const allowance: BigNumber = await stakeTokenContract.allowance(account, stakePoolInfo.address);
 
         stakePoolInfo.hasApprovedPool = !allowance.isZero();
       }
@@ -164,11 +149,7 @@ export function useApproveVaultStakePool() {
 
     {
       onSuccess: (address) => {
-        const stakePool = queryClient.getQueryData<VaultStakeInfo>([
-          "vault-stake-pool",
-          address,
-          account,
-        ]);
+        const stakePool = queryClient.getQueryData<VaultStakeInfo>(["vault-stake-pool", address, account]);
 
         queryClient.setQueryData(["vault-stake-pool", address, account], {
           ...stakePool,

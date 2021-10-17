@@ -8,4 +8,11 @@ export default {
       80001: "",
     }[DEFAULT_CHAIN_ID],
   },
+  iris: {
+    decimals: 18,
+    address: {
+      137: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+  },
 };

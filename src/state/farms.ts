@@ -1,21 +1,20 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useMasterChef, useUniPair } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
-import { useIrisPrice } from "hooks/prices";
+import { useApolloPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Farm, farms } from "config/farms";
 import { BigNumber, constants, utils } from "ethers";
-import { Token } from "quickswap-sdk";
-import { DEFAULT_CHAIN_ID, irisPerBlock } from "config/constants";
+import { apolloPerBlock } from "config/constants";
 import { fetchPairPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
 
 function useFetchFarmRequest() {
-  const irisPrice = useIrisPrice();
+  const apolloPrice = useApolloPrice();
   const masterChef = useMasterChef();
   const getPairContract = useUniPair();
   const { account, library } = useActiveWeb3React();
@@ -40,10 +39,7 @@ function useFetchFarmRequest() {
       newFarm.stakeToken.decimals
     );
 
-    const totalSupply = utils.formatUnits(
-      await lpContract.totalSupply(),
-      newFarm.stakeToken.decimals
-    );
+    const totalSupply = utils.formatUnits(await lpContract.totalSupply(), newFarm.stakeToken.decimals);
 
     newFarm.stakeToken.price = await fetchPairPrice(
       newFarm.pairs[0],
@@ -54,7 +50,7 @@ function useFetchFarmRequest() {
     );
 
     // APR data
-    const rewardsPerWeek = irisPerBlock * (604800 / 2.1);
+    const rewardsPerWeek = apolloPerBlock * (604800 / 2.1);
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
     const poolRewardsPerWeek = new BigNumberJS(newFarm.multiplier)
@@ -64,7 +60,7 @@ function useFetchFarmRequest() {
 
     newFarm.apr = newFarm.isActive
       ? getPoolApr(
-          parseFloat(irisPrice.data || "0"),
+          parseFloat(apolloPrice.data || "0"),
           poolRewardsPerWeek,
           parseFloat(newFarm.stakeToken.price || "0"),
           parseFloat(newFarm.totalStaked || "0")
@@ -77,7 +73,7 @@ function useFetchFarmRequest() {
 
     // USER data
     if (account) {
-      newFarm.rewardsEarned = utils.formatEther(await masterChef.pendingIris(farm.pid, account));
+      newFarm.rewardsEarned = utils.formatEther(await masterChef.pendingapollo(farm.pid, account));
 
       const userInfo = await masterChef.userInfo(farm.pid, account);
 
@@ -93,14 +89,14 @@ function useFetchFarmRequest() {
 }
 
 export function useFetchFarms() {
-  const irisPrice = useIrisPrice();
+  const apolloPrice = useApolloPrice();
   const fetchFarmRq = useFetchFarmRequest();
   const { account } = useActiveWeb3React();
 
   const farmQueries = useQueries(
     farms.map((farm) => {
       return {
-        enabled: !!irisPrice.data,
+        enabled: !!apolloPrice.data,
         queryKey: ["farm", farm.pid, account],
         queryFn: () => fetchFarmRq(farm),
       };
@@ -174,13 +170,7 @@ export function useDepositIntoFarm() {
       if (!account) throw new Error("No connected account");
 
       const farm = queryClient.getQueryData<Farm>(["farm", id, account]);
-      await depositIntoPool(
-        masterChef,
-        id,
-        amount,
-        constants.AddressZero,
-        farm.stakeToken.decimals
-      );
+      await depositIntoPool(masterChef, id, amount, constants.AddressZero, farm.stakeToken.decimals);
     },
     {
       onSuccess: (_, { id, amount }) => {

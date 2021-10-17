@@ -1,7 +1,7 @@
 import ReactGA from "react-ga";
 import token from "config/tokens";
 import { utils } from "ethers";
-import { useERC20_v2, useIrisToken, usePApollo, usePresaleContract } from "hooks/contracts";
+import { useERC20_v2, usePApollo, usePresaleContract } from "hooks/contracts";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
@@ -10,8 +10,8 @@ import { approveLpContract } from "web3-functions";
 export function usePresaleInfo(version: "v1" | "v2") {
   const presaleContract = usePresaleContract(version);
   const pApolloContract = usePApollo();
-  const irisContract = useIrisToken();
   const usdcContract = useERC20_v2(token.usdc.address);
+  const irisContract = useERC20_v2(token.iris.address);
   const { account } = useActiveWeb3React();
 
   return useQuery({
@@ -26,18 +26,12 @@ export function usePresaleInfo(version: "v1" | "v2") {
       data.maxpApollo = utils.formatEther(await presaleContract.maxTokenPurchase());
       data.maxpApolloWhitelist = utils.formatEther(await presaleContract.maxTokenPurchaseHeroes());
       data.pApolloPrice = (await presaleContract.pAPOLLOPrice()).toString();
-      data.pApolloRemaining = utils.formatEther(
-        await pApolloContract.balanceOf(presaleContract.address)
-      );
+      data.pApolloRemaining = utils.formatEther(await pApolloContract.balanceOf(presaleContract.address));
 
       if (account) {
-        data.irisApproved = !(
-          await irisContract.allowance(account, presaleContract.address)
-        ).isZero();
+        data.irisApproved = !(await irisContract.allowance(account, presaleContract.address)).isZero();
 
-        data.usdcApproved = !(
-          await usdcContract.allowance(account, presaleContract.address)
-        ).isZero();
+        data.usdcApproved = !(await usdcContract.allowance(account, presaleContract.address)).isZero();
 
         data.pApolloBalance = utils.formatEther(await pApolloContract.balanceOf(account));
       }
@@ -75,7 +69,7 @@ export function usePresaleApproveToken(version: "v1" | "v2") {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const presaleContract = usePresaleContract(version);
-  const irisContract = useIrisToken();
+  const irisContract = useERC20_v2(token.iris.address);
   const usdcContract = useERC20_v2(token.usdc.address);
   const toast = useToast();
 
@@ -83,10 +77,7 @@ export function usePresaleApproveToken(version: "v1" | "v2") {
     async (token: "iris" | "usdc") => {
       if (!account) throw new Error("No connected account");
 
-      await approveLpContract(
-        token === "iris" ? irisContract : usdcContract,
-        presaleContract.address
-      );
+      await approveLpContract(token === "iris" ? irisContract : usdcContract, presaleContract.address);
 
       return token;
     },

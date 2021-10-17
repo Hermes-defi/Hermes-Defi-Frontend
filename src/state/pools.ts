@@ -1,20 +1,20 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useERC20, useMasterChef } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
-import { useIrisPrice } from "hooks/prices";
+import { useApolloPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
-import { irisPerBlock } from "config/constants";
+import { apolloPerBlock } from "config/constants";
 import { fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
 
 function useFetchPoolsRequest() {
-  const irisPrice = useIrisPrice();
+  const apolloPrice = useApolloPrice();
   const masterChef = useMasterChef();
   const getLpContract = useERC20();
   const { account, library } = useActiveWeb3React();
@@ -42,7 +42,7 @@ function useFetchPoolsRequest() {
     newPool.stakeToken.price = await fetchPrice(newPool.stakeToken, library);
 
     // APR data
-    const rewardsPerWeek = irisPerBlock * (604800 / 2.1);
+    const rewardsPerWeek = apolloPerBlock * (604800 / 2.1);
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
     const poolRewardsPerWeek = new BigNumberJS(newPool.multiplier)
@@ -52,7 +52,7 @@ function useFetchPoolsRequest() {
 
     newPool.apr = newPool.isActive
       ? getPoolApr(
-          parseFloat(irisPrice.data || "0"),
+          parseFloat(apolloPrice.data || "0"),
           poolRewardsPerWeek,
           parseFloat(newPool.stakeToken.price || "0"),
           parseFloat(newPool.totalStaked || "0")
@@ -65,7 +65,7 @@ function useFetchPoolsRequest() {
 
     // USER data
     if (account) {
-      newPool.rewardsEarned = utils.formatEther(await masterChef.pendingIris(pool.pid, account));
+      newPool.rewardsEarned = utils.formatEther(await masterChef.pendingapollo(pool.pid, account));
 
       const userInfo = await masterChef.userInfo(pool.pid, account);
 
@@ -81,14 +81,14 @@ function useFetchPoolsRequest() {
 }
 
 export function useFetchPools() {
-  const irisPrice = useIrisPrice();
+  const apolloPrice = useApolloPrice();
   const fetchPoolRq = useFetchPoolsRequest();
   const { account } = useActiveWeb3React();
 
   const poolQueries = useQueries(
     pools.map((farm) => {
       return {
-        enabled: !!irisPrice.data,
+        enabled: !!apolloPrice.data,
         queryKey: ["pool", farm.pid, account],
         queryFn: () => fetchPoolRq(farm),
       };
@@ -162,13 +162,7 @@ export function useDepositIntoPool() {
       if (!account) throw new Error("No connected account");
 
       const pool = queryClient.getQueryData<Pool>(["pool", id, account]);
-      await depositIntoPool(
-        masterChef,
-        id,
-        amount,
-        constants.AddressZero,
-        pool.stakeToken.decimals
-      );
+      await depositIntoPool(masterChef, id, amount, constants.AddressZero, pool.stakeToken.decimals);
     },
     {
       onSuccess: (_, { id, amount }) => {

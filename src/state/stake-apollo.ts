@@ -10,7 +10,6 @@ import { ApolloStakeInfo, apolloStakingPools } from "config/stake-apollo";
 import { BigNumber, utils } from "ethers";
 import { approveLpContract } from "web3-functions";
 import { fetchPrice } from "web3-functions/prices";
-import { getPoolApr } from "web3-functions/utils";
 
 function useFetchStakingPoolRequest() {
   const getLpContract = useERC20();
@@ -43,10 +42,7 @@ function useFetchStakingPoolRequest() {
 
         const userInfo = await poolChef.userInfo(account);
 
-        stakePoolInfo.userTotalStaked = utils.formatUnits(
-          userInfo.amount,
-          stakePoolInfo.stakeToken.decimals
-        );
+        stakePoolInfo.userTotalStaked = utils.formatUnits(userInfo.amount, stakePoolInfo.stakeToken.decimals);
 
         stakePoolInfo.poolShare = new BigNumberJS(stakePoolInfo.userTotalStaked)
           .dividedBy(stakePoolInfo.totalStaked)
@@ -55,10 +51,7 @@ function useFetchStakingPoolRequest() {
 
         stakePoolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
 
-        const allowance: BigNumber = await stakeTokenContract.allowance(
-          account,
-          stakePoolInfo.address
-        );
+        const allowance: BigNumber = await stakeTokenContract.allowance(account, stakePoolInfo.address);
 
         stakePoolInfo.hasApprovedPool = !allowance.isZero();
       }
@@ -99,11 +92,7 @@ export function useApproveStakePool() {
     async (address: string) => {
       if (!account) throw new Error("No connected account");
 
-      const pool = queryClient.getQueryData<ApolloStakeInfo>([
-        "pre-apollo-stake",
-        address,
-        account,
-      ]);
+      const pool = queryClient.getQueryData<ApolloStakeInfo>(["pre-apollo-stake", address, account]);
       const lpContract = getLpContract(pool.stakeToken.address);
 
       await approveLpContract(lpContract, pool.address);
@@ -112,11 +101,7 @@ export function useApproveStakePool() {
 
     {
       onSuccess: (address) => {
-        const stakePool = queryClient.getQueryData<ApolloStakeInfo>([
-          "pre-apollo-stake",
-          address,
-          account,
-        ]);
+        const stakePool = queryClient.getQueryData<ApolloStakeInfo>(["pre-apollo-stake", address, account]);
 
         queryClient.setQueryData(["pre-apollo-stake", address, account], {
           ...stakePool,

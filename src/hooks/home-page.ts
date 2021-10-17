@@ -6,11 +6,11 @@ import dayjs from "dayjs";
 import { BurnAddress } from "config/constants";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
-import { useMasterChef, useIrisToken, useERC20 } from "hooks/contracts";
+import { useMasterChef, useApolloToken, useERC20 } from "hooks/contracts";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
-import { useIrisPrice } from "hooks/prices";
+import { useApolloPrice } from "hooks/prices";
 import { useFetchFarms } from "state/farms";
 import { useFetchVaults } from "state/vaults";
 import { Farm, farms } from "config/farms";
@@ -19,50 +19,48 @@ import { useFetchPools } from "state/pools";
 import { useFetchBalancers } from "state/balancers";
 import { Balancer, balancers } from "config/balancers";
 
-export function useIrisData() {
+export function useApolloData() {
   const { account } = useActiveWeb3React();
   const masterChef = useMasterChef();
-  const irisToken = useIrisToken();
+  const apolloToken = useApolloToken();
 
-  const irisInWallet = useQuery("irisInWallet", async () => {
-    return account ? utils.formatEther(await irisToken.balanceOf(account)) : "0.00";
+  const apolloInWallet = useQuery("apolloInWallet", async () => {
+    return account ? utils.formatEther(await apolloToken.balanceOf(account)) : "0.00";
   });
 
-  const irisToHarvest = useQuery("irisToHarvest", async () => {
-    const totalIrisToHarvest = [...farms, ...pools, ...balancers].reduce(async (_total, pool) => {
+  const apolloToHarvest = useQuery("apolloToHarvest", async () => {
+    const totalApolloToHarvest = [...farms, ...pools, ...balancers].reduce(async (_total, pool) => {
       const total = await _total;
-      const irisEarned = await masterChef.pendingIris(pool.pid, account);
-      return total.add(irisEarned);
+      const apolloEarned = await masterChef.pendingApollo(pool.pid, account);
+      return total.add(apolloEarned);
     }, Promise.resolve(BigNumber.from(0)));
 
-    return account ? utils.formatEther(await totalIrisToHarvest) : "0.00";
+    return account ? utils.formatEther(await totalApolloToHarvest) : "0.00";
   });
 
-  return { irisInWallet, irisToHarvest };
+  return { apolloInWallet, apolloToHarvest };
 }
 
-export function useIrisStats() {
-  const irisContract = useIrisToken();
-  const irisPrice = useIrisPrice();
+export function useApolloStats() {
+  const ApolloContract = useApolloToken();
+  const apolloPrice = useApolloPrice();
 
-  const irisStats = useQuery({
-    enabled: !!irisPrice.data,
+  const apolloStats = useQuery({
+    enabled: !!apolloPrice.data,
     refetchInterval: 0.5 * 60 * 1000,
-    queryKey: ["irisStats", irisPrice.data],
+    queryKey: ["apolloStats", apolloPrice.data],
     queryFn: async () => {
       const maximumSupply = 1_000_000;
-      const totalMinted = (await irisContract.totalSupply()) as BigNumber;
-      const totalBurned = (await irisContract.balanceOf(BurnAddress)) as BigNumber;
+      const totalMinted = (await ApolloContract.totalSupply()) as BigNumber;
+      const totalBurned = (await ApolloContract.balanceOf(BurnAddress)) as BigNumber;
 
       const circulatingSupply = totalMinted.sub(totalBurned);
 
       let marketCap = "N/A";
-      if (irisPrice) {
+      if (apolloPrice) {
         // convert circulating supply to real price
-        const circulatingSupplyInIris = utils.formatEther(circulatingSupply);
-        marketCap = new BigNumberJS(circulatingSupplyInIris)
-          .multipliedBy(irisPrice.data)
-          .toString();
+        const circulatingSupplyInApollo = utils.formatEther(circulatingSupply);
+        marketCap = new BigNumberJS(circulatingSupplyInApollo).multipliedBy(apolloPrice.data).toString();
       }
 
       return {
@@ -75,7 +73,7 @@ export function useIrisStats() {
     },
   });
 
-  return irisStats;
+  return apolloStats;
 }
 
 export function useFarmAPRStats() {
@@ -106,9 +104,7 @@ export function useTotalInVaults() {
     const vault = vaultResp.data as Vault;
     if (!vault) return new BigNumberJS(0);
 
-    const totalLockedInVaults = new BigNumberJS(vault?.totalStaked).multipliedBy(
-      vault?.stakeToken.price
-    );
+    const totalLockedInVaults = new BigNumberJS(vault?.totalStaked).multipliedBy(vault?.stakeToken.price);
 
     return total.plus(totalLockedInVaults);
   }, new BigNumberJS(0));
@@ -127,9 +123,7 @@ export function useTotalInFarms() {
     const farm = farmResp.data as Farm;
     if (!farm) return new BigNumberJS(0);
 
-    const totalLockedInFarm = new BigNumberJS(farm?.totalStaked).multipliedBy(
-      farm?.stakeToken.price
-    );
+    const totalLockedInFarm = new BigNumberJS(farm?.totalStaked).multipliedBy(farm?.stakeToken.price);
 
     return total.plus(totalLockedInFarm);
   }, new BigNumberJS(0));
@@ -148,9 +142,7 @@ export function useTotalInPools() {
     const pool = poolResp.data as Pool;
     if (!pool) return new BigNumberJS(0);
 
-    const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(
-      pool?.stakeToken.price
-    );
+    const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
 
     return total.plus(totalLockedInFarm);
   }, new BigNumberJS(0));
@@ -197,7 +189,7 @@ export function useTvlChart() {
   });
 }
 
-export function useHarvestAll(irisToHarvest: string) {
+export function useHarvestAll(ApolloToHarvest: string) {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const masterChef = useMasterChef();
@@ -209,33 +201,26 @@ export function useHarvestAll(irisToHarvest: string) {
       return Promise.all(
         [...farms, ...pools, ...balancers].map(async (pool) => {
           const lpContract = getLpContract(pool.stakeToken.address);
-          const allowance: BigNumber = await lpContract.allowance(
-            account,
-            defaultContracts.masterChef.address
-          );
+          const allowance: BigNumber = await lpContract.allowance(account, defaultContracts.masterChef.address);
 
           const hasApprovedPool = !allowance.isZero();
 
           if (!hasApprovedPool) return;
 
-          const tx = await masterChef.deposit(
-            pool.pid,
-            utils.parseEther("0"),
-            constants.AddressZero
-          );
+          const tx = await masterChef.deposit(pool.pid, utils.parseEther("0"), constants.AddressZero);
           await tx.wait();
         })
       );
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("irisInWallet");
-        queryClient.invalidateQueries("irisToHarvest");
+        queryClient.invalidateQueries("apolloInWallet");
+        queryClient.invalidateQueries("apolloToHarvest");
 
         ReactGA.event({
           category: "Withdrawals",
           action: `Withdrawing from all pools and farms`,
-          value: parseInt(irisToHarvest, 10),
+          value: parseInt(ApolloToHarvest, 10),
         });
       },
 
@@ -243,7 +228,7 @@ export function useHarvestAll(irisToHarvest: string) {
         toast({
           status: "error",
           position: "top-right",
-          title: "Error harvesting IRIS",
+          title: "Error harvesting apollo",
           description: data?.message || message,
           isClosable: true,
         });

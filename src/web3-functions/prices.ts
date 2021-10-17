@@ -7,6 +7,7 @@ import * as Dfyn from "@dfyn/sdk";
 
 const amms = {
   "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1": "quickswap", // iris
+  "0x87cf37B07a5f879c1af35532862e6229E90C72AF": "dfyn", // apollo
   "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
   "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc
   "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "coingecko", // wmatic
@@ -43,16 +44,8 @@ async function fetchCoinGeckoPrice(address: string) {
   }
 }
 
-async function fetchQuickSwapPrice(
-  _token: { address: string; decimals: number; symbol: string },
-  library: any
-) {
-  const usdc = new Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.usdc.address,
-    defaultTokens.usdc.decimals,
-    "USDC"
-  );
+async function fetchQuickSwapPrice(_token: { address: string; decimals: number; symbol: string }, library: any) {
+  const usdc = new Token(DEFAULT_CHAIN_ID, defaultTokens.usdc.address, defaultTokens.usdc.decimals, "USDC");
 
   const token = new Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
 
@@ -90,18 +83,10 @@ async function fetchQuickSwapPrice(
   }
 }
 
-async function fetchDfynPrice(
-  _token: { address: string; decimals: number; symbol: string },
-  library: any
-) {
+async function fetchDfynPrice(_token: { address: string; decimals: number; symbol: string }, library: any) {
   const token = new Dfyn.Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
 
-  const usdc = new Dfyn.Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.usdc.address,
-    defaultTokens.usdc.decimals,
-    "USDC"
-  );
+  const usdc = new Dfyn.Token(DEFAULT_CHAIN_ID, defaultTokens.usdc.address, defaultTokens.usdc.decimals, "USDC");
 
   try {
     let route;
@@ -114,11 +99,7 @@ async function fetchDfynPrice(
       );
 
       // fetch the token to matic pair info
-      const tokenToMatic = await Dfyn.Fetcher.fetchPairData(
-        token,
-        Dfyn.WETH[DEFAULT_CHAIN_ID],
-        library
-      );
+      const tokenToMatic = await Dfyn.Fetcher.fetchPairData(token, Dfyn.WETH[DEFAULT_CHAIN_ID], library);
 
       // find a route
       route = new Dfyn.Route([MaticToUSDCPair, tokenToMatic], usdc);
@@ -146,15 +127,13 @@ async function fetchDfynPrice(
 
 async function fetchPolycatPrice(address: string) {
   try {
-    const resp = await fetch(
-      "https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: `{
+    const resp = await fetch("https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
             tokenDayDatas ( 
               orderBy: date,
               orderDirection: desc,
@@ -167,9 +146,8 @@ async function fetchPolycatPrice(address: string) {
               priceUSD
             }
           }`,
-        }),
-      }
-    );
+      }),
+    });
 
     const { data } = await resp.json();
     return new BigNumberJS(data.tokenDayDatas[0].priceUSD).toPrecision(6).toString();
@@ -179,24 +157,16 @@ async function fetchPolycatPrice(address: string) {
   }
 }
 
-export async function fetchPrice(
-  token: { address: string; decimals: number; symbol: string },
-  library: any
-) {
+export async function fetchPrice(token: { address: string; decimals: number; symbol: string }, library: any) {
   const ammsFetcher = {
-    coingecko: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchCoinGeckoPrice(t.address),
-    quickswap: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchQuickSwapPrice(t, library),
+    coingecko: (t: { address: string; decimals: number; symbol: string }) => fetchCoinGeckoPrice(t.address),
+    quickswap: (t: { address: string; decimals: number; symbol: string }) => fetchQuickSwapPrice(t, library),
     dfyn: (t: { address: string; decimals: number; symbol: string }) => fetchDfynPrice(t, library),
-    polycat: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchPolycatPrice(t.address),
+    polycat: (t: { address: string; decimals: number; symbol: string }) => fetchPolycatPrice(t.address),
   };
 
   try {
-    const amm = Object.entries(amms).find(
-      ([k]) => k.toLowerCase() === token.address.toLowerCase()
-    )[1];
+    const amm = Object.entries(amms).find(([k]) => k.toLowerCase() === token.address.toLowerCase())[1];
 
     let price = await ammsFetcher[amm](token);
     return price;
@@ -255,34 +225,27 @@ export async function fetchPairPrice(
 
     polycat: async () => {
       try {
-        const resp = await fetch(
-          "https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              query: `{
+        const resp = await fetch("https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: `{
                 pairs (where: { token0: "${token0.address.toLowerCase()}", token1: "${token1.address.toLowerCase()}"}) {
                   id
                   reserve0
                   reserve1
                 }
               }`,
-            }),
-          }
-        );
+          }),
+        });
 
         const { data } = await resp.json();
 
-        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(
-          new BigNumberJS(token0Price)
-        );
+        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(new BigNumberJS(token0Price));
 
-        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(
-          new BigNumberJS(token1Price)
-        );
+        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(new BigNumberJS(token1Price));
 
         const tvl = token0Total.plus(token1Total);
         const price = tvl.dividedBy(new BigNumberJS(totalSupply));
@@ -300,24 +263,21 @@ export async function fetchPairPrice(
 
 export async function fetchBalancerPrice(balancerId: string) {
   try {
-    const resp = await fetch(
-      "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: `{    
+    const resp = await fetch("https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{    
               pool(id: "${balancerId}" ) {
                 id
                 totalLiquidity
                 totalShares
               }
           }`,
-        }),
-      }
-    );
+      }),
+    });
 
     const { data } = await resp.json();
 
