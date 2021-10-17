@@ -12,7 +12,7 @@ const moduleExports = {
       {
         source: "/app/pre-sale",
         destination: "https://apollo.hermesdefi.io/app/pre-sale", // Matched parameters can be used in the destination
-        permanent: true,
+        permanent: false,
       },
     ];
   },
