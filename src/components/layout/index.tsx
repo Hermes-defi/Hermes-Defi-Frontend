@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Container, Image, Link, Slide, Stack, Text } from "@chakra-ui/react";
 import { Navigation } from "./navigation";
-import { L1_NAV_ITEMS, L2_NAV_ITEMS } from "./nav-config";
+import { L1_NAV_ITEMS } from "./nav-config";
 import { useIrisPrice } from "hooks/prices";
 
 export const AppLayout: React.FC = ({ children }) => {
@@ -69,7 +69,7 @@ export const ApolloAppLayout: React.FC = ({ children }) => {
   return (
     <Box>
       <Container maxW="container.xl">
-        <Navigation tokenPrice={irisPrice} logo="/apollo-logo.png" navItems={L2_NAV_ITEMS} />
+        <Navigation tokenPrice={irisPrice} logo="/apollo-logo.png" navItems={L1_NAV_ITEMS} />
 
         {children}
 
