@@ -59,8 +59,7 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Apollo",
-        href: "https://apollo.hermesdefi.io/app",
-        isExternal: true,
+        href: "/app",
       },
     ],
   },
