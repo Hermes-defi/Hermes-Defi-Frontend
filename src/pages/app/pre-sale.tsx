@@ -188,7 +188,7 @@ const Page = () => {
                 </Text>
 
                 <Text fontSize="sm">
-                  3. Waiting room. Ongoing (<Link href="/apollo/app/waiting-room">here</Link>)
+                  3. Waiting room. Ongoing (<Link href="/app/waiting-room">here</Link>)
                 </Text>
 
                 <Text fontSize="sm">4. Presale Second round starts at block #20151640</Text>
