@@ -35,7 +35,7 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "Governance",
-    href: "https://feedback.hermesdefi.io",
+    href: "https://snapshot.org/#/hermesdefi.eth",
     isExternal: true,
   },
   {
