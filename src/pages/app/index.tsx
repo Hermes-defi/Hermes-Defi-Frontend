@@ -298,7 +298,11 @@ const Page: React.FC = () => {
                   >
                     Total Value Locked
                   </Heading>
-                  <Skeleton isLoaded={!farmStats.isLoading && !poolStats.isLoading && !balStats.isLoading}>
+                  <Skeleton
+                    isLoaded={
+                      !farmStats.isLoading && !poolStats.isLoading && !balStats.isLoading && !vaultStats.isLoading
+                    }
+                  >
                     <Text fontSize="3xl" fontWeight="700">
                       {displayCurrency(
                         farmStats.data.plus(poolStats.data).plus(balStats.data).plus(vaultStats.data).toNumber()
@@ -318,7 +322,7 @@ const Page: React.FC = () => {
                     >
                       Vaults
                     </Heading>
-                    <Skeleton isLoaded={!farmStats.isLoading}>
+                    <Skeleton isLoaded={!vaultStats.isLoading}>
                       <Text fontSize="2xl" fontWeight="700">
                         {displayCurrency(vaultStats.data.toNumber())}
                       </Text>

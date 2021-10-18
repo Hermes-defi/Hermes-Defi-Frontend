@@ -50,7 +50,7 @@ export function useApolloStats() {
     refetchInterval: 0.5 * 60 * 1000,
     queryKey: ["apolloStats", apolloPrice.data],
     queryFn: async () => {
-      const maximumSupply = 1_000_000;
+      const maximumSupply = 500_000;
       const totalMinted = (await ApolloContract.totalSupply()) as BigNumber;
       const totalBurned = (await ApolloContract.balanceOf(BurnAddress)) as BigNumber;
 
@@ -78,27 +78,27 @@ export function useApolloStats() {
 
 export function useFarmAPRStats() {
   const farmsResp = useFetchFarms();
-  const isLoading = farmsResp.every((f) => f.status === "loading");
+  const isLoading = farmsResp.some((f) => f.status === "loading");
 
   const aprs = farmsResp.map((f) => (f.data as Farm)?.apr.yearlyAPR);
-  const maxApr = Math.max(...aprs);
+  const maxApr = aprs.length ? Math.max(...aprs) : 0;
 
   return [isLoading, maxApr];
 }
 
 export function usePoolsAPRStats() {
   const poolsResp = useFetchPools();
-  const isLoading = poolsResp.every((p) => p.status === "loading");
+  const isLoading = poolsResp.some((p) => p.status === "loading");
 
   const aprs = poolsResp.map((p) => (p.data as Pool)?.apr.yearlyAPR);
-  const maxApr = Math.max(...aprs);
+  const maxApr = aprs.length ? Math.max(...aprs) : 0;
 
   return [isLoading, maxApr];
 }
 
 export function useTotalInVaults() {
   const vaultsResp = useFetchVaults();
-  const isLoading = vaultsResp.every((f) => f.status === "loading");
+  const isLoading = vaultsResp.some((f) => f.status === "loading");
 
   const data = vaultsResp.reduce((total, vaultResp) => {
     const vault = vaultResp.data as Vault;
@@ -117,7 +117,7 @@ export function useTotalInVaults() {
 
 export function useTotalInFarms() {
   const farmsResp = useFetchFarms();
-  const isLoading = farmsResp.every((f) => f.status === "loading");
+  const isLoading = farmsResp.some((f) => f.status === "loading");
 
   const data = farmsResp.reduce((total, farmResp) => {
     const farm = farmResp.data as Farm;
@@ -136,7 +136,7 @@ export function useTotalInFarms() {
 
 export function useTotalInPools() {
   const poolsResp = useFetchPools();
-  const isLoading = poolsResp.every((f) => f.status === "loading");
+  const isLoading = poolsResp.some((f) => f.status === "loading");
 
   const data = poolsResp.reduce((total, poolResp) => {
     const pool = poolResp.data as Pool;
@@ -155,7 +155,7 @@ export function useTotalInPools() {
 
 export function useTotalInBalancers() {
   const balsResp = useFetchBalancers();
-  const isLoading = balsResp.every((f) => f.status === "loading");
+  const isLoading = balsResp.some((f) => f.status === "loading");
 
   const data = balsResp.reduce((total, balResp) => {
     const bal = balResp.data as Balancer;

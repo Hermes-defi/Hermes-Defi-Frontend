@@ -27,7 +27,7 @@ const Page: React.FC = () => {
   const [active, toggleActive] = useToggle(true);
 
   const poolsResp = useFetchPools();
-  const isLoading = poolsResp.every((f) => f.status === "loading");
+  const isLoading = poolsResp.some((f) => f.status === "loading");
 
   let pools = poolsResp
     .filter((pool: any) => pool.data?.isActive === active)
@@ -38,14 +38,7 @@ const Page: React.FC = () => {
       <Stack align="center" spacing={10} py={10}>
         <HStack spacing={14} align="center" justify="center">
           <FormControl w="auto" display="flex" alignItems="center">
-            <Switch
-              isChecked={stakedOnly}
-              onChange={() => toggleStakedOnly()}
-              id="staked-only"
-              mt={1}
-              mb={0}
-              mr={3}
-            />
+            <Switch isChecked={stakedOnly} onChange={() => toggleStakedOnly()} id="staked-only" mt={1} mb={0} mr={3} />
             <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
               Staked Only
             </FormLabel>
@@ -54,11 +47,7 @@ const Page: React.FC = () => {
           <HStack justify="center" divider={<StackDivider borderColor="gray.200" />}>
             <Button
               onClick={() => toggleActive()}
-              color={
-                active
-                  ? useColorModeValue("gray.800", "gray.300")
-                  : useColorModeValue("gray.500", "gray.500")
-              }
+              color={active ? useColorModeValue("gray.800", "gray.300") : useColorModeValue("gray.500", "gray.500")}
               variant="link"
             >
               <Heading fontSize="xl">Active</Heading>
@@ -66,11 +55,7 @@ const Page: React.FC = () => {
 
             <Button
               onClick={() => toggleActive()}
-              color={
-                !active
-                  ? useColorModeValue("gray.800", "gray.300")
-                  : useColorModeValue("gray.500", "gray.500")
-              }
+              color={!active ? useColorModeValue("gray.800", "gray.300") : useColorModeValue("gray.500", "gray.500")}
               variant="link"
             >
               <Heading fontSize="xl">Inactive</Heading>

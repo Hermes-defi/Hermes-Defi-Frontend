@@ -136,7 +136,7 @@ function MyApp({ Component, pageProps }) {
           </Web3ReactProviderDefault>
         </Web3ReactProvider>
 
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
     </ChakraProvider>
   );
