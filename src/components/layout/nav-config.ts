@@ -10,7 +10,7 @@ export interface NavItem {
 export const L2_NAV_ITEMS: Array<NavItem> = [
   {
     label: "Home",
-    href: "/apollo/app",
+    href: "/app",
   },
   {
     label: "Products",
