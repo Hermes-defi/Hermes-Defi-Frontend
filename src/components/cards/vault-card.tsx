@@ -2,12 +2,7 @@ import React from "react";
 import BigNumber from "bignumber.js";
 import { Vault } from "config/vaults";
 
-import {
-  useApproveVault,
-  useDepositIntoVault,
-  useWithdrawAllFromVault,
-  useWithdrawFromVault,
-} from "state/vaults";
+import { useApproveVault, useDepositIntoVault, useWithdrawAllFromVault, useWithdrawFromVault } from "state/vaults";
 
 import { Box, HStack, Heading, Image, Stack, Text, Link, Badge } from "@chakra-ui/react";
 import { UserSection } from "components/helpers/user-section";
@@ -32,29 +27,15 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
       w="19rem"
       bg="accent.500"
       boxShadow="rgb(84 158 171 / 65%) 0px 25px 50px -12px"
-      bgGradient={`linear(to-b, pink.300, primary.500)`}
+      bgGradient={`linear(to-b, primary.200, accent.300)`}
       rounded="3xl"
       color="white"
     >
       {/* farm name */}
       <HStack align="center" mb={5} spacing={2}>
         <Box w={12} h={12} pos="relative">
-          <Image
-            pos="absolute"
-            top="5px"
-            left="0"
-            rounded="12px"
-            src={vault.stakeToken.logo[0]}
-            boxSize={6}
-          />
-          <Image
-            pos="absolute"
-            bottom="-5px"
-            right="0px"
-            rounded="20px"
-            src={vault.stakeToken.logo[1]}
-            boxSize={10}
-          />
+          <Image pos="absolute" top="5px" left="0" rounded="12px" src={vault.stakeToken.logo[0]} boxSize={6} />
+          <Image pos="absolute" bottom="-5px" right="0px" rounded="20px" src={vault.stakeToken.logo[1]} boxSize={10} />
         </Box>
 
         <Heading fontSize="3xl">{vault.stakeToken.symbol}</Heading>
@@ -75,7 +56,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {vault.apy ? `${displayNumber(vault.apy.yearly, true)}%` : "N/A"}
+              {vault.apy ? `${displayNumber(vault.apy.yearly, false, 2)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -153,7 +134,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
               LP Token Price
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {displayCurrency(vault.stakeToken.price || 0)}
+              {displayCurrency(vault.stakeToken.price || 0, true)}
             </Text>
           </Stack>
 
@@ -172,9 +153,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             </Text>
             <Text fontWeight="700" fontSize="sm">
               {vault.totalStaked
-                ? displayCurrency(
-                    new BigNumber(vault.totalStaked).times(vault.stakeToken.price || 0).toNumber()
-                  )
+                ? displayCurrency(new BigNumber(vault.totalStaked).times(vault.stakeToken.price || 0).toNumber())
                 : "N/A"}
             </Text>
           </Stack>

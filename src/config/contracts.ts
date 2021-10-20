@@ -9,6 +9,8 @@ import UNIPAIRABI from "config/abis/UNIPAIR.json";
 import StakePoolABI from "config/abis/StakePool.json";
 import VaultABI from "config/abis/Vault.json";
 import DfynFarmABI from "config/abis/DfynFarm.json";
+import RewardPoolABI from "config/abis/RewardPoolABI.json";
+import DualRewardPoolABI from "config/abis/DualRewardPoolABI.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
 import pAPOLLO from "config/abis/pApollo.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
@@ -40,6 +42,16 @@ export const vault: (address: string) => ContractInfo = (address: string) => ({
 
 export const dfynFarm: (address: string) => ContractInfo = (address: string) => ({
   abi: DfynFarmABI,
+  address,
+});
+
+export const rewardPools: (address: string) => ContractInfo = (address: string) => ({
+  abi: RewardPoolABI,
+  address,
+});
+
+export const dualRewardPools: (address: string) => ContractInfo = (address: string) => ({
+  abi: DualRewardPoolABI,
   address,
 });
 

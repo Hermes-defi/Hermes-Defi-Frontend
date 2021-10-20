@@ -1,7 +1,14 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
-import { useCustomMasterChef, useUniPair, useVaultContract, useDfynFarmContract } from "hooks/contracts";
+import {
+  useCustomMasterChef,
+  useUniPair,
+  useVaultContract,
+  useDfynFarmContract,
+  useERC20,
+  useVaultRewardPoolContract,
+  useVaultDualRewardPoolContract,
+} from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
-import { useApolloPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
@@ -10,94 +17,181 @@ import { Vault, vaults } from "config/vaults";
 import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
-import { getVaultApy, getVaultDualApy } from "web3-functions/utils";
+import {
+  getDualRewardPoolVaultApy,
+  getDualVaultApy,
+  getMasterChefVaultApy,
+  getRewardPoolVaultApy,
+} from "web3-functions/aprs";
 
 function useFetchVaultsRequest() {
   const getMasterChef = useCustomMasterChef();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
+  const getErc20 = useERC20();
   const getDfynFarmContract = useDfynFarmContract();
+  const getRewardPoolContract = useVaultRewardPoolContract();
+  const getDualRewardPoolContract = useVaultDualRewardPoolContract();
   const { account, library } = useActiveWeb3React();
 
   return async (vault: Vault) => {
     try {
       const vaultContract = getVaultContract(vault.address);
 
-      vault.totalStaked = utils.formatUnits(await vaultContract.balance(), vault.stakeToken.decimals);
-
       // get prices
       const lpContract = getPairContract(vault.stakeToken.address);
       const totalSupply = utils.formatUnits(await lpContract.totalSupply(), vault.stakeToken.decimals);
 
       vault.stakeToken.price = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, library, vault.amm);
+      vault.totalStaked = utils.formatUnits(await vaultContract.balance(), vault.stakeToken.decimals);
 
-      if (vault.isActive) {
-        if (vault.amm === "dfyn") {
-          vault.dfynRewardTokens[0].price = await fetchPrice(vault.dfynRewardTokens[0], library);
-          vault.dfynRewardTokens[1].price = await fetchPrice(vault.dfynRewardTokens[1], library);
+      if (vault.isActive && vault.type === "masterchef") {
+        const masterChef = getMasterChef(vault.masterChefAddress);
+        vault.projectToken.price = await fetchPrice(vault.projectToken, library);
 
-          const dfynFarm = getDfynFarmContract(vault.farmAddress);
+        // caculate apy
+        const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
+        const farmInfo = await masterChef.poolInfo(vault.farmPid);
 
-          const token0RewardRate = (await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[0].address)).toString();
+        const multiplier = farmInfo.allocPoint.toString();
+        const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
+        const farmLpContract = getPairContract(farmInfo.lpToken);
 
-          const token1RewardRate = (await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[1].address)).toString();
+        const totalStakedInFarm = utils.formatUnits(
+          await farmLpContract.balanceOf(masterChef.address),
+          await farmLpContract.decimals()
+        );
 
-          const totalStakedInFarm = utils.formatUnits(
-            await lpContract.balanceOf(dfynFarm.address),
-            await lpContract.decimals()
-          );
+        const apy = await getMasterChefVaultApy({
+          address: farmLpContract.address,
+          amm: vault.amm,
+          multiplier,
+          tokenPerBlock: vault.tokenPerBlock,
+          totalAllocPoints,
+          depositFees,
+          performanceFee: vault.performanceFee,
+          rewardToken: vault.projectToken,
+          stakeToken: vault.stakeToken,
+          totalStakedInFarm,
+        });
 
-          const apy = await getVaultDualApy({
-            address: vault.stakeToken.address,
-            stakePrice: vault.stakeToken.price,
-            totalStakedInFarm,
-            token0RewardRate,
-            token0Price: vault.dfynRewardTokens[0].price,
-            token0Decimals: vault.dfynRewardTokens[0].decimals,
-            token1RewardRate,
-            token1Price: vault.dfynRewardTokens[1].price,
-            token1Decimals: vault.dfynRewardTokens[1].decimals,
-            performanceFee: vault.performanceFee,
-          });
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: (apy.vaultApr / 365) * 100,
+        };
+      } else if (vault.isActive && vault.type === "dual") {
+        vault.farmRewardTokens[0].price = await fetchPrice(vault.farmRewardTokens[0], library);
+        vault.farmRewardTokens[1].price = await fetchPrice(vault.farmRewardTokens[1], library);
 
-          vault.apy = {
-            yearly: apy.totalApy * 100,
-            daily: (apy.vaultApr / 365) * 100,
-          };
-        } else {
-          const masterChef = getMasterChef(vault.masterChefAddress);
-          vault.projectToken.price = await fetchPrice(vault.projectToken, library);
+        const dfynFarm = getDfynFarmContract(vault.farmAddress);
 
-          // caculate apy
-          const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
-          const farmInfo = await masterChef.poolInfo(vault.farmPid);
+        const token0RewardRate = (await dfynFarm.tokenRewardRate(vault.farmRewardTokens[0].address)).toString();
+        const token1RewardRate = (await dfynFarm.tokenRewardRate(vault.farmRewardTokens[1].address)).toString();
 
-          const multiplier = farmInfo.allocPoint.toString();
-          const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
-          const farmLpContract = getPairContract(farmInfo.lpToken);
+        const totalStakedInFarm = utils.formatUnits(
+          await lpContract.balanceOf(dfynFarm.address),
+          await lpContract.decimals()
+        );
 
-          const totalStakedInFarm = utils.formatUnits(
-            await farmLpContract.balanceOf(masterChef.address),
-            await farmLpContract.decimals()
-          );
+        const apy = await getDualVaultApy({
+          address: vault.stakeToken.address,
+          amm: vault.amm,
+          stakePrice: vault.stakeToken.price,
+          totalStakedInFarm,
+          token0RewardRate,
+          token0Price: vault.farmRewardTokens[0].price,
+          token0Decimals: vault.farmRewardTokens[0].decimals,
+          token1RewardRate,
+          token1Price: vault.farmRewardTokens[1].price,
+          token1Decimals: vault.farmRewardTokens[1].decimals,
+          performanceFee: vault.performanceFee,
+        });
 
-          const apy = await getVaultApy({
-            address: farmLpContract.address,
-            multiplier,
-            tokenPerBlock: vault.tokenPerBlock,
-            totalAllocPoints,
-            depositFees,
-            performanceFee: vault.performanceFee,
-            rewardToken: vault.projectToken,
-            stakeToken: vault.stakeToken,
-            totalStakedInFarm,
-          });
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: (apy.vaultApr / 365) * 100,
+        };
+      } else if (vault.isActive && vault.type === "rewardPool") {
+        vault.farmRewardToken.price = await fetchPrice(vault.farmRewardToken, library);
+        let rewardTokenPrice = vault.farmRewardToken.price;
 
-          vault.apy = {
-            yearly: apy.totalApy * 100,
-            daily: (apy.vaultApr / 365) * 100,
-          };
+        if (vault.farmXTokenAddress) {
+          const farmRewardToken = getErc20(vault.farmRewardToken.address);
+          const farmRewardXToken = getErc20(vault.farmXTokenAddress);
+
+          const stakedInXPool = (await farmRewardToken.balanceOf(vault.farmXTokenAddress)).toString();
+          const totalXSuppy = (await farmRewardXToken.totalSupply()).toString();
+
+          rewardTokenPrice = new BigNumberJS(stakedInXPool)
+            .times(vault.farmRewardToken.price)
+            .dividedBy(totalXSuppy)
+            .toString();
         }
+
+        const rewardPool = getRewardPoolContract(vault.rewardPool);
+        const totalSupply = (await rewardPool.totalSupply()).toString();
+        const rewardRate = (await rewardPool.rewardRate()).toString();
+
+        const apy = await getRewardPoolVaultApy({
+          address: vault.stakeToken.address,
+          amm: vault.amm,
+          rewardPoolTotalSupply: totalSupply.toString(),
+          stakeTokenPrice: vault.stakeToken.price,
+          stakeTokenDecimals: vault.stakeToken.decimals,
+          rewardRate,
+          rewardTokenPrice,
+          rewardTokenDecimals: "1e18",
+          performanceFee: vault.performanceFee,
+        });
+
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: (apy.vaultApr / 365) * 100,
+        };
+      } else if (vault.isActive && vault.type === "dualRewardPool") {
+        vault.farmRewardTokens[0].price = await fetchPrice(vault.farmRewardTokens[0], library);
+        vault.farmRewardTokens[1].price = await fetchPrice(vault.farmRewardTokens[1], library);
+
+        let rewardTokenAPrice = vault.farmRewardTokens[0].price;
+        let rewardTokenBPrice = vault.farmRewardTokens[1].price;
+
+        if (vault.farmXTokenAddress) {
+          const farmRewardToken = getErc20(vault.farmRewardTokens[0].address);
+          const farmRewardXToken = getErc20(vault.farmXTokenAddress);
+
+          const stakedInXPool = (await farmRewardToken.balanceOf(vault.farmXTokenAddress)).toString();
+          const totalXSuppy = (await farmRewardXToken.totalSupply()).toString();
+
+          rewardTokenAPrice = new BigNumberJS(stakedInXPool)
+            .times(vault.farmRewardTokens[0].price)
+            .dividedBy(totalXSuppy)
+            .toString();
+        }
+
+        const rewardPool = getDualRewardPoolContract(vault.rewardPool);
+        const totalSupply = (await rewardPool.totalSupply()).toString();
+        const rewardRateA = (await rewardPool.rewardRateA()).toString();
+        const rewardRateB = (await rewardPool.rewardRateB()).toString();
+
+        const apy = await getDualRewardPoolVaultApy({
+          address: vault.stakeToken.address,
+          amm: vault.amm,
+          rewardPoolTotalSupply: totalSupply.toString(),
+          stakeTokenPrice: vault.stakeToken.price,
+          stakeTokenDecimals: vault.stakeToken.decimals,
+          rewardRateA,
+          rewardTokenAPrice,
+          rewardTokenADecimals: "1e18",
+          rewardRateB,
+          rewardTokenBPrice,
+          rewardTokenBDecimals: "1e18",
+          performanceFee: vault.performanceFee,
+        });
+
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: (apy.vaultApr / 365) * 100,
+        };
       } else {
         vault.apy = {
           yearly: 0,
@@ -131,14 +225,12 @@ function useFetchVaultsRequest() {
 }
 
 export function useFetchVaults() {
-  const apolloPrice = useApolloPrice();
   const fetchVaultRq = useFetchVaultsRequest();
   const { account } = useActiveWeb3React();
 
   const vaultQueries = useQueries(
     vaults.map((vault) => {
       return {
-        enabled: !!apolloPrice.data,
         queryKey: ["vault", vault.address, account],
         queryFn: () => fetchVaultRq(vault),
       };

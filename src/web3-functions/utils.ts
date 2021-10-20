@@ -5,13 +5,7 @@ export function compound(r, n = 365, t = 1, c = 1) {
   return (1 + (r * c) / n) ** (n * t) - 1;
 }
 
-const getFarmWithTradingFeesApy = ({
-  farmApr,
-  tradingApr,
-  compoundingsPerYear,
-  t,
-  shareAfterPerformanceFee,
-}) => {
+const getFarmWithTradingFeesApy = ({ farmApr, tradingApr, compoundingsPerYear, t, shareAfterPerformanceFee }) => {
   const farmApy = farmApr ? compound(farmApr, compoundingsPerYear, t, shareAfterPerformanceFee) : 0;
   const tradingApy = tradingApr ? compound(tradingApr, compoundingsPerYear, t, 1) : 0; // no fee on trading
   const finalAPY = (1 + farmApy) * (1 + tradingApy) - 1;
@@ -44,10 +38,7 @@ async function getTradingFeeApr(address: string, lpFee: number, amm: string) {
     const { data } = await resp.json();
     const pairDayData = data.pairDayDatas[0];
 
-    return new BigNumberJS(pairDayData.dailyVolumeUSD)
-      .times(lpFee)
-      .times(365)
-      .dividedBy(pairDayData.reserveUSD);
+    return new BigNumberJS(pairDayData.dailyVolumeUSD).times(lpFee).times(365).dividedBy(pairDayData.reserveUSD);
   } catch (err) {
     console.log(err);
     return new BigNumberJS("0");
@@ -100,9 +91,7 @@ export async function getVaultApy({
     .times(1 - (depositFees ?? 0));
 
   const yearlyRewards = poolBlockRewards.dividedBy(secondsPerBlock).times(secondsPerYear);
-  const yearlyRewardsInUsd = yearlyRewards
-    .times(rewardToken.price)
-    .dividedBy(`1e${rewardToken.decimals}`);
+  const yearlyRewardsInUsd = yearlyRewards.times(rewardToken.price).dividedBy(`1e${rewardToken.decimals}`);
 
   const simpleApr = yearlyRewardsInUsd.dividedBy(totalStakedInUSD);
 
@@ -158,21 +147,11 @@ export async function getVaultDualApy({
   const tradingFeeApr = await getTradingFeeApr(address, DFYN_LPF, "dfyn");
 
   // get farm apr
-  const token0yearlyRewards = new BigNumberJS(token0RewardRate)
-    .times(3)
-    .times(blocksPerDay)
-    .times(365);
-  const token0TotalRewardsInUsd = token0yearlyRewards
-    .times(token0Price)
-    .dividedBy(`1e${token0Decimals}`);
+  const token0yearlyRewards = new BigNumberJS(token0RewardRate).times(3).times(blocksPerDay).times(365);
+  const token0TotalRewardsInUsd = token0yearlyRewards.times(token0Price).dividedBy(`1e${token0Decimals}`);
 
-  const token1yearlyRewards = new BigNumberJS(token1RewardRate)
-    .times(3)
-    .times(blocksPerDay)
-    .times(365);
-  const token1TotalRewardsInUsd = token1yearlyRewards
-    .times(token1Price)
-    .dividedBy(`1e${token1Decimals}`);
+  const token1yearlyRewards = new BigNumberJS(token1RewardRate).times(3).times(blocksPerDay).times(365);
+  const token1TotalRewardsInUsd = token1yearlyRewards.times(token1Price).dividedBy(`1e${token1Decimals}`);
 
   const totalRewardsInUsd = token0TotalRewardsInUsd.plus(token1TotalRewardsInUsd);
   const totalStakedInUsd = new BigNumberJS(totalStakedInFarm).times(stakePrice);
