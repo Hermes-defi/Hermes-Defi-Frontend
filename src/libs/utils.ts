@@ -37,6 +37,28 @@ export function blockToTimestamp(block: number) {
   return dayjs().set("s", block * 2.5);
 }
 
+export function generateTimeDuration(diff: number) {
+  const duration = dayjs.duration(diff);
+  console.log(diff);
+
+  const days = duration.days();
+  const hours = duration.hours();
+  const minutes = duration.minutes();
+
+  let resp = "";
+  if (days > 0) {
+    resp += days > 1 ? `${days} days, ` : `${days} day, `;
+  }
+
+  if (hours > 0) {
+    resp += hours > 1 ? `${hours} hours, ` : `${hours} hour, `;
+  }
+
+  resp += minutes > 1 ? `${minutes} minutes` : `${minutes} minute`;
+
+  return resp;
+}
+
 export const getUtcSecondsFromDayRange = (daysAgo0: number, daysAgo1: number) => {
   const endDate = dayjs().subtract(daysAgo0, "d").startOf("m").toDate();
   const startDate = dayjs().subtract(daysAgo1, "d").startOf("m").toDate();

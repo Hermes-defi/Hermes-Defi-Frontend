@@ -1,8 +1,8 @@
 import { utils } from "ethers";
-import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { getTokenBalance } from "web3-functions";
+import defaultContracts from "config/contracts";
 import { useERC20 } from "./contracts";
 
 export function useTokenBalance(tokenAddress: string, tokenDecimals = 18) {
@@ -16,6 +16,10 @@ export function useTokenBalance(tokenAddress: string, tokenDecimals = 18) {
   });
 
   return balance.data;
+}
+
+export function useApolloBalance() {
+  return useTokenBalance(defaultContracts.apolloToken.address);
 }
 
 export function useBalance() {

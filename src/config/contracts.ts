@@ -13,6 +13,7 @@ import RewardPoolABI from "config/abis/RewardPoolABI.json";
 import DualRewardPoolABI from "config/abis/DualRewardPoolABI.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
 import pAPOLLO from "config/abis/pApollo.json";
+import BankABI from "config/abis/Bank.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -125,6 +126,13 @@ const defaultContracts = {
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: ERC20ABI,
+  },
+  bank: {
+    address: {
+      137: "0xB8C27aa9e8C1715e91262a6814e1e100eeF83a09",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: BankABI,
   },
 };
 

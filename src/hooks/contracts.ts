@@ -162,3 +162,8 @@ export function usePApollo() {
   const contract = useContract();
   return contract(defaultContracts.pApollo);
 }
+
+export function useBankContract() {
+  const contract = useContract();
+  return contract(defaultContracts.bank);
+}

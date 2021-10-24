@@ -1,4 +1,5 @@
 import { extendTheme } from "@chakra-ui/react";
+import { mode } from "@chakra-ui/theme-tools";
 
 const theme = extendTheme({
   config: {
@@ -54,7 +55,25 @@ const theme = extendTheme({
       base: {
         rounded: "xl",
       },
-      variants: {},
+      variants: {
+        action: (props) => ({
+          bg: "gray.700",
+          color: "white",
+
+          _hover: {
+            color: "white",
+            bg: "gray.600",
+
+            _disabled: {
+              bg: "gray.600",
+            },
+          },
+
+          _active: {
+            bg: "gray.700",
+          },
+        }),
+      },
     },
   },
 });

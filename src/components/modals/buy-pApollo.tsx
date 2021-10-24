@@ -14,10 +14,7 @@ import {
   useColorModeValue,
   Skeleton,
 } from "@chakra-ui/react";
-import { useBalance, useTokenBalance } from "hooks/wallet";
 import { displayTokenCurrency } from "libs/utils";
-import defaultContracts from "config/contracts";
-import tokens from "config/tokens";
 import { usePresaleQuote } from "state/pre-sale";
 
 type Props = {
