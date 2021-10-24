@@ -53,7 +53,7 @@ export const useHasApprovedPool = () => {
 };
 
 export const useFetchMainPool = () => {
-  const { account, library } = useActiveWeb3React();
+  const { library } = useActiveWeb3React();
   const bankContract = useBankContract();
   const apolloPrice = useApolloPrice();
 
@@ -204,7 +204,6 @@ export const useFetchPools = () => {
 };
 
 export const useBankStats = () => {
-  const { account, library } = useActiveWeb3React();
   const apolloContract = useApolloToken();
   const bankContract = useBankContract();
 
@@ -221,6 +220,60 @@ export const useBankStats = () => {
   });
 
   return bankStats;
+};
+
+export const useMyBankRewards = () => {
+  const { account, library } = useActiveWeb3React();
+  const apolloPrice = useApolloPrice();
+  const bankContract = useBankContract();
+  const getLpContract = useERC20();
+
+  const myBankRewards = useQuery({
+    queryKey: ["my-bank-rewards", account],
+    enabled: !!account,
+    queryFn: async () => {
+      const userInfo = await bankContract.userinfo(account);
+      const pids = userInfo.pids.map((p) => p.toNumber());
+
+      const poolRewards = [];
+      let totalDollarValue = 0;
+      for (let pid of pids) {
+        const reward = (await bankContract.pendingReward(pid, account)).toString();
+        const poolInfo = await bankContract.poolInfo(pid);
+        const lpContract = getLpContract(poolInfo.token);
+        const symbol = await lpContract.symbol();
+
+        const tokenPrice = await fetchPrice({ address: lpContract.address, symbol: symbol, decimals: 18 }, library);
+        const rewardInUsd = new BigNumberJS(reward).times(tokenPrice).toString();
+
+        totalDollarValue = new BigNumberJS(totalDollarValue).plus(rewardInUsd).toNumber();
+        poolRewards.push({
+          name: symbol,
+          reward,
+          rewardInUsd,
+        });
+      }
+
+      const ironRewards = (await bankContract.pendingIRON(account)).toString();
+      const ironPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
+      const ironRewardUsd = new BigNumberJS(ironRewards).times(ironPrice).toString();
+
+      // total dollar value
+      totalDollarValue = new BigNumberJS(totalDollarValue).plus(ironRewardUsd).toNumber();
+
+      const inApollo = apolloPrice.data ? new BigNumberJS(totalDollarValue).dividedBy(apolloPrice.data).toString() : 0;
+
+      console.log({ inApollo });
+      return {
+        ironRewards,
+        poolRewards,
+        totalDollarValue,
+        inApollo,
+      };
+    },
+  });
+
+  return myBankRewards;
 };
 
 // mutations
@@ -269,7 +322,8 @@ export const useDepositInBank = () => {
     async (amount: string) => {
       if (!account) throw new Error("No connected account");
 
-      await bankContract.deposit(utils.parseUnits(amount, 18));
+      const tx = await bankContract.deposit(utils.parseUnits(amount, 18));
+      await tx.wait();
     },
 
     {
@@ -295,7 +349,7 @@ export const useDepositInBank = () => {
         });
 
         toast({
-          title: "Error approving token for bank",
+          title: "Error depositing",
           description: data?.message,
           status: "error",
           position: "top-right",
@@ -318,7 +372,9 @@ export const useEnrollInPool = () => {
   const enrollMutation = useMutation(
     async (pid: number) => {
       if (!account) throw new Error("No connected account");
-      await bankContract.enroll(pid);
+
+      const tx = await bankContract.enroll(pid);
+      await tx.wait();
     },
 
     {
@@ -338,7 +394,7 @@ export const useEnrollInPool = () => {
         });
 
         toast({
-          title: "Error enrolling in pool for bank",
+          title: "Error enrolling",
           description: data?.message,
           status: "error",
           position: "top-right",
@@ -349,4 +405,92 @@ export const useEnrollInPool = () => {
   );
 
   return enrollMutation;
+};
+
+export const useCompoundInBank = () => {
+  const queryClient = useQueryClient();
+  const bankContract = useBankContract();
+
+  const { account } = useActiveWeb3React();
+  const toast = useToast();
+
+  const compoundMutation = useMutation(
+    async () => {
+      if (!account) throw new Error("No connected account");
+
+      const tx = await bankContract.compound();
+      await tx.wait();
+    },
+
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["my-bank-rewards", account]);
+
+        ReactGA.event({
+          category: "Bank Compound",
+          action: `Compound in bank`,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[useCompoundInBank][error] general error `, {
+          data,
+        });
+
+        toast({
+          title: "Error compouding",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return compoundMutation;
+};
+
+export const useHarvestFromBank = () => {
+  const queryClient = useQueryClient();
+  const bankContract = useBankContract();
+
+  const { account } = useActiveWeb3React();
+  const toast = useToast();
+
+  const harvestMutation = useMutation(
+    async () => {
+      if (!account) throw new Error("No connected account");
+
+      const tx = await bankContract.deposit(utils.parseUnits("0", 18));
+      await tx.wait();
+    },
+
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["my-bank-rewards", account]);
+
+        ReactGA.event({
+          category: "Harvest Bank",
+          action: `Harvest rewards from Bank`,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[useHarvestFromBank][error] general error `, {
+          data,
+        });
+
+        toast({
+          title: "Error harvesting",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return harvestMutation;
 };

@@ -1,22 +1,16 @@
 import React from "react";
 import NextLink from "next/link";
 import { AppLayout } from "components/layout";
-import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  Image,
-  Input,
-  Stack,
-  Text,
-  useColorModeValue,
-  Wrap,
-  WrapItem,
-} from "@chakra-ui/react";
-import { RiStackFill } from "react-icons/ri";
+import { Box, Button, Container, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { useCompoundInBank, useDepositedAmount, useHarvestFromBank, useMyBankRewards } from "state/bank";
+import { displayCurrency, displayNumber } from "libs/utils";
 
 const Page = () => {
+  const depositedAmount = useDepositedAmount();
+  const rewards = useMyBankRewards();
+  const claimMutation = useHarvestFromBank();
+  const compoundMutation = useCompoundInBank();
+
   return (
     <AppLayout>
       <Container maxWidth="container.md" my={8}>
@@ -53,15 +47,17 @@ const Page = () => {
                   Total
                 </Text>
 
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  0.4894 IRON
-                </Text>
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  0.3123 WETH
-                </Text>
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  0.2344 WMATIC
-                </Text>
+                <Skeleton isLoaded={!!rewards.data}>
+                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                    {displayNumber(rewards.data?.ironRewards || 0, false, 3)} IRON
+                  </Text>
+                </Skeleton>
+
+                {rewards.data?.poolRewards.map((pool) => (
+                  <Text key={pool.name} fontSize="lg" color="primary.400" fontWeight="bold">
+                    {displayNumber(pool.reward || 0, false, 3)} {pool.name}
+                  </Text>
+                ))}
               </Stack>
 
               <Stack spacing={1} align="flex-end">
@@ -69,9 +65,11 @@ const Page = () => {
                   Estimated Dollar Value
                 </Text>
 
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  $0.4992
-                </Text>
+                <Skeleton isLoaded={!!rewards.data}>
+                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                    {displayCurrency(rewards.data?.totalDollarValue)}
+                  </Text>
+                </Skeleton>
               </Stack>
 
               <Stack spacing={1} align="flex-end">
@@ -79,9 +77,11 @@ const Page = () => {
                   Estimated Amount in APOLLO
                 </Text>
 
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  123.8997 APOLLO
-                </Text>
+                <Skeleton isLoaded={!!rewards.data}>
+                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                    {displayNumber(rewards.data?.inApollo, false, 4)} APOLLO
+                  </Text>
+                </Skeleton>
               </Stack>
             </Stack>
 
@@ -95,8 +95,27 @@ const Page = () => {
             </Stack>
 
             <Stack spacing={5}>
-              <Button colorScheme="primary">Compound</Button>
-              <Button colorScheme="secondary">Claim Rewards</Button>
+              <Text fontSize="xs" align="center">
+                COMPOUND WITH 5% BONUS APOLLO, LOTTERY TICKET
+              </Text>
+
+              <Button
+                isDisabled={!depositedAmount.data}
+                isLoading={compoundMutation.isLoading}
+                onClick={() => compoundMutation.mutate()}
+                colorScheme="primary"
+              >
+                Compound
+              </Button>
+
+              <Button
+                isDisabled={!depositedAmount.data}
+                isLoading={claimMutation.isLoading}
+                onClick={() => claimMutation.mutate()}
+                colorScheme="secondary"
+              >
+                Claim Rewards
+              </Button>
             </Stack>
           </Stack>
         </Stack>

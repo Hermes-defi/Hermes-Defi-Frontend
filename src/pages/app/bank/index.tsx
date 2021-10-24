@@ -126,134 +126,64 @@ function DepositSection() {
   );
 }
 
-function Pools() {
-  const mainPool = useFetchMainPool();
-  const pools = useFetchPools();
-
+function Pool({ pool }) {
   const enrollMutation = useEnrollInPool();
-  const bgColor = useColorModeValue("secondary.400", "primary.400");
 
   return (
-    <SimpleGrid columns={2} spacing={5}>
-      {mainPool.data && (
-        <Stack
-          w="100%"
-          spacing={5}
-          bg={bgColor}
-          bgGradient={"linear(to-b, whiteAlpha.600, green.500)"}
-          color={"white"}
-          px={6}
-          py={5}
-          rounded="xl"
-        >
-          <Stack direction="row" justify="space-between">
-            <Stack direction="row" align="center">
-              <Image objectFit="contain" src={`/iron-logo.png`} boxSize={10} />
-              <Text fontSize="md" textTransform="uppercase" fontWeight="bold">
-                iron bank
-              </Text>
-            </Stack>
-
-            <Stack justify="center" align="center">
-              <Text
-                rounded="lg"
-                px={4}
-                py={2}
-                bg="primary.400"
-                fontWeight="bold"
-                fontSize="xs"
-                textTransform="uppercase"
-              >
-                New
-              </Text>
-            </Stack>
-          </Stack>
-
-          {/* bank info */}
-          <Stack textAlign="right" spacing={0}>
-            <Text fontWeight="semibold" textTransform="uppercase" fontSize="md">
-              Reward
-            </Text>
-            <Text fontWeight="bold" fontSize="4xl">
-              {displayCurrency(mainPool.data?.monthlyRewards)}/month
-            </Text>
-            <Text fontSize="md" fontWeight="semibold" textTransform="uppercase">
-              {displayNumber(mainPool.data?.apr)}%
-            </Text>
-
-            <Text fontSize="md" fontWeight="semibold">
-              {mainPool.data?.timeLeft || 0} left
-            </Text>
-          </Stack>
-
-          <Button isFullWidth isDisabled textTransform="uppercase" variant="action">
-            Enrolled
-          </Button>
+    <Stack
+      spacing={5}
+      bg={useColorModeValue("secondary.400", "primary.400")}
+      bgGradient={"linear(to-b, whiteAlpha.600, accent.500)"}
+      color={"white"}
+      px={6}
+      py={5}
+      rounded="xl"
+    >
+      <Stack direction="row" justify="space-between">
+        <Stack direction="row" align="center">
+          <Image objectFit="contain" src={`/${pool?.poolName}-logo.png`} boxSize={8} />
+          <Text fontSize="sm" textTransform="uppercase" fontWeight="bold">
+            {pool?.poolName} Reward
+          </Text>
         </Stack>
-      )}
 
-      {pools.map(({ data: pool }: any) => {
-        if (!pool) return null;
-
-        return (
-          <Stack
-            key={pool?.pid}
-            spacing={5}
-            bg={bgColor}
-            bgGradient={"linear(to-b, whiteAlpha.600, accent.500)"}
-            color={"white"}
-            px={6}
-            py={5}
-            rounded="xl"
-          >
-            <Stack direction="row" justify="space-between">
-              <Stack direction="row" align="center">
-                <Image objectFit="contain" src={`/${pool?.poolName}-logo.png`} boxSize={8} />
-                <Text fontSize="sm" textTransform="uppercase" fontWeight="bold">
-                  {pool?.poolName} Reward
-                </Text>
-              </Stack>
-
-              {pool?.isNew && (
-                <Stack rounded="lg" px={2} bg="primary.400" justify="center" align="center">
-                  <Text fontWeight="bold" fontSize="xs" textTransform="uppercase">
-                    New
-                  </Text>
-                </Stack>
-              )}
-            </Stack>
-
-            {/* bank info */}
-            <Stack textAlign="right" spacing={0}>
-              <Text fontWeight="semibold" fontSize="sm">
-                APR
-              </Text>
-              <Text fontWeight="bold" fontSize="4xl">
-                {displayNumber(pool?.apr)}%
-              </Text>
-              <Text fontSize="md" fontWeight="semibold" textTransform="uppercase">
-                {displayNumber(pool?.poolAmount, false, 6)} {pool?.poolName}
-              </Text>
-
-              <Text fontSize="md" fontWeight="semibold">
-                {pool?.timeLeft || 0} left
-              </Text>
-            </Stack>
-
-            <Button
-              isFullWidth
-              isDisabled={pool?.enrolled}
-              textTransform="uppercase"
-              variant="action"
-              isLoading={enrollMutation.isLoading}
-              onClick={() => enrollMutation.mutate(pool?.pid)}
-            >
-              {pool?.enrolled ? "Enrolled" : "Enroll"}
-            </Button>
+        {pool?.isNew && (
+          <Stack rounded="lg" px={2} bg="primary.400" justify="center" align="center">
+            <Text fontWeight="bold" fontSize="xs" textTransform="uppercase">
+              New
+            </Text>
           </Stack>
-        );
-      })}
-    </SimpleGrid>
+        )}
+      </Stack>
+
+      {/* bank info */}
+      <Stack textAlign="right" spacing={0}>
+        <Text fontWeight="semibold" fontSize="sm">
+          APR
+        </Text>
+        <Text fontWeight="bold" fontSize="4xl">
+          {displayNumber(pool?.apr)}%
+        </Text>
+        <Text fontSize="md" fontWeight="semibold" textTransform="uppercase">
+          {displayNumber(pool?.poolAmount, false, 6)} {pool?.poolName}
+        </Text>
+
+        <Text fontSize="md" fontWeight="semibold">
+          {pool?.timeLeft || 0} left
+        </Text>
+      </Stack>
+
+      <Button
+        isFullWidth
+        isDisabled={pool?.enrolled}
+        textTransform="uppercase"
+        variant="action"
+        isLoading={enrollMutation.isLoading}
+        onClick={() => enrollMutation.mutate(pool?.pid)}
+      >
+        {pool?.enrolled ? "Enrolled" : "Enroll"}
+      </Button>
+    </Stack>
   );
 }
 
@@ -317,6 +247,9 @@ function Stats() {
 }
 
 const Page = () => {
+  const mainPool = useFetchMainPool();
+  const pools = useFetchPools();
+
   return (
     <AppLayout>
       <Container maxWidth="container.lg" my={8}>
@@ -346,7 +279,68 @@ const Page = () => {
             <DepositSection />
 
             {/* rewards */}
-            <Pools />
+            <SimpleGrid columns={2} spacing={5}>
+              {mainPool.data && (
+                <Stack
+                  w="100%"
+                  spacing={5}
+                  bgGradient={"linear(to-b, whiteAlpha.600, green.500)"}
+                  color={"white"}
+                  px={6}
+                  py={5}
+                  rounded="xl"
+                >
+                  <Stack direction="row" justify="space-between">
+                    <Stack direction="row" align="center">
+                      <Image objectFit="contain" src={`/iron-logo.png`} boxSize={10} />
+                      <Text fontSize="md" textTransform="uppercase" fontWeight="bold">
+                        iron bank
+                      </Text>
+                    </Stack>
+
+                    <Stack justify="center" align="center">
+                      <Text
+                        rounded="lg"
+                        px={4}
+                        py={2}
+                        bg="primary.400"
+                        fontWeight="bold"
+                        fontSize="xs"
+                        textTransform="uppercase"
+                      >
+                        New
+                      </Text>
+                    </Stack>
+                  </Stack>
+
+                  {/* bank info */}
+                  <Stack textAlign="right" spacing={0}>
+                    <Text fontWeight="semibold" textTransform="uppercase" fontSize="md">
+                      Reward
+                    </Text>
+                    <Text fontWeight="bold" fontSize="4xl">
+                      {displayCurrency(mainPool.data?.monthlyRewards)}/month
+                    </Text>
+                    <Text fontSize="md" fontWeight="semibold" textTransform="uppercase">
+                      {displayNumber(mainPool.data?.apr)}%
+                    </Text>
+
+                    <Text fontSize="md" fontWeight="semibold">
+                      {mainPool.data?.timeLeft || 0} left
+                    </Text>
+                  </Stack>
+
+                  <Button isFullWidth isDisabled textTransform="uppercase" variant="action">
+                    Enrolled
+                  </Button>
+                </Stack>
+              )}
+
+              {pools.map(({ data: pool }: any) => {
+                if (!pool) return null;
+                return <Pool pool={pool} key={pool.pid} />;
+              })}
+            </SimpleGrid>
 
             {/* info */}
             <Stats />
