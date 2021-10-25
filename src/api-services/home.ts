@@ -23,6 +23,15 @@ export async function getIrisPrice() {
   return irisPrice;
 }
 
+export async function getApolloPrice() {
+  const apolloPrice = await fetchPrice(
+    { address: defaultContracts.apolloToken.address, decimals: 18, symbol: "APOLLO" },
+    provider
+  );
+
+  return apolloPrice || "0";
+}
+
 export async function getHermesStats() {
   const totalValueInPools = await pools.reduce(async (_total: Promise<BigNumberJS>, pool: Pool) => {
     const lpContract = new ethers.Contract(pool.stakeToken.address, ERC20_ABI, provider);
@@ -37,9 +46,7 @@ export async function getHermesStats() {
     );
 
     const total = await _total;
-    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(
-      tokenPrice
-    );
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(tokenPrice);
 
     return total.plus(poolPrice);
   }, Promise.resolve(new BigNumberJS(0)));
@@ -50,74 +57,125 @@ export async function getHermesStats() {
     const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
     const totalSupply = utils.formatUnits(await lpContract.totalSupply(), farm.stakeToken.decimals);
 
-    const tokenPrice = await fetchPairPrice(
-      farm.pairs[0],
-      farm.pairs[1],
-      totalSupply,
-      provider,
-      farm.farmDx
-    );
+    const tokenPrice = await fetchPairPrice(farm.pairs[0], farm.pairs[1], totalSupply, provider, farm.farmDx);
 
     const total = await _total;
-    const poolPrice = new BigNumberJS(
-      utils.formatUnits(totalLpStaked, farm.stakeToken.decimals)
-    ).multipliedBy(tokenPrice);
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, farm.stakeToken.decimals)).multipliedBy(
+      tokenPrice
+    );
 
     return total.plus(poolPrice);
   }, Promise.resolve(new BigNumberJS(0)));
 
-  const totalValueInBalancers = await balancers.reduce(
-    async (_total: Promise<BigNumberJS>, bal: Balancer) => {
-      const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, provider);
+  const totalValueInBalancers = await balancers.reduce(async (_total: Promise<BigNumberJS>, bal: Balancer) => {
+    const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, provider);
 
-      const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
-      const tokenDecimal = await lpContract.decimals();
+    const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+    const tokenDecimal = await lpContract.decimals();
 
-      const tokenPrice = await fetchBalancerPrice(bal.balancerAddress);
+    const tokenPrice = await fetchBalancerPrice(bal.balancerAddress);
 
-      const total = await _total;
-      const poolPrice = new BigNumberJS(
-        utils.formatUnits(totalLpStaked, tokenDecimal)
-      ).multipliedBy(tokenPrice);
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(tokenPrice);
 
-      return total.plus(poolPrice);
-    },
-    Promise.resolve(new BigNumberJS(0))
-  );
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
 
-  const totalValueInVaults = await vaults.reduce(
-    async (_total: Promise<BigNumberJS>, vault: Vault) => {
-      const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
-      const lpContract = new ethers.Contract(vault.stakeToken.address, ERC20_ABI, provider);
+  const totalValueInVaults = await vaults.reduce(async (_total: Promise<BigNumberJS>, vault: Vault) => {
+    const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
+    const lpContract = new ethers.Contract(vault.stakeToken.address, ERC20_ABI, provider);
 
-      const totalLpStaked = await vaultContract.balance();
-      const totalSupply = utils.formatUnits(
-        await lpContract.totalSupply(),
-        vault.stakeToken.decimals
-      );
+    const totalLpStaked = await vaultContract.balance();
+    const totalSupply = utils.formatUnits(await lpContract.totalSupply(), vault.stakeToken.decimals);
 
-      const tokenPrice = await fetchPairPrice(
-        vault.pairs[0],
-        vault.pairs[1],
-        totalSupply,
-        provider,
-        vault.amm
-      );
+    const tokenPrice = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, provider, vault.amm);
 
-      const total = await _total;
-      const poolPrice = new BigNumberJS(
-        utils.formatUnits(totalLpStaked, vault.stakeToken.decimals)
-      ).multipliedBy(tokenPrice);
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, vault.stakeToken.decimals)).multipliedBy(
+      tokenPrice
+    );
 
-      return total.plus(poolPrice);
-    },
-    Promise.resolve(new BigNumberJS(0))
-  );
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
 
-  const tvl = totalValueInPools
-    .plus(totalValueInFarms)
-    .plus(totalValueInBalancers)
-    .plus(totalValueInVaults);
+  const tvl = totalValueInPools.plus(totalValueInFarms).plus(totalValueInBalancers).plus(totalValueInVaults);
+
+  return {
+    totalValueInPools: totalValueInPools.toString(),
+    totalValueInFarms: totalValueInFarms.toString(),
+    totalValueInBalancers: totalValueInBalancers.toString(),
+    totalValueInVaults: totalValueInVaults.toString(),
+    tvl: tvl.toString(),
+  };
+}
+
+export async function getApolloStats() {
+  const totalValueInPools = await pools.reduce(async (_total: Promise<BigNumberJS>, pool: Pool) => {
+    const lpContract = new ethers.Contract(pool.stakeToken.address, ERC20_ABI, provider);
+
+    const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+    const tokenDecimal = await lpContract.decimals();
+    const tokenSymbol = await lpContract.symbol();
+
+    const tokenPrice = await fetchPrice(
+      { address: lpContract.address, decimals: tokenDecimal, symbol: tokenSymbol },
+      provider
+    );
+
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(tokenPrice);
+
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
+
+  const totalValueInFarms = await farms.reduce(async (_total: Promise<BigNumberJS>, farm: Farm) => {
+    const lpContract = new ethers.Contract(farm.stakeToken.address, ERC20_ABI, provider);
+
+    const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+    const totalSupply = utils.formatUnits(await lpContract.totalSupply(), farm.stakeToken.decimals);
+
+    const tokenPrice = await fetchPairPrice(farm.pairs[0], farm.pairs[1], totalSupply, provider, farm.farmDx);
+
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, farm.stakeToken.decimals)).multipliedBy(
+      tokenPrice
+    );
+
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
+
+  const totalValueInBalancers = await balancers.reduce(async (_total: Promise<BigNumberJS>, bal: Balancer) => {
+    const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, provider);
+
+    const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+    const tokenDecimal = await lpContract.decimals();
+
+    const tokenPrice = await fetchBalancerPrice(bal.balancerAddress);
+
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(tokenPrice);
+
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
+
+  const totalValueInVaults = await vaults.reduce(async (_total: Promise<BigNumberJS>, vault: Vault) => {
+    const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
+    const lpContract = new ethers.Contract(vault.stakeToken.address, ERC20_ABI, provider);
+
+    const totalLpStaked = await vaultContract.balance();
+    const totalSupply = utils.formatUnits(await lpContract.totalSupply(), vault.stakeToken.decimals);
+
+    const tokenPrice = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, provider, vault.amm);
+
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, vault.stakeToken.decimals)).multipliedBy(
+      tokenPrice
+    );
+
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
+
+  const tvl = totalValueInPools.plus(totalValueInFarms).plus(totalValueInBalancers).plus(totalValueInVaults);
 
   return {
     totalValueInPools: totalValueInPools.toString(),

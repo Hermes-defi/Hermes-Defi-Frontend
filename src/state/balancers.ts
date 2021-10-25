@@ -56,7 +56,7 @@ function useFetchBalancersRequest() {
 
     // USER data
     if (account) {
-      newBal.rewardsEarned = utils.formatEther(await masterChef.pendingapollo(balancer.pid, account));
+      newBal.rewardsEarned = utils.formatEther(await masterChef.pendingApollo(balancer.pid, account));
 
       const userInfo = await masterChef.userInfo(balancer.pid, account);
 

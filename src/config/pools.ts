@@ -65,6 +65,76 @@ export const pools: Pool[] = {
         logo: "/hermes-logo-1.png",
       },
     },
+    {
+      pid: 2,
+      multiplier: "3",
+      depositFees: 0,
+      isActive: true,
+      vaultPool: true,
+
+      stakeToken: {
+        address: "0x0f8860515B51bBbB3AEe4603Fe8716454a2Ed24C",
+        symbol: "godUSDC/WETH",
+        decimals: 18,
+        logo: "/god-usdc-weth-logo.png",
+      },
+    },
+    {
+      pid: 3,
+      multiplier: "3",
+      depositFees: 0,
+      isActive: true,
+      vaultPool: true,
+
+      stakeToken: {
+        address: "0xC12b54BAEc88CC4F28501f90Bb189Ac7132ee97F",
+        symbol: "godWMATIC/WETH",
+        decimals: 18,
+        logo: "/god-wmatic-weth-logo.png",
+      },
+    },
+    {
+      pid: 4,
+      multiplier: "3",
+      depositFees: 0,
+      isActive: true,
+      vaultPool: true,
+
+      stakeToken: {
+        address: "0xf32baBB43226DdF187151Eb392c1e7F8C0F4a2BB",
+        symbol: "godWBTC/WETH",
+        decimals: 18,
+        logo: "/god-btc-weth-logo.png",
+      },
+    },
+    {
+      pid: 5,
+      multiplier: "3",
+      depositFees: 0,
+      isActive: true,
+      vaultPool: true,
+
+      stakeToken: {
+        address: "0xaaF43E30e1Aa6ed2dfED9CCD03AbAF7C34B5B8F6",
+        symbol: "godUSDC/USDT",
+        decimals: 18,
+        logo: "/god-usdc-usdt-logo.png",
+      },
+    },
+    {
+      pid: 11,
+      multiplier: "3",
+      depositFees: 0,
+      isActive: true,
+      vaultPool: true,
+
+      stakeToken: {
+        address: "0x467cb3cE716e0801355BFb3b3F4070108E46051f",
+        symbol: "godDFYN/ROUTE",
+        decimals: 18,
+        logo: "/god-dfyn-route-logo.png",
+      },
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);

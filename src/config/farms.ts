@@ -147,7 +147,7 @@ export const farms: Farm[] = {
         address: "0xE6a2631D6Ef2BD7921cE6d51758c0249270A2B63",
         symbol: "APOLLO/ICE",
         decimals: 18,
-        logo: ["/apollo-logo.png", "/iron-logo.png"],
+        logo: ["/apollo-logo.png", "/ice-logo.png"],
       },
 
       pairs: [

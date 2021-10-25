@@ -273,6 +273,58 @@ export const vaults: Vault[] = {
         },
       ],
     },
+
+    {
+      address: "0x467cb3cE716e0801355BFb3b3F4070108E46051f",
+      stratAddress: "0x031AE02F2A989E50047aCb9Fc1d3DA11a4Fe259D",
+      type: "dual",
+
+      farmAddress: "0xa0d35c593235bA61151F0BAD89A4fB70AA5dad9f",
+
+      isActive: true,
+      amm: "dfyn",
+      depositFees: 2,
+      withdrawFees: 0,
+      performanceFee: 0.25,
+
+      farmRewardTokens: [
+        {
+          address: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
+          decimals: 18,
+          symbol: "ROUTE",
+        },
+        {
+          address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
+          decimals: 18,
+          symbol: "DFYN",
+        },
+      ],
+
+      stakeToken: {
+        address: "0xb0dc320ea9eea823a150763abb4a7ba8286cd08b",
+        symbol: "DFYN/ROUTE",
+        decimals: 18,
+        logo: ["/router-logo.png", "/dfyn-logo.svg"],
+      },
+
+      rewardToken: {
+        symbol: "godDFYN/ROUTE",
+        decimals: 18,
+      },
+
+      pairs: [
+        {
+          address: "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4",
+          decimals: 18,
+          symbol: "ROUTE",
+        },
+        {
+          address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
+          decimals: 18,
+          symbol: "DFYN",
+        },
+      ],
+    },
   ],
   80001: [],
 }[DEFAULT_CHAIN_ID].filter((vault: Vault) => !vault.isDisabled);

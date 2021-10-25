@@ -1,5 +1,5 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
-import { useERC20, useMasterChef } from "hooks/contracts";
+import { useERC20, useMasterChef, useVaultContract } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
 import { useApolloPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
@@ -9,14 +9,16 @@ import BigNumberJS from "bignumber.js";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
 import { apolloPerBlock } from "config/constants";
-import { fetchPrice } from "web3-functions/prices";
+import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
+import { vaults } from "config/vaults";
 
 function useFetchPoolsRequest() {
   const apolloPrice = useApolloPrice();
   const masterChef = useMasterChef();
   const getLpContract = useERC20();
+  const getVaultContract = useVaultContract();
   const { account, library } = useActiveWeb3React();
 
   return async (pool: Pool) => {
@@ -39,7 +41,26 @@ function useFetchPoolsRequest() {
       newPool.stakeToken.decimals
     );
 
-    newPool.stakeToken.price = await fetchPrice(newPool.stakeToken, library);
+    if (!newPool.vaultPool) {
+      newPool.stakeToken.price = await fetchPrice(newPool.stakeToken, library);
+    } else {
+      // get vault details
+      const poolVault = vaults.find((v) => v.address.toLowerCase() === newPool.stakeToken.address.toLowerCase());
+      const poolVaultContract = getVaultContract(poolVault.address);
+
+      const pricePerShare = utils.formatUnits(await poolVaultContract.getPricePerFullShare(), 18);
+      const lpContract = getLpContract(poolVault.stakeToken.address);
+      const vaultTotalSupply = utils.formatUnits(await lpContract.totalSupply(), poolVault.stakeToken.decimals);
+      const depositTokenPrice = await fetchPairPrice(
+        poolVault.pairs[0],
+        poolVault.pairs[1],
+        vaultTotalSupply,
+        library,
+        poolVault.amm
+      );
+
+      newPool.stakeToken.price = new BigNumberJS(depositTokenPrice).times(pricePerShare).toString();
+    }
 
     // APR data
     const rewardsPerWeek = apolloPerBlock * (604800 / 2.1);

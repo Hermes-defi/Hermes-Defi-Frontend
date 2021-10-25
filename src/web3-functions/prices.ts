@@ -7,7 +7,7 @@ import * as Dfyn from "@dfyn/sdk";
 
 const amms = {
   "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1": "quickswap", // iris
-  "0x87cf37B07a5f879c1af35532862e6229E90C72AF": "dfyn", // apollo
+  "0x577aa684b89578628941d648f1fbd6dde338f059": "dfyn", // apollo
   "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
   "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc
   "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "coingecko", // wmatic
@@ -31,6 +31,7 @@ const amms = {
   "0x8a953cfe442c5e8855cc6c61b1293fa648bae472": "quickswap", // polydoge
   "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a": "coingecko", // iron
   "0xc3FdbadC7c795EF1D6Ba111e06fF8F16A20Ea539": "coingecko", // addy
+  "0x4a81f8796e0c6ad4877a51c86693b0de8093f2ef": "coingecko", // ice
 };
 
 async function fetchCoinGeckoPrice(address: string) {
@@ -173,6 +174,7 @@ export async function fetchPrice(token: { address: string; decimals: number; sym
     let price = await ammsFetcher[amm](token);
     return price;
   } catch (e) {
+    console.log(token);
     console.log(e);
     return "0";
   }
@@ -204,7 +206,7 @@ export async function fetchPairPrice(
       const tvl = token0Total.plus(token1Total);
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
 
-      return price.toString();
+      return price.toNumber() ? price.toString() : "0";
     },
 
     dfyn: async () => {
@@ -222,7 +224,7 @@ export async function fetchPairPrice(
       const tvl = token0Total.plus(token1Total);
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
 
-      return price.toString();
+      return price.toNumber() ? price.toString() : "0";
     },
 
     polycat: async () => {

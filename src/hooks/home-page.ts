@@ -174,7 +174,7 @@ export function useTotalInBalancers() {
 
 export function useTvlChart() {
   return useQuery("tvl-chart-data", async () => {
-    const resp = await fetch("/api/tvl-chart");
+    const resp = await fetch("/api/tvl-chart-apollo");
     const data = await resp.json();
 
     // format data

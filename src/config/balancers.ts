@@ -46,45 +46,50 @@ export type Balancer = {
 export const balancers: Balancer[] = {
   137: [
     {
-      pid: 10,
+      pid: 8,
       multiplier: "15",
-      depositFees: 3,
+      depositFees: 0,
 
       isActive: false,
-      isDisabled: true,
+      isSpecial: true,
       farmDx: "Balancer",
 
       stakeToken: {
-        address: "0x06df3b2bbb68adc8b0e302443692037ed9f91b42",
-        symbol: "U/D/M/U BPT",
+        address: "0x7320d680ca9bce8048a286f00a79a2c9f8dcd7b3",
+        symbol: "W/U/W/B/I BPT",
         decimals: 18,
-        logo: "/USDC__USDT__DAI__miMATIC.png",
+        logo: "/WETH__WMATIC__BAL__USDC__IRIS.png",
       },
 
       pairs: [
+        {
+          tokenAddress: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+          tokenDecimals: 18,
+          tokenName: "WMATIC",
+        },
         {
           tokenAddress: "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
           tokenDecimals: 6,
           tokenName: "USDC",
         },
         {
-          tokenAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+          tokenAddress: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
           tokenDecimals: 18,
-          tokenName: "DAI",
+          tokenName: "WETH",
         },
         {
-          tokenAddress: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063",
+          tokenAddress: "0x9a71012B13CA4d3D0Cdc72A177DF3ef03b0E76A3",
           tokenDecimals: 18,
-          tokenName: "DAI",
+          tokenName: "BAL",
         },
         {
-          tokenAddress: "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-          tokenDecimals: 6,
-          tokenName: "USDT",
+          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          tokenDecimals: 18,
+          tokenName: "IRIS",
         },
       ],
 
-      balancerAddress: "0x06df3b2bbb68adc8b0e302443692037ed9f91b42000000000000000000000012",
+      balancerAddress: "0x7320d680ca9bce8048a286f00a79a2c9f8dcd7b3000100000000000000000044",
     },
   ],
 }[DEFAULT_CHAIN_ID].filter((p: Balancer) => !p.isDisabled);

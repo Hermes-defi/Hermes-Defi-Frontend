@@ -49,7 +49,7 @@ const Page = () => {
 
                 <Skeleton isLoaded={!!rewards.data}>
                   <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                    {displayNumber(rewards.data?.ironRewards || 0, false, 3)} IRON
+                    {displayNumber(rewards.data?.ironRewards || 0, false, 6)} IRON
                   </Text>
                 </Skeleton>
 

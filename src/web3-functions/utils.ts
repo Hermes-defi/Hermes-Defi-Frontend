@@ -58,9 +58,9 @@ export function getPoolApr(
   const yearlyAPR = weeklyAPR * 52;
 
   return {
-    weeklyAPR,
-    dailyAPR,
-    yearlyAPR,
+    weeklyAPR: weeklyAPR || 0,
+    dailyAPR: dailyAPR || 0,
+    yearlyAPR: yearlyAPR || 0,
   };
 }
 

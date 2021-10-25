@@ -20,18 +20,26 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
 
   return (
     <Box
-      px={8}
-      py={4}
-      w="19rem"
+      px={7}
+      py={5}
+      w="20rem"
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
-      bgGradient={pool.isSpecial ? `linear(to-b, primary.300, accent.500)` : `linear(to-t, accent.300, accent.500)`}
+      bgGradient={pool.isSpecial ? `linear(to-b, primary.200, accent.400)` : `linear(to-b, secondary.200, accent.400)`}
       rounded="3xl"
       color="white"
     >
       {/* pool name */}
       <HStack align="center" mb={5} spacing={2}>
-        <Image border="2px" borderColor="white" bg="white" rounded="24px" src={pool.stakeToken.logo} boxSize={12} />
+        <Image
+          border="2px"
+          borderColor="white"
+          bg="white"
+          rounded="24px"
+          objectFit="contain"
+          src={pool.stakeToken.logo}
+          boxSize={12}
+        />
 
         <Heading fontSize="3xl">{pool.stakeToken.symbol}</Heading>
       </HStack>

@@ -260,7 +260,7 @@ export const useMyBankRewards = () => {
         });
       }
 
-      const ironRewards = (await bankContract.pendingIRON(account)).toString();
+      const ironRewards = utils.formatUnits(await bankContract.pendingIRON(account), 18);
       const ironPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
       const ironRewardUsd = new BigNumberJS(ironRewards).times(ironPrice).toString();
 

@@ -188,18 +188,18 @@ const Page = () => {
                 </Text>
 
                 <Text fontSize="sm">
-                  3. Waiting room. Ongoing (<Link href="/app/waiting-room">here</Link>)
+                  3. Waiting room. Ended (<Link href="/app/waiting-room">here</Link>)
                 </Text>
 
                 <Text fontSize="sm">4. Presale Second round starts at block #20151640</Text>
 
-                <Text fontSize="sm">5. Presale Second round ends at block #TBD</Text>
+                <Text fontSize="sm">5. Presale Second round ends at block #20705323</Text>
 
-                <Text fontSize="sm">6. Liquidity added at block #TBD</Text>
+                <Text fontSize="sm">6. Liquidity added at block #20708511</Text>
 
-                <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #TBD</Text>
+                <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #20711511</Text>
 
-                <Text fontSize="sm">8. Farming starts at block #TBD</Text>
+                <Text fontSize="sm">8. Farming starts at block #20744511</Text>
               </Stack>
 
               <Text fontSize="sm">
