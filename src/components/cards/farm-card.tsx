@@ -29,25 +29,14 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
       w="19rem"
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
-      bgGradient={
-        farm.isSpecial
-          ? `linear(to-b, primary.300, accent.500)`
-          : `linear(to-t, accent.300, accent.500)`
-      }
+      bgGradient={farm.isSpecial ? `linear(to-b, primary.300, accent.500)` : `linear(to-t, accent.300, accent.500)`}
       rounded="3xl"
       color="white"
     >
       {/* farm name */}
       <HStack align="center" mb={5} spacing={2}>
         <Box w={12} h={12} pos="relative">
-          <Image
-            pos="absolute"
-            top="5px"
-            left="0"
-            rounded="12px"
-            src={farm.stakeToken.logo[0]}
-            boxSize={6}
-          />
+          <Image pos="absolute" top="5px" left="0" rounded="12px" src={farm.stakeToken.logo[0]} boxSize={6} />
           <Image
             pos="absolute"
             bottom="-5px"
@@ -55,6 +44,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
             rounded="20px"
             src={farm.stakeToken.logo[1]}
             boxSize={10}
+            objectFit="contain"
           />
         </Box>
 
@@ -86,11 +76,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
           </Text>
           <Box display="flex" alignItems="center">
             {farm.apr && (
-              <IrisAPRCalculator
-                apr={farm.apr}
-                tokenSymbol={farm.stakeToken.symbol}
-                tokenLink={lpLink[farm.farmDx]}
-              />
+              <IrisAPRCalculator apr={farm.apr} tokenSymbol={farm.stakeToken.symbol} tokenLink={lpLink[farm.farmDx]} />
             )}
             <Text fontWeight="700" fontSize="sm">
               {farm.apr ? `${displayNumber(Math.round(farm.apr.yearlyAPR))}%` : "N/A"}
@@ -103,7 +89,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
             Earn
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            IRIS
+            APOLLO
           </Text>
         </Stack>
 
@@ -120,9 +106,9 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
       <Stack mb={8}>
         <UserSection
           id={farm.pid}
-          canCompound={farm.stakeToken.symbol.toLowerCase() === "iris"}
+          canCompound={false}
           stakeToken={farm.stakeToken}
-          rewardToken={{ symbol: "Iris" }}
+          rewardToken={{ symbol: "APOLLO" }}
           rewardsEarned={farm.rewardsEarned}
           hasApprovedPool={farm.hasApprovedPool}
           userTotalStaked={farm.userTotalStaked}
@@ -165,9 +151,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
             </Text>
             <Text fontWeight="700" fontSize="sm">
               {farm.totalStaked
-                ? displayCurrency(
-                    new BigNumber(farm.totalStaked).times(farm.stakeToken.price || 0).toNumber()
-                  )
+                ? displayCurrency(new BigNumber(farm.totalStaked).times(farm.stakeToken.price || 0).toNumber())
                 : "N/A"}
             </Text>
           </Stack>

@@ -19,7 +19,7 @@ type IProps = {
 
 export function IrisAPRCalculator({ apr, tokenLink, tokenSymbol }: IProps) {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const { data: irisPrice } = useApolloPrice();
+  const { data: apolloPrice } = useApolloPrice();
 
   return (
     <>
@@ -33,8 +33,8 @@ export function IrisAPRCalculator({ apr, tokenLink, tokenSymbol }: IProps) {
           link: tokenLink,
         }}
         rewardToken={{
-          symbol: "IRIS",
-          price: irisPrice,
+          symbol: "APOLLO",
+          price: apolloPrice,
         }}
       />
     </>

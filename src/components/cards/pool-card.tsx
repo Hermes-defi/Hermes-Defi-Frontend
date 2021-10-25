@@ -25,24 +25,13 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
       w="19rem"
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
-      bgGradient={
-        pool.isSpecial
-          ? `linear(to-b, primary.300, accent.500)`
-          : `linear(to-t, accent.300, accent.500)`
-      }
+      bgGradient={pool.isSpecial ? `linear(to-b, primary.300, accent.500)` : `linear(to-t, accent.300, accent.500)`}
       rounded="3xl"
       color="white"
     >
       {/* pool name */}
       <HStack align="center" mb={5} spacing={2}>
-        <Image
-          border="2px"
-          borderColor="white"
-          bg="white"
-          rounded="24px"
-          src={pool.stakeToken.logo}
-          boxSize={12}
-        />
+        <Image border="2px" borderColor="white" bg="white" rounded="24px" src={pool.stakeToken.logo} boxSize={12} />
 
         <Heading fontSize="3xl">{pool.stakeToken.symbol}</Heading>
       </HStack>
@@ -87,7 +76,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
             Earn
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            IRIS
+            APOLLO
           </Text>
         </Stack>
 
@@ -104,9 +93,9 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
       <Stack mb={8}>
         <UserSection
           id={pool.pid}
-          canCompound={pool.stakeToken.symbol.toLowerCase() === "iris"}
+          canCompound={pool.stakeToken.symbol.toLowerCase() === "apollo"}
           stakeToken={pool.stakeToken}
-          rewardToken={{ symbol: "Iris" }}
+          rewardToken={{ symbol: "APOLLO" }}
           rewardsEarned={pool.rewardsEarned}
           hasApprovedPool={pool.hasApprovedPool}
           userTotalStaked={pool.userTotalStaked}
@@ -145,9 +134,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
             </Text>
             <Text fontWeight="700" fontSize="sm">
               {pool.totalStaked
-                ? displayCurrency(
-                    new BigNumber(pool.totalStaked).times(pool.stakeToken.price || 0).toNumber()
-                  )
+                ? displayCurrency(new BigNumber(pool.totalStaked).times(pool.stakeToken.price || 0).toNumber())
                 : "N/A"}
             </Text>
           </Stack>

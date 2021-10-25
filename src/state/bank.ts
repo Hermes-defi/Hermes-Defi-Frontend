@@ -70,6 +70,7 @@ export const useFetchMainPool = () => {
 
       // display total
       const poolDepositedAmount = await bankContract.totalAmount.toString();
+      const poolTotalPayout = utils.formatUnits(await bankContract.totalpayout(), 18);
 
       // calculate APR
 
@@ -77,8 +78,9 @@ export const useFetchMainPool = () => {
        * to calculate the APR we need the pool rewards per week and then convert this to USD and divide it
        * by the total amount in the pool
        */
+      const secondsPerCycle = 259200;
       let apr = 0;
-      let monthlyRewards = 0;
+      let cycleRewards = 0;
 
       // todo:: get apollo price
 
@@ -87,9 +89,10 @@ export const useFetchMainPool = () => {
         const tokenPerSec = poolInfo.usdcPerTime.toString();
 
         const yearlyRewards = new BigNumberJS(tokenPerSec).times(secondsPerYear);
+        const cycleRewardsIron = new BigNumberJS(tokenPerSec).times(secondsPerCycle);
         const yearlyRewardsUsd = yearlyRewards.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`);
 
-        monthlyRewards = yearlyRewardsUsd.dividedBy(12).toNumber();
+        cycleRewards = cycleRewardsIron.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`).toNumber();
 
         const totalStakedInUsd = new BigNumberJS(poolDepositedAmount)
           .times(apolloPrice.data)
@@ -102,7 +105,8 @@ export const useFetchMainPool = () => {
         poolName,
         timeLeft,
         apr,
-        monthlyRewards,
+        cycleRewards,
+        poolTotalPayout,
       };
     },
   });
@@ -312,6 +316,7 @@ export const useLotteryInfo = () => {
 
 // mutations
 export const useApproveBank = () => {
+  const queryClient = useQueryClient();
   const bankContract = useBankContract();
   const apolloContract = useApolloToken();
 
@@ -326,6 +331,15 @@ export const useApproveBank = () => {
     },
 
     {
+      onSuccess: () => {
+        queryClient.invalidateQueries("has-approved-bank");
+
+        ReactGA.event({
+          category: "Approve Bank",
+          action: `Approved APOLLO in Bank`,
+        });
+      },
+
       onError: ({ data }) => {
         console.error(`[useApproveBank][error] general error `, {
           data,

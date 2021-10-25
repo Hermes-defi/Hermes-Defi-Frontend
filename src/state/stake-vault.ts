@@ -58,12 +58,12 @@ function useFetchVaultStakingPoolRequest() {
 
         const depositTokenStaked = new BigNumberJS(stakePoolInfo.totalStaked);
         let depositTokenStakedUsd = depositTokenStaked.times(depositTokenPrice).times(pricePerShare);
-
         const apr = rewardYearlyUsd.dividedBy(depositTokenStakedUsd).toNumber();
+
         stakePoolInfo.apr = {
           yearlyAPR: apr * 100,
-          weeklyAPR: 0,
-          dailyAPR: 0,
+          weeklyAPR: (apr / 52) * 100,
+          dailyAPR: (apr / 365) * 100,
         };
         // console.log({
         //   apr: apr.valueOf(),

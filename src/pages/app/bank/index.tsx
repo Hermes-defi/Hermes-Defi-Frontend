@@ -40,7 +40,7 @@ function DepositSection() {
 
   return (
     <Stack
-      direction="row"
+      direction={{ base: "column", md: "row" }}
       p={7}
       rounded="xl"
       bg={useColorModeValue("secondary.400", "secondary.400")}
@@ -87,7 +87,7 @@ function DepositSection() {
         {!account ? (
           <UnlockButton w="50%" variant="action" />
         ) : (
-          <Stack direction="row" spacing={10}>
+          <Stack direction={["column", "row"]} spacing={[4, 10]}>
             <Button
               isDisabled={hasApprovedPool.data}
               isLoading={approveMutation.isLoading}
@@ -279,7 +279,7 @@ const Page = () => {
             <DepositSection />
 
             {/* rewards */}
-            <SimpleGrid columns={2} spacing={5}>
+            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
               {mainPool.data && (
                 <Stack
                   w="100%"
@@ -319,20 +319,24 @@ const Page = () => {
                       Reward
                     </Text>
                     <Text fontWeight="bold" fontSize="4xl">
-                      {displayCurrency(mainPool.data?.monthlyRewards)}/month
+                      {displayCurrency(mainPool.data?.cycleRewards)}/cycle*
                     </Text>
                     <Text fontSize="md" fontWeight="semibold" textTransform="uppercase">
                       {displayNumber(mainPool.data?.apr)}%
                     </Text>
 
                     <Text fontSize="md" fontWeight="semibold">
-                      {mainPool.data?.timeLeft || 0} left
+                      {displayNumber(mainPool.data?.poolTotalPayout)} IRON paid out
                     </Text>
                   </Stack>
 
                   <Button isFullWidth isDisabled textTransform="uppercase" variant="action">
                     Enrolled
                   </Button>
+
+                  <Text align="right" fontSize="sm">
+                    *A cycle is every 3 days
+                  </Text>
                 </Stack>
               )}
 

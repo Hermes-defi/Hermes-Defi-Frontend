@@ -66,7 +66,7 @@ const defaultContracts = {
   },
   masterChef: {
     address: {
-      137: "0x8016ABeC77489bfD0A7f98DdEA3dF9DC73326cBa",
+      137: "0x75409C27EA0E28A486B35Bad6006DD114Ae3559B",
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: MasterChefABI,
@@ -80,7 +80,7 @@ const defaultContracts = {
   },
   apolloToken: {
     address: {
-      137: "0x87cf37B07a5f879c1af35532862e6229E90C72AF",
+      137: "0x577aa684b89578628941d648f1fbd6dde338f059",
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: ApolloABI,
@@ -129,7 +129,7 @@ const defaultContracts = {
   },
   bank: {
     address: {
-      137: "0xB8C27aa9e8C1715e91262a6814e1e100eeF83a09",
+      137: "0x9C689e78260BcAb63641731BA67CcCd860F041E3",
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: BankABI,

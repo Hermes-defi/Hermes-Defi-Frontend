@@ -28,7 +28,7 @@ function useFetchFarmRequest() {
     newFarm.multiplier = masterChefInfo.allocPoint.toString();
     newFarm.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
 
-    // newFarm.isActive = masterChefInfo.allocPoint.toString() !== "0";
+    newFarm.isActive = masterChefInfo.allocPoint.toString() !== "0";
 
     // Token data
     newFarm.stakeToken.address = masterChefInfo.lpToken;
@@ -73,7 +73,7 @@ function useFetchFarmRequest() {
 
     // USER data
     if (account) {
-      newFarm.rewardsEarned = utils.formatEther(await masterChef.pendingapollo(farm.pid, account));
+      newFarm.rewardsEarned = utils.formatEther(await masterChef.pendingApollo(farm.pid, account));
 
       const userInfo = await masterChef.userInfo(farm.pid, account);
 

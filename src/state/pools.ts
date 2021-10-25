@@ -28,7 +28,7 @@ function useFetchPoolsRequest() {
     newPool.multiplier = masterChefInfo.allocPoint.toString();
     newPool.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
 
-    // newPool.isActive = masterChefInfo.allocPoint.toString() !== "0";
+    newPool.isActive = masterChefInfo.allocPoint.toString() !== "0";
 
     // Token data
     newPool.stakeToken.address = masterChefInfo.lpToken;
@@ -65,7 +65,7 @@ function useFetchPoolsRequest() {
 
     // USER data
     if (account) {
-      newPool.rewardsEarned = utils.formatEther(await masterChef.pendingapollo(pool.pid, account));
+      newPool.rewardsEarned = utils.formatEther(await masterChef.pendingApollo(pool.pid, account));
 
       const userInfo = await masterChef.userInfo(pool.pid, account);
 
