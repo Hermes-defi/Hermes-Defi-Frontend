@@ -1,22 +1,15 @@
 import React from "react";
 import NextLink from "next/link";
 import { AppLayout } from "components/layout";
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Heading,
-  Image,
-  Input,
-  Stack,
-  Text,
-  useColorModeValue,
-  Wrap,
-  WrapItem,
-} from "@chakra-ui/react";
+import { Button, Container, Divider, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { useLotteryInfo } from "state/bank";
+import { useActiveWeb3React } from "wallet";
+import { displayNumber, truncateAddress } from "libs/utils";
 
 const Page = () => {
+  const { account } = useActiveWeb3React();
+  const lotterInfo = useLotteryInfo();
+
   return (
     <AppLayout>
       <Container maxWidth="container.md" my={8}>
@@ -52,19 +45,31 @@ const Page = () => {
                   Price Pot
                 </Text>
 
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  0.4894 IRON
-                </Text>
+                <Skeleton isLoaded={!!lotterInfo.data}>
+                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                    {lotterInfo.data?.pricePot} IRON
+                  </Text>
+                </Skeleton>
               </Stack>
 
               <Stack>
                 <Text fontSize="sm" letterSpacing="1px" textTransform="uppercase">
-                  My Ticket
+                  My Tickets
                 </Text>
 
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  -
-                </Text>
+                <Skeleton isLoaded={!!lotterInfo.data}>
+                  {lotterInfo.data?.mytickets.length ? (
+                    lotterInfo.data?.mytickets.map((lot) => (
+                      <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                        #{lot} - {truncateAddress(account, 4)}
+                      </Text>
+                    ))
+                  ) : (
+                    <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                      -
+                    </Text>
+                  )}
+                </Skeleton>
               </Stack>
 
               <Stack>
@@ -72,10 +77,12 @@ const Page = () => {
                   Probability
                 </Text>
 
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  0/316 Tickets <br />
-                  0.00%
-                </Text>
+                <Skeleton isLoaded={!!lotterInfo.data}>
+                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                    {lotterInfo.data?.mytickets?.length}/{lotterInfo.data?.totalTickets} Tickets <br />
+                    {displayNumber(lotterInfo.data?.probability || 0)}%
+                  </Text>
+                </Skeleton>
               </Stack>
 
               <Stack>
@@ -83,24 +90,25 @@ const Page = () => {
                   Last Winner
                 </Text>
 
-                <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                  #1852 0xB5....3b22
-                </Text>
+                <Skeleton isLoaded={!!lotterInfo.data}>
+                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                    <Text as="span" fontWeight="semibold" color="gray.50">
+                      #{lotterInfo.data?.winnum}
+                    </Text>{" "}
+                    {truncateAddress(lotterInfo.data?.lotWinner || "", 4)}
+                  </Text>
+                </Skeleton>
               </Stack>
             </Stack>
 
             <Stack align="center">
-              <Text fontSize="sm" letterSpacing="1px" textTransform="uppercase">
-                Price
-              </Text>
-
-              <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                0 IRON
-              </Text>
-
-              <Text fontSize="sm" letterSpacing="1px">
-                Sorry better luck next time :(
-              </Text>
+              <Skeleton isLoaded={!!lotterInfo.data}>
+                <Text fontSize="sm" letterSpacing="1px">
+                  {account === lotterInfo.data?.lotWinner
+                    ? "Yay!! You won the lottery 🎉"
+                    : "Sorry better luck next time :("}
+                </Text>
+              </Skeleton>
             </Stack>
           </Stack>
         </Stack>

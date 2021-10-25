@@ -149,6 +149,8 @@ export const useFetchPools = () => {
           const isNew = dayjs.unix(poolStartTime).isBefore(dayjs().add(1, "d")); // if pool is started in less than 2 days
 
           const timeLeftDiff = dayjs.unix(poolEndTime).diff(dayjs()); // time until pool ends
+          if (timeLeftDiff < 1) return null;
+
           const timeLeft = timeLeftDiff > 0 ? generateTimeDuration(timeLeftDiff) : null;
 
           // display total
@@ -261,7 +263,9 @@ export const useMyBankRewards = () => {
       // total dollar value
       totalDollarValue = new BigNumberJS(totalDollarValue).plus(ironRewardUsd).toNumber();
 
-      const inApollo = apolloPrice.data ? new BigNumberJS(totalDollarValue).dividedBy(apolloPrice.data).toString() : 0;
+      const inApollo = !!apolloPrice.data
+        ? new BigNumberJS(totalDollarValue).dividedBy(apolloPrice.data).toString()
+        : 0;
 
       console.log({ inApollo });
       return {
@@ -274,6 +278,36 @@ export const useMyBankRewards = () => {
   });
 
   return myBankRewards;
+};
+
+export const useLotteryInfo = () => {
+  const { account } = useActiveWeb3React();
+  const bankContract = useBankContract();
+
+  const lotteryInfo = useQuery({
+    queryKey: ["lottery-info", account],
+    enabled: !!account,
+    queryFn: async () => {
+      const pricePot = utils.formatUnits(await bankContract.lotsize(), 18);
+      const mytickets = await bankContract.mytickets(account);
+      const totalTickets = (await bankContract.totalticket()).toString();
+      const probability = new BigNumberJS(mytickets?.length || 0).dividedBy(totalTickets).times(100).toNumber();
+
+      const lotWinner = await bankContract.lotwinner();
+      const winnum = (await bankContract.winnum()).toString();
+
+      return {
+        pricePot,
+        mytickets,
+        totalTickets,
+        probability,
+        lotWinner,
+        winnum,
+      };
+    },
+  });
+
+  return lotteryInfo;
 };
 
 // mutations
@@ -314,6 +348,7 @@ export const useApproveBank = () => {
 export const useDepositInBank = () => {
   const queryClient = useQueryClient();
   const bankContract = useBankContract();
+  const apolloContract = useApolloToken();
 
   const { account } = useActiveWeb3React();
   const toast = useToast();
@@ -334,6 +369,7 @@ export const useDepositInBank = () => {
         }
 
         queryClient.invalidateQueries("bankDepositAmount");
+        queryClient.invalidateQueries(["tokenBalance", account, apolloContract.address]);
 
         ReactGA.event({
           category: "Deposits",
