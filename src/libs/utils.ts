@@ -1,4 +1,7 @@
 import dayjs from "dayjs";
+import duration from "dayjs/plugin/duration";
+
+dayjs.extend(duration);
 
 export function truncateAddress(address: string, length: number): string {
   return `${address.substring(0, length + 2)}...${address.substring(address.length - length, address.length)}`;
@@ -37,9 +40,12 @@ export function blockToTimestamp(block: number) {
   return dayjs().set("s", block * 2.5);
 }
 
+export function blockDiff(block: number) {
+  return blockToTimestamp(block).diff(dayjs());
+}
+
 export function generateTimeDuration(diff: number) {
   const duration = dayjs.duration(diff);
-  console.log(diff);
 
   const days = duration.days();
   const hours = duration.hours();

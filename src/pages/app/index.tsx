@@ -3,7 +3,7 @@ import React from "react";
 import defaultContracts from "config/contracts";
 
 import { addTokenToWallet } from "wallet/utils";
-import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
+import { blockDiff, displayCurrency, displayNumber, displayTokenCurrency, generateTimeDuration } from "libs/utils";
 import {
   useFarmAPRStats,
   usePoolsAPRStats,
@@ -37,8 +37,11 @@ import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
 import { ResponsiveContainer, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { apolloPerBlock } from "config/constants";
+import { useCurrentBlockNumber } from "hooks/wallet";
 
 const Page: React.FC = () => {
+  const currentBlock = useCurrentBlockNumber();
+
   const apolloStats = useApolloStats();
   const farmStats = useTotalInFarms();
   const balStats = useTotalInBalancers();
@@ -56,6 +59,58 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
+        <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+          <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
+            Pre-Sale countdown
+          </Heading>
+
+          <SimpleGrid w="50%" columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
+            <Box>
+              <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
+                pre-sale ends in
+              </Heading>
+              <Skeleton isLoaded={!!currentBlock}>
+                <Text letterSpacing="1px" fontWeight="700">
+                  {generateTimeDuration(blockDiff(20705323 - currentBlock))}
+                </Text>
+              </Skeleton>
+            </Box>
+
+            <Box>
+              <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
+                Liquidity added in
+              </Heading>
+              <Skeleton isLoaded={!!currentBlock}>
+                <Text letterSpacing="1px" fontWeight="700">
+                  {generateTimeDuration(blockDiff(20708511 - currentBlock))}
+                </Text>
+              </Skeleton>
+            </Box>
+
+            <Box>
+              <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
+                Swap opens in
+              </Heading>
+              <Skeleton isLoaded={!!currentBlock}>
+                <Text letterSpacing="1px" fontWeight="700">
+                  {generateTimeDuration(blockDiff(20711511 - currentBlock))}
+                </Text>
+              </Skeleton>
+            </Box>
+
+            <Box>
+              <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
+                Farm starts in
+              </Heading>
+              <Skeleton isLoaded={!!currentBlock}>
+                <Text letterSpacing="1px" fontWeight="700">
+                  {generateTimeDuration(blockDiff(20744511 - currentBlock))}
+                </Text>
+              </Skeleton>
+            </Box>
+          </SimpleGrid>
+        </Box>
+
         <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
             Farms and Pools
@@ -373,13 +428,7 @@ const Page: React.FC = () => {
                   <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={3} />
                   <CartesianGrid stroke={useColorModeValue("#ccc", "#555")} strokeDasharray="5 5" />
                   <XAxis style={{ fontSize: "12px" }} dataKey="time" />
-                  <YAxis
-                    style={{ fontSize: "12px" }}
-                    domain={[
-                      Math.min(...(chartData.data || []).map((d: any) => d.value)) - 100000,
-                      Math.max(...(chartData.data || []).map((d: any) => d.value)) + 100000,
-                    ]}
-                  />
+                  <YAxis style={{ fontSize: "12px" }} />
                   <Tooltip />
                 </LineChart>
               </ResponsiveContainer>

@@ -16,20 +16,24 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
     label: "Products",
     children: [
       {
-        label: "Farms (coming soon)",
+        label: "Farms",
         href: "/app/farms",
       },
       {
-        label: "Pools (coming soon)",
+        label: "Pools",
         href: "/app/pools",
       },
       {
-        label: "Vaults (coming soon)",
+        label: "Vaults",
         href: "/app/vaults",
       },
       {
-        label: "Bank (coming soon)",
+        label: "Bank",
         href: "/app/bank",
+      },
+      {
+        label: "Balancers",
+        href: "/app/balancers",
       },
       {
         label: "Stake pAPOLLO",

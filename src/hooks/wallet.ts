@@ -41,7 +41,7 @@ export function useCurrentBlockNumber() {
     () => {
       return library.getBlockNumber();
     },
-    { staleTime: 0 }
+    { staleTime: 0, refetchInterval: 60 * 1000 }
   );
 
   return data;
