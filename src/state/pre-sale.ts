@@ -1,7 +1,7 @@
 import ReactGA from "react-ga";
 import token from "config/tokens";
 import { utils } from "ethers";
-import { useERC20_v2, usePApollo, usePresaleContract } from "hooks/contracts";
+import { useApolloToken, useERC20_v2, usePApollo, usePresaleContract } from "hooks/contracts";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
@@ -65,6 +65,47 @@ export function usePresaleQuote(version: "v1" | "v2", amount) {
   });
 }
 
+export function useSwapInfo() {
+  const presaleV1Contract = usePresaleContract("v1");
+  const presaleV2Contract = usePresaleContract("v2");
+  const pApolloContract = usePApollo();
+  const apolloContract = useApolloToken();
+  const { account } = useActiveWeb3React();
+
+  return useQuery({
+    queryKey: ["apollo-swap-info"],
+    queryFn: async () => {
+      const swapStarts = "20711511";
+
+      const pApolloRemainingV1 = utils.formatEther(await pApolloContract.balanceOf(presaleV1Contract.address));
+      const pApolloRemainingV2 = utils.formatEther(await pApolloContract.balanceOf(presaleV2Contract.address));
+      const apolloRemainingV1 = utils.formatEther(await apolloContract.balanceOf(presaleV1Contract.address));
+      const apolloRemainingV2 = utils.formatEther(await apolloContract.balanceOf(presaleV2Contract.address));
+
+      let pApolloBalance;
+      let pAPOLLOv1Approved = false;
+      let pAPOLLOv2Approved = false;
+      if (account) {
+        pApolloBalance = utils.formatEther(await pApolloContract.balanceOf(account));
+        pAPOLLOv1Approved = !(await pApolloContract.allowance(account, presaleV1Contract.address)).isZero();
+        pAPOLLOv2Approved = !(await pApolloContract.allowance(account, presaleV2Contract.address)).isZero();
+      }
+
+      return {
+        swapStarts,
+        pApolloRemainingV1,
+        pApolloRemainingV2,
+        apolloRemainingV1,
+        apolloRemainingV2,
+        pApolloBalance,
+        pAPOLLOv1Approved,
+        pAPOLLOv2Approved,
+      };
+    },
+    refetchInterval: 0.5 * 60 * 1000,
+  });
+}
+
 export function usePresaleApproveToken(version: "v1" | "v2") {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
@@ -106,6 +147,48 @@ export function usePresaleApproveToken(version: "v1" | "v2") {
 
         toast({
           title: "Error approving token for pre-sale",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return approveMutation;
+}
+
+export function useApprovePApollo(version: "v1" | "v2") {
+  const { account } = useActiveWeb3React();
+  const queryClient = useQueryClient();
+  const pApolloContract = usePApollo();
+  const presaleContract = usePresaleContract(version);
+  const toast = useToast();
+
+  const approveMutation = useMutation(
+    async () => {
+      if (!account) throw new Error("No connected account");
+      await approveLpContract(pApolloContract, presaleContract.address);
+    },
+
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(["apollo-swap-info"]);
+
+        ReactGA.event({
+          category: "swap pAPOLLO Approval",
+          action: `Approving pAPOLLO`,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[useApprovePApollo][error] general error `, {
+          data,
+        });
+
+        toast({
+          title: "Error approving token for swap",
           description: data?.message,
           status: "error",
           position: "top-right",
@@ -160,4 +243,46 @@ export function useBuyPApollo(version: "v1" | "v2") {
   );
 
   return purchaseMutation;
+}
+
+export function useSwapPApollo(version: "v1" | "v2") {
+  const { account } = useActiveWeb3React();
+  const queryClient = useQueryClient();
+  const presaleContract = usePresaleContract(version);
+  const toast = useToast();
+
+  const mutation = useMutation(
+    async () => {
+      if (!account) throw new Error("No connected account");
+      const tx = await presaleContract.swapAll();
+      await tx.wait();
+    },
+
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(["apollo-swap-info"]);
+
+        ReactGA.event({
+          category: "Swap pAPOLLO",
+          action: `Swapped pAPOLLO for APOLLO`,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[useSwapPApollo][error] general error `, {
+          data,
+        });
+
+        toast({
+          title: "Error swapping pAPOLLO",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return mutation;
 }
