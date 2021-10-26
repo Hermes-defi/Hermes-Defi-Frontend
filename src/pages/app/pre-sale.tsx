@@ -62,7 +62,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {displayCurrency(1.4)}
+                  {displayCurrency(1)}
                 </Text>
               </Skeleton>
             </Stack>
