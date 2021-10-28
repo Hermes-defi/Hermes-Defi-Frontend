@@ -59,7 +59,7 @@ function useFetchPoolsRequest() {
         poolVault.amm
       );
 
-      newPool.stakeToken.price = new BigNumberJS(depositTokenPrice).times(pricePerShare).toString();
+      newPool.stakeToken.price = new BigNumberJS(depositTokenPrice).times(pricePerShare).times("1e18").toString();
     }
 
     // APR data
