@@ -90,7 +90,7 @@ export function usePoolsAPRStats() {
   const poolsResp = useFetchPools();
   const isLoading = poolsResp.some((p) => p.status === "loading");
 
-  const aprs = poolsResp.map((p) => (p.data as Pool)?.apr.yearlyAPR);
+  const aprs = poolsResp.filter((p) => !(p.data as Pool)?.vaultPool).map((p) => (p.data as Pool)?.apr.yearlyAPR);
   const maxApr = aprs.length ? Math.max(...aprs) : 0;
 
   return [isLoading, maxApr];
@@ -138,14 +138,16 @@ export function useTotalInPools() {
   const poolsResp = useFetchPools();
   const isLoading = poolsResp.some((f) => f.status === "loading");
 
-  const data = poolsResp.reduce((total, poolResp) => {
-    const pool = poolResp.data as Pool;
-    if (!pool) return new BigNumberJS(0);
+  const data = poolsResp
+    .filter((p) => !(p.data as Pool)?.vaultPool)
+    .reduce((total, poolResp) => {
+      const pool = poolResp.data as Pool;
+      if (!pool) return new BigNumberJS(0);
 
-    const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
+      const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
 
-    return total.plus(totalLockedInFarm);
-  }, new BigNumberJS(0));
+      return total.plus(totalLockedInFarm);
+    }, new BigNumberJS(0));
 
   return {
     data,
