@@ -23,6 +23,7 @@ import {
   Button,
   Center,
   Heading,
+  HStack,
   Icon,
   Image,
   Link,
@@ -59,57 +60,75 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-          <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
-            Pre-Sale countdown
-          </Heading>
+        <Stack direction={["column", "row"]} justify="space-between" spacing={[0]}>
+          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[10, 10]} py={6} w="40%">
+            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
+              Pre-Sale countdown
+            </Heading>
 
-          <SimpleGrid w={{ base: "100%", md: "50%" }} columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
-            <Box>
-              <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
-                pre-sale ends in
-              </Heading>
-              <Skeleton isLoaded={!!currentBlock}>
-                <Text letterSpacing="1px" fontWeight="700">
-                  {generateTimeDuration(blockDiff(20705323 - currentBlock))}
-                </Text>
-              </Skeleton>
-            </Box>
+            <SimpleGrid w={{ base: "100%", md: "100%" }} columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
+              <Box>
+                <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
+                  pre-sale ends in
+                </Heading>
+                <Skeleton isLoaded={!!currentBlock}>
+                  <Text letterSpacing="1px" fontWeight="700">
+                    {generateTimeDuration(blockDiff(20705323 - currentBlock))}
+                  </Text>
+                </Skeleton>
+              </Box>
 
-            <Box>
-              <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
-                Liquidity added in
-              </Heading>
-              <Skeleton isLoaded={!!currentBlock}>
-                <Text letterSpacing="1px" fontWeight="700">
-                  {generateTimeDuration(blockDiff(20708511 - currentBlock))}
-                </Text>
-              </Skeleton>
-            </Box>
+              <Box>
+                <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
+                  Liquidity added in
+                </Heading>
+                <Skeleton isLoaded={!!currentBlock}>
+                  <Text letterSpacing="1px" fontWeight="700">
+                    {generateTimeDuration(blockDiff(20708511 - currentBlock))}
+                  </Text>
+                </Skeleton>
+              </Box>
 
-            <Box>
-              <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
-                Swap opens in
-              </Heading>
-              <Skeleton isLoaded={!!currentBlock}>
-                <Text letterSpacing="1px" fontWeight="700">
-                  {generateTimeDuration(blockDiff(20711511 - currentBlock))}
-                </Text>
-              </Skeleton>
-            </Box>
+              <Box>
+                <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
+                  Swap opens in
+                </Heading>
+                <Skeleton isLoaded={!!currentBlock}>
+                  <Text letterSpacing="1px" fontWeight="700">
+                    {generateTimeDuration(blockDiff(20711511 - currentBlock))}
+                  </Text>
+                </Skeleton>
+              </Box>
 
-            <Box>
-              <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
-                Farm starts in
-              </Heading>
-              <Skeleton isLoaded={!!currentBlock}>
-                <Text letterSpacing="1px" fontWeight="700">
-                  {generateTimeDuration(blockDiff(20744511 - currentBlock))}
-                </Text>
-              </Skeleton>
-            </Box>
-          </SimpleGrid>
-        </Box>
+              <Box>
+                <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
+                  Farm starts in
+                </Heading>
+                <Skeleton isLoaded={!!currentBlock}>
+                  <Text letterSpacing="1px" fontWeight="700">
+                    {generateTimeDuration(blockDiff(20744511 - currentBlock))}
+                  </Text>
+                </Skeleton>
+              </Box>
+            </SimpleGrid>
+          </Box>
+          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} pt={6} pb={20} w="40%">
+            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
+              How Apollo system works
+            </Heading>
+            <Box
+              as="iframe"
+              title="How Apollo system works"
+              src="https://www.youtube.com/embed/UGowzJ8kyIo"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              w="100%"
+              h="125%"
+              py={[5,10]}
+            ></Box>
+          </Box>
+        </Stack>
+
 
         <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">

@@ -11,6 +11,7 @@ import {
   FormLabel,
   Heading,
   HStack,
+  Link,
   Spinner,
   Stack,
   StackDivider,
@@ -59,6 +60,17 @@ const Page: React.FC = () => {
             >
               <Heading fontSize="xl">Inactive</Heading>
             </Button>
+          </HStack>
+          <HStack justify="center">
+            <Link
+            href={`https://hermes-defi.gitbook.io/apollo/products/apollo-vaults-system`}
+            textDecoration="underline"
+            fontWeight="700"
+            fontSize="sm"
+            color="#FF5C63"
+            >
+            Click here for more info
+           </Link>
           </HStack>
         </HStack>
 
