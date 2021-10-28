@@ -71,7 +71,6 @@ function useFetchPoolsRequest() {
       .times(rewardsPerWeek)
       .toNumber();
 
-    console.log({ newPool, poolRewardsPerWeek });
     newPool.apr = newPool.isActive
       ? getPoolApr(
           parseFloat(apolloPrice.data || "0"),
