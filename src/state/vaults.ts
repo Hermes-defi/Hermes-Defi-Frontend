@@ -9,11 +9,13 @@ import {
   useVaultDualRewardPoolContract,
 } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
+import { useFetchVaultPools } from "./pools";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Vault, vaults } from "config/vaults";
+import { Pool, pools } from "config/pools";
 import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
@@ -23,8 +25,10 @@ import {
   getMasterChefVaultApy,
   getRewardPoolVaultApy,
 } from "web3-functions/aprs";
+import { useFetchMainPool as useFetchBankMainPool } from "./bank";
 
 function useFetchVaultsRequest() {
+  const queryClient = useQueryClient();
   const getMasterChef = useCustomMasterChef();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
@@ -32,9 +36,10 @@ function useFetchVaultsRequest() {
   const getDfynFarmContract = useDfynFarmContract();
   const getRewardPoolContract = useVaultRewardPoolContract();
   const getDualRewardPoolContract = useVaultDualRewardPoolContract();
+  const bankMainPool = useFetchBankMainPool();
   const { account, library } = useActiveWeb3React();
 
-  return async (vault: Vault) => {
+  return async (vault: Vault, poolPid?: number) => {
     try {
       const vaultContract = getVaultContract(vault.address);
 
@@ -75,10 +80,25 @@ function useFetchVaultsRequest() {
           totalStakedInFarm,
         });
 
+        const dailyApy = Math.pow(10, Math.log10(apy.totalApy + 1) / 365) - 1;
+
         vault.apy = {
           yearly: apy.totalApy * 100,
-          daily: (apy.vaultApr / 365) * 100,
+          daily: dailyApy * 100,
         };
+
+        // add boosted values
+        const pool = queryClient.getQueryData<Pool>(["pool", poolPid, account]);
+        if (pool) {
+          vault.apy.boostedYearly = (pool.apr?.yearlyAPR || 0) + vault.apy.yearly;
+          vault.apy.dailyWithPool = (pool.apr?.dailyAPR || 0) + vault.apy.daily;
+        }
+
+        const bankPool = bankMainPool.data;
+        if (bankPool) {
+          vault.apy.boostedYearly = (bankPool?.apr || 0) + (vault.apy.boostedYearly || vault.apy.yearly);
+          vault.apy.dailyAll = (bankPool?.apr / 365 || 0) + vault.apy.daily + (vault.apy.dailyWithPool || 0);
+        }
       } else if (vault.isActive && vault.type === "dual") {
         vault.farmRewardTokens[0].price = await fetchPrice(vault.farmRewardTokens[0], library);
         vault.farmRewardTokens[1].price = await fetchPrice(vault.farmRewardTokens[1], library);
@@ -107,10 +127,25 @@ function useFetchVaultsRequest() {
           performanceFee: vault.performanceFee,
         });
 
+        const dailyApy = Math.pow(10, Math.log10(apy.totalApy + 1) / 365) - 1;
+
         vault.apy = {
           yearly: apy.totalApy * 100,
-          daily: (apy.vaultApr / 365) * 100,
+          daily: dailyApy * 100,
         };
+
+        // add boosted values
+        const pool = queryClient.getQueryData<Pool>(["pool", poolPid, account]);
+        if (pool) {
+          vault.apy.boostedYearly = (pool.apr?.yearlyAPR || 0) + vault.apy.yearly;
+          vault.apy.dailyWithPool = (pool.apr?.dailyAPR || 0) + vault.apy.daily;
+        }
+
+        const bankPool = bankMainPool.data;
+        if (bankPool) {
+          vault.apy.boostedYearly = (bankPool?.apr || 0) + (vault.apy.boostedYearly || vault.apy.yearly);
+          vault.apy.dailyAll = (bankPool?.apr / 365 || 0) + vault.apy.daily + (vault.apy.dailyWithPool || 0);
+        }
       } else if (vault.isActive && vault.type === "rewardPool") {
         vault.farmRewardToken.price = await fetchPrice(vault.farmRewardToken, library);
         let rewardTokenPrice = vault.farmRewardToken.price;
@@ -144,10 +179,26 @@ function useFetchVaultsRequest() {
           performanceFee: vault.performanceFee,
         });
 
+        const dailyApy = Math.pow(10, Math.log10(apy.totalApy + 1) / 365) - 1;
+
         vault.apy = {
           yearly: apy.totalApy * 100,
-          daily: (apy.vaultApr / 365) * 100,
+          daily: dailyApy * 100,
         };
+
+        // add boosted values
+        const pool = queryClient.getQueryData<Pool>(["pool", poolPid, account]);
+        if (pool) {
+          vault.apy.boostedYearly = (pool.apr?.yearlyAPR || 0) + vault.apy.yearly;
+          vault.apy.dailyWithPool = (pool.apr?.dailyAPR || 0) + vault.apy.daily;
+        }
+
+        const bankPool = bankMainPool.data;
+        console.log({ bankPool, bankMainPool });
+        if (bankPool) {
+          vault.apy.boostedYearly = (bankPool?.apr || 0) + (vault.apy.boostedYearly || vault.apy.yearly);
+          vault.apy.dailyAll = (bankPool?.apr / 365 || 0) + vault.apy.daily + (vault.apy.dailyWithPool || 0);
+        }
       } else if (vault.isActive && vault.type === "dualRewardPool") {
         vault.farmRewardTokens[0].price = await fetchPrice(vault.farmRewardTokens[0], library);
         vault.farmRewardTokens[1].price = await fetchPrice(vault.farmRewardTokens[1], library);
@@ -188,10 +239,25 @@ function useFetchVaultsRequest() {
           performanceFee: vault.performanceFee,
         });
 
+        const dailyApy = Math.pow(10, Math.log10(apy.totalApy + 1) / 365) - 1;
+
         vault.apy = {
           yearly: apy.totalApy * 100,
-          daily: (apy.vaultApr / 365) * 100,
+          daily: dailyApy * 100,
         };
+
+        // add boosted values
+        const pool = queryClient.getQueryData<Pool>(["pool", poolPid, account]);
+        if (pool) {
+          vault.apy.boostedYearly = (pool.apr?.yearlyAPR || 0) + vault.apy.yearly;
+          vault.apy.dailyWithPool = (pool.apr?.dailyAPR || 0) + vault.apy.daily;
+        }
+
+        const bankPool = bankMainPool.data;
+        if (bankPool) {
+          vault.apy.boostedYearly = (bankPool?.apr || 0) + (vault.apy.boostedYearly || vault.apy.yearly);
+          vault.apy.dailyAll = (bankPool?.apr / 365 || 0) + vault.apy.daily + (vault.apy.dailyWithPool || 0);
+        }
       } else {
         vault.apy = {
           yearly: 0,
@@ -225,14 +291,19 @@ function useFetchVaultsRequest() {
 }
 
 export function useFetchVaults() {
+  useFetchVaultPools();
+
   const fetchVaultRq = useFetchVaultsRequest();
   const { account } = useActiveWeb3React();
+  const bankMainPool = useFetchBankMainPool();
 
   const vaultQueries = useQueries(
     vaults.map((vault) => {
+      const pool = pools.find((pool) => pool.stakeToken.address.toLowerCase() === vault.address.toLowerCase());
       return {
         queryKey: ["vault", vault.address, account],
-        queryFn: () => fetchVaultRq(vault),
+        queryFn: () => fetchVaultRq(vault, pool.pid),
+        enabled: !!bankMainPool.data,
       };
     })
   );

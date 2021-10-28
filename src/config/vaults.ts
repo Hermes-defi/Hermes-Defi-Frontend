@@ -5,6 +5,7 @@ export type Vault = {
   address: string;
   stratAddress: string;
   type?: string;
+  isBoosted?: boolean;
 
   // for masterchef vaults
   masterChefAddress?: string;
@@ -76,7 +77,10 @@ export type Vault = {
 
   apy?: {
     yearly: number;
+    boostedYearly?: number;
     daily: number;
+    dailyWithPool?: number;
+    dailyAll?: number;
   };
 
   hasStaked?: boolean;

@@ -119,6 +119,26 @@ export function useFetchPools() {
   return poolQueries;
 }
 
+export function useFetchVaultPools() {
+  const apolloPrice = useApolloPrice();
+  const fetchPoolRq = useFetchPoolsRequest();
+  const { account } = useActiveWeb3React();
+
+  const poolQueries = useQueries(
+    pools
+      .filter((p) => !!vaults.find((v) => p.stakeToken.address.toLowerCase() === v.address.toLowerCase()))
+      .map((farm) => {
+        return {
+          enabled: !!apolloPrice.data,
+          queryKey: ["pool", farm.pid, account],
+          queryFn: () => fetchPoolRq(farm),
+        };
+      })
+  );
+
+  return poolQueries;
+}
+
 export function useApprovePool() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();

@@ -47,18 +47,34 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             {vault.amm}
           </Badge>
         )}
+
+        {vault.apy.boostedYearly === vault.apy.yearly && (
+          <Badge boxShadow="md" px={2} rounded="lg" colorScheme="green">
+            Boosted
+          </Badge>
+        )}
       </HStack>
 
       <Stack mb={6}>
-        <Stack direction="row" justify="space-between">
+        <Stack direction="row" align="center" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
             APY
           </Text>
-          <Box display="flex" alignItems="center">
-            <Text fontWeight="700" fontSize="sm">
+          <Stack display="flex" alignItems="center" justify="center" spacing={0}>
+            {vault.apy?.boostedYearly && (
+              <Text fontWeight="700" fontSize="sm">
+                {`${displayNumber(vault.apy.boostedYearly, false, 2)}%`}
+              </Text>
+            )}
+            <Text
+              color={vault.apy?.boostedYearly ? "gray.200" : "white"}
+              as={vault.apy?.boostedYearly ? "del" : "span"}
+              fontWeight="700"
+              fontSize="xs"
+            >
               {vault.apy ? `${displayNumber(vault.apy.yearly, false, 2)}%` : "N/A"}
             </Text>
-          </Box>
+          </Stack>
         </Stack>
 
         <Stack direction="row" justify="space-between">
@@ -71,6 +87,38 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             </Text>
           </Box>
         </Stack>
+
+        {vault.apy?.dailyWithPool && (
+          <Stack direction="row" justify="space-between">
+            <Text fontWeight="600" fontSize="sm">
+              Daily{" "}
+              <Text as="span" fontSize="xs">
+                (vault + godToken)
+              </Text>
+            </Text>
+            <Box display="flex" alignItems="center">
+              <Text fontWeight="700" fontSize="sm">
+                {`${displayNumber(vault.apy.dailyWithPool, false, 3)}%`}
+              </Text>
+            </Box>
+          </Stack>
+        )}
+
+        {vault.apy?.dailyAll && (
+          <Stack direction="row" justify="space-between">
+            <Text fontWeight="600" fontSize="sm">
+              Daily{" "}
+              <Text as="span" fontSize="xs">
+                (vault + godToken + bank)
+              </Text>
+            </Text>
+            <Box display="flex" alignItems="center">
+              <Text fontWeight="700" fontSize="sm">
+                {vault.apy ? `${displayNumber(vault.apy.daily, false, 3)}%` : "N/A"}
+              </Text>
+            </Box>
+          </Stack>
+        )}
 
         <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
@@ -90,12 +138,15 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
         </Stack>
 
-        <Stack direction="row" justify="space-between">
-          <Text fontWeight="600" fontSize="sm">
+        <Stack direction="row" justify="space-between" alignItems="center">
+          <Text align="left" fontWeight="600" fontSize="sm">
             Perfomance Fees
           </Text>
-          <Text fontWeight="700" fontSize="sm">
+          {/* <Text fontWeight="700" fontSize="sm">
             {vault.performanceFee * 100}%
+          </Text> */}
+          <Text align="right" fontWeight="700" fontSize="xs">
+            Fees redistributed in bank
           </Text>
         </Stack>
       </Stack>
