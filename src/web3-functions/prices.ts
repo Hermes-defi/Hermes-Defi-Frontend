@@ -90,10 +90,24 @@ async function fetchDfynPrice(_token: { address: string; decimals: number; symbo
   const token = new Dfyn.Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
 
   const usdc = new Dfyn.Token(DEFAULT_CHAIN_ID, defaultTokens.usdc.address, defaultTokens.usdc.decimals, "USDC");
+  const iron = new Dfyn.Token(DEFAULT_CHAIN_ID, defaultTokens.iron.address, defaultTokens.iron.decimals, "IRON");
 
   try {
     let route;
-    if (token.symbol !== "WMATIC") {
+    if (token.symbol === "APOLLO") {
+      // fetch iron to usdc pair
+      const IronToUSDCPair = await Dfyn.Fetcher.fetchPairData(
+        iron, // points to WMATIC :facepalm:
+        usdc,
+        library
+      );
+
+      // fetch the token to iron pair info
+      const tokenToIron = await Dfyn.Fetcher.fetchPairData(token, iron, library);
+
+      // find a route
+      route = new Dfyn.Route([IronToUSDCPair, tokenToIron], usdc);
+    } else if (token.symbol !== "WMATIC") {
       // fetch matic to usdc pair
       const MaticToUSDCPair = await Dfyn.Fetcher.fetchPairData(
         Dfyn.WETH[DEFAULT_CHAIN_ID], // points to WMATIC :facepalm:
