@@ -45,6 +45,10 @@ export function blockDiff(block: number) {
 }
 
 export function generateTimeDuration(diff: number) {
+  if (diff < 0) {
+    return "-";
+  }
+
   const duration = dayjs.duration(diff);
 
   const days = duration.days();

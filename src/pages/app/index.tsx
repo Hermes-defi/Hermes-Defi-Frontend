@@ -64,7 +64,7 @@ const Page: React.FC = () => {
             Pre-Sale countdown
           </Heading>
 
-          <SimpleGrid w="50%" columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
+          <SimpleGrid w={{ base: "100%", md: "50%" }} columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
             <Box>
               <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
                 pre-sale ends in
