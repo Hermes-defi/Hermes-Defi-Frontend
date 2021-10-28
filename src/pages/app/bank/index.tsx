@@ -57,7 +57,7 @@ export function BankNavigation() {
           </Button>
         </a>
       </NextLink>
-      <NextLink href="https://hermes-defi.gitbook.io/apollo/products/pools" passHref>
+      <NextLink href="https://hermes-defi.gitbook.io/apollo/products/bank" passHref>
         <a>
           <Button variant="link" color={useColorModeValue("gray.500", "gray.300")}>
             <Heading fontSize="xl">More Info</Heading>
