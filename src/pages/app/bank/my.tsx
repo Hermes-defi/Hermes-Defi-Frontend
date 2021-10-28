@@ -1,9 +1,9 @@
 import React from "react";
-import NextLink from "next/link";
 import { AppLayout } from "components/layout";
 import { Box, Button, Container, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { useCompoundInBank, useDepositedAmount, useHarvestFromBank, useMyBankRewards } from "state/bank";
 import { displayCurrency, displayNumber } from "libs/utils";
+import { BankNavigation } from ".";
 
 const Page = () => {
   const depositedAmount = useDepositedAmount();
@@ -15,25 +15,7 @@ const Page = () => {
     <AppLayout>
       <Container maxWidth="container.md" my={8}>
         <Stack spacing={8}>
-          <Stack direction="row" justify="flex-end">
-            <NextLink href="/app/bank" passHref>
-              <a>
-                <Button colorScheme="accent">Bank</Button>
-              </a>
-            </NextLink>
-
-            <NextLink href="/app/bank/my" passHref>
-              <a>
-                <Button colorScheme="accent">My Pot</Button>
-              </a>
-            </NextLink>
-
-            <NextLink href="/app/bank/lottery" passHref>
-              <a>
-                <Button colorScheme="secondary">Lottery</Button>
-              </a>
-            </NextLink>
-          </Stack>
+          <BankNavigation />
 
           <Stack w="100%" bg="gray.900" color="white" rounded="xl" spacing={6} py={8} px={24}>
             <Heading fontSize="5xl" borderBottom="1px" pb={4} align="center">

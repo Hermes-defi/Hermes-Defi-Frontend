@@ -84,7 +84,7 @@ export const BalancerCard: React.FC<{ balancer: Balancer }> = ({ balancer }) => 
             Earn
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            IRIS
+            APOLLO
           </Text>
         </Stack>
 

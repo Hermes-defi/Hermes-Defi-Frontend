@@ -10,6 +10,7 @@ import {
   SimpleGrid,
   Skeleton,
   Stack,
+  StackDivider,
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -28,6 +29,36 @@ import { useApolloBalance } from "hooks/wallet";
 import { useActiveWeb3React } from "wallet";
 import { UnlockButton } from "components/wallet/unlock-wallet";
 import { useApolloPrice } from "hooks/prices";
+
+export function BankNavigation() {
+  return (
+    <Stack divider={<StackDivider borderColor="gray.200" />} direction="row" justify="center">
+      <NextLink href="/app/bank" passHref>
+        <a>
+          <Button variant="link" color={useColorModeValue("gray.500", "gray.300")}>
+            <Heading fontSize="xl">Bank</Heading>
+          </Button>
+        </a>
+      </NextLink>
+
+      <NextLink href="/app/bank/my" passHref>
+        <a>
+          <Button variant="link" color={useColorModeValue("gray.500", "gray.300")}>
+            <Heading fontSize="xl">My Earnings</Heading>
+          </Button>
+        </a>
+      </NextLink>
+
+      <NextLink href="/app/bank/lottery" passHref>
+        <a>
+          <Button variant="link" color={useColorModeValue("gray.500", "gray.300")}>
+            <Heading fontSize="xl">Lottery</Heading>
+          </Button>
+        </a>
+      </NextLink>
+    </Stack>
+  );
+}
 
 function DepositSection() {
   const [amount, setAmount] = React.useState("");
@@ -133,7 +164,7 @@ function Pool({ pool }) {
     <Stack
       spacing={5}
       bg={useColorModeValue("secondary.400", "primary.400")}
-      bgGradient={"linear(to-b, whiteAlpha.600, accent.500)"}
+      bgGradient={"linear(to-b, secondary.200, accent.500)"}
       color={"white"}
       px={6}
       py={5}
@@ -254,28 +285,9 @@ const Page = () => {
     <AppLayout>
       <Container maxWidth="container.lg" my={8}>
         <Stack spacing={8}>
-          <Stack direction="row" justify="flex-end">
-            <NextLink href="/app/bank" passHref>
-              <a>
-                <Button colorScheme="accent">Bank</Button>
-              </a>
-            </NextLink>
+          <BankNavigation />
 
-            <NextLink href="/app/bank/my" passHref>
-              <a>
-                <Button colorScheme="accent">My Pot</Button>
-              </a>
-            </NextLink>
-
-            <NextLink href="/app/bank/lottery" passHref>
-              <a>
-                <Button colorScheme="secondary">Lottery</Button>
-              </a>
-            </NextLink>
-          </Stack>
-
-          <Stack w="100%" bg="gray.900" color="white" rounded="xl" spacing={6} py={8} px={8}>
-            {/* deposit */}
+          <Stack w="100%" rounded="xl" spacing={6} py={8} px={8}>
             <DepositSection />
 
             {/* rewards */}
@@ -284,7 +296,7 @@ const Page = () => {
                 <Stack
                   w="100%"
                   spacing={5}
-                  bgGradient={"linear(to-b, whiteAlpha.600, green.500)"}
+                  bgGradient={"linear(to-b, secondary.200, green.400)"}
                   color={"white"}
                   px={6}
                   py={5}
@@ -326,7 +338,7 @@ const Page = () => {
                     </Text>
 
                     <Text fontSize="md" fontWeight="semibold">
-                      {displayNumber(mainPool.data?.poolTotalPayout)} IRON paid out
+                      {displayNumber(mainPool.data?.poolTotalPayout, false, 3)} IRON paid out
                     </Text>
                   </Stack>
 

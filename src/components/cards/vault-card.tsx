@@ -114,7 +114,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             </Text>
             <Box display="flex" alignItems="center">
               <Text fontWeight="700" fontSize="sm">
-                {vault.apy ? `${displayNumber(vault.apy.daily, false, 3)}%` : "N/A"}
+                {vault.apy ? `${displayNumber(vault.apy.dailyAll, false, 3)}%` : "N/A"}
               </Text>
             </Box>
           </Stack>

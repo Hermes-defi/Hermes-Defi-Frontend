@@ -50,7 +50,7 @@ export const balancers: Balancer[] = {
       multiplier: "15",
       depositFees: 0,
 
-      
+      isActive: true,
       isSpecial: true,
       farmDx: "Balancer",
 

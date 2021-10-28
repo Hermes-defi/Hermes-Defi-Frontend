@@ -194,7 +194,6 @@ function useFetchVaultsRequest() {
         }
 
         const bankPool = bankMainPool.data;
-        console.log({ bankPool, bankMainPool });
         if (bankPool) {
           vault.apy.boostedYearly = (bankPool?.apr || 0) + (vault.apy.boostedYearly || vault.apy.yearly);
           vault.apy.dailyAll = (bankPool?.apr / 365 || 0) + vault.apy.daily + (vault.apy.dailyWithPool || 0);

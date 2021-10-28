@@ -59,6 +59,7 @@ export const useFetchMainPool = () => {
 
   const mainPool = useQuery({
     queryKey: "bank-main-pool",
+    enabled: !!apolloPrice.data,
     queryFn: async () => {
       const poolName = "iron";
 
@@ -69,7 +70,7 @@ export const useFetchMainPool = () => {
       const timeLeft = timeLeftDiff > 0 ? generateTimeDuration(timeLeftDiff) : null;
 
       // display total
-      const poolDepositedAmount = await bankContract.totalAmount.toString();
+      const poolDepositedAmount = utils.formatUnits(await bankContract.totalAmount(), 18);
       const poolTotalPayout = utils.formatUnits(await bankContract.totalpayout(), 18);
 
       // calculate APR
@@ -82,11 +83,9 @@ export const useFetchMainPool = () => {
       let apr = 0;
       let cycleRewards = 0;
 
-      // todo:: get apollo price
-
-      if (poolDepositedAmount > 0 && apolloPrice.data && parseFloat(apolloPrice.data) > 0) {
+      if (parseFloat(poolDepositedAmount) > 0 && apolloPrice.data && parseFloat(apolloPrice.data) > 0) {
         const rewardTokenPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
-        const tokenPerSec = poolInfo.usdcPerTime.toString();
+        const tokenPerSec = utils.formatUnits(poolInfo.usdcPerTime, 18);
 
         const yearlyRewards = new BigNumberJS(tokenPerSec).times(secondsPerYear);
         const cycleRewardsIron = new BigNumberJS(tokenPerSec).times(secondsPerCycle);
@@ -94,9 +93,7 @@ export const useFetchMainPool = () => {
 
         cycleRewards = cycleRewardsIron.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`).toNumber();
 
-        const totalStakedInUsd = new BigNumberJS(poolDepositedAmount)
-          .times(apolloPrice.data)
-          .dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`);
+        const totalStakedInUsd = new BigNumberJS(poolDepositedAmount).times(apolloPrice.data);
 
         apr = yearlyRewardsUsd.dividedBy(totalStakedInUsd).toNumber() * 100;
       }
@@ -133,7 +130,7 @@ export const useFetchPools = () => {
   const pools = useQueries(
     poolsArr.map((_, idx) => {
       return {
-        enabled: !!poolLength,
+        enabled: !!poolLength && !!apolloPrice.data,
         queryKey: ["bank-pool", idx, account],
         queryFn: async ({ queryKey }) => {
           const pid = queryKey[1] as number;
