@@ -65,7 +65,6 @@ export function BankNavigation() {
         </a>
       </NextLink>
     </Stack>
-    
   );
 }
 
@@ -343,7 +342,7 @@ const Page = () => {
                       {displayCurrency(mainPool.data?.cycleRewards)}/cycle*
                     </Text>
                     <Text fontSize="md" fontWeight="semibold" textTransform="uppercase">
-                      {displayNumber(mainPool.data?.apr)}%
+                      {displayNumber(mainPool.data?.apr)}% APR
                     </Text>
 
                     <Text fontSize="md" fontWeight="semibold">

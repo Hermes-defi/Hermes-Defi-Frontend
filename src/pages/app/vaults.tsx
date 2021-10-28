@@ -36,7 +36,7 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>
-        <HStack spacing={14} align="center" justify="center">
+        <Stack direction={["column", "row"]} spacing={[4, 14]} align="center" justify="center">
           <FormControl w="auto" display="flex" alignItems="center">
             <Switch isChecked={stakedOnly} onChange={() => toggleStakedOnly()} id="staked-only" mt={1} mb={0} mr={3} />
             <FormLabel mr={0} mb={0} fontSize="md" htmlFor="staked-only">
@@ -61,18 +61,17 @@ const Page: React.FC = () => {
               <Heading fontSize="xl">Inactive</Heading>
             </Button>
           </HStack>
-          <HStack justify="center">
-            <Link
+
+          <Link
             href={`https://hermes-defi.gitbook.io/apollo/products/apollo-vaults-system`}
             textDecoration="underline"
             fontWeight="700"
             fontSize="sm"
-            color="#FF5C63"
-            >
-            Click here for more info
-           </Link>
-          </HStack>
-        </HStack>
+            color="primary.400"
+          >
+            Click here learn more
+          </Link>
+        </Stack>
 
         <Container align="center" maxWidth="container.lg">
           {isLoading ? (

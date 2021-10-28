@@ -60,8 +60,8 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        <Stack direction={["column", "row"]} justify="space-between" spacing={[0]}>
-          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[10, 10]} py={6} w="40%">
+        <Stack direction={["column", "row"]} justify="space-between" spacing={10}>
+          <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
               Pre-Sale countdown
             </Heading>
@@ -112,7 +112,8 @@ const Page: React.FC = () => {
               </Box>
             </SimpleGrid>
           </Box>
-          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} pt={6} pb={20} w="40%">
+
+          <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
               How Apollo system works
             </Heading>
@@ -123,12 +124,11 @@ const Page: React.FC = () => {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
               w="100%"
-              h="125%"
-              py={[5,10]}
-            ></Box>
+              h="100%"
+              py={[5, 10]}
+            />
           </Box>
         </Stack>
-
 
         <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
