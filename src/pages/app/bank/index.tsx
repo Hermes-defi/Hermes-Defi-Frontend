@@ -265,7 +265,7 @@ function Stats() {
           </Text>
           <Skeleton isLoaded={!!stats.data}>
             <Text fontWeight="bold" color={useColorModeValue("primary.400", "primary.200")}>
-              {stats.data?.totalBurnt}
+              {displayNumber(stats.data?.totalBurnt, false, 2)}
             </Text>
           </Skeleton>
         </Stack>

@@ -85,17 +85,24 @@ export const useFetchMainPool = () => {
 
       if (parseFloat(poolDepositedAmount) > 0 && apolloPrice.data && parseFloat(apolloPrice.data) > 0) {
         const rewardTokenPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
+
         const tokenPerSec = utils.formatUnits(poolInfo.usdcPerTime, 18);
 
         const yearlyRewards = new BigNumberJS(tokenPerSec).times(secondsPerYear);
         const cycleRewardsIron = new BigNumberJS(tokenPerSec).times(secondsPerCycle);
-        const yearlyRewardsUsd = yearlyRewards.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`);
 
+        const yearlyRewardsUsd = yearlyRewards.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`);
         cycleRewards = cycleRewardsIron.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`).toNumber();
 
         const totalStakedInUsd = new BigNumberJS(poolDepositedAmount).times(apolloPrice.data);
 
         apr = yearlyRewardsUsd.dividedBy(totalStakedInUsd).toNumber() * 100;
+        // console.log({
+        //   rewardTokenPrice,
+        //   tokenPerSec,
+        //   yearlyRewards: yearlyRewards.valueOf(),
+        //   yearlyRewardsUsd: yearlyRewardsUsd.valueOf(),
+        // });
       }
 
       return {

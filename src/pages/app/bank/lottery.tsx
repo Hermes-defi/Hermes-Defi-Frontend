@@ -1,7 +1,6 @@
 import React from "react";
-import NextLink from "next/link";
 import { AppLayout } from "components/layout";
-import { Button, Container, Divider, Heading, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Box, Container, Divider, Heading, Skeleton, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { useLotteryInfo } from "state/bank";
 import { useActiveWeb3React } from "wallet";
 import { displayNumber, truncateAddress } from "libs/utils";
@@ -9,7 +8,7 @@ import { BankNavigation } from ".";
 
 const Page = () => {
   const { account } = useActiveWeb3React();
-  const lotterInfo = useLotteryInfo();
+  const lotteryInfo = useLotteryInfo();
 
   return (
     <AppLayout>
@@ -17,83 +16,84 @@ const Page = () => {
         <Stack spacing={8}>
           <BankNavigation />
 
-          <Stack w="100%" bg="gray.900" color="white" rounded="xl" divider={<Divider />} spacing={6} py={8} px={24}>
-            <Heading fontSize="5xl" align="center">
+          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="2xl">
               Lottery
             </Heading>
 
-            <Stack spacing={4}>
-              <Stack>
-                <Text fontSize="sm" letterSpacing="1px" textTransform="uppercase">
+            <Stack mt={4} spacing={4}>
+              <Stack spacing={1}>
+                <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
                   Price Pot
-                </Text>
+                </Heading>
 
-                <Skeleton isLoaded={!!lotterInfo.data}>
-                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                    {lotterInfo.data?.pricePot} IRON
+                <Skeleton isLoaded={!!lotteryInfo.data}>
+                  <Text color="primary.400" fontWeight="bold">
+                    {displayNumber(lotteryInfo.data?.pricePot, false, 2)} IRON
                   </Text>
                 </Skeleton>
               </Stack>
 
-              <Stack>
-                <Text fontSize="sm" letterSpacing="1px" textTransform="uppercase">
+              <Stack spacing={1}>
+                <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
                   My Tickets
-                </Text>
+                </Heading>
 
-                <Skeleton isLoaded={!!lotterInfo.data}>
-                  {lotterInfo.data?.mytickets.length ? (
-                    lotterInfo.data?.mytickets.map((lot) => (
-                      <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                <Skeleton isLoaded={!!lotteryInfo.data}>
+                  {lotteryInfo.data?.mytickets.length ? (
+                    lotteryInfo.data?.mytickets.map((lot) => (
+                      <Text color="primary.400" fontWeight="bold">
                         #{lot} - {truncateAddress(account, 4)}
                       </Text>
                     ))
                   ) : (
-                    <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                    <Text color="primary.400" fontWeight="bold">
                       -
                     </Text>
                   )}
                 </Skeleton>
               </Stack>
 
-              <Stack>
-                <Text fontSize="sm" letterSpacing="1px" textTransform="uppercase">
+              <Stack spacing={1}>
+                <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
                   Probability
-                </Text>
+                </Heading>
 
-                <Skeleton isLoaded={!!lotterInfo.data}>
-                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                    {lotterInfo.data?.mytickets?.length}/{lotterInfo.data?.totalTickets} Tickets <br />
-                    {displayNumber(lotterInfo.data?.probability || 0)}%
+                <Skeleton isLoaded={!!lotteryInfo.data}>
+                  <Text color="primary.400" fontWeight="bold">
+                    {lotteryInfo.data?.mytickets?.length}/{lotteryInfo.data?.totalTickets} Tickets <br />
+                    {displayNumber(lotteryInfo.data?.probability || 0)}%
                   </Text>
                 </Skeleton>
               </Stack>
 
-              <Stack>
-                <Text fontSize="sm" letterSpacing="1px" textTransform="uppercase">
+              <Stack spacing={1}>
+                <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
                   Last Winner
-                </Text>
+                </Heading>
 
-                <Skeleton isLoaded={!!lotterInfo.data}>
+                <Skeleton isLoaded={!!lotteryInfo.data}>
                   <Text fontSize="lg" color="primary.400" fontWeight="bold">
-                    <Text as="span" fontWeight="semibold" color="gray.50">
-                      #{lotterInfo.data?.winnum}
-                    </Text>{" "}
-                    {truncateAddress(lotterInfo.data?.lotWinner || "", 4)}
+                    <Text as="span" fontWeight="semibold">
+                      #{lotteryInfo.data?.winnum}
+                    </Text>
+                    {" - "}
+                    {truncateAddress(lotteryInfo.data?.lotWinner || "", 4)}
+                  </Text>
+                </Skeleton>
+              </Stack>
+
+              <Stack align="center">
+                <Skeleton isLoaded={!!lotteryInfo.data}>
+                  <Text fontSize="sm" letterSpacing="1px">
+                    {account === lotteryInfo.data?.lotWinner
+                      ? "Yay!! You won the lottery 🎉"
+                      : "Sorry better luck next time :("}
                   </Text>
                 </Skeleton>
               </Stack>
             </Stack>
-
-            <Stack align="center">
-              <Skeleton isLoaded={!!lotterInfo.data}>
-                <Text fontSize="sm" letterSpacing="1px">
-                  {account === lotterInfo.data?.lotWinner
-                    ? "Yay!! You won the lottery 🎉"
-                    : "Sorry better luck next time :("}
-                </Text>
-              </Skeleton>
-            </Stack>
-          </Stack>
+          </Box>
         </Stack>
       </Container>
     </AppLayout>
