@@ -209,7 +209,7 @@ export function useHarvestAll(ApolloToHarvest: string) {
 
           if (!hasApprovedPool) return;
 
-          const tx = await masterChef.deposit(pool.pid, utils.parseEther("0"), constants.AddressZero);
+          const tx = await masterChef.deposit(pool.pid, utils.parseEther("0"));
           await tx.wait();
         })
       );
