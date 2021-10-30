@@ -42,6 +42,7 @@ export function useApproveSwapUsdc() {
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries(["swap-usdc-allowance", account]);
+        await queryClient.invalidateQueries(["tokenBalance", account, tokens.usdc.address]);
 
         ReactGA.event({
           category: "swap USDC Approval",

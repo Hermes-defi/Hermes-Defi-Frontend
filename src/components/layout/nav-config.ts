@@ -35,10 +35,6 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
         label: "Balancers",
         href: "/app/balancers",
       },
-      {
-        label: "Stake pAPOLLO",
-        href: "/app/waiting-room",
-      },
     ],
   },
   {
@@ -53,7 +49,7 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
         label: "Add liquidity (DFYN)",
         href: "https://exchange.dfyn.network/#/add/0x577aa684B89578628941D648f1Fbd6dDE338F059/0xD86b5923F3AD7b585eD81B448170ae026c65ae9a",
         isExternal: true,
-      }
+      },
     ],
   },
   {
@@ -109,10 +105,5 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
     ],
-  },
-  {
-    label: "Presale",
-    href: "/app/pre-sale",
-    decorate: true,
   },
 ];

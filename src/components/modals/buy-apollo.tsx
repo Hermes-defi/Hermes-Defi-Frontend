@@ -104,7 +104,12 @@ export const BuyApolloModal: React.FC<Props> = (props) => {
               </Button>
 
               <Button
-                onClick={() => buyApollo.mutateAsync(amount).then(() => setAmount(""))}
+                onClick={() =>
+                  buyApollo
+                    .mutateAsync(amount)
+                    .then(() => setAmount(""))
+                    .then(() => props.onClose())
+                }
                 isLoading={buyApollo.isLoading}
                 fontSize="md"
                 size="lg"

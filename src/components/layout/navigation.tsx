@@ -32,7 +32,6 @@ import { displayCurrency } from "libs/utils";
 import { NavItem } from "./nav-config";
 import { Wallet } from "components/wallet";
 import { BuyApolloModal } from "components/modals/buy-apollo";
-import { useSwapUSDCForApollo } from "hooks/swap";
 
 function getNavItemsSplit(length: number) {
   if (length % 2 === 0) return length / 2;
@@ -164,15 +163,8 @@ export const Navigation = ({
           </Stack>
 
           {/* token price */}
-          <Stack>
-            <Badge
-              display={{ base: "none", md: "block" }}
-              colorScheme="secondary"
-              fontSize="lg"
-              py={1}
-              px={10}
-              rounded="xl"
-            >
+          <Stack align="center" display={{ base: "none", md: "flex" }}>
+            <Badge colorScheme="secondary" fontSize="lg" py={1} px={10} rounded="xl">
               <Skeleton isLoaded={!!tokenPrice}>{displayCurrency(tokenPrice)}</Skeleton>
             </Badge>
 
@@ -375,6 +367,8 @@ export const Navigation = ({
             <Badge colorScheme="secondary" fontSize="lg" size="lg" py={2} px={10} rounded="xl">
               {displayCurrency(tokenPrice)}
             </Badge>
+
+            <BuyApollo />
 
             <Stack w="full" bg={useColorModeValue("white", "gray.700")} p={4} display={{ md: "none" }}>
               {navItems.map((navItem) => (

@@ -137,7 +137,7 @@ const defaultContracts = {
   },
   swapUsdc: {
     address: {
-      137: "0x6FB653f79A97638d72EEF95805523591228b5188",
+      137: "0x217aaa91e252b46e1abff0c8bab63249fbba881b",
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: UsdcSwapABI,
