@@ -26,10 +26,13 @@ import {
   Text,
   useColorMode,
   StackDivider,
+  Button,
 } from "@chakra-ui/react";
 import { displayCurrency } from "libs/utils";
 import { NavItem } from "./nav-config";
 import { Wallet } from "components/wallet";
+import { BuyApolloModal } from "components/modals/buy-apollo";
+import { useSwapUSDCForApollo } from "hooks/swap";
 
 function getNavItemsSplit(length: number) {
   if (length % 2 === 0) return length / 2;
@@ -58,6 +61,20 @@ function ColorModeToggle() {
         icon={<IoIosMoon />}
       />
     </Stack>
+  );
+}
+
+function BuyApollo() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <Button onClick={() => onOpen()} colorScheme="accent" variant="outline" size="sm">
+        Buy Apollo
+      </Button>
+
+      <BuyApolloModal isOpen={isOpen} onClose={() => onClose()} />
+    </>
   );
 }
 
@@ -147,17 +164,20 @@ export const Navigation = ({
           </Stack>
 
           {/* token price */}
-          <Badge
-            display={{ base: "none", md: "block" }}
-            colorScheme="secondary"
-            fontSize="lg"
-            size="lg"
-            py={2}
-            px={10}
-            rounded="xl"
-          >
-            <Skeleton isLoaded={!!tokenPrice}>{displayCurrency(tokenPrice)}</Skeleton>
-          </Badge>
+          <Stack>
+            <Badge
+              display={{ base: "none", md: "block" }}
+              colorScheme="secondary"
+              fontSize="lg"
+              py={1}
+              px={10}
+              rounded="xl"
+            >
+              <Skeleton isLoaded={!!tokenPrice}>{displayCurrency(tokenPrice)}</Skeleton>
+            </Badge>
+
+            <BuyApollo />
+          </Stack>
         </Flex>
 
         {/* desktop navigation */}

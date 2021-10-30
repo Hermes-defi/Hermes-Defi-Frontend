@@ -14,6 +14,7 @@ import DualRewardPoolABI from "config/abis/DualRewardPoolABI.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
 import pAPOLLO from "config/abis/pApollo.json";
 import BankABI from "config/abis/Bank.json";
+import UsdcSwapABI from "config/abis/UsdcSwap.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -133,6 +134,13 @@ const defaultContracts = {
       80001: "",
     }[DEFAULT_CHAIN_ID],
     abi: BankABI,
+  },
+  swapUsdc: {
+    address: {
+      137: "0x6FB653f79A97638d72EEF95805523591228b5188",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: UsdcSwapABI,
   },
 };
 

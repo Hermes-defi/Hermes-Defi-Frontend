@@ -167,3 +167,8 @@ export function useBankContract() {
   const contract = useContract();
   return contract(defaultContracts.bank);
 }
+
+export function useSwapUSDCContract() {
+  const contract = useContract();
+  return contract(defaultContracts.swapUsdc);
+}
