@@ -305,7 +305,7 @@ export const vaults: Vault[] = {
 
       farmAddress: "0xe194f2cB4da23B1FB26B41Eb818d25d9FC7367f2",
 
-      isActive: true,
+      isActive: false,
       amm: "dfyn",
       depositFees: 0,
       withdrawFees: 0,
