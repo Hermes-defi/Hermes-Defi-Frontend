@@ -297,7 +297,10 @@ export const useLotteryInfo = () => {
     enabled: !!account,
     queryFn: async () => {
       const pricePot = utils.formatUnits(await bankContract.lotsize(), 18);
-      const mytickets = (await bankContract.mytickets(account)).map((tickets) => tickets.toString());
+      const mytickets = (await bankContract.mytickets(account))
+        .map((tickets) => tickets.toString())
+        .filter((tickets) => tickets != "0");
+
       const totalTickets = (await bankContract.totalticket()).toString();
       const probability = new BigNumberJS(mytickets?.length || 0).dividedBy(totalTickets).times(100).toNumber();
 
