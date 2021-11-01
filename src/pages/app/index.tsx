@@ -61,7 +61,7 @@ const Page: React.FC = () => {
     <AppLayout>
       <Stack spacing={10} py={10}>
         <Stack direction={["column", "row"]} justify="space-between" spacing={10}>
-          <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+          {/* <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
               Pre-Sale countdown
             </Heading>
@@ -111,8 +111,23 @@ const Page: React.FC = () => {
                 </Skeleton>
               </Box>
             </SimpleGrid>
-          </Box>
+          </Box> */}
 
+          <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
+            More about Hermes Heroes
+            </Heading>
+            <Box
+              as="iframe"
+              title="More about Hermes Heroes"
+              src="https://www.youtube.com/embed/mpu6R0ECiI8"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              w="100%"
+              h="100%"
+              py={[5, 10]}
+            />
+          </Box>
           <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
               How Apollo system works
