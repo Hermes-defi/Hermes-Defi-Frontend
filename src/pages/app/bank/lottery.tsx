@@ -41,8 +41,8 @@ const Page = () => {
 
                 <Skeleton isLoaded={!!lotteryInfo.data}>
                   {lotteryInfo.data?.mytickets.length ? (
-                    lotteryInfo.data?.mytickets.map((lot) => (
-                      <Text color="primary.400" fontWeight="bold">
+                    lotteryInfo.data?.mytickets.map((lot, index) => (
+                      <Text key={index} color="primary.400" fontWeight="bold">
                         #{lot} - {truncateAddress(account, 4)}
                       </Text>
                     ))

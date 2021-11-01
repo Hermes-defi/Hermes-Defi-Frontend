@@ -297,12 +297,21 @@ export const useLotteryInfo = () => {
     enabled: !!account,
     queryFn: async () => {
       const pricePot = utils.formatUnits(await bankContract.lotsize(), 18);
-      const mytickets = await bankContract.mytickets(account);
+      const mytickets = (await bankContract.mytickets(account)).map((tickets) => tickets.toString());
       const totalTickets = (await bankContract.totalticket()).toString();
       const probability = new BigNumberJS(mytickets?.length || 0).dividedBy(totalTickets).times(100).toNumber();
 
       const lotWinner = await bankContract.lotwinner();
       const winnum = (await bankContract.winnum()).toString();
+
+      console.log({
+        pricePot,
+        mytickets,
+        totalTickets,
+        probability,
+        lotWinner,
+        winnum,
+      });
 
       return {
         pricePot,
