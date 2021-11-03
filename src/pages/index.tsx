@@ -29,7 +29,7 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 
-import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon, ExternalLinkIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { RiWaterFlashFill, RiRoadMapFill, RiBookOpenFill } from "react-icons/ri";
 import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
 import { AiOutlineAudit } from "react-icons/ai";
@@ -305,15 +305,15 @@ const DappStats = () => {
         </Box>
       </Stack>
 
-      <Stack direction="row" justify="space-between" align="center" spacing={8}>
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Stack direction="row" justify="space-between" align="center" spacing={[6, 8]}>
+        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{irisPrice ? displayCurrency(irisPrice) : "N/A"}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             $IRIS Price
           </Text>
         </Box>
 
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
+        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(vaultStats.data.toNumber()), true)}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Vaults
@@ -321,28 +321,31 @@ const DappStats = () => {
         </Box>
       </Stack>
 
-      <Stack direction="row" justify="space-between" align="center" spacing={8}>
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Stack direction="row" justify="space-between" align="center" spacing={[6, 8]}>
+        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{irisPrice ? displayCurrency(0) : "N/A"}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             $APOLLO Price
           </Text>
         </Box>
 
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
+        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Vaults
           </Text>
         </Box>
+      </Stack>
 
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Stack direction="row" justify="space-between" align="center" spacing={[6, 8]}>
+        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Pools
           </Text>
         </Box>
-        <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
+
+        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Farms
