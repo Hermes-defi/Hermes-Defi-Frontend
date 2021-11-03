@@ -69,6 +69,18 @@ const Page = () => {
 
               <Stack spacing={1}>
                 <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+                  Lottery Draw in
+                </Heading>
+
+                <Skeleton isLoaded={!!lotteryInfo.data}>
+                  <Text fontSize="lg" color="primary.400" fontWeight="bold">
+                    {lotteryInfo.data?.timeLeft}
+                  </Text>
+                </Skeleton>
+              </Stack>
+
+              <Stack spacing={1}>
+                <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
                   Last Winner
                 </Heading>
 

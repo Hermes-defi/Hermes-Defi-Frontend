@@ -334,6 +334,7 @@ export const useLotteryInfo = () => {
   const lotteryInfo = useQuery({
     queryKey: ["lottery-info", account],
     enabled: !!account,
+    refetchInterval: 1 * 60 * 1000,
     queryFn: async () => {
       const pricePot = utils.formatUnits(await bankContract.lotsize(), 18);
       const mytickets = (await bankContract.mytickets(account))
@@ -346,6 +347,11 @@ export const useLotteryInfo = () => {
       const lotWinner = await bankContract.lotwinner();
       const winnum = (await bankContract.winnum()).toString();
 
+      const poolEndTime = (await bankContract.endtime()).toString();
+
+      const timeLeftDiff = dayjs.unix(poolEndTime).diff(dayjs()); // time until pool ends
+      const timeLeft = timeLeftDiff > 0 ? generateTimeDuration(timeLeftDiff) : null;
+
       return {
         pricePot,
         mytickets,
@@ -353,6 +359,7 @@ export const useLotteryInfo = () => {
         probability,
         lotWinner,
         winnum,
+        timeLeft,
       };
     },
   });

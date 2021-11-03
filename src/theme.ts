@@ -1,5 +1,5 @@
 import { extendTheme, theme as defaultTheme } from "@chakra-ui/react";
-import { mode } from "@chakra-ui/theme-tools";
+import { mode, transparentize } from "@chakra-ui/theme-tools";
 
 const theme = extendTheme({
   config: {
@@ -74,6 +74,29 @@ const theme = extendTheme({
           }
 
           return defaultTheme.components.Button.variants.solid;
+        },
+        outline: (props) => {
+          const { colorScheme: c } = props;
+
+          const darkHoverBg = transparentize(`${c}.200`, 0.12)(theme);
+          const darkActiveBg = transparentize(`${c}.200`, 0.24)(theme);
+
+          if (c === "primary") {
+            return {
+              border: "1px solid",
+              borderColor: "currentColor",
+              color: mode(`${c}.400`, `${c}.200`)(props),
+              bg: "transparent",
+              _hover: {
+                bg: mode(`${c}.50`, darkHoverBg)(props),
+              },
+              _active: {
+                bg: mode(`${c}.100`, darkActiveBg)(props),
+              },
+            };
+          }
+
+          return defaultTheme.components.Button.variants.outline;
         },
         action: (props) => ({
           bg: "gray.700",
