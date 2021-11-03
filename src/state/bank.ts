@@ -9,7 +9,7 @@ import { approveLpContract } from "web3-functions";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { fetchPrice } from "web3-functions/prices";
-import { secondsPerYear } from "config/constants";
+import { BurnAddress, secondsPerYear } from "config/constants";
 import { generateTimeDuration } from "libs/utils";
 import { useApolloPrice } from "hooks/prices";
 
@@ -55,6 +55,7 @@ export const useHasApprovedPool = () => {
 export const useFetchMainPool = () => {
   const { library } = useActiveWeb3React();
   const bankContract = useBankContract();
+  const getErc20 = useERC20();
   const apolloPrice = useApolloPrice();
 
   const mainPool = useQuery({
@@ -73,26 +74,30 @@ export const useFetchMainPool = () => {
       const poolDepositedAmount = utils.formatUnits(await bankContract.totalAmount(), 18);
       const poolTotalPayout = utils.formatUnits(await bankContract.totalpayout(), 18);
 
-      // calculate APR
+      // total rewards
+      const rewardTokenPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
+      const rewardToken = getErc20(BANK_REWARD_TOKEN.address);
 
+      const totalRewards = utils.formatUnits(
+        await rewardToken.balanceOf(bankContract.address),
+        BANK_REWARD_TOKEN.decimals
+      );
+
+      const totalRewardsInUsd = new BigNumberJS(totalRewards).times(rewardTokenPrice).toString();
+
+      // calculate APR
       /**
        * to calculate the APR we need the pool rewards per week and then convert this to USD and divide it
        * by the total amount in the pool
        */
-      const secondsPerCycle = 259200;
       let apr = 0;
-      let cycleRewards = 0;
 
       if (parseFloat(poolDepositedAmount) > 0 && apolloPrice.data && parseFloat(apolloPrice.data) > 0) {
-        const rewardTokenPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
-
         const tokenPerSec = utils.formatUnits(poolInfo.usdcPerTime, 18);
 
         const yearlyRewards = new BigNumberJS(tokenPerSec).times(secondsPerYear);
-        const cycleRewardsIron = new BigNumberJS(tokenPerSec).times(secondsPerCycle);
 
         const yearlyRewardsUsd = yearlyRewards.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`);
-        cycleRewards = cycleRewardsIron.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`).toNumber();
 
         const totalStakedInUsd = new BigNumberJS(poolDepositedAmount).times(apolloPrice.data);
 
@@ -109,7 +114,7 @@ export const useFetchMainPool = () => {
         poolName,
         timeLeft,
         apr,
-        cycleRewards,
+        totalRewardsInUsd,
         poolTotalPayout,
       };
     },
@@ -166,6 +171,7 @@ export const useFetchPools = () => {
           const poolDepositedAmount = poolInfo.amount.toString();
 
           // calculate APR
+          const poolTokenPrice = await fetchPrice({ address: lpContract.address, symbol, decimals }, library);
 
           /**
            * to calculate the APR we need the pool rewards per week and then convert this to USD and divide it
@@ -176,10 +182,9 @@ export const useFetchPools = () => {
           // todo:: get apollo price
 
           if (poolDepositedAmount > 0 && apolloPrice.data && parseFloat(apolloPrice.data) > 0) {
-            const rewadTokenPrice = await fetchPrice({ address: lpContract.address, symbol, decimals }, library);
             const tokenPerSec = poolInfo.tokenPerSec.toString();
             const yearlyRewards = new BigNumberJS(tokenPerSec).times(secondsPerYear);
-            const yearlyRewardsUsd = yearlyRewards.times(rewadTokenPrice).dividedBy(`1e${decimals}`);
+            const yearlyRewardsUsd = yearlyRewards.times(poolTokenPrice).dividedBy(`1e${decimals}`);
 
             const totalStakedInUsd = new BigNumberJS(poolDepositedAmount)
               .times(apolloPrice.data)
@@ -200,6 +205,7 @@ export const useFetchPools = () => {
             isNew,
             apr,
             poolAmount,
+            poolAmountInUsd: new BigNumberJS(poolAmount).times(poolTokenPrice).toString(),
             poolStartTime,
             poolEndTime,
             timeLeft,
@@ -213,6 +219,29 @@ export const useFetchPools = () => {
   return pools;
 };
 
+export const useRewardInfo = () => {
+  const pools = useFetchPools();
+  const mainPool = useFetchMainPool();
+
+  const isLoading = pools.some((f) => f.status === "loading") || mainPool.status === "loading";
+
+  const aprs = pools
+    .reduce((total, curr: any) => {
+      return total.plus(curr.data?.apr || 0);
+    }, new BigNumberJS(0))
+    .plus(mainPool.data?.apr)
+    .toString();
+
+  const totalRewards = pools
+    .reduce((total, curr: any) => {
+      return total.plus(curr.data?.poolAmountInUsd || 0);
+    }, new BigNumberJS(0))
+    .plus(mainPool.data?.totalRewardsInUsd)
+    .toString();
+
+  return { isLoading, aprs, totalRewards };
+};
+
 export const useBankStats = () => {
   const apolloContract = useApolloToken();
   const bankContract = useBankContract();
@@ -221,11 +250,21 @@ export const useBankStats = () => {
     queryKey: "bank-stats",
     queryFn: async () => {
       const totalSupply = utils.formatUnits(await apolloContract.totalSupply(), 18);
-      const totalBurnt = utils.formatUnits(await bankContract.totalBurnt(), 18);
-      const percentageBurnt = new BigNumberJS(totalSupply).minus(totalBurnt).dividedBy(totalSupply).toNumber();
-      const lotteryWinner = await bankContract.lotwinner();
 
-      return { totalBurnt, percentageBurnt, lotteryWinner };
+      const totalBurntInBank = utils.formatUnits(await bankContract.totalBurnt(), 18);
+      const percentageBurntInBank = new BigNumberJS(totalBurntInBank).dividedBy(totalSupply).times(100).toString();
+
+      const totalBurnt = utils.formatUnits(await apolloContract.balanceOf(BurnAddress), 18);
+      const percentageBurnt = new BigNumberJS(totalBurnt).dividedBy(totalSupply).times(100).toString();
+
+      console.log({
+        totalSupply: totalSupply.valueOf(),
+        totalBurntInBank: totalBurntInBank.valueOf(),
+        totalBurnt: totalBurnt.valueOf(),
+        percentageBurntInBank: percentageBurntInBank.valueOf(),
+        percentageBurnt: percentageBurnt.valueOf(),
+      });
+      return { totalBurnt, percentageBurnt, totalBurntInBank, percentageBurntInBank };
     },
   });
 

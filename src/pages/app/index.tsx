@@ -61,61 +61,9 @@ const Page: React.FC = () => {
     <AppLayout>
       <Stack spacing={10} py={10}>
         <Stack direction={["column", "row"]} justify="space-between" spacing={10}>
-          {/* <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
-              Pre-Sale countdown
-            </Heading>
-
-            <SimpleGrid w={{ base: "100%", md: "100%" }} columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
-              <Box>
-                <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
-                  pre-sale ends in
-                </Heading>
-                <Skeleton isLoaded={!!currentBlock}>
-                  <Text letterSpacing="1px" fontWeight="700">
-                    {generateTimeDuration(blockDiff(20705323 - currentBlock))}
-                  </Text>
-                </Skeleton>
-              </Box>
-
-              <Box>
-                <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
-                  Liquidity added in
-                </Heading>
-                <Skeleton isLoaded={!!currentBlock}>
-                  <Text letterSpacing="1px" fontWeight="700">
-                    {generateTimeDuration(blockDiff(20708511 - currentBlock))}
-                  </Text>
-                </Skeleton>
-              </Box>
-
-              <Box>
-                <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
-                  Swap opens in
-                </Heading>
-                <Skeleton isLoaded={!!currentBlock}>
-                  <Text letterSpacing="1px" fontWeight="700">
-                    {generateTimeDuration(blockDiff(20711511 - currentBlock))}
-                  </Text>
-                </Skeleton>
-              </Box>
-
-              <Box>
-                <Heading mb={1} color={useColorModeValue("primary.600", "accent.300")} fontSize="lg">
-                  Farm starts in
-                </Heading>
-                <Skeleton isLoaded={!!currentBlock}>
-                  <Text letterSpacing="1px" fontWeight="700">
-                    {generateTimeDuration(blockDiff(20744511 - currentBlock))}
-                  </Text>
-                </Skeleton>
-              </Box>
-            </SimpleGrid>
-          </Box> */}
-
           <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
-            More about Hermes Heroes
+              More about Hermes Heroes
             </Heading>
             <Box
               as="iframe"

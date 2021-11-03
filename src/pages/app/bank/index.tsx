@@ -2,12 +2,12 @@ import React from "react";
 import NextLink from "next/link";
 import { AppLayout } from "components/layout";
 import {
+  Box,
   Button,
   Container,
   Heading,
   Image,
   Input,
-  Link,
   SimpleGrid,
   Skeleton,
   Stack,
@@ -18,18 +18,17 @@ import {
 import {
   useApproveBank,
   useBankStats,
-  useDepositedAmount,
   useDepositInBank,
   useEnrollInPool,
   useFetchMainPool,
   useFetchPools,
   useHasApprovedPool,
+  useRewardInfo,
 } from "state/bank";
-import { displayCurrency, displayNumber, truncateAddress } from "libs/utils";
+import { displayCurrency, displayNumber } from "libs/utils";
 import { useApolloBalance } from "hooks/wallet";
 import { useActiveWeb3React } from "wallet";
 import { UnlockButton } from "components/wallet/unlock-wallet";
-import { useApolloPrice } from "hooks/prices";
 
 export function BankNavigation() {
   return (
@@ -68,34 +67,71 @@ export function BankNavigation() {
   );
 }
 
+function BankStats() {
+  const rewardInfo = useRewardInfo();
+
+  return (
+    <Stack
+      direction="row"
+      justify="space-around"
+      align="center"
+      flex="1"
+      bg={useColorModeValue("white", "gray.700")}
+      rounded="2xl"
+      boxShadow="base"
+      px={[5, 10]}
+      py={{ base: 10, md: 6 }}
+    >
+      <Stack align="center">
+        <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize={{ base: "xl", md: "2xl" }}>
+          Total APR
+        </Heading>
+
+        <Skeleton isLoaded={!rewardInfo.isLoading}>
+          <Heading color="accent.400" fontSize="4xl">
+            {displayNumber(rewardInfo.aprs, false, 2)}%
+          </Heading>
+        </Skeleton>
+      </Stack>
+
+      <Stack align="center">
+        <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize={{ base: "xl", md: "2xl" }}>
+          Total Rewards
+        </Heading>
+
+        <Skeleton isLoaded={!rewardInfo.isLoading}>
+          <Heading color="accent.400" fontSize="4xl">
+            {displayCurrency(rewardInfo.totalRewards, false)}
+          </Heading>
+        </Skeleton>
+      </Stack>
+    </Stack>
+  );
+}
+
 function DepositSection() {
   const [amount, setAmount] = React.useState("");
   const { account } = useActiveWeb3React();
-  const userDepositedAmount = useDepositedAmount();
   const apolloBalance = useApolloBalance();
   const hasApprovedPool = useHasApprovedPool();
   const approveMutation = useApproveBank();
   const depositeMutation = useDepositInBank();
 
   return (
-    <Stack
-      direction={{ base: "column", md: "row" }}
-      p={7}
-      rounded="xl"
-      bg={useColorModeValue("secondary.400", "secondary.400")}
-      bgGradient="linear(to-b, whiteAlpha.600, accent.500)"
-      color={"white"}
-      spacing={5}
-    >
-      <Stack flex="1" textAlign="center" align="center" spacing={3}>
-        <Text pb={2} fontWeight="bold" textTransform="uppercase" fontSize="sm">
-          {displayNumber(apolloBalance, false, 3)} APOLLO available
+    <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+      <Box mb={8}>
+        <Heading mb={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+          Deposit Apollo
+        </Heading>
+        <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.100")}>
+          Burn your $APOLLO to earn $IRON + partner pool rewards.
         </Text>
+      </Box>
 
-        <Stack align="center" direction="row" borderWidth="1px" borderColor="whiteAlpha.500" px={3} py={2} rounded="xl">
+      <Stack justify="center" spacing={5}>
+        <Stack align="center" direction="row" borderWidth="1px" borderColor="blackAlpha.500" px={3} py={2} rounded="xl">
           <Input
             _focus={{ outline: "none" }}
-            _placeholder={{ color: "white" }}
             isDisabled={!hasApprovedPool.data}
             pl={0}
             borderWidth="0px"
@@ -113,55 +149,45 @@ function DepositSection() {
           <Button
             size="sm"
             variant="outline"
-            borderColor="whiteAlpha.500"
-            color="white"
+            colorScheme="secondary"
             isDisabled={!hasApprovedPool.data}
             onClick={() => setAmount(apolloBalance)}
-            _hover={{ bg: "transparent", borderColor: "whiteAlpha.900" }}
           >
             Max
           </Button>
         </Stack>
 
+        <Text fontSize="sm">Balance: {displayNumber(apolloBalance, false, 3)} APOLLO</Text>
+
         {!account ? (
-          <UnlockButton w="50%" variant="action" />
+          <UnlockButton w="50%" colorScheme="accent" />
         ) : (
-          <Stack direction={["column", "row"]} spacing={[4, 10]}>
+          <Stack direction="row">
             <Button
+              isFullWidth
               isDisabled={hasApprovedPool.data}
               isLoading={approveMutation.isLoading}
               onClick={() => approveMutation.mutate()}
-              variant="action"
+              variant="solid"
+              colorScheme="primary"
             >
               Approve Bank
             </Button>
 
             <Button
+              isFullWidth
               isDisabled={!hasApprovedPool.data}
               isLoading={depositeMutation.isLoading}
               onClick={() => depositeMutation.mutateAsync(amount).then(() => setAmount(""))}
-              variant="action"
+              variant="solid"
+              colorScheme="primary"
             >
-              Burn APOLLO
+              Deposit APOLLO
             </Button>
           </Stack>
         )}
       </Stack>
-
-      <Stack flex="1" textAlign="center" justify="center">
-        <Text pb={2} fontWeight="bold" textTransform="uppercase" fontSize="sm">
-          My Burnt APOLLO
-        </Text>
-
-        <Stack flex="1" align="center" justify="center">
-          <Skeleton isLoaded={!userDepositedAmount.isLoading}>
-            <Text fontWeight="900" fontSize="xl">
-              {displayNumber(userDepositedAmount.data || 0, false, 3)} APOLLO
-            </Text>
-          </Skeleton>
-        </Stack>
-      </Stack>
-    </Stack>
+    </Box>
   );
 }
 
@@ -204,7 +230,7 @@ function Pool({ pool }) {
           {displayNumber(pool?.apr)}%
         </Text>
         <Text fontSize="md" fontWeight="semibold" textTransform="uppercase">
-          {displayNumber(pool?.poolAmount, false, 6)} {pool?.poolName}
+          {displayNumber(pool?.poolAmount, false, 3)} {pool?.poolName}
         </Text>
 
         <Text fontSize="md" fontWeight="semibold">
@@ -226,68 +252,10 @@ function Pool({ pool }) {
   );
 }
 
-function Stats() {
-  const stats = useBankStats();
-  const apolloPrice = useApolloPrice();
-
-  return (
-    <Stack border="1px" borderColor={useColorModeValue("gray.400", "whiteAlpha.100")} p={7} rounded="xl" spacing={7}>
-      <Heading fontSize="lg" borderBottom="1px" w={20}>
-        Bank Stats
-      </Heading>
-
-      <Stack spacing={1}>
-        <Stack direction="row" justify="space-between">
-          <Text fontWeight="bold" fontSize="sm">
-            APOLLO Price
-          </Text>
-          <Skeleton isLoaded={!!apolloPrice.data}>
-            <Text fontWeight="bold" color={useColorModeValue("primary.400", "primary.200")}>
-              {displayCurrency(apolloPrice.data || 0)}
-            </Text>
-          </Skeleton>
-        </Stack>
-
-        <Stack direction="row" justify="space-between">
-          <Text fontWeight="bold" fontSize="sm">
-            % of burnt APOLLO
-          </Text>
-          <Skeleton isLoaded={!!stats.data}>
-            <Text fontWeight="bold" color={useColorModeValue("primary.400", "primary.200")}>
-              {displayNumber(stats.data?.percentageBurnt, false, 3)}%
-            </Text>
-          </Skeleton>
-        </Stack>
-
-        <Stack direction="row" justify="space-between">
-          <Text fontWeight="bold" fontSize="sm">
-            Total APOLLO burnt
-          </Text>
-          <Skeleton isLoaded={!!stats.data}>
-            <Text fontWeight="bold" color={useColorModeValue("primary.400", "primary.200")}>
-              {displayNumber(stats.data?.totalBurnt, false, 2)}
-            </Text>
-          </Skeleton>
-        </Stack>
-
-        <Stack direction="row" justify="space-between">
-          <Text fontWeight="bold" fontSize="sm">
-            Last lottery winner
-          </Text>
-          <Skeleton isLoaded={!!stats.data}>
-            <Text fontWeight="bold" color={useColorModeValue("primary.300", "primary.200")}>
-              {truncateAddress(stats.data?.lotteryWinner || "", 4)}
-            </Text>
-          </Skeleton>
-        </Stack>
-      </Stack>
-    </Stack>
-  );
-}
-
 const Page = () => {
   const mainPool = useFetchMainPool();
   const pools = useFetchPools();
+  const stats = useBankStats();
 
   return (
     <AppLayout>
@@ -295,79 +263,131 @@ const Page = () => {
         <Stack spacing={8}>
           <BankNavigation />
 
-          <Stack w="100%" rounded="xl" spacing={6} py={8} px={8}>
-            <DepositSection />
+          <Stack w="100%" rounded="xl" spacing={6} py={[4, 8]} px={[0, 8]}>
+            <Stack direction={{ base: "column-reverse", md: "row" }} align="stretch">
+              <BankStats />
+              <DepositSection />
+            </Stack>
+
+            {mainPool.data && (
+              <Box
+                flex="1"
+                bgGradient={"linear(to-b, primary.200, accent.400)"}
+                color="white"
+                rounded="2xl"
+                boxShadow="base"
+                px={[5, 10]}
+                py={6}
+              >
+                <Stack direction="row" align="center">
+                  <Image objectFit="contain" src={`/iron-logo.png`} boxSize={10} />
+                  <Text fontSize="md" textTransform="uppercase" fontWeight="bold">
+                    iron bank
+                  </Text>
+                </Stack>
+
+                <Stack mt={8} direction={["column", "row"]} justify="space-around" spacing={[5, 10]}>
+                  <Stack align="center">
+                    <Heading color="gray.50" fontSize="xl">
+                      APR
+                    </Heading>
+
+                    <Heading color="white" fontSize="4xl">
+                      {displayNumber(mainPool.data?.apr, false, 2)}%
+                    </Heading>
+                  </Stack>
+
+                  <Stack align="center">
+                    <Heading color="gray.50" fontSize="xl">
+                      Rewards
+                    </Heading>
+
+                    <Heading color="white" fontSize="4xl">
+                      {displayCurrency(mainPool.data?.totalRewardsInUsd)}
+                    </Heading>
+                  </Stack>
+
+                  <Stack align="center">
+                    <Heading color="gray.50" fontSize="xl">
+                      IRON paid out
+                    </Heading>
+
+                    <Heading color="white" fontSize="4xl">
+                      {displayNumber(mainPool.data?.poolTotalPayout, false, 2)}
+                    </Heading>
+                  </Stack>
+                </Stack>
+              </Box>
+            )}
 
             {/* rewards */}
             <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
-              {mainPool.data && (
-                <Stack
-                  w="100%"
-                  spacing={5}
-                  bgGradient={"linear(to-b, secondary.200, green.400)"}
-                  color={"white"}
-                  px={6}
-                  py={5}
-                  rounded="xl"
-                >
-                  <Stack direction="row" justify="space-between">
-                    <Stack direction="row" align="center">
-                      <Image objectFit="contain" src={`/iron-logo.png`} boxSize={10} />
-                      <Text fontSize="md" textTransform="uppercase" fontWeight="bold">
-                        iron bank
-                      </Text>
-                    </Stack>
-
-                    <Stack justify="center" align="center">
-                      <Text
-                        rounded="lg"
-                        px={4}
-                        py={2}
-                        bg="primary.400"
-                        fontWeight="bold"
-                        fontSize="xs"
-                        textTransform="uppercase"
-                      >
-                        New
-                      </Text>
-                    </Stack>
-                  </Stack>
-
-                  {/* bank info */}
-                  <Stack textAlign="right" spacing={0}>
-                    <Text fontWeight="semibold" textTransform="uppercase" fontSize="md">
-                      Reward
-                    </Text>
-                    <Text fontWeight="bold" fontSize="4xl">
-                      {displayCurrency(mainPool.data?.cycleRewards)}/cycle*
-                    </Text>
-                    <Text fontSize="md" fontWeight="semibold" textTransform="uppercase">
-                      {displayNumber(mainPool.data?.apr)}% APR
-                    </Text>
-
-                    <Text fontSize="md" fontWeight="semibold">
-                      {displayNumber(mainPool.data?.poolTotalPayout, false, 3)} IRON paid out
-                    </Text>
-                  </Stack>
-
-                  <Button isFullWidth isDisabled textTransform="uppercase" variant="action">
-                    Enrolled
-                  </Button>
-
-                  <Text align="right" fontSize="sm">
-                    *A cycle is every 3 days
-                  </Text>
-                </Stack>
-              )}
-
               {pools.map(({ data: pool }: any) => {
                 if (!pool) return null;
                 return <Pool pool={pool} key={pool.pid} />;
               })}
             </SimpleGrid>
 
-            {/* info */}
-            <Stats />
+            <Stack
+              spacing={7}
+              bg={useColorModeValue("white", "gray.700")}
+              rounded="2xl"
+              boxShadow="base"
+              px={[5, 10]}
+              py={6}
+            >
+              <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+                Burn Stats
+              </Heading>
+
+              <Stack spacing={[4, 2]}>
+                <Stack direction={["column", "row"]} justify="space-between">
+                  <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+                    Total APOLLO burnt in bank
+                  </Heading>
+
+                  <Skeleton isLoaded={!!stats.data}>
+                    <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
+                      {displayNumber(stats.data?.totalBurntInBank, false, 2)}
+                    </Text>
+                  </Skeleton>
+                </Stack>
+
+                <Stack direction={["column", "row"]} justify="space-between">
+                  <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+                    % APOLLO burnt in bank
+                  </Heading>
+                  <Skeleton isLoaded={!!stats.data}>
+                    <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
+                      {displayNumber(stats.data?.percentageBurntInBank, false, 2)}%
+                    </Text>
+                  </Skeleton>
+                </Stack>
+
+                <Stack direction={["column", "row"]} justify="space-between">
+                  <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+                    Total APOLLO burnt (bank + tax)
+                  </Heading>
+
+                  <Skeleton isLoaded={!!stats.data}>
+                    <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
+                      {displayNumber(stats.data?.totalBurnt, false, 2)}
+                    </Text>
+                  </Skeleton>
+                </Stack>
+
+                <Stack direction={["column", "row"]} justify="space-between">
+                  <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+                    % APOLLO burnt (bank + tax)
+                  </Heading>
+                  <Skeleton isLoaded={!!stats.data}>
+                    <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
+                      {displayNumber(stats.data?.percentageBurnt, false, 2)}%
+                    </Text>
+                  </Skeleton>
+                </Stack>
+              </Stack>
+            </Stack>
           </Stack>
         </Stack>
       </Container>

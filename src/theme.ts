@@ -1,4 +1,4 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme, theme as defaultTheme } from "@chakra-ui/react";
 import { mode } from "@chakra-ui/theme-tools";
 
 const theme = extendTheme({
@@ -56,6 +56,25 @@ const theme = extendTheme({
         rounded: "xl",
       },
       variants: {
+        solid: (props) => {
+          const { colorScheme: c } = props;
+
+          if (c === "primary") {
+            return {
+              bg: mode(`${c}.400`, `${c}.200`)(props),
+              color: mode("white", `gray.800`)(props),
+              _hover: {
+                bg: mode(`${c}.500`, `${c}.300`)(props),
+                _disabled: {
+                  bg: mode(`${c}.500`, `${c}.200`)(props),
+                },
+              },
+              _active: { bg: mode(`${c}.700`, `${c}.400`)(props) },
+            };
+          }
+
+          return defaultTheme.components.Button.variants.solid;
+        },
         action: (props) => ({
           bg: "gray.700",
           color: "white",

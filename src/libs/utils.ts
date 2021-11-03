@@ -9,7 +9,7 @@ export function truncateAddress(address: string, length: number): string {
 
 export function displayNumber(number: number | string, compact?: boolean, fractionDigits?: number) {
   const value = new Intl.NumberFormat(undefined, {
-    maximumFractionDigits: fractionDigits ? 2 : 0,
+    maximumFractionDigits: fractionDigits ?? 2,
     ...(compact ? { notation: "compact", compactDisplay: "short" } : {}),
   }).format(number as number);
 

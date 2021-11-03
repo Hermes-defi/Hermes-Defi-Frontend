@@ -104,6 +104,16 @@ export const L2_NAV_ITEMS: Array<NavItem> = [
         href: "https://medium.com/@HermesDefi",
         isExternal: true,
       },
+      {
+        label: "Youtube",
+        href: "https://youtube.com/channel/UCnLWipB915XYPHMmMZcsnag",
+        isExternal: true,
+      },
+      {
+        label: "Discord",
+        href: "https://discord.gg/CzZCrsC4Hg",
+        isExternal: true,
+      },
     ],
   },
 ];
