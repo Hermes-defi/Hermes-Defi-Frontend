@@ -23,7 +23,6 @@ import {
   SimpleGrid,
   Stack,
   Text,
-  useBreakpointValue,
   useColorModeValue,
   useDisclosure,
   useColorMode,
@@ -305,7 +304,7 @@ const DappStats = () => {
         </Box>
       </Stack>
 
-      <Stack direction="row" justify="space-between" align="center" spacing={[6, 8]}>
+      <SimpleGrid columns={2} spacing={8}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{irisPrice ? displayCurrency(irisPrice) : "N/A"}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
@@ -319,9 +318,9 @@ const DappStats = () => {
             Total in Vaults
           </Text>
         </Box>
-      </Stack>
+      </SimpleGrid>
 
-      <Stack direction="row" justify="space-between" align="center" spacing={[6, 8]}>
+      <SimpleGrid columns={{ base: 2, md: 4 }} spacing={8}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{irisPrice ? displayCurrency(0) : "N/A"}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
@@ -335,9 +334,7 @@ const DappStats = () => {
             Total in Vaults
           </Text>
         </Box>
-      </Stack>
 
-      <Stack direction="row" justify="space-between" align="center" spacing={[6, 8]}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
@@ -351,7 +348,7 @@ const DappStats = () => {
             Total in Farms
           </Text>
         </Box>
-      </Stack>
+      </SimpleGrid>
     </Stack>
   );
 };
