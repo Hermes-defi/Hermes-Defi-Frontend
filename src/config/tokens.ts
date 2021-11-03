@@ -8,4 +8,11 @@ export default {
       80001: "",
     }[DEFAULT_CHAIN_ID],
   },
+  iron: {
+    decimals: 18,
+    address: {
+      137: "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+  },
 };

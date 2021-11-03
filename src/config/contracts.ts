@@ -10,6 +10,7 @@ import VaultABI from "config/abis/Vault.json";
 import DfynFarmABI from "config/abis/DfynFarm.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
 import pAPOLLO from "config/abis/pApollo.json";
+import ApolloABI from "config/abis/ApolloABI.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -63,6 +64,13 @@ const defaultContracts = {
       80001: "0x5EB25908Abf8764CB101bE704d6Bb4a8d5254f72",
     }[DEFAULT_CHAIN_ID],
     abi: IrisTokenABI,
+  },
+  apolloToken: {
+    address: {
+      137: "0x577aa684b89578628941d648f1fbd6dde338f059",
+      80001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: ApolloABI,
   },
   fenixToken: {
     address: {

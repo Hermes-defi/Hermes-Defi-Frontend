@@ -1,11 +1,4 @@
-import defaultContracts, {
-  erc20,
-  ContractInfo,
-  uniPair,
-  stakePool,
-  vault,
-  dfynFarm,
-} from "config/contracts";
+import defaultContracts, { erc20, ContractInfo, uniPair, stakePool, vault, dfynFarm } from "config/contracts";
 import { utils, providers, constants, Contract } from "ethers";
 import { useCallback } from "react";
 import { useActiveWeb3React } from "wallet";
@@ -47,6 +40,11 @@ export function useMasterChef() {
 export function useIrisToken() {
   const contract = useContract();
   return contract(defaultContracts.irisToken);
+}
+
+export function useApolloToken() {
+  const contract = useContract();
+  return contract(defaultContracts.apolloToken);
 }
 
 export function useReferral() {
@@ -134,9 +132,7 @@ export function useCustomMasterChef() {
 export function usePresaleContract(version: "v1" | "v2") {
   const contract = useContract();
   return contract(
-    version === "v1"
-      ? defaultContracts.apolloPresaleFirstRound
-      : defaultContracts.apolloPresaleSecondRound
+    version === "v1" ? defaultContracts.apolloPresaleFirstRound : defaultContracts.apolloPresaleSecondRound
   );
 }
 

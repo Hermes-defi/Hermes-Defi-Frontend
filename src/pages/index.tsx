@@ -34,7 +34,7 @@ import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
 import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
-import { useIrisPrice } from "hooks/prices";
+import { useIrisPrice, useApolloPrice } from "hooks/prices";
 import { useTotalInFarms, useTotalInBalancers, useTotalInPools, useTotalInVaults } from "hooks/home-page";
 
 // NAVIGATION
@@ -273,6 +273,7 @@ function Header() {
 // NUMBERS
 const DappStats = () => {
   const { data: irisPrice } = useIrisPrice();
+  const { data: apolloPrice } = useApolloPrice();
   const farmStats = useTotalInFarms();
   const balStats = useTotalInBalancers();
   const poolStats = useTotalInPools();
@@ -322,7 +323,7 @@ const DappStats = () => {
 
       <SimpleGrid columns={{ base: 2, md: 4 }} spacing={8}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Heading size="2xl">{irisPrice ? displayCurrency(0) : "N/A"}</Heading>
+          <Heading size="2xl">{apolloPrice ? displayCurrency(apolloPrice) : "N/A"}</Heading>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             $APOLLO Price
           </Text>
