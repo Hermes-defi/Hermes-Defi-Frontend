@@ -307,15 +307,6 @@ export const useLotteryInfo = () => {
       const lotWinner = await bankContract.lotwinner();
       const winnum = (await bankContract.winnum()).toString();
 
-      console.log({
-        pricePot,
-        mytickets,
-        totalTickets,
-        probability,
-        lotWinner,
-        winnum,
-      });
-
       return {
         pricePot,
         mytickets,
