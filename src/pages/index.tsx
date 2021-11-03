@@ -26,6 +26,7 @@ import {
   useColorModeValue,
   useDisclosure,
   useColorMode,
+  Skeleton,
 } from "@chakra-ui/react";
 
 import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
@@ -35,7 +36,13 @@ import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
 import { useIrisPrice, useApolloPrice } from "hooks/prices";
-import { useTotalInFarms, useTotalInBalancers, useTotalInPools, useTotalInVaults } from "hooks/home-page";
+import {
+  useTotalInFarms,
+  useTotalInBalancers,
+  useTotalInPools,
+  useTotalInVaults,
+  useLandingPageStats,
+} from "hooks/home-page";
 
 // NAVIGATION
 interface NavItem {
@@ -274,10 +281,7 @@ function Header() {
 const DappStats = () => {
   const { data: irisPrice } = useIrisPrice();
   const { data: apolloPrice } = useApolloPrice();
-  const farmStats = useTotalInFarms();
-  const balStats = useTotalInBalancers();
-  const poolStats = useTotalInPools();
-  const vaultStats = useTotalInVaults();
+  const stats = useLandingPageStats();
 
   return (
     <Stack align="center" spacing={8}>
@@ -293,12 +297,10 @@ const DappStats = () => {
           bgGradient="linear(to-r, primary.300, secondaryL2.200)"
           align="center"
         >
-          <Heading size="2xl">
-            {displayCurrency(
-              Math.round(farmStats.data.plus(poolStats.data).plus(balStats.data).plus(vaultStats.data).toNumber()),
-              true
-            )}
-          </Heading>
+          <Skeleton isLoaded={!!stats.data}>
+            <Heading size="2xl">{displayCurrency(stats.data?.totalTvl)}</Heading>
+          </Skeleton>
+
           <Text color="gray.700" size="sm">
             Total Value Locked
           </Text>
@@ -307,14 +309,20 @@ const DappStats = () => {
 
       <SimpleGrid columns={2} spacing={8}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Heading size="2xl">{irisPrice ? displayCurrency(irisPrice) : "N/A"}</Heading>
+          <Skeleton isLoaded={!!irisPrice}>
+            <Heading size="2xl">{displayCurrency(irisPrice)}</Heading>
+          </Skeleton>
+
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             $IRIS Price
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Heading size="2xl">{displayCurrency(Math.round(vaultStats.data.toNumber()), true)}</Heading>
+          <Skeleton isLoaded={!!stats.data}>
+            <Heading size="2xl">{displayCurrency(stats.data?.iris?.totalValueInVaults, true)}</Heading>
+          </Skeleton>
+
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Vaults
           </Text>
@@ -323,28 +331,44 @@ const DappStats = () => {
 
       <SimpleGrid columns={{ base: 2, md: 4 }} spacing={8}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Heading size="2xl">{apolloPrice ? displayCurrency(apolloPrice) : "N/A"}</Heading>
+          <Skeleton isLoaded={!!apolloPrice}>
+            <Heading size="2xl">{displayCurrency(apolloPrice)}</Heading>
+          </Skeleton>
+
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             $APOLLO Price
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
+          <Skeleton isLoaded={!!stats.data}>
+            <Heading size="2xl">{displayCurrency(stats.data?.apollo?.totalValueInVaults, true)}</Heading>
+          </Skeleton>
+
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Vaults
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
+          <Skeleton isLoaded={!!stats.data}>
+            <Heading size="2xl">{displayCurrency(stats.data?.apollo?.totalValueInPools, true)}</Heading>
+          </Skeleton>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Pools
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Heading size="2xl">{displayCurrency(Math.round(0), true)}</Heading>
+          <Skeleton isLoaded={!!stats.data}>
+            <Heading size="2xl">
+              {displayCurrency(
+                parseFloat(stats.data?.apollo?.totalValueInFarms) +
+                  parseFloat(stats.data?.apollo?.totalValueInBalancers),
+                true
+              )}
+            </Heading>
+          </Skeleton>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Farms
           </Text>

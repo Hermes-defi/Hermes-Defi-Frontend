@@ -60,9 +60,7 @@ export function useIrisStats() {
       if (irisPrice) {
         // convert circulating supply to real price
         const circulatingSupplyInIris = utils.formatEther(circulatingSupply);
-        marketCap = new BigNumberJS(circulatingSupplyInIris)
-          .multipliedBy(irisPrice.data)
-          .toString();
+        marketCap = new BigNumberJS(circulatingSupplyInIris).multipliedBy(irisPrice.data).toString();
       }
 
       return {
@@ -106,9 +104,7 @@ export function useTotalInVaults() {
     const vault = vaultResp.data as Vault;
     if (!vault) return new BigNumberJS(0);
 
-    const totalLockedInVaults = new BigNumberJS(vault?.totalStaked).multipliedBy(
-      vault?.stakeToken.price
-    );
+    const totalLockedInVaults = new BigNumberJS(vault?.totalStaked).multipliedBy(vault?.stakeToken.price);
 
     return total.plus(totalLockedInVaults);
   }, new BigNumberJS(0));
@@ -127,9 +123,7 @@ export function useTotalInFarms() {
     const farm = farmResp.data as Farm;
     if (!farm) return new BigNumberJS(0);
 
-    const totalLockedInFarm = new BigNumberJS(farm?.totalStaked).multipliedBy(
-      farm?.stakeToken.price
-    );
+    const totalLockedInFarm = new BigNumberJS(farm?.totalStaked).multipliedBy(farm?.stakeToken.price);
 
     return total.plus(totalLockedInFarm);
   }, new BigNumberJS(0));
@@ -148,9 +142,7 @@ export function useTotalInPools() {
     const pool = poolResp.data as Pool;
     if (!pool) return new BigNumberJS(0);
 
-    const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(
-      pool?.stakeToken.price
-    );
+    const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
 
     return total.plus(totalLockedInFarm);
   }, new BigNumberJS(0));
@@ -197,6 +189,19 @@ export function useTvlChart() {
   });
 }
 
+export function useLandingPageStats() {
+  return useQuery("landing-page-stats", async () => {
+    const resp = await fetch("/api/stats");
+    const data = await resp.json();
+
+    const totalTvl = new BigNumberJS(data.iris?.tvl).plus(data.apollo?.tvl).toString();
+    return {
+      ...data,
+      totalTvl,
+    };
+  });
+}
+
 export function useHarvestAll(irisToHarvest: string) {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
@@ -209,20 +214,13 @@ export function useHarvestAll(irisToHarvest: string) {
       return Promise.all(
         [...farms, ...pools, ...balancers].map(async (pool) => {
           const lpContract = getLpContract(pool.stakeToken.address);
-          const allowance: BigNumber = await lpContract.allowance(
-            account,
-            defaultContracts.masterChef.address
-          );
+          const allowance: BigNumber = await lpContract.allowance(account, defaultContracts.masterChef.address);
 
           const hasApprovedPool = !allowance.isZero();
 
           if (!hasApprovedPool) return;
 
-          const tx = await masterChef.deposit(
-            pool.pid,
-            utils.parseEther("0"),
-            constants.AddressZero
-          );
+          const tx = await masterChef.deposit(pool.pid, utils.parseEther("0"), constants.AddressZero);
           await tx.wait();
         })
       );
