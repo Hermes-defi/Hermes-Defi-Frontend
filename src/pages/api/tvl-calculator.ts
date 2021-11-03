@@ -17,7 +17,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         // push the new tvl to the array
         const currentTime = dayjs().toISOString();
-        const { tvl } = await getHermesStats();
+        const { tvl, ...otherStats } = await getHermesStats();
 
         tvlCache.push({ time: currentTime, value: tvl });
         if (tvlCache.length > 12) {
@@ -26,6 +26,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         // set cache to expire every 60 seconds
         redis.set("tvl-chart", JSON.stringify(tvlCache));
+        redis.set("iris-stats", JSON.stringify({ tvl, ...otherStats }));
         return res.send(true);
       } catch (e) {
         return res.send(e.message);

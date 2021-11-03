@@ -18,7 +18,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         // push the new tvl to the array
         const currentTime = dayjs().toISOString();
-        const { tvl } = await getApolloStats();
+        const { tvl, ...otherStats } = await getApolloStats();
 
         console.log({ tvl });
         tvlCache.push({ time: currentTime, value: tvl });
@@ -28,6 +28,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
         // set cache to expire every 60 seconds
         redis.set("tvl-chart-apollo", JSON.stringify(tvlCache));
+        redis.set("apollo-stats", JSON.stringify({ tvl, ...otherStats }));
         return res.json({ success: true });
       } catch (e) {
         return res.json({ success: false, error: e.message });
