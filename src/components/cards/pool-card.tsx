@@ -74,7 +74,8 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
               />
             )}
             <Text fontWeight="700" fontSize="sm">
-              {pool.apr ? `${displayNumber(Math.round(pool.apr.yearlyAPR))}%` : "N/A"}
+              {/* {pool.apr ? `${displayNumber(Math.round(pool.apr.yearlyAPR))}%` : "N/A"} */}
+              {"N/A"}
             </Text>
           </Box>
         </Stack>

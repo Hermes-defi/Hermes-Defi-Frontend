@@ -79,7 +79,8 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
               <IrisAPRCalculator apr={farm.apr} tokenSymbol={farm.stakeToken.symbol} tokenLink={lpLink[farm.farmDx]} />
             )}
             <Text fontWeight="700" fontSize="sm">
-              {farm.apr ? `${displayNumber(Math.round(farm.apr.yearlyAPR))}%` : "N/A"}
+            {/* {farm.apr ? `${displayNumber(Math.round(farm.apr.yearlyAPR))}%` : "N/A"} */}
+            {"N/A"}
             </Text>
           </Box>
         </Stack>

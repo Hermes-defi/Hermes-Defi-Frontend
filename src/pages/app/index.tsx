@@ -60,28 +60,6 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-      <Stack direction={["column", "row"]} justify="space-between" spacing={10}>
-        <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-            <Heading color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              Start emissions increased + lower deposit fees - APOLLO V2 LAUNCH
-            </Heading>
-            <Skeleton isLoaded={!!currentBlock}>
-              <Text letterSpacing="1px" fontWeight="700">
-                {generateTimeDuration(blockDiff(20985939 - currentBlock))}
-              </Text>
-            </Skeleton>
-        </Box>
-        <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-            <Heading color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              Finish emissions increased
-            </Heading>
-            <Skeleton isLoaded={!!currentBlock}>
-              <Text letterSpacing="1px" fontWeight="700">
-                {generateTimeDuration(blockDiff(21003939 - 20985939 + currentBlock))}
-              </Text>
-            </Skeleton>
-        </Box>
-      </Stack>
         <Stack direction={["column", "row"]} justify="space-between" spacing={10}>
           <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">

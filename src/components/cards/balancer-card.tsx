@@ -74,7 +74,8 @@ export const BalancerCard: React.FC<{ balancer: Balancer }> = ({ balancer }) => 
               />
             )}
             <Text fontWeight="700" fontSize="sm">
-              {balancer.apr ? `${displayNumber(Math.round(balancer.apr.yearlyAPR))}%` : "N/A"}
+            {/* {balancer.apr ? `${displayNumber(Math.round(balancer.apr.yearlyAPR))}%` : "N/A"} */}
+            {"N/A"}
             </Text>
           </Box>
         </Stack>
