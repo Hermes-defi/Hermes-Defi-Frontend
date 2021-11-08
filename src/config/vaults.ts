@@ -106,9 +106,9 @@ export const vaults: Vault[] = {
 
       isActive: true,
       amm: "quickswap",
-      depositFees: 3,
+      depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.25,
+      performanceFee: 0.03,
 
       stakeToken: {
         address: "0x853Ee4b2A13f8a742d64C8F088bE7bA2131f670d",
@@ -151,9 +151,9 @@ export const vaults: Vault[] = {
 
       isActive: true,
       amm: "quickswap",
-      depositFees: 3,
+      depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.25,
+      performanceFee: 0.03,
 
       stakeToken: {
         address: "0x2cF7252e74036d1Da831d11089D326296e64a728",
@@ -203,9 +203,9 @@ export const vaults: Vault[] = {
 
       isActive: true,
       amm: "quickswap",
-      depositFees: 3,
+      depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.25,
+      performanceFee: 0.03,
 
       stakeToken: {
         address: "0xadbF1854e5883eB8aa7BAf50705338739e558E5b",
@@ -248,9 +248,9 @@ export const vaults: Vault[] = {
 
       isActive: true,
       amm: "quickswap",
-      depositFees: 3,
+      depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.25,
+      performanceFee: 0.03,
 
       stakeToken: {
         address: "0xdc9232e2df177d7a12fdff6ecbab114e2231198d",
@@ -287,9 +287,9 @@ export const vaults: Vault[] = {
 
       isActive: true,
       amm: "dfyn",
-      depositFees: 2,
+      depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.25,
+      performanceFee: 0.03,
 
       farmRewardTokens: [
         {
