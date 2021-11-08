@@ -178,7 +178,8 @@ const Page: React.FC = () => {
                   </Text>
                   <Skeleton isLoaded={!isFarmAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {displayNumber(farmApr as number, true)}%
+                      {/* {displayNumber(farmApr as number, true)}% */}
+                      {"N/A"}
                     </Text>{" "}
                   </Skeleton>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
@@ -217,7 +218,8 @@ const Page: React.FC = () => {
                   </Text>
                   <Skeleton isLoaded={!isPoolAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {displayNumber(poolApr as number, true)}%
+                      {/* {displayNumber(poolApr as number, true)}% */}
+                      {"N/A"}
                     </Text>{" "}
                   </Skeleton>
 
