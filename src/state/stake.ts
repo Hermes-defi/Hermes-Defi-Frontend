@@ -9,7 +9,7 @@ import BigNumberJS from "bignumber.js";
 import { StakeInfo, stakingPools } from "config/stake";
 import { BigNumber, utils } from "ethers";
 import { approveLpContract } from "web3-functions";
-import { fetchPrice } from "web3-functions/prices";
+import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 
 function useFetchStakingPoolRequest() {
@@ -31,7 +31,21 @@ function useFetchStakingPoolRequest() {
       stakePoolInfo.totalStaked = utils.formatUnits(totalStaked, stakePoolInfo.stakeToken.decimals);
 
       // TOKEN PRICE
-      stakePoolInfo.stakeToken.price = await fetchPrice(stakePoolInfo.stakeToken, library);
+      if(stakePoolInfo.stakeToken.isLp){
+        const totalSupply = utils.formatUnits(
+          await poolChef.totalSupply(),
+          stakePoolInfo.stakeToken.decimals
+        )
+        stakePoolInfo.stakeToken.price = await fetchPairPrice(
+          stakePoolInfo.stakeToken.pairs[0],
+          stakePoolInfo.stakeToken.pairs[1],
+          totalSupply,
+          library,
+          stakePoolInfo.stakeToken.farmDx
+        )
+      }else{
+        stakePoolInfo.stakeToken.price =  await fetchPrice(stakePoolInfo.stakeToken, library);
+      }
       stakePoolInfo.rewardToken.price = await fetchPrice(stakePoolInfo.rewardToken, library);
 
       // calculate APR

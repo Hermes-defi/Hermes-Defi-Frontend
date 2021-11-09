@@ -16,6 +16,13 @@ export type StakeInfo = {
     decimals: number;
     logo: string | string[];
     price?: string;
+    isLp?: boolean;
+    pairs?: {
+      address: string;
+      decimals: number;
+      symbol: string;
+    }[];
+    farmDx?: string;
   };
 
   rewardToken: {
@@ -174,6 +181,20 @@ export const stakingPools: StakeInfo[] = {
         symbol: "IRIS/WMATIC",
         decimals: 18,
         logo: "/hermes-logo-1.png",
+        isLp: true,
+        pairs: [
+          {
+            address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+            decimals: 18,
+            symbol: "WMATIC",
+          },
+          {
+            address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+            decimals: 18,
+            symbol: "IRIS",
+          },
+        ],
+        farmDx: "quickswap",
       },
 
       rewardToken: {
