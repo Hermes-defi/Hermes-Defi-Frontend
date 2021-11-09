@@ -1,6 +1,6 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
-import { useERC20, useStakePoolContract } from "hooks/contracts";
+import { useERC20, useStakePoolContract, useMasterChef, useUniPair } from "hooks/contracts";
 import { useCurrentBlockNumber } from "hooks/wallet";
 import { useToast } from "@chakra-ui/react";
 
@@ -32,17 +32,19 @@ function useFetchStakingPoolRequest() {
 
       // TOKEN PRICE
       if(stakePoolInfo.stakeToken.isLp){
+        const getPairContract = useUniPair();
+        const lpContract = getPairContract(stakePoolInfo.stakeToken.address);
         const totalSupply = utils.formatUnits(
-          await poolChef.totalSupply(),
+          await lpContract.totalSupply(),
           stakePoolInfo.stakeToken.decimals
-        )
+        );
         stakePoolInfo.stakeToken.price = await fetchPairPrice(
           stakePoolInfo.stakeToken.pairs[0],
           stakePoolInfo.stakeToken.pairs[1],
           totalSupply,
           library,
           stakePoolInfo.stakeToken.farmDx
-        )
+        );
       }else{
         stakePoolInfo.stakeToken.price =  await fetchPrice(stakePoolInfo.stakeToken, library);
       }
