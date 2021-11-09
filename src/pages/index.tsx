@@ -320,7 +320,7 @@ const DappStats = () => {
         </Text>
       </Box>
 
-      {/* <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
+      <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">{displayCurrency(Math.round(farmStats.data.toNumber()), true)}</Heading>
         <Text color="gray.700" size="sm">
           Total in Farms
@@ -332,7 +332,7 @@ const DappStats = () => {
         <Text color="gray.700" size="sm">
           Total in Pools
         </Text>
-      </Box> */}
+      </Box>
 
       <Box boxShadow="2xl" px={[3, 10]} py={10} rounded="md" bg="secondary.200" align="center">
         <Heading size="2xl">
