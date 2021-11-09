@@ -329,7 +329,7 @@ const DappStats = () => {
         </Box>
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 2, md: 4 }} spacing={8}>
+      <SimpleGrid columns={{ base: 2, md: 2 }} spacing={8}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Skeleton isLoaded={!!apolloPrice}>
             <Heading size="2xl">{displayCurrency(apolloPrice)}</Heading>
@@ -350,7 +350,7 @@ const DappStats = () => {
           </Text>
         </Box>
 
-        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
+        {/* <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Skeleton isLoaded={!!stats.data}>
             <Heading size="2xl">{displayCurrency(stats.data?.apollo?.totalValueInPools, true)}</Heading>
           </Skeleton>
@@ -372,7 +372,7 @@ const DappStats = () => {
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Farms
           </Text>
-        </Box>
+        </Box> */}
       </SimpleGrid>
     </Stack>
   );

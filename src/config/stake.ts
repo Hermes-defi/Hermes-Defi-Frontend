@@ -2,7 +2,7 @@ import { DEFAULT_CHAIN_ID } from "./constants";
 
 export type StakeInfo = {
   address: string;
-  poolSite: string;
+  poolSite?: string;
 
   rewardEndBlock?: string;
   isDisabled?: boolean;
@@ -14,7 +14,7 @@ export type StakeInfo = {
     address: string;
     symbol: string;
     decimals: number;
-    logo: string;
+    logo: string | string[];
     price?: string;
   };
 
@@ -161,6 +161,26 @@ export const stakingPools: StakeInfo[] = {
         symbol: "USDC",
         decimals: 6,
         logo: "/usdc-logo.png",
+      },
+    },
+    
+    {
+      address: "0x850f4a1Da8Ec47C6865B487dF2a59804CFDBE3E0",
+      active: true,
+      isSpecial: true,
+
+      stakeToken: {
+        address: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
+        symbol: "IRIS/WMATIC",
+        decimals: 18,
+        logo: "/hermes-logo-1.png",
+      },
+
+      rewardToken: {
+        address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+        symbol: "IRIS",
+        decimals: 18,
+        logo: "/hermes-logo-1.png",
       },
     },
   ],

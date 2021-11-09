@@ -37,15 +37,36 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
     >
       {/* pool name */}
       <HStack align="center" mb={5} spacing={2}>
-        <Image
-          border="2px"
-          borderColor="white"
-          bg="white"
-          rounded="24px"
-          src={stakePool.rewardToken.logo}
-          boxSize={12}
-        />
-
+        {stakePool.stakeToken.logo.length == 2 ? (
+          <Box w={12} h={12} pos="relative">
+            <Image
+              pos="absolute"
+              top="5px"
+              left="0"
+              rounded="12px"
+              src={stakePool.stakeToken.logo[0]}
+              boxSize={6}
+            />
+            <Image
+              pos="absolute"
+              bottom="-5px"
+              right="0px"
+              rounded="20px"
+              src={stakePool.stakeToken.logo[1]}
+              boxSize={10}
+            />
+          </Box>
+          ) : (
+          <Image
+            border="2px"
+            borderColor="white"
+            bg="white"
+            rounded="24px"
+            src={stakePool.rewardToken.logo}
+            boxSize={12}
+          />
+          )
+        }
         <Heading fontSize="3xl">{stakePool.rewardToken.symbol}</Heading>
       </HStack>
 
@@ -57,7 +78,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
           </Badge>
         ) : (
           <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white">
-            Stake IRIS
+            Stake {stakePool.stakeToken.symbol}
           </Badge>
         )}
       </HStack>
