@@ -173,7 +173,7 @@ export const stakingPools: StakeInfo[] = {
     
     {
       address: "0x850f4a1Da8Ec47C6865B487dF2a59804CFDBE3E0",
-      active: false,
+      active: true,
       isSpecial: true,
 
       stakeToken: {

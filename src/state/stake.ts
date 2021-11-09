@@ -29,13 +29,12 @@ function useFetchStakingPoolRequest() {
       const totalStaked = (await poolChef.totalStakeTokenBalance()).toString();
 
       stakePoolInfo.totalStaked = utils.formatUnits(totalStaked, stakePoolInfo.stakeToken.decimals);
+      let stakeTokenContract = getLpContract(stakePoolInfo.stakeToken.address);
 
       // TOKEN PRICE
       if(stakePoolInfo.stakeToken.isLp){
-        const getPairContract = useUniPair();
-        const lpContract = getPairContract(stakePoolInfo.stakeToken.address);
         const totalSupply = utils.formatUnits(
-          await lpContract.totalSupply(),
+          await stakeTokenContract.totalSupply(),
           stakePoolInfo.stakeToken.decimals
         );
         stakePoolInfo.stakeToken.price = await fetchPairPrice(
@@ -80,7 +79,6 @@ function useFetchStakingPoolRequest() {
       }
 
       if (account) {
-        let stakeTokenContract = getLpContract(stakePoolInfo.stakeToken.address);
 
         stakePoolInfo.rewardsEarned = utils.formatUnits(
           await poolChef.pendingReward(account),
