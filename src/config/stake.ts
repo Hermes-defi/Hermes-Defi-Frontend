@@ -153,7 +153,7 @@ export const stakingPools: StakeInfo[] = {
     {
       address: "0xFf11555aedf0cDCA44cA587AeAf7FF4b7F7CD32D",
       poolSite: "https://www.centre.io/usdc",
-      active: true,
+      active: false,
       isSpecial: true,
 
       stakeToken: {
