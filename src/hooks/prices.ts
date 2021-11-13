@@ -3,13 +3,13 @@ import { useActiveWeb3React } from "wallet";
 import { useQuery } from "react-query";
 import { fetchPrice } from "web3-functions/prices";
 
-export function useIrisPrice() {
+export function usePlutusPrice() {
   const { library } = useActiveWeb3React();
 
   return useQuery({
-    queryKey: "iris-price",
+    queryKey: "plutus-price",
     queryFn: async () => {
-      return await fetchPrice({ address: defaultContracts.irisToken.address, decimals: 18, symbol: "IRIS" }, library);
+      return await fetchPrice({ address: defaultContracts.plutusToken.address, decimals: 18, symbol: "PLUTUS" }, library);
     },
     refetchInterval: 0.5 * 60 * 1000,
   });

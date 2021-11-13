@@ -36,7 +36,7 @@ const Page: React.FC = () => {
             Hermes Heroes are descending upon the Polygon Network! The official HermesDefi
             collection of 3125 randomly generated NFTs is here! In order to celebrate our
             introduction in the NFTs sector (we'll have news here), we've decided to create our own
-            collection. Get some IRIS, collect them and trade your Heroes across the heavens!
+            collection. Get some PLUTUS, collect them and trade your Heroes across the heavens!
           </Text>
 
           {queryResp.data && (
@@ -94,7 +94,7 @@ const Page: React.FC = () => {
                 size="lg"
                 colorScheme="primary"
               >
-                Buy a Hermes Hero for 150 $IRIS
+                Buy a Hermes Hero for 150 $PLUTUS
               </Button>
               <BuyNftModal
                 isOpen={isOpen}

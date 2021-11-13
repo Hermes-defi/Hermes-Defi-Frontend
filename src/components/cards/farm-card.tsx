@@ -5,7 +5,7 @@ import { Farm } from "config/farms";
 import { useApproveFarm, useDepositIntoFarm, useWithdrawFromFarm } from "state/farms";
 
 import { Box, HStack, Heading, Image, Stack, Text, Link, Badge } from "@chakra-ui/react";
-import { IrisAPRCalculator } from "components/helpers/apr-calculator";
+import { PlutusAPRCalculator } from "components/helpers/apr-calculator";
 import { UserSection } from "components/helpers/user-section";
 
 import { displayCurrency, displayNumber } from "libs/utils";
@@ -86,7 +86,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
           </Text>
           <Box display="flex" alignItems="center">
             {farm.apr && (
-              <IrisAPRCalculator
+              <PlutusAPRCalculator
                 apr={farm.apr}
                 tokenSymbol={farm.stakeToken.symbol}
                 tokenLink={lpLink[farm.farmDx]}
@@ -103,7 +103,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
             Earn
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            IRIS
+            PLUTUS
           </Text>
         </Stack>
 
@@ -120,9 +120,9 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
       <Stack mb={8}>
         <UserSection
           id={farm.pid}
-          canCompound={farm.stakeToken.symbol.toLowerCase() === "iris"}
+          canCompound={farm.stakeToken.symbol.toLowerCase() === "plutus"}
           stakeToken={farm.stakeToken}
-          rewardToken={{ symbol: "Iris" }}
+          rewardToken={{ symbol: "Plutus" }}
           rewardsEarned={farm.rewardsEarned}
           hasApprovedPool={farm.hasApprovedPool}
           userTotalStaked={farm.userTotalStaked}

@@ -6,7 +6,7 @@ import {
   useDfynFarmContract,
 } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
-import { useIrisPrice } from "hooks/prices";
+import { usePlutusPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
@@ -153,14 +153,14 @@ function useFetchVaultsRequest() {
 }
 
 export function useFetchVaults() {
-  const irisPrice = useIrisPrice();
+  const plutusPrice = usePlutusPrice();
   const fetchVaultRq = useFetchVaultsRequest();
   const { account } = useActiveWeb3React();
 
   const vaultQueries = useQueries(
     vaults.map((vault) => {
       return {
-        enabled: !!irisPrice.data,
+        enabled: !!plutusPrice.data,
         queryKey: ["vault", vault.address, account],
         queryFn: () => fetchVaultRq(vault),
       };

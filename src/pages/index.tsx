@@ -35,7 +35,7 @@ import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
 import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
-import { useIrisPrice, useApolloPrice } from "hooks/prices";
+import { usePlutusPrice, useApolloPrice } from "hooks/prices";
 import {
   useTotalInFarms,
   useTotalInBalancers,
@@ -63,7 +63,7 @@ const NAV_ITEMS: Array<NavItem> = [
   {
     label: "Coingecko",
     isExternal: true,
-    href: "https://www.coingecko.com/en/coins/iris-token",
+    href: "https://www.coingecko.com/en/coins/plutus-token",
   },
 ];
 
@@ -259,7 +259,7 @@ function Header() {
           <NextLink href="/app" passHref>
             <chakra.a flex="1">
               <Button isFullWidth variant="solid" colorScheme="primary" size="lg">
-                Use Iris
+                Use Plutus
               </Button>
             </chakra.a>
           </NextLink>
@@ -279,7 +279,7 @@ function Header() {
 
 // NUMBERS
 const DappStats = () => {
-  const { data: irisPrice } = useIrisPrice();
+  const { data: plutusPrice } = usePlutusPrice();
   const { data: apolloPrice } = useApolloPrice();
   const stats = useLandingPageStats();
 
@@ -309,18 +309,18 @@ const DappStats = () => {
 
       <SimpleGrid columns={2} spacing={8}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Skeleton isLoaded={!!irisPrice}>
-            <Heading size="2xl">{displayCurrency(irisPrice)}</Heading>
+          <Skeleton isLoaded={!!plutusPrice}>
+            <Heading size="2xl">{displayCurrency(plutusPrice)}</Heading>
           </Skeleton>
 
           <Text color="gray.700" fontSize="sm" fontWeight="600">
-            $IRIS Price
+            $PLUTUS Price
           </Text>
         </Box>
 
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Skeleton isLoaded={!!stats.data}>
-            <Heading size="2xl">{displayCurrency(stats.data?.iris?.totalValueInVaults, true)}</Heading>
+            <Heading size="2xl">{displayCurrency(stats.data?.plutus?.totalValueInVaults, true)}</Heading>
           </Skeleton>
 
           <Text color="gray.700" fontSize="sm" fontWeight="600">

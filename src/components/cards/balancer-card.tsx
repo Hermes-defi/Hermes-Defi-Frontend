@@ -12,7 +12,7 @@ import {
 import { Balancer } from "config/balancers";
 
 import { Box, HStack, Heading, Badge, Stack, Image, Link, Text } from "@chakra-ui/react";
-import { IrisAPRCalculator } from "components/helpers/apr-calculator";
+import { PlutusAPRCalculator } from "components/helpers/apr-calculator";
 import { UserSection } from "components/helpers/user-section";
 
 export const BalancerCard: React.FC<{ balancer: Balancer }> = ({ balancer }) => {
@@ -80,7 +80,7 @@ export const BalancerCard: React.FC<{ balancer: Balancer }> = ({ balancer }) => 
           </Text>
           <Box display="flex" alignItems="center">
             {balancer.apr && (
-              <IrisAPRCalculator
+              <PlutusAPRCalculator
                 apr={balancer.apr}
                 tokenSymbol={balancer.stakeToken.symbol}
                 tokenLink={`https://polygon.balancer.fi/#/pool/${balancer.balancerAddress}`}
@@ -97,7 +97,7 @@ export const BalancerCard: React.FC<{ balancer: Balancer }> = ({ balancer }) => 
             Earn
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            IRIS
+            PLUTUS
           </Text>
         </Stack>
 
@@ -114,9 +114,9 @@ export const BalancerCard: React.FC<{ balancer: Balancer }> = ({ balancer }) => 
       <Stack mb={8}>
         <UserSection
           id={balancer.pid}
-          canCompound={balancer.stakeToken.symbol.toLowerCase() === "iris"}
+          canCompound={balancer.stakeToken.symbol.toLowerCase() === "plutus"}
           stakeToken={balancer.stakeToken}
-          rewardToken={{ symbol: "Iris" }}
+          rewardToken={{ symbol: "Plutus" }}
           rewardsEarned={balancer.rewardsEarned}
           hasApprovedPool={balancer.hasApprovedPool}
           userTotalStaked={balancer.userTotalStaked}

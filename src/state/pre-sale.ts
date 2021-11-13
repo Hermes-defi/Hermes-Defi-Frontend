@@ -1,7 +1,7 @@
 import ReactGA from "react-ga";
 import token from "config/tokens";
 import { utils } from "ethers";
-import { useERC20_v2, useIrisToken, usePApollo, usePresaleContract } from "hooks/contracts";
+import { useERC20_v2, usePlutusToken, usePApollo, usePresaleContract } from "hooks/contracts";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
@@ -10,7 +10,7 @@ import { approveLpContract } from "web3-functions";
 export function usePresaleInfo(version: "v1" | "v2") {
   const presaleContract = usePresaleContract(version);
   const pApolloContract = usePApollo();
-  const irisContract = useIrisToken();
+  const plutusContract = usePlutusToken();
   const usdcContract = useERC20_v2(token.usdc.address);
   const { account } = useActiveWeb3React();
 
@@ -31,8 +31,8 @@ export function usePresaleInfo(version: "v1" | "v2") {
       );
 
       if (account) {
-        data.irisApproved = !(
-          await irisContract.allowance(account, presaleContract.address)
+        data.plutusApproved = !(
+          await plutusContract.allowance(account, presaleContract.address)
         ).isZero();
 
         data.usdcApproved = !(
@@ -58,11 +58,11 @@ export function usePresaleQuote(version: "v1" | "v2", amount) {
       const resp = await presaleContract.quoteAmounts(utils.parseEther(amount), account);
 
       console.log(resp);
-      const amountInIRIS = utils.formatEther(resp.amountIRIS.toString());
+      const amountInPLUTUS = utils.formatEther(resp.amountPLUTUS.toString());
       const amountInUSDC = utils.formatUnits(resp.inUsdc.toString(), 6);
 
       return {
-        amountInIRIS,
+        amountInPLUTUS,
         amountInUSDC,
       };
     },
@@ -75,16 +75,16 @@ export function usePresaleApproveToken(version: "v1" | "v2") {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const presaleContract = usePresaleContract(version);
-  const irisContract = useIrisToken();
+  const plutusContract = usePlutusToken();
   const usdcContract = useERC20_v2(token.usdc.address);
   const toast = useToast();
 
   const approveMutation = useMutation(
-    async (token: "iris" | "usdc") => {
+    async (token: "plutus" | "usdc") => {
       if (!account) throw new Error("No connected account");
 
       await approveLpContract(
-        token === "iris" ? irisContract : usdcContract,
+        token === "plutus" ? plutusContract : usdcContract,
         presaleContract.address
       );
 
@@ -92,12 +92,12 @@ export function usePresaleApproveToken(version: "v1" | "v2") {
     },
 
     {
-      onSuccess: (token: "iris" | "usdc") => {
+      onSuccess: (token: "plutus" | "usdc") => {
         const data: any = queryClient.getQueryData(["apollo-presale-info"]);
 
         queryClient.setQueryData(["apollo-presale-info"], {
           ...data,
-          ...(token === "iris" ? { irisApproved: true } : {}),
+          ...(token === "plutus" ? { plutusApproved: true } : {}),
           ...(token === "usdc" ? { usdcApproved: true } : {}),
         });
 

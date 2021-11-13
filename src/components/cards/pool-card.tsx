@@ -8,7 +8,7 @@ import { useApprovePool, useDepositIntoPool, useWithdrawFromPool } from "state/p
 import { Pool } from "config/pools";
 
 import { Box, HStack, Heading, Badge, Stack, Image, Link, Text } from "@chakra-ui/react";
-import { IrisAPRCalculator } from "components/helpers/apr-calculator";
+import { PlutusAPRCalculator } from "components/helpers/apr-calculator";
 import { UserSection } from "components/helpers/user-section";
 
 export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
@@ -70,7 +70,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
           </Text>
           <Box display="flex" alignItems="center">
             {pool.apr && (
-              <IrisAPRCalculator
+              <PlutusAPRCalculator
                 apr={pool.apr}
                 tokenSymbol={pool.stakeToken.symbol}
                 tokenLink={`https://quickswap.exchange/#/swap/${pool.stakeToken.address}`}
@@ -87,7 +87,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
             Earn
           </Text>
           <Text fontWeight="700" fontSize="sm">
-            IRIS
+            PLUTUS
           </Text>
         </Stack>
 
@@ -104,9 +104,9 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
       <Stack mb={8}>
         <UserSection
           id={pool.pid}
-          canCompound={pool.stakeToken.symbol.toLowerCase() === "iris"}
+          canCompound={pool.stakeToken.symbol.toLowerCase() === "plutus"}
           stakeToken={pool.stakeToken}
-          rewardToken={{ symbol: "Iris" }}
+          rewardToken={{ symbol: "Plutus" }}
           rewardsEarned={pool.rewardsEarned}
           hasApprovedPool={pool.hasApprovedPool}
           userTotalStaked={pool.userTotalStaked}

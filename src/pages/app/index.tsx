@@ -11,14 +11,13 @@ import {
   useTotalInFarms,
   useTotalInPools,
   useHarvestAll,
-  useIrisData,
-  useIrisStats,
+  usePlutusData,
+  usePlutusStats,
   useTvlChart,
   useTotalInVaults,
 } from "hooks/home-page";
 
 import { AppLayout } from "components/layout";
-import { ArkenWidget } from "arken-widget";
 import {
   Box,
   Button,
@@ -47,7 +46,7 @@ import {
 } from "recharts";
 
 const Page: React.FC = () => {
-  const irisStats = useIrisStats();
+  const plutusStats = usePlutusStats();
   const farmStats = useTotalInFarms();
   const balStats = useTotalInBalancers();
   const poolStats = useTotalInPools();
@@ -56,10 +55,10 @@ const Page: React.FC = () => {
   const [isFarmAprLoading, farmApr] = useFarmAPRStats();
   const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
 
-  const { irisInWallet, irisToHarvest } = useIrisData();
+  const { plutusInWallet, plutusToHarvest } = usePlutusData();
   const chartData = useTvlChart();
 
-  const harvestAll = useHarvestAll(irisToHarvest.data);
+  const harvestAll = useHarvestAll(plutusToHarvest.data);
 
   return (
     <AppLayout>
@@ -80,35 +79,35 @@ const Page: React.FC = () => {
               <Stack spacing={4} justify={["center", ""]} align="center" direction="row">
                 <Image src="/hermes-logo-1.png" boxSize={12} />
                 <Button
-                  onClick={() => addTokenToWallet(defaultContracts.irisToken.address, "IRIS")}
+                  onClick={() => addTokenToWallet(defaultContracts.plutusToken.address, "PLUTUS")}
                   colorScheme="secondary"
                   size="sm"
                 >
-                  + Add IRIS to Wallet
+                  + Add PLUTUS to Wallet
                 </Button>
               </Stack>
 
               <Stack justify={["center", ""]} direction="row" spacing={10}>
                 <Box align="center">
-                  <Skeleton isLoaded={!!irisToHarvest.data}>
+                  <Skeleton isLoaded={!!plutusToHarvest.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">
-                      {displayTokenCurrency(irisToHarvest.data, "", true)}
+                      {displayTokenCurrency(plutusToHarvest.data, "", true)}
                     </Text>
                   </Skeleton>
 
                   <Text fontSize={"sm"} color={useColorModeValue("gray.600", "gray.200")}>
-                    IRIS to harvest
+                    PLUTUS to harvest
                   </Text>
                 </Box>
 
                 <Box align="center">
-                  <Skeleton isLoaded={!!irisInWallet.data}>
+                  <Skeleton isLoaded={!!plutusInWallet.data}>
                     <Text mb={2} fontWeight="700" fontSize="2xl">
-                      {displayTokenCurrency(irisInWallet.data, "", true)}
+                      {displayTokenCurrency(plutusInWallet.data, "", true)}
                     </Text>
                   </Skeleton>
                   <Text fontSize={"sm"} color={useColorModeValue("gray.600", "gray.200")}>
-                    IRIS in wallet
+                    PLUTUS in wallet
                   </Text>
                 </Box>
               </Stack>
@@ -234,16 +233,16 @@ const Page: React.FC = () => {
           py={6}
         >
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
-            IRIS stats
+            PLUTUS stats
           </Heading>
 
           <Stack mt={[6, 0]} direction={["column-reverse", "row"]} spacing={10}>
             <SimpleGrid columns={2} mt={[0, 10]} spacing={["20px", "30px"]}>
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency(irisStats.data?.marketCap)}
+                      {displayCurrency(plutusStats.data?.marketCap)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="md">
@@ -254,9 +253,9 @@ const Page: React.FC = () => {
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayTokenCurrency(irisStats.data?.maximumSupply, "")}
+                      {displayTokenCurrency(plutusStats.data?.maximumSupply, "")}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="md">
@@ -267,22 +266,22 @@ const Page: React.FC = () => {
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
                       {displayNumber("0.4", false, 1)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
-                    New IRIS/block
+                    New PLUTUS/block
                   </Heading>
                 </Box>
               </Box>
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber(irisStats.data?.totalMinted)}
+                      {displayNumber(plutusStats.data?.totalMinted)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
@@ -293,9 +292,9 @@ const Page: React.FC = () => {
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber(irisStats.data?.circulatingSupply)}
+                      {displayNumber(plutusStats.data?.circulatingSupply)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">
@@ -306,9 +305,9 @@ const Page: React.FC = () => {
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
-                  <Skeleton isLoaded={!!irisStats.data}>
+                  <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber(irisStats.data?.totalBurned, true)}
+                      {displayNumber(plutusStats.data?.totalBurned, true)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">

@@ -2,15 +2,15 @@ import React from "react";
 import { Box, Container, Image, Link, Slide, Stack, Text } from "@chakra-ui/react";
 import { Navigation } from "./navigation";
 import { L1_NAV_ITEMS } from "./nav-config";
-import { useIrisPrice } from "hooks/prices";
+import { usePlutusPrice } from "hooks/prices";
 
 export const AppLayout: React.FC = ({ children }) => {
-  const { data: irisPrice } = useIrisPrice();
+  const { data: plutusPrice } = usePlutusPrice();
 
   return (
     <Box>
       <Container maxW="container.xl">
-        <Navigation tokenPrice={irisPrice} logo="/hermes-logo-1.png" navItems={L1_NAV_ITEMS} />
+        <Navigation tokenPrice={plutusPrice} logo="/hermes-logo-1.png" navItems={L1_NAV_ITEMS} />
 
         {children}
 
@@ -64,12 +64,12 @@ export const AppLayout: React.FC = ({ children }) => {
 };
 
 export const ApolloAppLayout: React.FC = ({ children }) => {
-  const { data: irisPrice } = useIrisPrice();
+  const { data: plutusPrice } = usePlutusPrice();
 
   return (
     <Box>
       <Container maxW="container.xl">
-        <Navigation tokenPrice={irisPrice} logo="/apollo-logo.png" navItems={L1_NAV_ITEMS} />
+        <Navigation tokenPrice={plutusPrice} logo="/apollo-logo.png" navItems={L1_NAV_ITEMS} />
 
         {children}
 

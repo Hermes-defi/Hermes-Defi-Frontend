@@ -16,7 +16,7 @@ const PresaleCard = () => {
   const queryResp = usePresaleInfo("v2");
   const isLoaded = !!queryResp.data;
 
-  const approveIrisMutation = usePresaleApproveToken("v2");
+  const approvePlutusMutation = usePresaleApproveToken("v2");
   const approveUsdcMutation = usePresaleApproveToken("v2");
 
   const buyApollo = useBuyPApollo("v2");
@@ -45,7 +45,7 @@ const PresaleCard = () => {
           <Stack mb={6}>
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                USDC/IRIS Ratio
+                USDC/PLUTUS Ratio
               </Text>
 
               <Skeleton isLoaded={isLoaded}>
@@ -116,17 +116,17 @@ const PresaleCard = () => {
             />
           )}
 
-          {!queryResp.data?.irisApproved && (
+          {!queryResp.data?.plutusApproved && (
             <Button
               isFullWidth
-              onClick={() => approveIrisMutation.mutate("iris")}
-              isLoading={approveIrisMutation.isLoading}
+              onClick={() => approvePlutusMutation.mutate("plutus")}
+              isLoading={approvePlutusMutation.isLoading}
               bg="gray.700"
               size="lg"
               fontSize="md"
               _hover={{ bg: "gray.600" }}
             >
-              Approve IRIS
+              Approve PLUTUS
             </Button>
           )}
 
@@ -144,9 +144,9 @@ const PresaleCard = () => {
             </Button>
           )}
 
-          {queryResp.data?.irisApproved && queryResp.data?.usdcApproved && (
+          {queryResp.data?.plutusApproved && queryResp.data?.usdcApproved && (
             <Button isFullWidth onClick={onOpen} bg="gray.700" size="lg" fontSize="md" _hover={{ bg: "gray.600" }}>
-              Buy pAPOLLO with IRIS/USDC
+              Buy pAPOLLO with PLUTUS/USDC
             </Button>
           )}
         </Stack>
@@ -218,9 +218,9 @@ const Page = () => {
               <Stack>
                 <Heading fontSize="xl">How To</Heading>
 
-                <Text fontSize="sm">1. Purchase pAPOLLO with USDC + IRIS using the First Round Pre-sale Contract</Text>
+                <Text fontSize="sm">1. Purchase pAPOLLO with USDC + PLUTUS using the First Round Pre-sale Contract</Text>
 
-                <Text fontSize="sm">2. Purchase pAPOLLO with USDC + IRIS using the Second Round Pre-sale Contract</Text>
+                <Text fontSize="sm">2. Purchase pAPOLLO with USDC + PLUTUS using the Second Round Pre-sale Contract</Text>
 
                 <Text fontSize="sm">3. Enjoy the waiting room</Text>
 

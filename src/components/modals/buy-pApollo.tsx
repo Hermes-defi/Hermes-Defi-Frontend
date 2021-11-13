@@ -76,11 +76,11 @@ export const BuypApolloModal: React.FC<Props> = (props) => {
 
             <Stack>
               <div>
-                <Text fontSize="xs">IRIS amount (20%):</Text>
+                <Text fontSize="xs">PLUTUS amount (20%):</Text>
 
                 <Skeleton isLoaded={!!quotes.data}>
                   <Text fontSize="sm" fontWeight="bold" as="span">
-                    {displayTokenCurrency(quotes.data?.amountInIRIS, "IRIS")}
+                    {displayTokenCurrency(quotes.data?.amountInPLUTUS, "PLUTUS")}
                   </Text>
                 </Skeleton>
               </div>

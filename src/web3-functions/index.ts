@@ -55,11 +55,11 @@ export async function getPresaleInfo(fenixContract: Contract, currentBlock: numb
 export async function getRedeemInfo(
   redeem: Contract,
   fenix: Contract,
-  iris: Contract,
+  plutus: Contract,
   currentBlock: number,
   address: string
 ) {
-  const redeemBalance = await iris.balanceOf(defaultContracts.redeem.address);
+  const redeemBalance = await plutus.balanceOf(defaultContracts.redeem.address);
   const redeemStartBlock = await redeem.startBlock();
   const timeToStartRedeem = redeemStartBlock.sub(currentBlock || 0).toNumber();
 
@@ -122,6 +122,6 @@ export async function purchaseFenix(fenixContract: Contract, amount: string) {
 }
 
 export async function swapFenix(redeemContract: Contract, amount: string) {
-  const tx = await redeemContract.swapFenixForIris(utils.parseEther(amount));
+  const tx = await redeemContract.swapFenixForPlutus(utils.parseEther(amount));
   await tx.wait();
 }

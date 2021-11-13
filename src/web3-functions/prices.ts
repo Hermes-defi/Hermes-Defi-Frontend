@@ -6,7 +6,7 @@ import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
 import * as Dfyn from "@dfyn/sdk";
 
 const amms = {
-  "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1": "quickswap", // iris
+  "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "quickswap", // plutus
   "0x577aa684b89578628941d648f1fbd6dde338f059": "dfyn", // apollo
   "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
   "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc

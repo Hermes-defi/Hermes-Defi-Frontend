@@ -37,9 +37,9 @@ export function useMasterChef() {
   return contract(defaultContracts.masterChef);
 }
 
-export function useIrisToken() {
+export function usePlutusToken() {
   const contract = useContract();
-  return contract(defaultContracts.irisToken);
+  return contract(defaultContracts.plutusToken);
 }
 
 export function useApolloToken() {

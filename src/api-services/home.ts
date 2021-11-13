@@ -14,13 +14,13 @@ import { vaults, Vault } from "config/vaults";
 
 const provider = new ethers.providers.JsonRpcProvider(RPC_URLS[DEFAULT_CHAIN_ID]);
 
-export async function getIrisPrice() {
-  const irisPrice = await fetchPrice(
-    { address: defaultContracts.irisToken.address, decimals: 18, symbol: "IRIS" },
+export async function getPlutusPrice() {
+  const plutusPrice = await fetchPrice(
+    { address: defaultContracts.plutusToken.address, decimals: 18, symbol: "PLUTUS" },
     provider
   );
 
-  return irisPrice;
+  return plutusPrice;
 }
 
 export async function getHermesStats() {

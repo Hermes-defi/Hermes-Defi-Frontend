@@ -52,7 +52,7 @@ export const vaultStakingPools: VaultStakeInfo[] = {
 
       stakeToken: {
         address: "0xcbd7b263460ad4807deadad3858de6654f082ca4",
-        symbol: "godIRIS/WMATIC",
+        symbol: "godPLUTUS/WMATIC",
         decimals: 18,
         logo: "/hermes-logo-1.png",
       },

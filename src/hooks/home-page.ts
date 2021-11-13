@@ -6,11 +6,11 @@ import dayjs from "dayjs";
 import { BurnAddress } from "config/constants";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
-import { useMasterChef, useIrisToken, useERC20 } from "hooks/contracts";
+import { useMasterChef, usePlutusToken, useERC20 } from "hooks/contracts";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
-import { useIrisPrice } from "hooks/prices";
+import { usePlutusPrice } from "hooks/prices";
 import { useFetchFarms } from "state/farms";
 import { useFetchVaults } from "state/vaults";
 import { Farm, farms } from "config/farms";
@@ -19,48 +19,48 @@ import { useFetchPools } from "state/pools";
 import { useFetchBalancers } from "state/balancers";
 import { Balancer, balancers } from "config/balancers";
 
-export function useIrisData() {
+export function usePlutusData() {
   const { account } = useActiveWeb3React();
   const masterChef = useMasterChef();
-  const irisToken = useIrisToken();
+  const plutusToken = usePlutusToken();
 
-  const irisInWallet = useQuery("irisInWallet", async () => {
-    return account ? utils.formatEther(await irisToken.balanceOf(account)) : "0.00";
+  const plutusInWallet = useQuery("plutusInWallet", async () => {
+    return account ? utils.formatEther(await plutusToken.balanceOf(account)) : "0.00";
   });
 
-  const irisToHarvest = useQuery("irisToHarvest", async () => {
-    const totalIrisToHarvest = [...farms, ...pools, ...balancers].reduce(async (_total, pool) => {
+  const plutusToHarvest = useQuery("plutusToHarvest", async () => {
+    const totalPlutusToHarvest = [...farms, ...pools, ...balancers].reduce(async (_total, pool) => {
       const total = await _total;
-      const irisEarned = await masterChef.pendingIris(pool.pid, account);
-      return total.add(irisEarned);
+      const plutusEarned = await masterChef.pendingApollo(pool.pid, account); // TODO: shouldn be pendingPlutus instead?
+      return total.add(plutusEarned);
     }, Promise.resolve(BigNumber.from(0)));
 
-    return account ? utils.formatEther(await totalIrisToHarvest) : "0.00";
+    return account ? utils.formatEther(await totalPlutusToHarvest) : "0.00";
   });
 
-  return { irisInWallet, irisToHarvest };
+  return { plutusInWallet, plutusToHarvest };
 }
 
-export function useIrisStats() {
-  const irisContract = useIrisToken();
-  const irisPrice = useIrisPrice();
+export function usePlutusStats() {
+  const plutusContract = usePlutusToken();
+  const plutusPrice = usePlutusPrice();
 
-  const irisStats = useQuery({
-    enabled: !!irisPrice.data,
+  const plutusStats = useQuery({
+    enabled: !!plutusPrice.data,
     refetchInterval: 0.5 * 60 * 1000,
-    queryKey: ["irisStats", irisPrice.data],
+    queryKey: ["plutusStats", plutusPrice.data],
     queryFn: async () => {
       const maximumSupply = 1_000_000;
-      const totalMinted = (await irisContract.totalSupply()) as BigNumber;
-      const totalBurned = (await irisContract.balanceOf(BurnAddress)) as BigNumber;
+      const totalMinted = (await plutusContract.totalSupply()) as BigNumber;
+      const totalBurned = (await plutusContract.balanceOf(BurnAddress)) as BigNumber;
 
       const circulatingSupply = totalMinted.sub(totalBurned);
 
       let marketCap = "N/A";
-      if (irisPrice) {
+      if (plutusPrice) {
         // convert circulating supply to real price
-        const circulatingSupplyInIris = utils.formatEther(circulatingSupply);
-        marketCap = new BigNumberJS(circulatingSupplyInIris).multipliedBy(irisPrice.data).toString();
+        const circulatingSupplyInPlutus = utils.formatEther(circulatingSupply);
+        marketCap = new BigNumberJS(circulatingSupplyInPlutus).multipliedBy(plutusPrice.data).toString();
       }
 
       return {
@@ -73,7 +73,7 @@ export function useIrisStats() {
     },
   });
 
-  return irisStats;
+  return plutusStats;
 }
 
 export function useFarmAPRStats() {
@@ -194,7 +194,7 @@ export function useLandingPageStats() {
     const resp = await fetch("/api/stats");
     const data = await resp.json();
 
-    const totalTvl = new BigNumberJS(data.iris?.tvl).plus(data.apollo?.tvl).toString();
+    const totalTvl = new BigNumberJS(data.plutus?.tvl).plus(data.apollo?.tvl).toString();
     return {
       ...data,
       totalTvl,
@@ -202,7 +202,7 @@ export function useLandingPageStats() {
   });
 }
 
-export function useHarvestAll(irisToHarvest: string) {
+export function useHarvestAll(plutusToHarvest: string) {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const masterChef = useMasterChef();
@@ -227,13 +227,13 @@ export function useHarvestAll(irisToHarvest: string) {
     },
     {
       onSuccess: () => {
-        queryClient.invalidateQueries("irisInWallet");
-        queryClient.invalidateQueries("irisToHarvest");
+        queryClient.invalidateQueries("plutusInWallet");
+        queryClient.invalidateQueries("plutusToHarvest");
 
         ReactGA.event({
           category: "Withdrawals",
           action: `Withdrawing from all pools and farms`,
-          value: parseInt(irisToHarvest, 10),
+          value: parseInt(plutusToHarvest, 10),
         });
       },
 
@@ -241,7 +241,7 @@ export function useHarvestAll(irisToHarvest: string) {
         toast({
           status: "error",
           position: "top-right",
-          title: "Error harvesting IRIS",
+          title: "Error harvesting PLUTUS",
           description: data?.message || message,
           isClosable: true,
         });

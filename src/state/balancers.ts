@@ -1,20 +1,20 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useERC20, useMasterChef } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
-import { useIrisPrice } from "hooks/prices";
+import { usePlutusPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Balancer, balancers } from "config/balancers";
 import { BigNumber, constants, utils } from "ethers";
-import { irisPerBlock } from "config/constants";
+import { plutusPerBlock } from "config/constants";
 import { fetchBalancerPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
 
 function useFetchBalancersRequest() {
-  const irisPrice = useIrisPrice();
+  const plutusPrice = usePlutusPrice();
   const masterChef = useMasterChef();
   const getLpContract = useERC20();
   const { account } = useActiveWeb3React();
@@ -42,7 +42,7 @@ function useFetchBalancersRequest() {
     newBal.stakeToken.price = await fetchBalancerPrice(balancer.balancerAddress);
 
     // APR data
-    const rewardsPerWeek = irisPerBlock * (604800 / 2.1);
+    const rewardsPerWeek = plutusPerBlock * (604800 / 2.1);
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
     const poolRewardsPerWeek = new BigNumberJS(newBal.multiplier)
@@ -51,7 +51,7 @@ function useFetchBalancersRequest() {
       .toNumber();
 
     newBal.apr = getPoolApr(
-      parseFloat(irisPrice.data || "0"),
+      parseFloat(plutusPrice.data || "0"),
       poolRewardsPerWeek,
       parseFloat(newBal.stakeToken.price || "0"),
       parseFloat(newBal.totalStaked || "0")
@@ -59,7 +59,7 @@ function useFetchBalancersRequest() {
 
     // USER data
     if (account) {
-      newBal.rewardsEarned = utils.formatEther(await masterChef.pendingIris(balancer.pid, account));
+      newBal.rewardsEarned = utils.formatEther(await masterChef.pendingApollo(balancer.pid, account)); // TODO: shoudn't be pendingPlutus instead?
 
       const userInfo = await masterChef.userInfo(balancer.pid, account);
 
@@ -75,14 +75,14 @@ function useFetchBalancersRequest() {
 }
 
 export function useFetchBalancers() {
-  const irisPrice = useIrisPrice();
+  const plutusPrice = usePlutusPrice();
   const fetchBalRq = useFetchBalancersRequest();
   const { account } = useActiveWeb3React();
 
   const balancersQueries = useQueries(
     balancers.map((bal) => {
       return {
-        enabled: !!irisPrice.data,
+        enabled: !!plutusPrice.data,
         queryKey: ["balancer", bal.pid, account],
         queryFn: () => fetchBalRq(bal),
       };

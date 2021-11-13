@@ -138,7 +138,7 @@ export const balancers: Balancer[] = {
         address: "0x7320d680ca9bce8048a286f00a79a2c9f8dcd7b3",
         symbol: "W/U/W/B/I BPT",
         decimals: 18,
-        logo: "/WETH__WMATIC__BAL__USDC__IRIS.png",
+        logo: "/WETH__WMATIC__BAL__USDC__PLUTUS.png",
       },
 
       pairs: [
@@ -163,9 +163,9 @@ export const balancers: Balancer[] = {
           tokenName: "BAL",
         },
         {
-          tokenAddress: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+          tokenAddress: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
           tokenDecimals: 18,
-          tokenName: "IRIS",
+          tokenName: "PLUTUS",
         },
       ],
 

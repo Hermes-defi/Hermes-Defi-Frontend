@@ -1,14 +1,14 @@
 import BigNumberJS from "bignumber.js";
 import ReactGA from "react-ga";
 import { useToast } from "@chakra-ui/react";
-import { useHermesNftContract, useIrisToken } from "hooks/contracts";
+import { useHermesNftContract, usePlutusToken } from "hooks/contracts";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { approveLpContract } from "web3-functions";
 
 export function useNFTInfo() {
   const nftContract = useHermesNftContract();
-  const irisContract = useIrisToken();
+  const plutusContract = usePlutusToken();
   const { account } = useActiveWeb3React();
 
   const nftQuery = useQuery({
@@ -22,7 +22,7 @@ export function useNFTInfo() {
 
       let hasUserApproved = false;
       if (account) {
-        const allowance = await irisContract.allowance(account, nftContract.address);
+        const allowance = await plutusContract.allowance(account, nftContract.address);
         hasUserApproved = !allowance.isZero();
       }
 
@@ -42,13 +42,13 @@ export function useNFTInfo() {
 export function useApproveNft() {
   const { account } = useActiveWeb3React();
   const nftContract = useHermesNftContract();
-  const irisContract = useIrisToken();
+  const plutusContract = usePlutusToken();
   const toast = useToast();
 
   const approveMutation = useMutation(
     async () => {
       if (!account) throw new Error("No connected account");
-      await approveLpContract(irisContract, nftContract.address);
+      await approveLpContract(plutusContract, nftContract.address);
     },
 
     {

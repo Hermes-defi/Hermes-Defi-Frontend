@@ -16,7 +16,7 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
     label: "Products",
     children: [
       {
-        label: "Stake IRIS",
+        label: "Stake PLUTUS",
         href: "/app/stake",
       },
       {
@@ -42,7 +42,7 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
     label: "Layers",
     children: [
       {
-        label: "Iris",
+        label: "Plutus",
         href: "/app",
       },
       {
@@ -57,12 +57,12 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
     children: [
       {
         label: "Swap (QuickSwap)",
-        href: "https://quickswap.exchange/#/swap?outputCurrency=0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+        href: "https://quickswap.exchange/#/swap?outputCurrency=0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
       {
         label: "Liquidity (QuickSwap)",
-        href: "https://quickswap.exchange/#/add/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270/0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+        href: "https://quickswap.exchange/#/add/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
       {
@@ -77,12 +77,12 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Swap (Dfyn)",
-        href: "https://exchange.dfyn.network/#/swap?inputCurrency=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&outputCurrency=0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+        href: "https://exchange.dfyn.network/#/swap?inputCurrency=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&outputCurrency=0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
       {
         label: "Liquidity (Dfyn)",
-        href: "https://exchange.dfyn.network/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+        href: "https://exchange.dfyn.network/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
     ],
@@ -97,12 +97,12 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "DexGuru",
-        href: "https://dex.guru/token/0xdab35042e63e93cc8556c9bae482e5415b5ac4b1-polygon",
+        href: "https://dex.guru/token/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B-polygon",
         isExternal: true,
       },
       {
         label: "Arken",
-        href: "https://swap.arken.finance/tokens/polygon/0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
+        href: "https://swap.arken.finance/tokens/polygon/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
     ],
