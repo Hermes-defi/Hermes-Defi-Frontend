@@ -68,7 +68,7 @@ export type Vault = {
 };
 
 export const vaults: Vault[] = {
-  137: [
+  1666600000: [
     {
       address: "0xCBd7b263460ad4807dEAdAd3858DE6654f082cA4",
       stratAddress: "0xd74941d4f9202d7e4c550d344507298a4e3ed2dd",
@@ -350,5 +350,5 @@ export const vaults: Vault[] = {
       ],
     },
   ],
-  80001: [],
+  1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((vault: Vault) => !vault.isDisabled);

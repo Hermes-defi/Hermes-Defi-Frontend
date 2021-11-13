@@ -46,71 +46,71 @@ export const dfynFarm: (address: string) => ContractInfo = (address: string) => 
 const defaultContracts = {
   referral: {
     address: {
-      137: "0xDC99FE88118CdE8316df10Eb16c722C3967e73Fd",
-      80001: "0x8295CCCA26e2e4396061515B0b72731BDf5796C1",
+      1666600000: "0xDC99FE88118CdE8316df10Eb16c722C3967e73Fd",
+      1666700001: "0x8295CCCA26e2e4396061515B0b72731BDf5796C1",
     }[DEFAULT_CHAIN_ID],
     abi: ReferralABI,
   },
   masterChef: {
     address: {
-      137: "0x4aA8DeF481d19564596754CD2108086Cf0bDc71B",
-      80001: "0xA3dc6b430A90D61e7f1C7800d43Bd67b8a06D597",
+      1666600000: "0x4aA8DeF481d19564596754CD2108086Cf0bDc71B",
+      1666700001: "0xA3dc6b430A90D61e7f1C7800d43Bd67b8a06D597",
     }[DEFAULT_CHAIN_ID],
     abi: MasterChefABI,
   },
   irisToken: {
     address: {
-      137: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
-      80001: "0x5EB25908Abf8764CB101bE704d6Bb4a8d5254f72",
+      1666600000: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+      1666700001: "0x5EB25908Abf8764CB101bE704d6Bb4a8d5254f72",
     }[DEFAULT_CHAIN_ID],
     abi: IrisTokenABI,
   },
   apolloToken: {
     address: {
-      137: "0x577aa684b89578628941d648f1fbd6dde338f059",
-      80001: "",
+      1666600000: "0x577aa684b89578628941d648f1fbd6dde338f059",
+      1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: ApolloABI,
   },
   fenixToken: {
     address: {
-      137: "0x41013D1521B20CA67397e7c65256bfb2975FAAc8",
-      80001: "0x807Be9676f72390bCaB19f914f770d9713a2d9e0",
+      1666600000: "0x41013D1521B20CA67397e7c65256bfb2975FAAc8",
+      1666700001: "0x807Be9676f72390bCaB19f914f770d9713a2d9e0",
     }[DEFAULT_CHAIN_ID],
     abi: FenixABI,
   },
   redeem: {
     address: {
-      137: "0x0C72A971AB0D85689bDd95810BE54dD0C3aB3Ab3",
-      80001: "0xC481Cc926522A14Ed21077B8eEd85c7C0947F62e",
+      1666600000: "0x0C72A971AB0D85689bDd95810BE54dD0C3aB3Ab3",
+      1666700001: "0xC481Cc926522A14Ed21077B8eEd85c7C0947F62e",
     }[DEFAULT_CHAIN_ID],
     abi: RedeemABI,
   },
   hermesNft: {
     address: {
-      137: "0x6011b77d2dcba999f837d6609124fbcdc4ac3a4e",
-      80001: "",
+      1666600000: "0x6011b77d2dcba999f837d6609124fbcdc4ac3a4e",
+      1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: HermesNFTABI,
   },
   apolloPresaleFirstRound: {
     address: {
-      137: "0xF8459eF698f7C6F6C2a5D80a80f92C8Ae6535d6E",
-      80001: "",
+      1666600000: "0xF8459eF698f7C6F6C2a5D80a80f92C8Ae6535d6E",
+      1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: pAPOLLO,
   },
   apolloPresaleSecondRound: {
     address: {
-      137: "0xe08fA8F2b3531e82a6Bef397C5FA64c5d9d7B889",
-      80001: "",
+      1666600000: "0xe08fA8F2b3531e82a6Bef397C5FA64c5d9d7B889",
+      1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: pAPOLLO,
   },
   pApollo: {
     address: {
-      137: "0xE644Be5D4d5E7f16F0039cD67BCd438D1A62ef13",
-      80001: "",
+      1666600000: "0xE644Be5D4d5E7f16F0039cD67BCd438D1A62ef13",
+      1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: ERC20ABI,
   },

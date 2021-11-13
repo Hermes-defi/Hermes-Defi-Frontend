@@ -36,7 +36,7 @@ export type ApolloStakeInfo = {
 };
 
 export const apolloStakingPools: ApolloStakeInfo[] = {
-  137: [
+  1666600000: [
     {
       address: "0x948bc903a311D42a003FC9b39F90cF27aCcEbD4A",
       poolSite: "https://dfyn.network/",

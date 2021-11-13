@@ -43,7 +43,7 @@ export type VaultStakeInfo = {
 };
 
 export const vaultStakingPools: VaultStakeInfo[] = {
-  137: [
+  1666600000: [
     {
       address: "0x7164F49cfA6152119009c600e0c3DA736F6cdC6f",
       vaultAddress: "0xCBd7b263460ad4807dEAdAd3858DE6654f082cA4",

@@ -35,7 +35,7 @@ export type Pool = {
 };
 
 export const pools: Pool[] = {
-  137: [
+  1666600000: [
     {
       pid: 0,
       multiplier: "80",
@@ -253,5 +253,5 @@ export const pools: Pool[] = {
       },
     },
   ],
-  80001: [],
+  1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);

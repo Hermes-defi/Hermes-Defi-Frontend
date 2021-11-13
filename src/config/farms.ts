@@ -43,7 +43,7 @@ export type Farm = {
 };
 
 export const farms: Farm[] = {
-  137: [
+  1666600000: [
     {
       pid: 8,
       multiplier: "160",
@@ -192,5 +192,5 @@ export const farms: Farm[] = {
       ],
     },
   ],
-  80001: [],
+  1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((farm: Farm) => !farm.isDisabled);

@@ -48,7 +48,7 @@ export type StakeInfo = {
 };
 
 export const stakingPools: StakeInfo[] = {
-  137: [
+  1666600000: [
     {
       address: "0xFE3583513Ba38B228C7A62B200F71a0ecF337Eb9",
       poolSite: "https://kavian.finance/",
