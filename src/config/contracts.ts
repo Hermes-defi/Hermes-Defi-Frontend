@@ -53,8 +53,8 @@ const defaultContracts = {
   },
   masterChef: {
     address: {
-      1666600000: "0x4aA8DeF481d19564596754CD2108086Cf0bDc71B",
-      1666700001: "0xA3dc6b430A90D61e7f1C7800d43Bd67b8a06D597",
+      1666600000: "0xaFd37A86044528010d0E70cDc58d0A9B5Eb03206",
+      1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: MasterChefABI,
   },
