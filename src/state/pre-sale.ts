@@ -1,7 +1,7 @@
 import ReactGA from "react-ga";
 import token from "config/tokens";
 import { utils } from "ethers";
-import { useERC20_v2, usePlutusToken, usePApollo, usePresaleContract } from "hooks/contracts";
+import { useERC20_v2, usePlutusToken, usePresaleContract } from "hooks/contracts";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
@@ -9,7 +9,6 @@ import { approveLpContract } from "web3-functions";
 
 export function usePresaleInfo(version: "v1" | "v2") {
   const presaleContract = usePresaleContract(version);
-  const pApolloContract = usePApollo();
   const plutusContract = usePlutusToken();
   const usdcContract = useERC20_v2(token.usdc.address);
   const { account } = useActiveWeb3React();
@@ -23,13 +22,6 @@ export function usePresaleInfo(version: "v1" | "v2") {
       data.endBlock = (await presaleContract.endBlock()).toString();
       data.ratio = (await presaleContract.ratio()).toString();
 
-      data.maxpApollo = utils.formatEther(await presaleContract.maxTokenPurchase());
-      data.maxpApolloWhitelist = utils.formatEther(await presaleContract.maxTokenPurchaseHeroes());
-      data.pApolloPrice = (await presaleContract.pAPOLLOPrice()).toString();
-      data.pApolloRemaining = utils.formatEther(
-        await pApolloContract.balanceOf(presaleContract.address)
-      );
-
       if (account) {
         data.plutusApproved = !(
           await plutusContract.allowance(account, presaleContract.address)
@@ -38,8 +30,6 @@ export function usePresaleInfo(version: "v1" | "v2") {
         data.usdcApproved = !(
           await usdcContract.allowance(account, presaleContract.address)
         ).isZero();
-
-        data.pApolloBalance = utils.formatEther(await pApolloContract.balanceOf(account));
       }
 
       return data;
@@ -102,7 +92,7 @@ export function usePresaleApproveToken(version: "v1" | "v2") {
         });
 
         ReactGA.event({
-          category: "pAPOLLO Pool Approval",
+          category: "Pool Approval",
           action: `Approving ${token}`,
           label: token,
         });
@@ -125,48 +115,4 @@ export function usePresaleApproveToken(version: "v1" | "v2") {
   );
 
   return approveMutation;
-}
-
-export function useBuyPApollo(version: "v1" | "v2") {
-  const { account } = useActiveWeb3React();
-  const queryClient = useQueryClient();
-  const presaleContract = usePresaleContract(version);
-  const toast = useToast();
-
-  const purchaseMutation = useMutation(
-    async (amount: string) => {
-      if (!account) throw new Error("No connected account");
-
-      const tx = await presaleContract.buy(utils.parseUnits(amount, 18));
-      await tx.wait();
-
-      return amount;
-    },
-    {
-      onSuccess: (amount) => {
-        queryClient.invalidateQueries(["apollo-presale-info"]);
-
-        ReactGA.event({
-          category: "pAPOLLO Purchase",
-          action: `Purchase pAPOLLO`,
-          value: parseInt(amount, 10),
-          label: "pAPOLLO",
-        });
-      },
-
-      onError: ({ data }) => {
-        console.error(`[useBuyPApollo][error] general error`, { data });
-
-        toast({
-          title: "Error purchasing pAPOLLO",
-          description: data?.message,
-          status: "error",
-          position: "top-right",
-          isClosable: true,
-        });
-      },
-    }
-  );
-
-  return purchaseMutation;
 }

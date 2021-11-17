@@ -10,11 +10,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     switch (method) {
       case "GET": {
         let plutusData = JSON.parse(await redis.get("plutus-stats"));
-        let apolloData = JSON.parse(await redis.get("apollo-stats"));
 
         return res.status(200).json({
           plutus: plutusData,
-          apollo: apolloData,
         });
       }
       default: {

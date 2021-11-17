@@ -9,8 +9,6 @@ import StakePoolABI from "config/abis/StakePool.json";
 import VaultABI from "config/abis/Vault.json";
 import DfynFarmABI from "config/abis/DfynFarm.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
-import pAPOLLO from "config/abis/pApollo.json";
-import ApolloABI from "config/abis/ApolloABI.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -65,13 +63,6 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: PlutusTokenABI,
   },
-  apolloToken: {
-    address: {
-      1666600000: "0x577aa684b89578628941d648f1fbd6dde338f059",
-      1666700001: "",
-    }[DEFAULT_CHAIN_ID],
-    abi: ApolloABI,
-  },
   fenixToken: {
     address: {
       1666600000: "0x41013D1521B20CA67397e7c65256bfb2975FAAc8",
@@ -92,27 +83,6 @@ const defaultContracts = {
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: HermesNFTABI,
-  },
-  apolloPresaleFirstRound: {
-    address: {
-      1666600000: "0xF8459eF698f7C6F6C2a5D80a80f92C8Ae6535d6E",
-      1666700001: "",
-    }[DEFAULT_CHAIN_ID],
-    abi: pAPOLLO,
-  },
-  apolloPresaleSecondRound: {
-    address: {
-      1666600000: "0xe08fA8F2b3531e82a6Bef397C5FA64c5d9d7B889",
-      1666700001: "",
-    }[DEFAULT_CHAIN_ID],
-    abi: pAPOLLO,
-  },
-  pApollo: {
-    address: {
-      1666600000: "0xE644Be5D4d5E7f16F0039cD67BCd438D1A62ef13",
-      1666700001: "",
-    }[DEFAULT_CHAIN_ID],
-    abi: ERC20ABI,
   },
 };
 

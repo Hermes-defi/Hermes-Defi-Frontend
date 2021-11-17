@@ -35,7 +35,7 @@ import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
 import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
-import { usePlutusPrice, useApolloPrice } from "hooks/prices";
+import { usePlutusPrice } from "hooks/prices";
 import {
   useTotalInFarms,
   useTotalInBalancers,
@@ -263,14 +263,6 @@ function Header() {
               </Button>
             </chakra.a>
           </NextLink>
-
-          <NextLink href="https://apollo.hermesdefi.io/app" passHref>
-            <chakra.a flex="1">
-              <Button isFullWidth variant="solid" bg="#FF775C" color="white" size="lg" _hover={{ bg: "#FF9D8A" }}>
-                Use Apollo
-              </Button>
-            </chakra.a>
-          </NextLink>
         </Stack>
       </Stack>
     </Container>
@@ -280,7 +272,6 @@ function Header() {
 // NUMBERS
 const DappStats = () => {
   const { data: plutusPrice } = usePlutusPrice();
-  const { data: apolloPrice } = useApolloPrice();
   const stats = useLandingPageStats();
 
   return (
@@ -330,16 +321,6 @@ const DappStats = () => {
       </SimpleGrid>
 
       <SimpleGrid columns={{ base: 2, md: 2 }} spacing={8}>
-        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Skeleton isLoaded={!!apolloPrice}>
-            <Heading size="2xl">{displayCurrency(apolloPrice)}</Heading>
-          </Skeleton>
-
-          <Text color="gray.700" fontSize="sm" fontWeight="600">
-            $APOLLO Price
-          </Text>
-        </Box>
-
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Skeleton isLoaded={!!stats.data}>
             <Heading size="2xl">{displayCurrency(stats.data?.apollo?.totalValueInVaults, true)}</Heading>

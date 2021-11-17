@@ -45,11 +45,6 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
         label: "Plutus",
         href: "/app",
       },
-      {
-        label: "Apollo",
-        href: "https://apollo.hermesdefi.io/app",
-        isExternal: true,
-      },
     ],
   },
   {
@@ -138,7 +133,7 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Pre Sale",
-        href: "https://apollo.hermesdefi.io/app/pre-sale",
+        href: "#",
       },
     ],
   },

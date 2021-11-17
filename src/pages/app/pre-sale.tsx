@@ -2,11 +2,10 @@ import React from "react";
 
 import { displayCurrency, displayTokenCurrency } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
-import { useBuyPApollo, usePresaleApproveToken, usePresaleInfo } from "state/pre-sale";
+import { usePresaleApproveToken, usePresaleInfo } from "state/pre-sale";
 
 import { AppLayout } from "components/layout";
 import { UnlockButton } from "components/wallet/unlock-wallet";
-import { BuypApolloModal } from "components/modals/buy-pApollo";
 
 import { Box, Button, Container, Heading, HStack, Link, Skeleton, Stack, Text, useDisclosure } from "@chakra-ui/react";
 
@@ -18,8 +17,6 @@ const PresaleCard = () => {
 
   const approvePlutusMutation = usePresaleApproveToken("v2");
   const approveUsdcMutation = usePresaleApproveToken("v2");
-
-  const buyApollo = useBuyPApollo("v2");
 
   return (
     <>
@@ -151,14 +148,6 @@ const PresaleCard = () => {
           )}
         </Stack>
       </Stack>
-
-      <BuypApolloModal
-        isOpen={isOpen}
-        onClose={onClose}
-        version={"v2"}
-        isLoading={buyApollo.isLoading}
-        onPurchase={buyApollo.mutateAsync}
-      />
     </>
   );
 };

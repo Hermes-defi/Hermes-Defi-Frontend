@@ -7,7 +7,6 @@ import * as Dfyn from "@dfyn/sdk";
 
 const amms = {
   "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "quickswap", // plutus
-  "0x577aa684b89578628941d648f1fbd6dde338f059": "dfyn", // apollo
   "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
   "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc
   "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "coingecko", // wmatic
@@ -92,20 +91,7 @@ async function fetchDfynPrice(_token: { address: string; decimals: number; symbo
 
   try {
     let route;
-    if (token.symbol === "APOLLO") {
-      // fetch iron to usdc pair
-      const IronToUSDCPair = await Dfyn.Fetcher.fetchPairData(
-        iron, // points to WMATIC :facepalm:
-        usdc,
-        library
-      );
-
-      // fetch the token to iron pair info
-      const tokenToIron = await Dfyn.Fetcher.fetchPairData(token, iron, library);
-
-      // find a route
-      route = new Dfyn.Route([IronToUSDCPair, tokenToIron], usdc);
-    } else if (token.symbol !== "WMATIC") {
+    if (token.symbol !== "WMATIC") {
       // fetch matic to usdc pair
       const MaticToUSDCPair = await Dfyn.Fetcher.fetchPairData(
         Dfyn.WETH[DEFAULT_CHAIN_ID], // points to WMATIC :facepalm:

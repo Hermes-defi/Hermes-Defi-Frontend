@@ -42,11 +42,6 @@ export function usePlutusToken() {
   return contract(defaultContracts.plutusToken);
 }
 
-export function useApolloToken() {
-  const contract = useContract();
-  return contract(defaultContracts.apolloToken);
-}
-
 export function useReferral() {
   const contract = useContract();
   return contract(defaultContracts.referral);
@@ -131,12 +126,5 @@ export function useCustomMasterChef() {
 
 export function usePresaleContract(version: "v1" | "v2") {
   const contract = useContract();
-  return contract(
-    version === "v1" ? defaultContracts.apolloPresaleFirstRound : defaultContracts.apolloPresaleSecondRound
-  );
-}
-
-export function usePApollo() {
-  const contract = useContract();
-  return contract(defaultContracts.pApollo);
+  return contract(defaultContracts.hermesNft); // TODO: Remove Presale.
 }
