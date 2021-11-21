@@ -6,7 +6,7 @@ import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
 import * as Dfyn from "@dfyn/sdk";
 
 const amms = {
-  "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "quickswap", // plutus
+  "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "sushiswap", // plutus
   "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
   "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc
   "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "coingecko", // wmatic
@@ -158,12 +158,43 @@ async function fetchPolycatPrice(address: string) {
   }
 }
 
+async function fetchSushiswapPrice(address: string) {
+  try {
+    const resp = await fetch("https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
+            tokenDayDatas ( 
+              where: { 
+                token: "${address.toLowerCase()}" 
+              } 
+            ){
+              id
+              date
+              priceUSD
+            }
+          }`,
+      }),
+    });
+
+    const { data } = await resp.json();
+    return new BigNumberJS(data.tokenDayDatas[0]?.priceUSD).toPrecision(6).toString();
+  } catch (err) {
+    console.log(err);
+    return "0";
+  }
+}
+
 export async function fetchPrice(token: { address: string; decimals: number; symbol: string }, library: any) {
   const ammsFetcher = {
     coingecko: (t: { address: string; decimals: number; symbol: string }) => fetchCoinGeckoPrice(t.address),
     quickswap: (t: { address: string; decimals: number; symbol: string }) => fetchQuickSwapPrice(t, library),
     dfyn: (t: { address: string; decimals: number; symbol: string }) => fetchDfynPrice(t, library),
     polycat: (t: { address: string; decimals: number; symbol: string }) => fetchPolycatPrice(t.address),
+    sushiswap: (t: { address: string }) => fetchSushiswapPrice(t.address),
   };
 
   try {
@@ -227,6 +258,40 @@ export async function fetchPairPrice(
     polycat: async () => {
       try {
         const resp = await fetch("https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: `{
+                pairs (where: { token0: "${token0.address.toLowerCase()}", token1: "${token1.address.toLowerCase()}"}) {
+                  id
+                  reserve0
+                  reserve1
+                }
+              }`,
+          }),
+        });
+
+        const { data } = await resp.json();
+
+        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(new BigNumberJS(token0Price));
+
+        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(new BigNumberJS(token1Price));
+
+        const tvl = token0Total.plus(token1Total);
+        const price = tvl.dividedBy(new BigNumberJS(totalSupply));
+
+        return price.toString();
+      } catch (err) {
+        console.log(err);
+        return "0";
+      }
+    },
+
+    sushiswap: async () => {
+      try {
+        const resp = await fetch("https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
