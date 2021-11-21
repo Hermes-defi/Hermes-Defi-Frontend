@@ -323,7 +323,7 @@ const DappStats = () => {
       <SimpleGrid columns={{ base: 2, md: 2 }} spacing={8}>
         <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Skeleton isLoaded={!!stats.data}>
-            <Heading size="2xl">{displayCurrency(stats.data?.apollo?.totalValueInVaults, true)}</Heading>
+            <Heading size="2xl">{displayCurrency(stats.data?.plutus?.totalValueInVaults, true)}</Heading>
           </Skeleton>
 
           <Text color="gray.700" fontSize="sm" fontWeight="600">
@@ -333,7 +333,7 @@ const DappStats = () => {
 
         {/* <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Skeleton isLoaded={!!stats.data}>
-            <Heading size="2xl">{displayCurrency(stats.data?.apollo?.totalValueInPools, true)}</Heading>
+            <Heading size="2xl">{displayCurrency(stats.data?.plutus?.totalValueInPools, true)}</Heading>
           </Skeleton>
           <Text color="gray.700" fontSize="sm" fontWeight="600">
             Total in Pools
@@ -344,8 +344,8 @@ const DappStats = () => {
           <Skeleton isLoaded={!!stats.data}>
             <Heading size="2xl">
               {displayCurrency(
-                parseFloat(stats.data?.apollo?.totalValueInFarms) +
-                  parseFloat(stats.data?.apollo?.totalValueInBalancers),
+                parseFloat(stats.data?.plutus?.totalValueInFarms) +
+                  parseFloat(stats.data?.plutus?.totalValueInBalancers),
                 true
               )}
             </Heading>
