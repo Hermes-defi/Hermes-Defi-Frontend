@@ -208,23 +208,6 @@ const Page: React.FC = () => {
           </SimpleGrid>
         </Box>
 
-        <ArkenWidget
-          chain="polygon"
-          mode="light"
-          themeColor="#669ca9"
-          themeTextColor="#ffffff"
-          baseTokenAddress="0xdab35042e63e93cc8556c9bae482e5415b5ac4b1"
-          quoteTokenAddress="0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270"
-          externalTopTokenAddress={[]}
-          graphRange={1}
-          enableGraph
-          containerStyle={{
-            width: "100%",
-            minHeight: 700,
-            // put container style here
-          }}
-        />
-
         <Box
           bg={useColorModeValue("white", "gray.700")}
           rounded="2xl"
