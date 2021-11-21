@@ -10,8 +10,8 @@ const moduleExports = {
   async redirects() {
     return [
       {
-        source: "/app/pre-sale",
-        destination: "https://apollo.hermesdefi.io/app/pre-sale", // Matched parameters can be used in the destination
+        source: "/",
+        destination: "https://testnethermesdefo.one", // Matched parameters can be used in the destination
         permanent: false,
       },
     ];
