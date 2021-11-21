@@ -113,6 +113,7 @@ const theme = extendTheme({
 
           _active: {
             bg: "gray.700",
+            
           },
         }),
       },
