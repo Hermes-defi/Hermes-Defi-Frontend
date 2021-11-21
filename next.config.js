@@ -11,7 +11,7 @@ const moduleExports = {
     return [
       {
         source: "/",
-        destination: "https://test.testnethermesdefo.one", // Matched parameters can be used in the destination
+        destination: "https://testnethermesdefo.one", // Matched parameters can be used in the destination
         permanent: false,
       },
     ];
