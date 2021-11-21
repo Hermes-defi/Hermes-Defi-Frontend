@@ -78,7 +78,67 @@ const theme = extendTheme({
       base: {
         rounded: "xl",
       },
-      variants: {},
+      variants: {
+        solid: (props) => {
+          const { colorScheme: c } = props;
+
+          if (c === "primary") {
+            return {
+              bg: mode(`${c}.400`, `${c}.200`)(props),
+              color: mode("white", `gray.800`)(props),
+              _hover: {
+                bg: mode(`${c}.500`, `${c}.300`)(props),
+                _disabled: {
+                  bg: mode(`${c}.500`, `${c}.200`)(props),
+                },
+              },
+              _active: { bg: mode(`${c}.700`, `${c}.400`)(props) },
+            };
+          }
+
+          return defaultTheme.components.Button.variants.solid;
+        },
+        outline: (props) => {
+          const { colorScheme: c } = props;
+
+          const darkHoverBg = transparentize(`${c}.200`, 0.12)(theme);
+          const darkActiveBg = transparentize(`${c}.200`, 0.24)(theme);
+
+          if (c === "primary") {
+            return {
+              border: "1px solid",
+              borderColor: "currentColor",
+              color: mode(`${c}.400`, `${c}.200`)(props),
+              bg: "transparent",
+              _hover: {
+                bg: mode(`${c}.50`, darkHoverBg)(props),
+              },
+              _active: {
+                bg: mode(`${c}.100`, darkActiveBg)(props),
+              },
+            };
+          }
+
+          return defaultTheme.components.Button.variants.outline;
+        },
+        action: (props) => ({
+          bg: "gray.700",
+          color: "white",
+
+          _hover: {
+            color: "white",
+            bg: "gray.600",
+
+            _disabled: {
+              bg: "gray.600",
+            },
+          },
+
+          _active: {
+            bg: "gray.700",
+          },
+        }),
+      },
     },
   },
 });
