@@ -331,6 +331,7 @@ const DappStats = () => {
           </Text>
         </Box>
 
+
         {/* <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
           <Skeleton isLoaded={!!stats.data}>
             <Heading size="2xl">{displayCurrency(stats.data?.plutus?.totalValueInPools, true)}</Heading>
