@@ -174,12 +174,12 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
         </Stack>
 
         <Link
-          href={`https://polygonscan.com/token/${farm.stakeToken.address}`}
+          href={`https://explorer.harmony.one/address/${farm.stakeToken.address}`}
           textDecoration="underline"
           fontWeight="700"
           fontSize="sm"
         >
-          View on Matic
+          View on Harmony
         </Link>
       </Box>
     </Box>
