@@ -7,7 +7,7 @@ export interface NavItem {
   href?: string;
 }
 
-export const L1_NAV_ITEMS: Array<NavItem> = [
+export const L3_NAV_ITEMS: Array<NavItem> = [
   {
     label: "Home",
     href: "/app",
@@ -16,16 +16,20 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
     label: "Products",
     children: [
       {
+        label: "Pools",
+        href: "/app/pools"
+      },
+      {
+        label: "Farms",
+        href: "/app/farms"
+      },
+      {
         label: "Stake PLUTUS",
         href: "/app/stake",
       },
       {
         label: "Vaults",
         href: "/app/vaults",
-      },
-      {
-        label: "Stake god",
-        href: "/app/vault-stake",
       },
     ],
   },
@@ -51,33 +55,13 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
     label: "Trade",
     children: [
       {
-        label: "Swap (QuickSwap)",
-        href: "https://quickswap.exchange/#/swap?outputCurrency=0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        label: "Swap (Sushiswap)",
+        href: "https://app.sushi.com/swap?inputCurrency=0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a&outputCurrency=0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
       {
-        label: "Liquidity (QuickSwap)",
-        href: "https://quickswap.exchange/#/add/0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
-        isExternal: true,
-      },
-      {
-        label: "Swap (Balancer)",
-        href: "https://polygon.balancer.fi/#/trade",
-        isExternal: true,
-      },
-      {
-        label: "Liquidity (Balancer)",
-        href: "https://polygon.balancer.fi/#/pool/0x7320d680ca9bce8048a286f00a79a2c9f8dcd7b3000100000000000000000044",
-        isExternal: true,
-      },
-      {
-        label: "Swap (Dfyn)",
-        href: "https://exchange.dfyn.network/#/swap?inputCurrency=0x2791bca1f2de4661ed88a30c99a7a9449aa84174&outputCurrency=0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
-        isExternal: true,
-      },
-      {
-        label: "Liquidity (Dfyn)",
-        href: "https://exchange.dfyn.network/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        label: "Liquidity (Sushiswap)",
+        href: "https://app.sushi.com/add/0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
     ],
@@ -89,17 +73,7 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
         label: "Defined",
         href: "https://www.defined.fi/matic/0x86ad6271809f350522085f95f5a67d46ff7ed3ab",
         isExternal: true,
-      },
-      {
-        label: "DexGuru",
-        href: "https://dex.guru/token/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B-polygon",
-        isExternal: true,
-      },
-      {
-        label: "Arken",
-        href: "https://swap.arken.finance/tokens/polygon/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
-        isExternal: true,
-      },
+      }
     ],
   },
 

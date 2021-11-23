@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Container, Image, Link, Slide, Stack, Text } from "@chakra-ui/react";
 import { Navigation } from "./navigation";
-import { L1_NAV_ITEMS } from "./nav-config";
+import { L3_NAV_ITEMS } from "./nav-config";
 import { usePlutusPrice } from "hooks/prices";
 
 export const AppLayout: React.FC = ({ children }) => {
@@ -10,7 +10,7 @@ export const AppLayout: React.FC = ({ children }) => {
   return (
     <Box>
       <Container maxW="container.xl">
-        <Navigation tokenPrice={plutusPrice} logo="/hermes-logo-1.png" navItems={L1_NAV_ITEMS} />
+        <Navigation tokenPrice={plutusPrice} logo="/plutus-logo.png" navItems={L3_NAV_ITEMS} />
 
         {children}
 

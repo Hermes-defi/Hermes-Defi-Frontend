@@ -45,7 +45,7 @@ export const pools: Pool[] = {
 
       stakeToken: {
         address: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
-        symbol: "PLUTUS",
+        symbol: "PLTS",
         decimals: 18,
         logo: "/plutus-logo.png",
       },
@@ -58,7 +58,7 @@ export const pools: Pool[] = {
       isActive: true,
 
       stakeToken: {
-        address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+        address: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
         symbol: "WONE",
         decimals: 18,
         logo: "/harmony-one-logo.png",

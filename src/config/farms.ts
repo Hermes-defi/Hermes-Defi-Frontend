@@ -55,7 +55,7 @@ export const farms: Farm[] = {
 
       stakeToken: {
         address: "0xafd37a86044528010d0e70cdc58d0a9b5eb03206",
-        symbol: "PLUTUS/WONE",
+        symbol: "PLTS/WONE",
         decimals: 18,
         logo: ["/plutus-logo.png", "/harmony-one-logo.png"],
       },
@@ -69,7 +69,7 @@ export const farms: Farm[] = {
         {
           address: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
           decimals: 18,
-          symbol: "PLUTUS",
+          symbol: "PLTS",
         },
       ],
     },
