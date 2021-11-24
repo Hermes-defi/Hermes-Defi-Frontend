@@ -175,17 +175,15 @@ export function useTotalInBalancers() {
 export function useTvlChart() {
   return useQuery("tvl-chart-data", async () => {
     const resp = await fetch("/api/tvl-chart");
-    const data = await resp.json();
+    const data = await resp.json() || [];
 
     // format data
-    const formattedData = data.map((tvlData: { value: string; time: string }) => {
-      const time = dayjs(tvlData.time).format("HH:mm");
-      const value = parseInt(tvlData.value);
+    return data.map( ( tvlData: { value: string; time: string } ) => {
+      const time = dayjs( tvlData.time ).format( "HH:mm" );
+      const value = parseInt( tvlData.value );
 
       return { time, value };
-    });
-
-    return formattedData;
+    } );
   });
 }
 
@@ -194,7 +192,7 @@ export function useLandingPageStats() {
     const resp = await fetch("/api/stats");
     const data = await resp.json();
 
-    const totalTvl = new BigNumberJS(data.plutus?.tvl).plus(data.apollo?.tvl).toString();
+    const totalTvl = new BigNumberJS(data?.plutus?.tvl).plus(data?.apollo?.tvl).toString();
     return {
       ...data,
       totalTvl,
