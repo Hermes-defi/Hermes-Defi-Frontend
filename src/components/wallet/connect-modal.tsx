@@ -22,6 +22,11 @@ import { injected, SUPPORTED_WALLETS } from "wallet/connectors";
 import { switchNetwork } from "wallet/utils";
 
 const Option: React.FC<any> = ({ name, description, href, iconURL, ...props }) => {
+  const linkProps = href ? {
+    as: Link,
+    isExternal: true
+  } : {};
+
   return (
     <Button
       isFullWidth
@@ -35,9 +40,8 @@ const Option: React.FC<any> = ({ name, description, href, iconURL, ...props }) =
       justifyContent="space-between"
       borderRadius="xl"
       _hover={{ borderColor: "gray.500", textDecoration: "none" }}
-      as={href ? Link : undefined}
       href={href}
-      isExternal={!!href}
+      {...linkProps}
       {...props}
     >
       <Box align="left">
