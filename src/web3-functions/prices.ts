@@ -199,9 +199,16 @@ export async function fetchPrice(token: { address: string; decimals: number; sym
   };
 
   try {
-    const amm = Object.entries(amms).find(([k]) => k.toLowerCase() === token.address.toLowerCase())[1];
+    const tokenAddress = token.address.toLowerCase();
 
-    let price = await ammsFetcher[amm](token);
+    const ammEntry = Object.entries(amms).find(([k]) => k.toLowerCase() === tokenAddress);
+    if( !ammEntry ){
+      console.warn('Could not find AMM for token', tokenAddress);
+      return 0;
+    }
+
+    const amm = ammEntry[1];
+    const price = await ammsFetcher[amm]( token );
     return price;
   } catch (e) {
     console.log(e);
