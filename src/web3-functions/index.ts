@@ -102,7 +102,7 @@ export async function depositIntoPool(
   referral: string,
   decimals: number
 ) {
-  const tx = await masterChef.deposit(pid, utils.parseUnits(amount, decimals), referral);
+  const tx = await masterChef.deposit(pid, utils.parseUnits(amount, decimals) );
   await tx.wait();
 }
 
