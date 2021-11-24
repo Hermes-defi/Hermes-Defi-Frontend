@@ -2,22 +2,19 @@ import defaultContracts from "config/contracts";
 import ERC20_ABI from "config/abis/ERC20.json";
 import VAULT_ABI from "config/abis/Vault.json";
 import BigNumberJS from "bignumber.js";
-import { DEFAULT_CHAIN_ID } from "config/constants";
 import { ethers, utils } from "ethers";
-import { RPC_URLS } from "wallet/connectors";
 import { fetchBalancerPrice, fetchPairPrice, fetchPrice } from "web3-functions/prices";
 
+import simpleRpcProvider from 'libs/providers';
 import { Pool, pools } from "config/pools";
 import { Farm, farms } from "config/farms";
 import { Balancer, balancers } from "config/balancers";
 import { vaults, Vault } from "config/vaults";
 
-const provider = new ethers.providers.JsonRpcProvider(RPC_URLS[DEFAULT_CHAIN_ID]);
-
 export async function getPlutusPrice() {
   const plutusPrice = await fetchPrice(
     { address: defaultContracts.plutusToken.address, decimals: 18, symbol: "PLUTUS" },
-    provider
+    simpleRpcProvider
   );
 
   return plutusPrice;
@@ -25,7 +22,7 @@ export async function getPlutusPrice() {
 
 export async function getHermesStats() {
   const totalValueInPools = await pools.reduce(async (_total: Promise<BigNumberJS>, pool: Pool) => {
-    const lpContract = new ethers.Contract(pool.stakeToken.address, ERC20_ABI, provider);
+    const lpContract = new ethers.Contract(pool.stakeToken.address, ERC20_ABI, simpleRpcProvider);
 
     const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
     const tokenDecimal = await lpContract.decimals();
@@ -33,7 +30,7 @@ export async function getHermesStats() {
 
     const tokenPrice = await fetchPrice(
       { address: lpContract.address, decimals: tokenDecimal, symbol: tokenSymbol },
-      provider
+      simpleRpcProvider
     );
 
     const total = await _total;
@@ -45,7 +42,7 @@ export async function getHermesStats() {
   }, Promise.resolve(new BigNumberJS(0)));
 
   const totalValueInFarms = await farms.reduce(async (_total: Promise<BigNumberJS>, farm: Farm) => {
-    const lpContract = new ethers.Contract(farm.stakeToken.address, ERC20_ABI, provider);
+    const lpContract = new ethers.Contract(farm.stakeToken.address, ERC20_ABI, simpleRpcProvider);
 
     const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
     const totalSupply = utils.formatUnits(await lpContract.totalSupply(), farm.stakeToken.decimals);
@@ -54,7 +51,7 @@ export async function getHermesStats() {
       farm.pairs[0],
       farm.pairs[1],
       totalSupply,
-      provider,
+      simpleRpcProvider,
       farm.farmDx
     );
 
@@ -68,7 +65,7 @@ export async function getHermesStats() {
 
   const totalValueInBalancers = await balancers.reduce(
     async (_total: Promise<BigNumberJS>, bal: Balancer) => {
-      const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, provider);
+      const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, simpleRpcProvider);
 
       const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
       const tokenDecimal = await lpContract.decimals();
@@ -87,8 +84,8 @@ export async function getHermesStats() {
 
   const totalValueInVaults = await vaults.reduce(
     async (_total: Promise<BigNumberJS>, vault: Vault) => {
-      const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
-      const lpContract = new ethers.Contract(vault.stakeToken.address, ERC20_ABI, provider);
+      const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, simpleRpcProvider);
+      const lpContract = new ethers.Contract(vault.stakeToken.address, ERC20_ABI, simpleRpcProvider);
 
       const totalLpStaked = await vaultContract.balance();
       const totalSupply = utils.formatUnits(
@@ -100,7 +97,7 @@ export async function getHermesStats() {
         vault.pairs[0],
         vault.pairs[1],
         totalSupply,
-        provider,
+        simpleRpcProvider,
         vault.amm
       );
 

@@ -1,13 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { injected } from "./connectors";
 import { providers } from "ethers";
 import { useWeb3React } from "@web3-react/core";
 import { Web3ReactContextInterface } from "@web3-react/core/dist/types";
+import { simpleRpcProvider } from 'libs/providers';
+import { DEFAULT_CHAIN_ID } from '../config/constants';
 
 export function useActiveWeb3React(): Web3ReactContextInterface<providers.Web3Provider> {
-  const context = useWeb3React<providers.Web3Provider>();
-  const contextNetwork = useWeb3React<providers.Web3Provider>("web3-network");
-  return context.active ? context : contextNetwork;
+  const { library, chainId, ...web3React } = useWeb3React()
+  const refEth = useRef( library )
+  const [ provider, setProvider ] = useState( library || simpleRpcProvider )
+
+  useEffect( () => {
+    // console.debug('Current provider:', provider.connection);
+    if ( library !== refEth.current ) {
+      setProvider( library || simpleRpcProvider )
+      refEth.current = library
+    }
+  }, [ library ] )
+
+  return { library: provider, chainId: chainId ?? DEFAULT_CHAIN_ID, ...web3React }
 }
 
 export function useEagerConnect() {
