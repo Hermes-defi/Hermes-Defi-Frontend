@@ -44,10 +44,10 @@ export const pools: Pool[] = {
       isActive: true,
 
       stakeToken: {
-        address: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
-        symbol: "PLTS",
+        address: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
+        symbol: "WONE",
         decimals: 18,
-        logo: "/plutus-logo.png",
+        logo: "/harmony-one-logo.png",
       },
     },
 
@@ -58,24 +58,10 @@ export const pools: Pool[] = {
       isActive: true,
 
       stakeToken: {
-        address: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
-        symbol: "WONE",
+        address: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        symbol: "PLTS",
         decimals: 18,
-        logo: "/harmony-one-logo.png",
-      },
-    },
-
-    {
-      pid: 2,
-      multiplier: "15",
-      depositFees: 4,
-      isActive: true,
-
-      stakeToken: {
-        address: "0xafd37a86044528010d0e70cdc58d0a9b5eb03206",
-        symbol: "PLUTUS/ONE",
-        decimals: 18,
-        logo: "/harmony-one-logo.png",
+        logo: "/plutus-logo.png",
       },
     },
 
