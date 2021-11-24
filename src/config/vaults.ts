@@ -58,7 +58,10 @@ export type Vault = {
 
   apy?: {
     yearly: number;
+    boostedYearly?: number;
     daily: number;
+    dailyWithPool?: number;
+    dailyAll?: number;
   };
 
   hasStaked?: boolean;
