@@ -6,7 +6,7 @@ import { DEFAULT_CHAIN_ID } from "config/constants";
 
 // CONSTANTS
 export const RPC_URLS: { [chainId: number]: string } = {
-  1666600000: "https://api.s0.t.hmny.io", // main
+  1666600000: "https://api.harmony.one", // main
   1666700001: "https://api.s0.b.hmny.io",
 };
 
