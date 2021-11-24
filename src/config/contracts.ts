@@ -9,6 +9,8 @@ import StakePoolABI from "config/abis/StakePool.json";
 import VaultABI from "config/abis/Vault.json";
 import DfynFarmABI from "config/abis/DfynFarm.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
+import BankABI from "config/abis/Bank.json";
+import UsdcSwapABI from "config/abis/UsdcSwap.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -83,6 +85,20 @@ const defaultContracts = {
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: HermesNFTABI,
+  },
+  bank: {
+    address: {
+      1666600000: "0x9C689e78260BcAb63641731BA67CcCd860F041E3",
+      1666700001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: BankABI,
+  },
+  swapUsdc: {
+    address: {
+      1666600000: "0x217aaa91e252b46e1abff0c8bab63249fbba881b",
+      1666700001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: UsdcSwapABI,
   },
 };
 

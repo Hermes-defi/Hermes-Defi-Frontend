@@ -9,6 +9,7 @@ import {
   Flex,
   Badge,
   Box,
+  Button,
   Collapse,
   Heading,
   Icon,
@@ -30,6 +31,7 @@ import {
 import { displayCurrency } from "libs/utils";
 import { NavItem } from "./nav-config";
 import { Wallet } from "components/wallet";
+import { BuyPlutusModal } from "components/modals/buy-plutus";
 
 function getNavItemsSplit(length: number) {
   if (length % 2 === 0) return length / 2;
@@ -60,7 +62,19 @@ function ColorModeToggle() {
     </Stack>
   );
 }
+function BuyPlutus() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
+  return (
+    <>
+      <Button onClick={() => onOpen()} colorScheme="accent" variant="outline" size="sm">
+        Buy Plutus
+      </Button>
+
+      <BuyPlutusModal isOpen={isOpen} onClose={() => onClose()} />
+    </>
+  );
+}
 const MobileNavItem = ({ label, children, href, isExternal }: NavItem) => {
   const { isOpen, onToggle } = useDisclosure();
 

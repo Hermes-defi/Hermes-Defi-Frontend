@@ -128,3 +128,13 @@ export function usePresaleContract(version: "v1" | "v2") {
   const contract = useContract();
   return contract(defaultContracts.hermesNft); // TODO: Remove Presale.
 }
+
+export function useBankContract() {
+  const contract = useContract();
+  return contract(defaultContracts.bank);
+}
+
+export function useSwapUSDCContract() {
+  const contract = useContract();
+  return contract(defaultContracts.swapUsdc);
+}

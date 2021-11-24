@@ -37,24 +37,7 @@ export const AppLayout: React.FC = ({ children }) => {
                 </Stack>
               </Stack>
 
-              <Stack direction="row" align="flex-end" justify="flex-end">
-                <Link href="https://paladinsec.co/projects/hermes-defi/">
-                  <Image
-                    w={24}
-                    src="https://paladinsec.co/pld/assets/audited-by-paladin-standard.svg"
-                    alt="Paladin Logo"
-                  />
-                </Link>
-
-                <Stack as={Link} href="https://rugdoc.io/project/hermes-defi/">
-                  <Image w={24} src="/rugdoc-kyc.png" alt="Rugdoc Logo" />
-                  <Image
-                    w={24}
-                    src="https://rugdoc.io/assets/2021/05/rugdoc-review-badge-for-light-bg.svg"
-                    alt="Rugdoc Logo"
-                  />
-                </Stack>
-              </Stack>
+              
             </Stack>
           </Slide>
         </Box>
