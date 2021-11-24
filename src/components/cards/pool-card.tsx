@@ -73,7 +73,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
               <PlutusAPRCalculator
                 apr={pool.apr}
                 tokenSymbol={pool.stakeToken.symbol}
-                tokenLink={`https://quickswap.exchange/#/swap/${pool.stakeToken.address}`}
+                tokenLink={`https://app.sushi.com/swap?outputCurrency=${pool.stakeToken.address}`}
               />
             )}
             <Text fontWeight="700" fontSize="sm">
@@ -130,7 +130,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
               Deposit
             </Text>
             <Link
-              href={`https://quickswap.exchange/#/swap/${pool.stakeToken.address}`}
+              href={`https://app.sushi.com/swap?outputCurrency=${pool.stakeToken.address}`}
               isExternal
               fontWeight="700"
               fontSize="sm"

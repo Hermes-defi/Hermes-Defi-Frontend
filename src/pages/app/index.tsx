@@ -66,7 +66,7 @@ const Page: React.FC = () => {
         <Box
           bg={useColorModeValue("white", "gray.700")}
           rounded="2xl"
-          boxShadow="base"
+          boxShadow="2xl"
           px={[5, 10]}
           py={6}
         >
@@ -77,7 +77,7 @@ const Page: React.FC = () => {
           <SimpleGrid templateColumns={{ base: "1fr", md: "1fr 1fr 2fr" }} spacing={[5, 10]}>
             <Stack mt={10} align="stretch" spacing={10}>
               <Stack spacing={4} justify={["center", ""]} align="center" direction="row">
-                <Image src="/hermes-logo-1.png" boxSize={12} />
+                <Image src="/plutus-logo.png" boxSize={12} />
                 <Button
                   onClick={() => addTokenToWallet(defaultContracts.plutusToken.address, "PLUTUS")}
                   colorScheme="secondary"
@@ -127,7 +127,7 @@ const Page: React.FC = () => {
 
             <Stack spacing={[5, 14]} direction={{ base: "column", md: "row" }}>
               <Stack
-                boxShadow="rgb(190 157 65 / 45%) 0px 25px 50px -12px"
+                boxShadow="rgb(251 182 206 / 30%) 0px 25px 25px -12px"
                 rounded="3xl"
                 bg="secondary.500"
                 bgGradient="linear(to-t, secondary.500, primary.200)"
@@ -142,7 +142,7 @@ const Page: React.FC = () => {
               >
                 <div>
                   <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
-                    <Icon color="secondary.500" boxSize={8} as={GiFarmTractor} />
+                    <Icon color="secondary.300" boxSize={8} as={GiFarmTractor} />
                   </Center>
 
                   <Text fontSize={["lg", "sm"]} fontWeight={["500"]}>
@@ -166,7 +166,7 @@ const Page: React.FC = () => {
               </Stack>
 
               <Stack
-                boxShadow="rgb(179 142 89 / 45%) 0px 25px 50px -12px"
+                boxShadow="rgb(251 182 206 / 30%) 0px 25px 25px -12px"
                 rounded="3xl"
                 bg="accent.500"
                 bgGradient="linear(to-t, accent.500, primary.200)"
@@ -181,7 +181,7 @@ const Page: React.FC = () => {
               >
                 <div>
                   <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
-                    <Icon color="#B38E5A" boxSize={8} as={RiWaterFlashFill} />
+                    <Icon color="secondary.300" boxSize={8} as={RiWaterFlashFill} />
                   </Center>
 
                   <Text fontSize={["lg", "sm"]} fontWeight={["500", "700"]}>
@@ -211,7 +211,7 @@ const Page: React.FC = () => {
         <Box
           bg={useColorModeValue("white", "gray.700")}
           rounded="2xl"
-          boxShadow="base"
+          boxShadow="2xl"
           px={[5, 10]}
           py={6}
         >

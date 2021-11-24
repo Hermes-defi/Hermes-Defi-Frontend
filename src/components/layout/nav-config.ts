@@ -16,38 +16,23 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     label: "Products",
     children: [
       {
+        label: "Vaults",
+        href: "/app/vaults",
+      },
+
+      {
         label: "Pools",
         href: "/app/pools"
       },
+
       {
         label: "Farms",
         href: "/app/farms"
       },
+
       {
-        label: "Stake PLUTUS",
-        href: "/app/stake",
-      },
-      {
-        label: "Vaults",
-        href: "/app/vaults",
-      },
-    ],
-  },
-  {
-    label: "NFT",
-    href: "/app/nfts",
-  },
-  {
-    label: "Governance",
-    href: "https://snapshot.org/#/hermesdefi.eth",
-    isExternal: true,
-  },
-  {
-    label: "Layers",
-    children: [
-      {
-        label: "Plutus",
-        href: "/app",
+        label: "Bank",
+        href: "/app/bank",
       },
     ],
   },
@@ -76,13 +61,26 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       }
     ],
   },
-
+  {
+    label: "Layers",
+    children: [
+      {
+        label: "Iris",
+        href: "https://www.hermesdefi.io/app",
+        isExternal: true
+      },
+      {
+        label: "Plutus",
+        href: "/app",
+      },
+    ],
+  },
   {
     label: "Community",
     children: [
       {
         label: "Docs",
-        href: "https://hermes-defi.gitbook.io/hermes-finance/",
+        href: "https://hermes-defi.gitbook.io/plutus/",
         isExternal: true,
       },
       {
@@ -91,8 +89,8 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
-        label: "Telegram",
-        href: "https://t.me/hermesdefinance",
+        label: "Discord",
+        href: "https://discord.gg/k6SX8pkK",
         isExternal: true,
       },
       {
@@ -106,8 +104,9 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
-        label: "Pre Sale",
-        href: "#",
+        label: "Youtube",
+        href: "https://www.youtube.com/channel/UCnLWipB915XYPHMmMZcsnag",
+        isExternal: true,
       },
     ],
   },
