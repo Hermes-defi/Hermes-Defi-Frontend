@@ -29,6 +29,7 @@ const amms = {
   "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f": "polycat", // wise
   "0x8a953cfe442c5e8855cc6c61b1293fa648bae472": "quickswap", // polydoge
   "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a": "coingecko", // iron
+  "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "sushiswap", // WONE
 };
 
 async function fetchCoinGeckoPrice(address: string) {
