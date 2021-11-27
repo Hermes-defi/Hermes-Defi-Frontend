@@ -2,8 +2,12 @@ import fetch from "isomorphic-fetch";
 import defaultTokens from "config/tokens";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
-import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
+import { Token, WETH as WMATIC, Fetcher, Route, Pair, CurrencyAmount } from "quickswap-sdk";
 import * as Dfyn from "@dfyn/sdk";
+import * as Sushi from "@sushiswap/sdk";
+import * as SushiData from "@sushiswap/sushi-data";
+import ethers from "ethers";
+import * as contracts from "hooks/contracts";
 
 const amms = {
   "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "sushiswap", // plutus
@@ -31,6 +35,8 @@ const amms = {
   "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a": "coingecko", // iron
   "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "sushiswap", // WONE
 };
+const USDCONE = "0xbf255d8c30dbab84ea42110ea7dc870f01c0013a";
+
 
 async function fetchCoinGeckoPrice(address: string) {
   try {
@@ -180,7 +186,7 @@ async function fetchSushiswapPrice(address: string) {
           }`,
       }),
     });
-
+    
     const { data } = await resp.json();
     return new BigNumberJS(data.tokenDayDatas[0]?.priceUSD).toPrecision(6).toString();
   } catch (err) {
@@ -189,13 +195,80 @@ async function fetchSushiswapPrice(address: string) {
   }
 }
 
+async function fetchSushiSwapPrice2(address: string, decimals: number) {
+  const woneAddress = "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a";
+  const usdcAddress = "0x985458E523dB3d53125813eD68c274899e9DfAb4"
+  const tokenWONE = new Sushi.Token(DEFAULT_CHAIN_ID, woneAddress, 18, "WONE");
+  const tokenUSDC = new Sushi.Token(DEFAULT_CHAIN_ID, usdcAddress, 6, "USDC");
+  const token = new Sushi.Token(DEFAULT_CHAIN_ID, address, decimals);
+  const getPairContract = contracts.useUniPair();
+
+  // fetch one to usdc pair
+  const ONEToUSDCPairAddress = Sushi.Pair.getAddress(tokenWONE, tokenUSDC);
+  const ONEToUSDCPairContract = getPairContract(ONEToUSDCPairAddress);
+  const ONEToUSDCReserves = await ONEToUSDCPairContract.getReserves();
+
+  const ONEToUSDCToken0 = ONEToUSDCPairContract.token0();
+  const ONEToUSDCToken1 = ONEToUSDCPairContract.token1();
+
+  const token0PairA = [tokenWONE, tokenUSDC].find(token => token.address === ONEToUSDCToken0);
+  const token1PairA = [tokenWONE, tokenUSDC].find(token => token.address === ONEToUSDCToken1);
+  
+  const ONEUSDCPair = new Sushi.Pair(
+    Sushi.CurrencyAmount.fromRawAmount(token0PairA, ONEToUSDCReserves.reserve0.ToString()),
+    Sushi.CurrencyAmount.fromRawAmount(token1PairA, ONEToUSDCReserves.reserve1.ToString())
+  );
+  try {
+    let route;
+    if (token.symbol !== "WONE") {
+      
+      // fetch the token to one pair info
+      const tokenToOneAddress = Sushi.Pair.getAddress(token, tokenWONE);
+      const tokenToOnePairContract = getPairContract(tokenToOneAddress);
+      const tokenToOneReserves = tokenToOnePairContract.getReserves();
+
+      const tokenToOneToken0 = tokenToOnePairContract.token0();
+      const tokenToOneToken1 = tokenToOnePairContract.token1();
+
+      const token0PairB = [tokenWONE, token].find(token => token.address === tokenToOneToken0);
+      const token1PairB = [tokenWONE, token].find(token => token.address === tokenToOneToken1);
+      
+      const tokenONEPair = new Sushi.Pair(
+        Sushi.CurrencyAmount.fromRawAmount(token0PairB, tokenToOneReserves.reserve0.ToString()),
+        Sushi.CurrencyAmount.fromRawAmount(token1PairB, tokenToOneReserves.reserve1.ToString())
+      );
+
+      // find a route
+      route = new Sushi.Route([ONEUSDCPair, tokenONEPair], token, tokenUSDC);
+    } else {
+      // use only the MATIC-USDC pair to get the price
+      route = new Sushi.Route([ONEUSDCPair], tokenWONE, tokenUSDC);
+    }
+    console.log(route.midPrice.invert().toSignificant(6));
+    return route.midPrice.invert().toSignificant(6);
+  } catch (e) {
+    console.log(`dfyn - error getting price for ${token.symbol}`, e.message, token);
+
+    // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
+    // please refactor
+    // HACK:: we use this for cases where the we're finding a route for a token to the same token,
+    // so we hack the price to be 1 because TOKEN_A_PRICE === TOKEN_A_PRICE (same token!!!)
+    if (e.message.includes("ADDRESSES")) {
+      return "1";
+    }
+
+    return "0";
+  }
+}
+
 export async function fetchPrice(token: { address: string; decimals: number; symbol: string }, library: any) {
+  
   const ammsFetcher = {
     coingecko: (t: { address: string; decimals: number; symbol: string }) => fetchCoinGeckoPrice(t.address),
     quickswap: (t: { address: string; decimals: number; symbol: string }) => fetchQuickSwapPrice(t, library),
     dfyn: (t: { address: string; decimals: number; symbol: string }) => fetchDfynPrice(t, library),
     polycat: (t: { address: string; decimals: number; symbol: string }) => fetchPolycatPrice(t.address),
-    sushiswap: (t: { address: string }) => fetchSushiswapPrice(t.address),
+    sushiswap: (t: { address: string; decimals: number }) => fetchSushiSwapPrice2(t.address, t.decimals),
   };
 
   try {
