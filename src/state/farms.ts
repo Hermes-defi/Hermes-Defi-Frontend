@@ -34,7 +34,6 @@ function useFetchFarmRequest() {
     // Token data
     newFarm.stakeToken.address = masterChefInfo.lpToken;
     const lpContract = getPairContract(newFarm.stakeToken.address);
-
     newFarm.totalStaked = utils.formatUnits(
       await lpContract.balanceOf(masterChef.address),
       newFarm.stakeToken.decimals

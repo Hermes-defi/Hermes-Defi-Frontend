@@ -88,7 +88,7 @@ const defaultContracts = {
   },
   bank: {
     address: {
-      1666600000: "0x9C689e78260BcAb63641731BA67CcCd860F041E3",
+      1666600000: "0x208713c037312e09a787e178b6880a8ff811e17c",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: BankABI,

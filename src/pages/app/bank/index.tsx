@@ -124,7 +124,7 @@ function DepositSection() {
           Deposit Plutus
         </Heading>
         <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.100")}>
-          Burn your $PLUTUS to earn $IRON + partner pool rewards.
+          Burn your $PLUTUS to earn $DAI + partner pool rewards.
         </Text>
       </Box>
 
@@ -280,9 +280,9 @@ const Page = () => {
                 py={6}
               >
                 <Stack direction="row" align="center">
-                  <Image objectFit="contain" src={`/iron-logo.png`} boxSize={10} />
+                  <Image objectFit="contain" src={`/dai-logo.png`} boxSize={10} />
                   <Text fontSize="md" textTransform="uppercase" fontWeight="bold">
-                    iron bank
+                    dai bank
                   </Text>
                 </Stack>
 
@@ -309,7 +309,7 @@ const Page = () => {
 
                   <Stack align="center">
                     <Heading color="gray.50" fontSize="xl">
-                      IRON paid out
+                      DAI paid out
                     </Heading>
 
                     <Heading color="white" fontSize="4xl">

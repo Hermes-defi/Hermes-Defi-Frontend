@@ -16,8 +16,8 @@ import { usePlutusPrice } from "hooks/prices";
 dayjs.extend(duration);
 
 const BANK_REWARD_TOKEN = {
-  address: "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a",
-  symbol: "IRON",
+  address: "0xEf977d2f931C1978Db5F6747666fa1eACB0d0339",
+  symbol: "DAI",
   decimals: 18,
   price: 0,
 };
@@ -62,9 +62,9 @@ export const useFetchMainPool = () => {
     queryKey: "bank-main-pool",
     enabled: !!plutusPrice.data,
     queryFn: async () => {
-      const poolName = "iron";
+      const poolName = "dai";
 
-      const poolInfo = await bankContract.usdcinfo();
+      const poolInfo = await bankContract.daiinfo();
       const poolEndTime = (await bankContract.endtime()).toString();
 
       const timeLeftDiff = dayjs.unix(poolEndTime).diff(dayjs()); // time until pool ends
@@ -303,12 +303,12 @@ export const useMyBankRewards = () => {
         });
       }
 
-      const ironRewards = utils.formatUnits(await bankContract.pendingIRON(account), 18);
-      const ironPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
-      const ironRewardUsd = new BigNumberJS(ironRewards).times(ironPrice).toString();
+      const daiRewards = utils.formatUnits(await bankContract.pendingDAI(account), 18);
+      const daiPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
+      const daiRewardUsd = new BigNumberJS(daiRewards).times(daiPrice).toString();
 
       // total dollar value
-      totalDollarValue = new BigNumberJS(totalDollarValue).plus(ironRewardUsd).toNumber();
+      totalDollarValue = new BigNumberJS(totalDollarValue).plus(daiRewardUsd).toNumber();
 
       const inPlutus = !!plutusPrice.data
         ? new BigNumberJS(totalDollarValue).dividedBy(plutusPrice.data).toString()
@@ -316,7 +316,7 @@ export const useMyBankRewards = () => {
 
       console.log({ inPlutus });
       return {
-        ironRewards,
+        daiRewards,
         poolRewards,
         totalDollarValue,
         inPlutus,
