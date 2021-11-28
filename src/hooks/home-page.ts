@@ -81,7 +81,7 @@ export function useFarmAPRStats() {
   const isLoading = farmsResp.every((f) => f.status === "loading");
 
   const aprs = farmsResp.map((f) => (f.data as Farm)?.apr.yearlyAPR);
-  const maxApr = Math.max(...aprs);
+  const maxApr = aprs.reduce( (accum, apr) => ( apr > accum ? apr : accum ), 0 );
 
   return [isLoading, maxApr];
 }
@@ -91,7 +91,7 @@ export function usePoolsAPRStats() {
   const isLoading = poolsResp.every((p) => p.status === "loading");
 
   const aprs = poolsResp.map((p) => (p.data as Pool)?.apr.yearlyAPR);
-  const maxApr = Math.max(...aprs);
+  const maxApr = aprs.reduce( (accum, apr) => ( apr > accum ? apr : accum ), 0 );
 
   return [isLoading, maxApr];
 }
