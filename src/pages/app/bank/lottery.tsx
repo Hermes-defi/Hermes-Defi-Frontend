@@ -29,7 +29,7 @@ const Page = () => {
 
                 <Skeleton isLoaded={!!lotteryInfo.data}>
                   <Text color="primary.400" fontWeight="bold">
-                    {displayNumber(lotteryInfo.data?.pricePot, false, 2)} IRON
+                    {displayNumber(lotteryInfo.data?.pricePot, false, 2)} DAI
                   </Text>
                 </Skeleton>
               </Stack>
