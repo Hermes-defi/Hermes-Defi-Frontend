@@ -8,7 +8,7 @@ import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Balancer, balancers } from "config/balancers";
 import { BigNumber, constants, utils } from "ethers";
-import { plutusPerBlock } from "config/constants";
+import { BLOCKS_PER_SECOND, PLUTUS_PER_BLOCK, SECONDS_PER_WEEK } from 'config/constants';
 import { fetchBalancerPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
@@ -42,7 +42,7 @@ function useFetchBalancersRequest() {
     newBal.stakeToken.price = await fetchBalancerPrice(balancer.balancerAddress);
 
     // APR data
-    const rewardsPerWeek = plutusPerBlock * (604800 / 2.1);
+    const rewardsPerWeek = PLUTUS_PER_BLOCK * (SECONDS_PER_WEEK / BLOCKS_PER_SECOND);
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
     const poolRewardsPerWeek = new BigNumberJS(newBal.multiplier)

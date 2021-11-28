@@ -1,5 +1,5 @@
 import BigNumberJS from "bignumber.js";
-import { blocksPerDay, secondsPerBlock, secondsPerYear } from "config/constants";
+import { BLOCKS_PER_DAY, BLOCKS_PER_SECOND, SECONDS_PER_YEAR } from "config/constants";
 
 export function compound(r, n = 365, t = 1, c = 1) {
   return (1 + (r * c) / n) ** (n * t) - 1;
@@ -102,7 +102,7 @@ export async function getVaultApy({
     .dividedBy(totalAllocPoints)
     .times(1 - (depositFees ?? 0));
 
-  const yearlyRewards = poolBlockRewards.dividedBy(secondsPerBlock).times(secondsPerYear);
+  const yearlyRewards = poolBlockRewards.dividedBy(BLOCKS_PER_SECOND).times(SECONDS_PER_YEAR);
   const yearlyRewardsInUsd = yearlyRewards
     .times(rewardToken.price)
     .dividedBy(`1e${rewardToken.decimals}`);
@@ -163,7 +163,7 @@ export async function getVaultDualApy({
   // get farm apr
   const token0yearlyRewards = new BigNumberJS(token0RewardRate)
     .times(3)
-    .times(blocksPerDay)
+    .times(BLOCKS_PER_DAY)
     .times(365);
   const token0TotalRewardsInUsd = token0yearlyRewards
     .times(token0Price)
@@ -171,7 +171,7 @@ export async function getVaultDualApy({
 
   const token1yearlyRewards = new BigNumberJS(token1RewardRate)
     .times(3)
-    .times(blocksPerDay)
+    .times(BLOCKS_PER_DAY)
     .times(365);
   const token1TotalRewardsInUsd = token1yearlyRewards
     .times(token1Price)
