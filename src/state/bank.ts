@@ -9,7 +9,7 @@ import { approveLpContract } from "web3-functions";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { fetchPrice } from "web3-functions/prices";
-import { BurnAddress, secondsPerYear } from "config/constants";
+import { BURN_ADDRESS, SECONDS_PER_YEAR } from "config/constants";
 import { generateTimeDuration } from "libs/utils";
 import { usePlutusPrice } from "hooks/prices";
 
@@ -95,7 +95,7 @@ export const useFetchMainPool = () => {
       if (parseFloat(poolDepositedAmount) > 0 && plutusPrice.data && parseFloat(plutusPrice.data) > 0) {
         const tokenPerSec = utils.formatUnits(poolInfo.usdcPerTime, 18);
 
-        const yearlyRewards = new BigNumberJS(tokenPerSec).times(secondsPerYear);
+        const yearlyRewards = new BigNumberJS(tokenPerSec).times(SECONDS_PER_YEAR);
 
         const yearlyRewardsUsd = yearlyRewards.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`);
 
@@ -183,7 +183,7 @@ export const useFetchPools = () => {
 
           if (poolDepositedAmount > 0 && plutusPrice.data && parseFloat(plutusPrice.data) > 0) {
             const tokenPerSec = poolInfo.tokenPerSec.toString();
-            const yearlyRewards = new BigNumberJS(tokenPerSec).times(secondsPerYear);
+            const yearlyRewards = new BigNumberJS(tokenPerSec).times(SECONDS_PER_YEAR);
             const yearlyRewardsUsd = yearlyRewards.times(poolTokenPrice).dividedBy(`1e${decimals}`);
 
             const totalStakedInUsd = new BigNumberJS(poolDepositedAmount)
@@ -254,7 +254,7 @@ export const useBankStats = () => {
       const totalBurntInBank = utils.formatUnits(await bankContract.totalBurnt(), 18);
       const percentageBurntInBank = new BigNumberJS(totalBurntInBank).dividedBy(totalSupply).times(100).toString();
 
-      const totalBurnt = utils.formatUnits(await plutusContract.balanceOf(BurnAddress), 18);
+      const totalBurnt = utils.formatUnits(await plutusContract.balanceOf(BURN_ADDRESS), 18);
       const percentageBurnt = new BigNumberJS(totalBurnt).dividedBy(totalSupply).times(100).toString();
 
       console.log({

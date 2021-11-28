@@ -3,7 +3,7 @@ import defaultContracts from "config/contracts";
 import ReactGA from "react-ga";
 import dayjs from "dayjs";
 
-import { BurnAddress } from "config/constants";
+import { BURN_ADDRESS } from "config/constants";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
 import { useMasterChef, usePlutusToken, useERC20 } from "hooks/contracts";
@@ -52,7 +52,7 @@ export function usePlutusStats() {
     queryFn: async () => {
       const maximumSupply = 1_000_000;
       const totalMinted = (await plutusContract.totalSupply()) as BigNumber;
-      const totalBurned = (await plutusContract.balanceOf(BurnAddress)) as BigNumber;
+      const totalBurned = (await plutusContract.balanceOf(BURN_ADDRESS)) as BigNumber;
 
       const circulatingSupply = totalMinted.sub(totalBurned);
 
