@@ -2,7 +2,7 @@ import fetch from "isomorphic-fetch";
 import defaultTokens from "config/tokens";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
-import { Token, WETH as WMATIC, Fetcher, Route, Pair, CurrencyAmount } from "quickswap-sdk";
+import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
 import * as Dfyn from "@dfyn/sdk";
 import * as Sushi from "@sushiswap/sdk";
 import * as SushiData from "@sushiswap/sushi-data";
@@ -186,7 +186,7 @@ async function fetchSushiswapPrice(address: string) {
           }`,
       }),
     });
-    
+
     const { data } = await resp.json();
     return new BigNumberJS(data.tokenDayDatas[0]?.priceUSD).toPrecision(6).toString();
   } catch (err) {
@@ -213,7 +213,7 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
 
   const token0PairA = [tokenWONE, tokenUSDC].find(token => token.address === ONEToUSDCToken0);
   const token1PairA = [tokenWONE, tokenUSDC].find(token => token.address === ONEToUSDCToken1);
-  
+
   const ONEUSDCPair = new Sushi.Pair(
     Sushi.CurrencyAmount.fromRawAmount(token0PairA, ONEToUSDCReserves.reserve0.ToString()),
     Sushi.CurrencyAmount.fromRawAmount(token1PairA, ONEToUSDCReserves.reserve1.ToString())
@@ -221,7 +221,7 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
   try {
     let route;
     if (token.symbol !== "WONE") {
-      
+
       // fetch the token to one pair info
       const tokenToOneAddress = Sushi.Pair.getAddress(token, tokenWONE);
       const tokenToOnePairContract = getPairContract(tokenToOneAddress);
@@ -232,7 +232,7 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
 
       const token0PairB = [tokenWONE, token].find(token => token.address === tokenToOneToken0);
       const token1PairB = [tokenWONE, token].find(token => token.address === tokenToOneToken1);
-      
+
       const tokenONEPair = new Sushi.Pair(
         Sushi.CurrencyAmount.fromRawAmount(token0PairB, tokenToOneReserves.reserve0.ToString()),
         Sushi.CurrencyAmount.fromRawAmount(token1PairB, tokenToOneReserves.reserve1.ToString())
@@ -262,13 +262,13 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
 }
 
 export async function fetchPrice(token: { address: string; decimals: number; symbol: string }, library: any) {
-  
+
   const ammsFetcher = {
     coingecko: (t: { address: string; decimals: number; symbol: string }) => fetchCoinGeckoPrice(t.address),
     quickswap: (t: { address: string; decimals: number; symbol: string }) => fetchQuickSwapPrice(t, library),
     dfyn: (t: { address: string; decimals: number; symbol: string }) => fetchDfynPrice(t, library),
     polycat: (t: { address: string; decimals: number; symbol: string }) => fetchPolycatPrice(t.address),
-    sushiswap: (t: { address: string; decimals: number }) => fetchSushiSwapPrice2(t.address, t.decimals),
+    sushiswap: (t: { address: string; decimals: number }) => fetchSushiswapPrice(t.address),
   };
 
   try {
