@@ -253,6 +253,36 @@ async function fetchSushiswapPrice(address: string) {
   }
 }
 
+async function query(token: string){
+  return await fetch(
+    "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
+        pair(id: "${token}"){
+          token0{
+            id
+            name
+            symbol
+          }
+          token1{
+            id
+            name
+            symbol
+          }
+          reserve0
+          reserve1
+        }
+        }`,
+      }),
+    }
+  );
+}
+
 async function fetchSushiSwapPrice2(address: string, decimals: number) {
   const woneAddress = "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a";
   const usdcAddress = "0x985458E523dB3d53125813eD68c274899e9DfAb4";
@@ -278,67 +308,69 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
   // fetch one to usdc pair
   const ONEToUSDCPairAddress = Sushi.Pair.getAddress(tokenWONE, tokenUSDC).toLowerCase();
   // const ONEToUSDCPairContract = getPairContract(ONEToUSDCPairAddress);
-  const resp = await fetch(
-    "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `{
-        pair(id: "${ONEToUSDCPairAddress}"){
-          token0{
-            id
-            name
-            symbol
-          }
-          token1{
-            id
-            name
-            symbol
-          }
-          reserve0
-          reserve1
-        }
-        }`,
-      }),
-    }
-  );
+  // const resp = await fetch(
+  //   "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
+  //   {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       query: `{
+  //       pair(id: "${ONEToUSDCPairAddress}"){
+  //         token0{
+  //           id
+  //           name
+  //           symbol
+  //         }
+  //         token1{
+  //           id
+  //           name
+  //           symbol
+  //         }
+  //         reserve0
+  //         reserve1
+  //       }
+  //       }`,
+  //     }),
+  //   }
+  // );
+  const resp = await query(ONEToUSDCPairAddress);
 
   const tokenToOneAddress = Sushi.Pair.getAddress(tokenWONE, token).toLowerCase();
-
-  const respONE = await fetch(
-    "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `{
-        pair(id: "${tokenToOneAddress}"){
-          token0{
-            id
-            name
-            symbol
-          }
-          token1{
-            id
-            name
-            symbol
-          }
-          reserve0
-          reserve1
-        }
-        }`,
-      }),
-    }
-  );
+  
+  // const respONE = await fetch(
+  //   "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
+  //   {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       query: `{
+  //       pair(id: "${tokenToOneAddress}"){
+  //         token0{
+  //           id
+  //           name
+  //           symbol
+  //         }
+  //         token1{
+  //           id
+  //           name
+  //           symbol
+  //         }
+  //         reserve0
+  //         reserve1
+  //       }
+  //       }`,
+  //     }),
+  //   }
+  // );
+  const respONE = await query(tokenToOneAddress);
 
   try {
   // const ONEToUSDCReserves = await ONEToUSDCPairContract.getReserves();
-  const { data } = await resp.json();
+  let { data } = await resp.json();
   // const ONEToUSDCToken0 = ONEToUSDCPairContract.token0();
   const ONEToUSDCToken0 = data.pair.token0.id;
   // const ONEToUSDCToken1 = ONEToUSDCPairContract.token1();
@@ -351,7 +383,6 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
     (t) => t.address.toLowerCase() === ONEToUSDCToken1
   );
 
-    console.log(typeof data.pair.reserve0);
     const ONEUSDCPair = new Sushi.Pair(
       Sushi.CurrencyAmount.fromRawAmount(
         token0PairA,
@@ -373,9 +404,9 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
       // const tokenToOneReserves = tokenToOnePairContract.getReserves();
       
 
-      const { dataONE } = await respONE.json();
-      const tokenToOneToken0 = dataONE.pair.token0.id;
-      const tokenToOneToken1 = dataONE.pair.token1.id;
+      data  = await respONE.json();
+      const tokenToOneToken0 = data.data.pair.token0.id;
+      const tokenToOneToken1 = data.data.pair.token1.id;
 
       const token0PairB = [tokenWONE, token].find(
         (t) => t.address.toLowerCase() === tokenToOneToken0
@@ -385,8 +416,8 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
       );
 
       const tokenONEPair = new Sushi.Pair(
-        Sushi.CurrencyAmount.fromRawAmount(token0PairB, Math.round(Number(dataONE.pair.reserve0)).toString()),
-        Sushi.CurrencyAmount.fromRawAmount(token1PairB, Math.round(Number(dataONE.pair.reserve1)).toString())
+        Sushi.CurrencyAmount.fromRawAmount(token0PairB, Math.round(Number(data.data.pair.reserve0)).toString()),
+        Sushi.CurrencyAmount.fromRawAmount(token1PairB, Math.round(Number(data.data.pair.reserve1)).toString())
         );
 
       // find a route
