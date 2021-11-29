@@ -1,14 +1,10 @@
-import fetch from "isomorphic-fetch";
-import defaultTokens from "config/tokens";
-import BigNumberJS from "bignumber.js";
-import { DEFAULT_CHAIN_ID } from "config/constants";
-import { Token, WETH as WMATIC, Fetcher, Route } from "quickswap-sdk";
-import * as Dfyn from "@dfyn/sdk";
-import * as Sushi from "@sushiswap/sdk";
-import * as SushiData from "@sushiswap/sushi-data";
-import ethers from "ethers";
-import * as contracts from "hooks/contracts";
-import { pair } from "@sushiswap/sushi-data/typings/exchange";
+import fetch from 'isomorphic-fetch';
+import defaultTokens from 'config/tokens';
+import BigNumberJS from 'bignumber.js';
+import { DEFAULT_CHAIN_ID } from 'config/constants';
+import { Fetcher, Route, Token, WETH as WMATIC } from 'quickswap-sdk';
+import * as Dfyn from '@dfyn/sdk';
+import * as Sushi from '@sushiswap/sdk';
 
 const amms = {
   "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "sushiswap", // plutus
@@ -253,8 +249,8 @@ async function fetchSushiswapPrice(address: string) {
   }
 }
 
-async function query(token: string){
-  return await fetch(
+async function fetchSushiPairData(token: string){
+  return fetch(
     "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
     {
       method: "POST",
@@ -280,170 +276,130 @@ async function query(token: string){
         }`,
       }),
     }
-  );
+  ).then( function ( response ) {
+    if ( response.status >= 400 ) {
+      throw new Error( 'Bad response from server' );
+    }
+    return response.json();
+  } )
+   .then( ( jsonResponse ) => {
+     return jsonResponse.data || {};
+   } );
 }
 
-async function fetchSushiSwapPrice2(address: string, decimals: number) {
-  const woneAddress = "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a";
-  const usdcAddress = "0x985458E523dB3d53125813eD68c274899e9DfAb4";
+async function fetchSushiSwapPrice2( address: string, decimals: number ) {
+  const woneAddress = '0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a';
+  const usdcAddress = '0x985458E523dB3d53125813eD68c274899e9DfAb4';
+
   const tokenWONE = new Sushi.Token(
-    DEFAULT_CHAIN_ID,
-    woneAddress.toLowerCase(),
-    18,
-    "WONE"
+      DEFAULT_CHAIN_ID,
+      woneAddress.toLowerCase(),
+      18,
+      'WONE'
   );
+
   const tokenUSDC = new Sushi.Token(
-    DEFAULT_CHAIN_ID,
-    usdcAddress.toLowerCase(),
-    6,
-    "USDC"
+      DEFAULT_CHAIN_ID,
+      usdcAddress.toLowerCase(),
+      6,
+      'USDC'
   );
+
   const token = new Sushi.Token(
-    DEFAULT_CHAIN_ID,
-    address.toLowerCase(),
-    decimals
+      DEFAULT_CHAIN_ID,
+      address.toLowerCase(),
+      decimals
   );
-  // const getPairContract = contracts.useUniPair();
 
   // fetch one to usdc pair
-  const ONEToUSDCPairAddress = Sushi.Pair.getAddress(tokenWONE, tokenUSDC).toLowerCase();
-  // const ONEToUSDCPairContract = getPairContract(ONEToUSDCPairAddress);
-  // const resp = await fetch(
-  //   "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
-  //   {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       query: `{
-  //       pair(id: "${ONEToUSDCPairAddress}"){
-  //         token0{
-  //           id
-  //           name
-  //           symbol
-  //         }
-  //         token1{
-  //           id
-  //           name
-  //           symbol
-  //         }
-  //         reserve0
-  //         reserve1
-  //       }
-  //       }`,
-  //     }),
-  //   }
-  // );
-  const resp = await query(ONEToUSDCPairAddress);
+  const woneUsdcPairAddress = Sushi.Pair.getAddress( tokenWONE, tokenUSDC ).toLowerCase();
+  const woneUsdcPairData = await fetchSushiPairData( woneUsdcPairAddress );
 
-  const tokenToOneAddress = Sushi.Pair.getAddress(tokenWONE, token).toLowerCase();
-  
-  // const respONE = await fetch(
-  //   "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
-  //   {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       query: `{
-  //       pair(id: "${tokenToOneAddress}"){
-  //         token0{
-  //           id
-  //           name
-  //           symbol
-  //         }
-  //         token1{
-  //           id
-  //           name
-  //           symbol
-  //         }
-  //         reserve0
-  //         reserve1
-  //       }
-  //       }`,
-  //     }),
-  //   }
-  // );
-  const respONE = await query(tokenToOneAddress);
+  const woneTokenPairAddress = Sushi.Pair.getAddress( tokenWONE, token ).toLowerCase();
+  const woneTokenPairData = await fetchSushiPairData( woneTokenPairAddress );
+
+  console.debug( {
+    woneUsdcPairAddress,
+    woneUsdcPairData,
+    woneTokenPairAddress,
+    woneTokenPairData,
+  } );
 
   try {
-  // const ONEToUSDCReserves = await ONEToUSDCPairContract.getReserves();
-  let { data } = await resp.json();
-  // const ONEToUSDCToken0 = ONEToUSDCPairContract.token0();
-  const ONEToUSDCToken0 = data.pair.token0.id;
-  // const ONEToUSDCToken1 = ONEToUSDCPairContract.token1();
-  const ONEToUSDCToken1 = data.pair.token1.id;
 
-  const token0PairA = [tokenWONE, tokenUSDC].find(
-    (t) => t.address.toLowerCase() === ONEToUSDCToken0
-  );
-  const token1PairA = [tokenWONE, tokenUSDC].find(
-    (t) => t.address.toLowerCase() === ONEToUSDCToken1
-  );
-
-    const ONEUSDCPair = new Sushi.Pair(
-      Sushi.CurrencyAmount.fromRawAmount(
-        token0PairA,
-        Math.round(Number(data.pair.reserve0)).toString()
-      ),
-      Sushi.CurrencyAmount.fromRawAmount(
-        token1PairA,
-        Math.round(Number(data.pair.reserve1)).toString()
-      )
-    );
-  
-
-  
-    let route;
-    if (token.symbol !== "WONE") {
-      // fetch the token to one pair info
-     
-      // const tokenToOnePairContract = getPairContract(tokenToOneAddress);
-      // const tokenToOneReserves = tokenToOnePairContract.getReserves();
-      
-
-      data  = await respONE.json();
-      const tokenToOneToken0 = data.data.pair.token0.id;
-      const tokenToOneToken1 = data.data.pair.token1.id;
-
-      const token0PairB = [tokenWONE, token].find(
-        (t) => t.address.toLowerCase() === tokenToOneToken0
-      );
-      const token1PairB = [tokenWONE, token].find(
-        (t) => t.address.toLowerCase() === tokenToOneToken1
-      );
-
-      const tokenONEPair = new Sushi.Pair(
-        Sushi.CurrencyAmount.fromRawAmount(token0PairB, Math.round(Number(data.data.pair.reserve0)).toString()),
-        Sushi.CurrencyAmount.fromRawAmount(token1PairB, Math.round(Number(data.data.pair.reserve1)).toString())
-        );
-
-      // find a route
-      route = new Sushi.Route([ONEUSDCPair, tokenONEPair], token, tokenUSDC);
-    } else {
-      // use only the MATIC-USDC pair to get the price
-      route = new Sushi.Route([ONEUSDCPair], tokenWONE, tokenUSDC);
-    }
-    console.log(route.midPrice.invert().toSignificant(6));
-    return route.midPrice.invert().toSignificant(6);
-  } catch (e) {
-    console.log(
-      `sushiswap - error getting price for ${token.symbol}`,
-      e.message,
-      token
+    const WoneToUsdcPair = new Sushi.Pair(
+        Sushi.CurrencyAmount.fromRawAmount(
+            tokenWONE,
+            Math.round( Number(woneUsdcPairData.pair.reserve0) ).toString()
+        ),
+        Sushi.CurrencyAmount.fromRawAmount(
+            tokenUSDC,
+            Math.round( Number(woneUsdcPairData.pair.reserve1) ).toString()
+        )
     );
 
-    // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
-    // please refactor
-    // HACK:: we use this for cases where the we're finding a route for a token to the same token,
-    // so we hack the price to be 1 because TOKEN_A_PRICE === TOKEN_A_PRICE (same token!!!)
-    if (e.message.includes("ADDRESSES")) {
-      return "1";
-    }
+    const TokenToWonePair = new Sushi.Pair(
+        Sushi.CurrencyAmount.fromRawAmount(
+            token,
+            Math.round( Number(woneTokenPairData.pair.reserve0) ).toString()
+        ),
+        Sushi.CurrencyAmount.fromRawAmount(
+            tokenUSDC,
+            Math.round( Number(woneTokenPairData.pair.reserve1) ).toString()
+        )
+    );
 
-    return "0";
+    const route = new Sushi.Route(
+        [ TokenToWonePair, WoneToUsdcPair ],
+        token,
+        tokenUSDC,
+    );
+
+    const midPrice = route.midPrice;
+    console.debug( {
+      route,
+      midPrice: midPrice.toSignificant(5),
+      midPriceInverted: midPrice.invert().toSignificant(5),
+    } );
+
+    // if (token.symbol !== "WONE") {
+    //   // fetch the token to one pair info
+    //
+    //   // const tokenToOnePairContract = getPairContract(tokenToOneAddress);
+    //   // const tokenToOneReserves = tokenToOnePairContract.getReserves();
+    //
+    //
+    //   const tokenToOneToken0 = dataOneUsdc.data.pair.token0.id;
+    //   const tokenToOneToken1 = dataOneUsdc.data.pair.token1.id;
+    //
+    //   const token0PairB = [tokenWONE, token].find(
+    //     (t) => t.address.toLowerCase() === tokenToOneToken0
+    //   );
+    //   const token1PairB = [tokenWONE, token].find(
+    //     (t) => t.address.toLowerCase() === tokenToOneToken1
+    //   );
+    //
+    //   const tokenONEPair = new Sushi.Pair(
+    //     Sushi.CurrencyAmount.fromRawAmount(token0PairB, Math.round(Number(data.data.pair.reserve0)).toString()),
+    //     Sushi.CurrencyAmount.fromRawAmount(token1PairB, Math.round(Number(data.data.pair.reserve1)).toString())
+    //     );
+    //
+    //   // find a route
+    //   route = new Sushi.Route([ONEUSDCPair, tokenONEPair], token, tokenUSDC);
+    // } else {
+    //   // use only the MATIC-USDC pair to get the price
+    // }
+
+    return 0;
+  } catch ( e ) {
+
+    console.error(
+        'sushiswap - error getting price for',
+        token,
+        e
+    );
+
+    return '0';
   }
 }
 
