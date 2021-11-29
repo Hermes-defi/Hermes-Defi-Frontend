@@ -330,37 +330,30 @@ async function fetchSushiSwapPrice2( address: string, decimals: number ) {
     const WoneToUsdcPair = new Sushi.Pair(
         Sushi.CurrencyAmount.fromRawAmount(
             tokenWONE,
-            Math.round( Number(woneUsdcPairData.pair.reserve0) ).toString()
+            Math.round( Number( woneUsdcPairData.pair.reserve0 ) ).toString()
         ),
         Sushi.CurrencyAmount.fromRawAmount(
             tokenUSDC,
-            Math.round( Number(woneUsdcPairData.pair.reserve1) ).toString()
+            Math.round( Number( woneUsdcPairData.pair.reserve1 ) ).toString()
         )
     );
 
     const TokenToWonePair = new Sushi.Pair(
         Sushi.CurrencyAmount.fromRawAmount(
             token,
-            Math.round( Number(woneTokenPairData.pair.reserve0) ).toString()
+            Math.round( Number( woneTokenPairData.pair.reserve0 ) ).toString()
         ),
         Sushi.CurrencyAmount.fromRawAmount(
-            tokenUSDC,
-            Math.round( Number(woneTokenPairData.pair.reserve1) ).toString()
-        )
+            tokenWONE,
+            Math.round( Number( woneTokenPairData.pair.reserve1 ) ).toString()
+        ),
     );
 
     const route = new Sushi.Route(
         [ TokenToWonePair, WoneToUsdcPair ],
         token,
-        tokenUSDC,
+        tokenWONE,
     );
-
-    const midPrice = route.midPrice;
-    console.debug( {
-      route,
-      midPrice: midPrice.toSignificant(5),
-      midPriceInverted: midPrice.invert().toSignificant(5),
-    } );
 
     // if (token.symbol !== "WONE") {
     //   // fetch the token to one pair info
@@ -390,7 +383,7 @@ async function fetchSushiSwapPrice2( address: string, decimals: number ) {
     //   // use only the MATIC-USDC pair to get the price
     // }
 
-    return 0;
+    return route.midPrice.invert().toSignificant(5);
   } catch ( e ) {
 
     console.error(
