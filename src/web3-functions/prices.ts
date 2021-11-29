@@ -8,6 +8,7 @@ import * as Sushi from "@sushiswap/sdk";
 import * as SushiData from "@sushiswap/sushi-data";
 import ethers from "ethers";
 import * as contracts from "hooks/contracts";
+import { pair } from "@sushiswap/sushi-data/typings/exchange";
 
 const amms = {
   "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "sushiswap", // plutus
@@ -34,9 +35,9 @@ const amms = {
   "0x8a953cfe442c5e8855cc6c61b1293fa648bae472": "quickswap", // polydoge
   "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a": "coingecko", // iron
   "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "sushiswap", // WONE
+  "0xef977d2f931c1978db5f6747666fa1eacb0d0339": "sushiswap", //DAI
 };
 const USDCONE = "0xbf255d8c30dbab84ea42110ea7dc870f01c0013a";
-
 
 async function fetchCoinGeckoPrice(address: string) {
   try {
@@ -51,19 +52,40 @@ async function fetchCoinGeckoPrice(address: string) {
   }
 }
 
-async function fetchQuickSwapPrice(_token: { address: string; decimals: number; symbol: string }, library: any) {
-  const usdc = new Token(DEFAULT_CHAIN_ID, defaultTokens.usdc.address, defaultTokens.usdc.decimals, "USDC");
+async function fetchQuickSwapPrice(
+  _token: { address: string; decimals: number; symbol: string },
+  library: any
+) {
+  const usdc = new Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.usdc.address,
+    defaultTokens.usdc.decimals,
+    "USDC"
+  );
 
-  const token = new Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
+  const token = new Token(
+    DEFAULT_CHAIN_ID,
+    _token.address,
+    _token.decimals,
+    _token.symbol
+  );
 
   try {
     let route;
     if (token.symbol !== "WMATIC") {
       // fetch matic to usdc pair
-      const MaticToUSDCPair = await Fetcher.fetchPairData(WMATIC[DEFAULT_CHAIN_ID], usdc, library);
+      const MaticToUSDCPair = await Fetcher.fetchPairData(
+        WMATIC[DEFAULT_CHAIN_ID],
+        usdc,
+        library
+      );
 
       // fetch the token to matic pair info
-      const tokenToMatic = await Fetcher.fetchPairData(token, WMATIC[DEFAULT_CHAIN_ID], library);
+      const tokenToMatic = await Fetcher.fetchPairData(
+        token,
+        WMATIC[DEFAULT_CHAIN_ID],
+        library
+      );
 
       // find a route
       route = new Route([MaticToUSDCPair, tokenToMatic], usdc);
@@ -90,11 +112,29 @@ async function fetchQuickSwapPrice(_token: { address: string; decimals: number; 
   }
 }
 
-async function fetchDfynPrice(_token: { address: string; decimals: number; symbol: string }, library: any) {
-  const token = new Dfyn.Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
+async function fetchDfynPrice(
+  _token: { address: string; decimals: number; symbol: string },
+  library: any
+) {
+  const token = new Dfyn.Token(
+    DEFAULT_CHAIN_ID,
+    _token.address,
+    _token.decimals,
+    _token.symbol
+  );
 
-  const usdc = new Dfyn.Token(DEFAULT_CHAIN_ID, defaultTokens.usdc.address, defaultTokens.usdc.decimals, "USDC");
-  const iron = new Dfyn.Token(DEFAULT_CHAIN_ID, defaultTokens.iron.address, defaultTokens.iron.decimals, "IRON");
+  const usdc = new Dfyn.Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.usdc.address,
+    defaultTokens.usdc.decimals,
+    "USDC"
+  );
+  const iron = new Dfyn.Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.iron.address,
+    defaultTokens.iron.decimals,
+    "IRON"
+  );
 
   try {
     let route;
@@ -107,7 +147,11 @@ async function fetchDfynPrice(_token: { address: string; decimals: number; symbo
       );
 
       // fetch the token to matic pair info
-      const tokenToMatic = await Dfyn.Fetcher.fetchPairData(token, Dfyn.WETH[DEFAULT_CHAIN_ID], library);
+      const tokenToMatic = await Dfyn.Fetcher.fetchPairData(
+        token,
+        Dfyn.WETH[DEFAULT_CHAIN_ID],
+        library
+      );
 
       // find a route
       route = new Dfyn.Route([MaticToUSDCPair, tokenToMatic], usdc);
@@ -119,7 +163,11 @@ async function fetchDfynPrice(_token: { address: string; decimals: number; symbo
 
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
-    console.log(`dfyn - error getting price for ${token.symbol}`, e.message, token);
+    console.log(
+      `dfyn - error getting price for ${token.symbol}`,
+      e.message,
+      token
+    );
 
     // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
     // please refactor
@@ -135,13 +183,15 @@ async function fetchDfynPrice(_token: { address: string; decimals: number; symbo
 
 async function fetchPolycatPrice(address: string) {
   try {
-    const resp = await fetch("https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `{
+    const resp = await fetch(
+      "https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `{
             tokenDayDatas ( 
               orderBy: date,
               orderDirection: desc,
@@ -154,11 +204,14 @@ async function fetchPolycatPrice(address: string) {
               priceUSD
             }
           }`,
-      }),
-    });
+        }),
+      }
+    );
 
     const { data } = await resp.json();
-    return new BigNumberJS(data.tokenDayDatas[0].priceUSD).toPrecision(6).toString();
+    return new BigNumberJS(data.tokenDayDatas[0].priceUSD)
+      .toPrecision(6)
+      .toString();
   } catch (err) {
     console.log(err);
     return "0";
@@ -167,13 +220,15 @@ async function fetchPolycatPrice(address: string) {
 
 async function fetchSushiswapPrice(address: string) {
   try {
-    const resp = await fetch("https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `{
+    const resp = await fetch(
+      "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `{
             tokenDayDatas ( 
               where: { 
                 token: "${address.toLowerCase()}" 
@@ -184,11 +239,14 @@ async function fetchSushiswapPrice(address: string) {
               priceUSD
             }
           }`,
-      }),
-    });
+        }),
+      }
+    );
 
     const { data } = await resp.json();
-    return new BigNumberJS(data.tokenDayDatas[0]?.priceUSD).toPrecision(6).toString();
+    return new BigNumberJS(data.tokenDayDatas[0]?.priceUSD)
+      .toPrecision(6)
+      .toString();
   } catch (err) {
     console.log(err);
     return "0";
@@ -197,46 +255,139 @@ async function fetchSushiswapPrice(address: string) {
 
 async function fetchSushiSwapPrice2(address: string, decimals: number) {
   const woneAddress = "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a";
-  const usdcAddress = "0x985458E523dB3d53125813eD68c274899e9DfAb4"
-  const tokenWONE = new Sushi.Token(DEFAULT_CHAIN_ID, woneAddress, 18, "WONE");
-  const tokenUSDC = new Sushi.Token(DEFAULT_CHAIN_ID, usdcAddress, 6, "USDC");
-  const token = new Sushi.Token(DEFAULT_CHAIN_ID, address, decimals);
-  const getPairContract = contracts.useUniPair();
+  const usdcAddress = "0x985458E523dB3d53125813eD68c274899e9DfAb4";
+  const tokenWONE = new Sushi.Token(
+    DEFAULT_CHAIN_ID,
+    woneAddress.toLowerCase(),
+    18,
+    "WONE"
+  );
+  const tokenUSDC = new Sushi.Token(
+    DEFAULT_CHAIN_ID,
+    usdcAddress.toLowerCase(),
+    6,
+    "USDC"
+  );
+  const token = new Sushi.Token(
+    DEFAULT_CHAIN_ID,
+    address.toLowerCase(),
+    decimals
+  );
+  // const getPairContract = contracts.useUniPair();
 
   // fetch one to usdc pair
-  const ONEToUSDCPairAddress = Sushi.Pair.getAddress(tokenWONE, tokenUSDC);
-  const ONEToUSDCPairContract = getPairContract(ONEToUSDCPairAddress);
-  const ONEToUSDCReserves = await ONEToUSDCPairContract.getReserves();
-
-  const ONEToUSDCToken0 = ONEToUSDCPairContract.token0();
-  const ONEToUSDCToken1 = ONEToUSDCPairContract.token1();
-
-  const token0PairA = [tokenWONE, tokenUSDC].find(token => token.address === ONEToUSDCToken0);
-  const token1PairA = [tokenWONE, tokenUSDC].find(token => token.address === ONEToUSDCToken1);
-
-  const ONEUSDCPair = new Sushi.Pair(
-    Sushi.CurrencyAmount.fromRawAmount(token0PairA, ONEToUSDCReserves.reserve0.ToString()),
-    Sushi.CurrencyAmount.fromRawAmount(token1PairA, ONEToUSDCReserves.reserve1.ToString())
+  const ONEToUSDCPairAddress = Sushi.Pair.getAddress(tokenWONE, tokenUSDC).toLowerCase();
+  // const ONEToUSDCPairContract = getPairContract(ONEToUSDCPairAddress);
+  const resp = await fetch(
+    "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
+        pair(id: "${ONEToUSDCPairAddress}"){
+          token0{
+            id
+            name
+            symbol
+          }
+          token1{
+            id
+            name
+            symbol
+          }
+          reserve0
+          reserve1
+        }
+        }`,
+      }),
+    }
   );
+
+  const tokenToOneAddress = Sushi.Pair.getAddress(tokenWONE, token).toLowerCase();
+
+  const respONE = await fetch(
+    "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
+        pair(id: "${tokenToOneAddress}"){
+          token0{
+            id
+            name
+            symbol
+          }
+          token1{
+            id
+            name
+            symbol
+          }
+          reserve0
+          reserve1
+        }
+        }`,
+      }),
+    }
+  );
+
   try {
+  // const ONEToUSDCReserves = await ONEToUSDCPairContract.getReserves();
+  const { data } = await resp.json();
+  // const ONEToUSDCToken0 = ONEToUSDCPairContract.token0();
+  const ONEToUSDCToken0 = data.pair.token0.id;
+  // const ONEToUSDCToken1 = ONEToUSDCPairContract.token1();
+  const ONEToUSDCToken1 = data.pair.token1.id;
+
+  const token0PairA = [tokenWONE, tokenUSDC].find(
+    (t) => t.address.toLowerCase() === ONEToUSDCToken0
+  );
+  const token1PairA = [tokenWONE, tokenUSDC].find(
+    (t) => t.address.toLowerCase() === ONEToUSDCToken1
+  );
+
+    console.log(typeof data.pair.reserve0);
+    const ONEUSDCPair = new Sushi.Pair(
+      Sushi.CurrencyAmount.fromRawAmount(
+        token0PairA,
+        Math.round(Number(data.pair.reserve0)).toString()
+      ),
+      Sushi.CurrencyAmount.fromRawAmount(
+        token1PairA,
+        Math.round(Number(data.pair.reserve1)).toString()
+      )
+    );
+  
+
+  
     let route;
     if (token.symbol !== "WONE") {
-
       // fetch the token to one pair info
-      const tokenToOneAddress = Sushi.Pair.getAddress(token, tokenWONE);
-      const tokenToOnePairContract = getPairContract(tokenToOneAddress);
-      const tokenToOneReserves = tokenToOnePairContract.getReserves();
+     
+      // const tokenToOnePairContract = getPairContract(tokenToOneAddress);
+      // const tokenToOneReserves = tokenToOnePairContract.getReserves();
+      
 
-      const tokenToOneToken0 = tokenToOnePairContract.token0();
-      const tokenToOneToken1 = tokenToOnePairContract.token1();
+      const { dataONE } = await respONE.json();
+      const tokenToOneToken0 = dataONE.pair.token0.id;
+      const tokenToOneToken1 = dataONE.pair.token1.id;
 
-      const token0PairB = [tokenWONE, token].find(token => token.address === tokenToOneToken0);
-      const token1PairB = [tokenWONE, token].find(token => token.address === tokenToOneToken1);
+      const token0PairB = [tokenWONE, token].find(
+        (t) => t.address.toLowerCase() === tokenToOneToken0
+      );
+      const token1PairB = [tokenWONE, token].find(
+        (t) => t.address.toLowerCase() === tokenToOneToken1
+      );
 
       const tokenONEPair = new Sushi.Pair(
-        Sushi.CurrencyAmount.fromRawAmount(token0PairB, tokenToOneReserves.reserve0.ToString()),
-        Sushi.CurrencyAmount.fromRawAmount(token1PairB, tokenToOneReserves.reserve1.ToString())
-      );
+        Sushi.CurrencyAmount.fromRawAmount(token0PairB, Math.round(Number(dataONE.pair.reserve0)).toString()),
+        Sushi.CurrencyAmount.fromRawAmount(token1PairB, Math.round(Number(dataONE.pair.reserve1)).toString())
+        );
 
       // find a route
       route = new Sushi.Route([ONEUSDCPair, tokenONEPair], token, tokenUSDC);
@@ -247,7 +398,11 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
     console.log(route.midPrice.invert().toSignificant(6));
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
-    console.log(`dfyn - error getting price for ${token.symbol}`, e.message, token);
+    console.log(
+      `sushiswap - error getting price for ${token.symbol}`,
+      e.message,
+      token
+    );
 
     // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
     // please refactor
@@ -261,27 +416,36 @@ async function fetchSushiSwapPrice2(address: string, decimals: number) {
   }
 }
 
-export async function fetchPrice(token: { address: string; decimals: number; symbol: string }, library: any) {
-
+export async function fetchPrice(
+  token: { address: string; decimals: number; symbol: string },
+  library: any
+) {
   const ammsFetcher = {
-    coingecko: (t: { address: string; decimals: number; symbol: string }) => fetchCoinGeckoPrice(t.address),
-    quickswap: (t: { address: string; decimals: number; symbol: string }) => fetchQuickSwapPrice(t, library),
-    dfyn: (t: { address: string; decimals: number; symbol: string }) => fetchDfynPrice(t, library),
-    polycat: (t: { address: string; decimals: number; symbol: string }) => fetchPolycatPrice(t.address),
-    sushiswap: (t: { address: string; decimals: number }) => fetchSushiswapPrice(t.address),
+    coingecko: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchCoinGeckoPrice(t.address),
+    quickswap: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchQuickSwapPrice(t, library),
+    dfyn: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchDfynPrice(t, library),
+    polycat: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchPolycatPrice(t.address),
+    sushiswap: (t: { address: string; decimals: number }) =>
+      fetchSushiSwapPrice2(t.address, t.decimals),
   };
 
   try {
     const tokenAddress = token.address.toLowerCase();
 
-    const ammEntry = Object.entries(amms).find(([k]) => k.toLowerCase() === tokenAddress);
-    if( !ammEntry ){
-      console.warn('Could not find AMM for token', tokenAddress);
+    const ammEntry = Object.entries(amms).find(
+      ([k]) => k.toLowerCase() === tokenAddress
+    );
+    if (!ammEntry) {
+      console.warn("Could not find AMM for token", tokenAddress);
       return 0;
     }
 
     const amm = ammEntry[1];
-    const price = await ammsFetcher[amm]( token );
+    const price = await ammsFetcher[amm](token);
     return price;
   } catch (e) {
     console.log(e);
@@ -301,16 +465,30 @@ export async function fetchPairPrice(
 
   const getPrice = {
     quickswap: async () => {
-      const t0 = new Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
-      const t1 = new Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
+      const t0 = new Token(
+        DEFAULT_CHAIN_ID,
+        token0.address,
+        token0.decimals,
+        token0.symbol
+      );
+      const t1 = new Token(
+        DEFAULT_CHAIN_ID,
+        token1.address,
+        token1.decimals,
+        token1.symbol
+      );
 
       const pair = await Fetcher.fetchPairData(t0, t1, library);
 
       const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
       const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
 
-      const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
-      const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
+      const token0Total = new BigNumberJS(reserve0).times(
+        new BigNumberJS(token0Price)
+      );
+      const token1Total = new BigNumberJS(reserve1).times(
+        new BigNumberJS(token1Price)
+      );
 
       const tvl = token0Total.plus(token1Total);
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
@@ -319,16 +497,30 @@ export async function fetchPairPrice(
     },
 
     dfyn: async () => {
-      const t0 = new Dfyn.Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
-      const t1 = new Dfyn.Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
+      const t0 = new Dfyn.Token(
+        DEFAULT_CHAIN_ID,
+        token0.address,
+        token0.decimals,
+        token0.symbol
+      );
+      const t1 = new Dfyn.Token(
+        DEFAULT_CHAIN_ID,
+        token1.address,
+        token1.decimals,
+        token1.symbol
+      );
 
       const pair = await Dfyn.Fetcher.fetchPairData(t0, t1, library);
 
       const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
       const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
 
-      const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
-      const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
+      const token0Total = new BigNumberJS(reserve0).times(
+        new BigNumberJS(token0Price)
+      );
+      const token1Total = new BigNumberJS(reserve1).times(
+        new BigNumberJS(token1Price)
+      );
 
       const tvl = token0Total.plus(token1Total);
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
@@ -338,27 +530,34 @@ export async function fetchPairPrice(
 
     polycat: async () => {
       try {
-        const resp = await fetch("https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: `{
+        const resp = await fetch(
+          "https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              query: `{
                 pairs (where: { token0: "${token0.address.toLowerCase()}", token1: "${token1.address.toLowerCase()}"}) {
                   id
                   reserve0
                   reserve1
                 }
               }`,
-          }),
-        });
+            }),
+          }
+        );
 
         const { data } = await resp.json();
 
-        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(new BigNumberJS(token0Price));
+        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(
+          new BigNumberJS(token0Price)
+        );
 
-        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(new BigNumberJS(token1Price));
+        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(
+          new BigNumberJS(token1Price)
+        );
 
         const tvl = token0Total.plus(token1Total);
         const price = tvl.dividedBy(new BigNumberJS(totalSupply));
@@ -372,27 +571,34 @@ export async function fetchPairPrice(
 
     sushiswap: async () => {
       try {
-        const resp = await fetch("https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: `{
+        const resp = await fetch(
+          "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              query: `{
                 pairs (where: { token0: "${token0.address.toLowerCase()}", token1: "${token1.address.toLowerCase()}"}) {
                   id
                   reserve0
                   reserve1
                 }
               }`,
-          }),
-        });
+            }),
+          }
+        );
 
         const { data } = await resp.json();
 
-        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(new BigNumberJS(token0Price));
+        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(
+          new BigNumberJS(token0Price)
+        );
 
-        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(new BigNumberJS(token1Price));
+        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(
+          new BigNumberJS(token1Price)
+        );
 
         const tvl = token0Total.plus(token1Total);
         const price = tvl.dividedBy(new BigNumberJS(totalSupply));
@@ -410,21 +616,24 @@ export async function fetchPairPrice(
 
 export async function fetchBalancerPrice(balancerId: string) {
   try {
-    const resp = await fetch("https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `{    
+    const resp = await fetch(
+      "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          query: `{    
               pool(id: "${balancerId}" ) {
                 id
                 totalLiquidity
                 totalShares
               }
           }`,
-      }),
-    });
+        }),
+      }
+    );
 
     const { data } = await resp.json();
 
