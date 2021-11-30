@@ -1,13 +1,14 @@
-import fetch from 'isomorphic-fetch';
-import defaultTokens from 'config/tokens';
-import BigNumberJS from 'bignumber.js';
-import { DEFAULT_CHAIN_ID } from 'config/constants';
-import { Fetcher, Route, Token, WETH as WMATIC } from 'quickswap-sdk';
-import * as Dfyn from '@dfyn/sdk';
-import * as Sushi from '@sushiswap/sdk';
+import fetch from "isomorphic-fetch";
+import defaultTokens from "config/tokens";
+import BigNumberJS from "bignumber.js";
+import { DEFAULT_CHAIN_ID } from "config/constants";
+import { Fetcher, Route, Token, WETH as WMATIC } from "quickswap-sdk";
+import * as Dfyn from "@dfyn/sdk";
+import * as Sushi from "@sushiswap/sdk";
+import * as Viper from "@viperswap/sdk";
 
 const amms = {
-  "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "sushiswap", // plutus
+  "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "viper", // plutus
   "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
   "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc
   "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "coingecko", // wmatic
@@ -30,8 +31,8 @@ const amms = {
   "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f": "polycat", // wise
   "0x8a953cfe442c5e8855cc6c61b1293fa648bae472": "quickswap", // polydoge
   "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a": "coingecko", // iron
-  "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "sushiswap", // WONE
-  "0xef977d2f931c1978db5f6747666fa1eacb0d0339": "sushiswap", //DAI
+  "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "viper", // WONE
+  "0xef977d2f931c1978db5f6747666fa1eacb0d0339": "viper", //DAI
 };
 const USDCONE = "0xbf255d8c30dbab84ea42110ea7dc870f01c0013a";
 
@@ -249,7 +250,7 @@ async function fetchSushiswapPrice(address: string) {
   }
 }
 
-async function fetchSushiPairData(token: string){
+async function fetchSushiPairData(token: string) {
   return fetch(
     "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
     {
@@ -276,123 +277,172 @@ async function fetchSushiPairData(token: string){
         }`,
       }),
     }
-  ).then( function ( response ) {
-    if ( response.status >= 400 ) {
-      throw new Error( 'Bad response from server' );
-    }
-    return response.json();
-  } )
-   .then( ( jsonResponse ) => {
-     return jsonResponse.data || {};
-   } );
+  )
+    .then(function (response) {
+      if (response.status >= 400) {
+        throw new Error("Bad response from server");
+      }
+      return response.json();
+    })
+    .then((jsonResponse) => {
+      return jsonResponse.data || {};
+    });
 }
 
-async function fetchSushiSwapPrice2( address: string, decimals: number ) {
-  const woneAddress = '0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a';
-  const usdcAddress = '0x985458E523dB3d53125813eD68c274899e9DfAb4';
+async function fetchSushiSwapPrice2(
+  address: string,
+  decimals: number,
+  symbol: string
+) {
+  const woneAddress = "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a";
+  const usdcAddress = "0x985458E523dB3d53125813eD68c274899e9DfAb4";
 
   const tokenWONE = new Sushi.Token(
-      DEFAULT_CHAIN_ID,
-      woneAddress.toLowerCase(),
-      18,
-      'WONE'
+    DEFAULT_CHAIN_ID,
+    woneAddress.toLowerCase(),
+    18,
+    "WONE"
   );
 
   const tokenUSDC = new Sushi.Token(
-      DEFAULT_CHAIN_ID,
-      usdcAddress.toLowerCase(),
-      6,
-      'USDC'
+    DEFAULT_CHAIN_ID,
+    usdcAddress.toLowerCase(),
+    6,
+    "USDC"
   );
 
   const token = new Sushi.Token(
-      DEFAULT_CHAIN_ID,
-      address.toLowerCase(),
-      decimals
+    DEFAULT_CHAIN_ID,
+    address.toLowerCase(),
+    decimals,
+    symbol
   );
 
-  // fetch one to usdc pair
-  const woneUsdcPairAddress = Sushi.Pair.getAddress( tokenWONE, tokenUSDC ).toLowerCase();
-  const woneUsdcPairData = await fetchSushiPairData( woneUsdcPairAddress );
-
-  const woneTokenPairAddress = Sushi.Pair.getAddress( tokenWONE, token ).toLowerCase();
-  const woneTokenPairData = await fetchSushiPairData( woneTokenPairAddress );
-
-  console.debug( {
-    woneUsdcPairAddress,
-    woneUsdcPairData,
-    woneTokenPairAddress,
-    woneTokenPairData,
-  } );
+  // console.debug({
+  //   woneUsdcPairAddress,
+  //   woneUsdcPairData,
+  //   woneTokenPairAddress,
+  //   woneTokenPairData,
+  // });
 
   try {
+    let route;
+    // fetch one to usdc pair
+    const woneUsdcPairAddress = Sushi.Pair.getAddress(
+      tokenWONE,
+      tokenUSDC
+    ).toLowerCase();
+    const woneUsdcPairData = await fetchSushiPairData(woneUsdcPairAddress);
 
     const WoneToUsdcPair = new Sushi.Pair(
-        Sushi.CurrencyAmount.fromRawAmount(
-            tokenWONE,
-            Math.round( Number( woneUsdcPairData.pair.reserve0 ) ).toString()
-        ),
-        Sushi.CurrencyAmount.fromRawAmount(
-            tokenUSDC,
-            Math.round( Number( woneUsdcPairData.pair.reserve1 ) ).toString()
-        )
-    );
-
-    const TokenToWonePair = new Sushi.Pair(
-        Sushi.CurrencyAmount.fromRawAmount(
-            token,
-            Math.round( Number( woneTokenPairData.pair.reserve0 ) ).toString()
-        ),
-        Sushi.CurrencyAmount.fromRawAmount(
-            tokenWONE,
-            Math.round( Number( woneTokenPairData.pair.reserve1 ) ).toString()
-        ),
-    );
-
-    const route = new Sushi.Route(
-        [ TokenToWonePair, WoneToUsdcPair ],
-        token,
+      Sushi.CurrencyAmount.fromRawAmount(
         tokenWONE,
+        Math.round(Number(woneUsdcPairData.pair.reserve1)).toString()
+      ),
+      Sushi.CurrencyAmount.fromRawAmount(
+        tokenUSDC,
+        Math.round(Number(woneUsdcPairData.pair.reserve0)).toString()
+      )
     );
+    if (token.symbol !== "WONE") {
+      const woneTokenPairAddress = Sushi.Pair.getAddress(
+        tokenWONE,
+        token
+      ).toLowerCase();
+      const woneTokenPairData = await fetchSushiPairData(woneTokenPairAddress);
+      const TokenToWonePair = new Sushi.Pair(
+        Sushi.CurrencyAmount.fromRawAmount(
+          token,
+          Math.round(Number(woneTokenPairData.pair.reserve1)).toString()
+        ),
+        Sushi.CurrencyAmount.fromRawAmount(
+          tokenWONE,
+          Math.round(Number(woneTokenPairData.pair.reserve0)).toString()
+        )
+      );
 
-    // if (token.symbol !== "WONE") {
-    //   // fetch the token to one pair info
-    //
-    //   // const tokenToOnePairContract = getPairContract(tokenToOneAddress);
-    //   // const tokenToOneReserves = tokenToOnePairContract.getReserves();
-    //
-    //
-    //   const tokenToOneToken0 = dataOneUsdc.data.pair.token0.id;
-    //   const tokenToOneToken1 = dataOneUsdc.data.pair.token1.id;
-    //
-    //   const token0PairB = [tokenWONE, token].find(
-    //     (t) => t.address.toLowerCase() === tokenToOneToken0
-    //   );
-    //   const token1PairB = [tokenWONE, token].find(
-    //     (t) => t.address.toLowerCase() === tokenToOneToken1
-    //   );
-    //
-    //   const tokenONEPair = new Sushi.Pair(
-    //     Sushi.CurrencyAmount.fromRawAmount(token0PairB, Math.round(Number(data.data.pair.reserve0)).toString()),
-    //     Sushi.CurrencyAmount.fromRawAmount(token1PairB, Math.round(Number(data.data.pair.reserve1)).toString())
-    //     );
-    //
-    //   // find a route
-    //   route = new Sushi.Route([ONEUSDCPair, tokenONEPair], token, tokenUSDC);
-    // } else {
-    //   // use only the MATIC-USDC pair to get the price
-    // }
-
-    return route.midPrice.invert().toSignificant(5);
-  } catch ( e ) {
-
-    console.error(
-        'sushiswap - error getting price for',
+      route = new Sushi.Route(
+        [TokenToWonePair, WoneToUsdcPair],
         token,
-        e
-    );
+        tokenWONE
+      );
+      return route.midPrice.toSignificant(6);
+    } else {
+      route = new Sushi.Route([WoneToUsdcPair], token, tokenUSDC);
+      return route.midPrice.invert().toSignificant(6);
+    }
+  } catch (e) {
+    console.error("sushiswap - error getting price for", token, e);
 
-    return '0';
+    return "0";
+  }
+}
+
+async function fetchViperSwapPrice(
+  _token: { address: string; decimals: number; symbol: string },
+  library: any
+) {
+  try {
+  const usdc = new Viper.Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.usdc.address,
+    defaultTokens.usdc.decimals,
+    "1USDC"
+  );
+
+  const dai = new Viper.Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.dai.address,
+    defaultTokens.dai.decimals,
+    "1DAI"
+  );
+
+  const token = new Viper.Token(
+    DEFAULT_CHAIN_ID,
+    _token.address,
+    _token.decimals,
+    _token.symbol
+  );
+  console.debug(token);
+  
+    let route;
+    if (token.symbol !== "DAI") {
+      // fetch matic to usdc pair
+      const DaiToUSDCPair = await Viper.Fetcher.fetchPairData(
+        dai,
+        usdc,
+        library
+      );
+
+      // fetch the token to matic pair info
+      const tokenToDaiPair = await Viper.Fetcher.fetchPairData(
+        token,
+        dai,
+        library
+      );
+
+      // find a route
+      route = new Viper.Route([DaiToUSDCPair, tokenToDaiPair], usdc);
+    } else {
+      // use only the MATIC-USDC pair to get the price
+      const pair = await Viper.Fetcher.fetchPairData(token, usdc, library);
+      route = new Viper.Route([pair], usdc);
+    }
+
+    return route.midPrice.invert().toSignificant(6);
+  } catch (e) {
+    console.log("Error for token");
+    // console.log(`error getting price for ${token.symbol}`, e.message, token);
+
+    // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
+    // please refactor
+    // HACK:: we use this for cases where the we're finding a route for a token to the same token,
+    // so we hack the price to be 1 because TOKEN_A_PRICE === TOKEN_A_PRICE (same token!!!)
+    if (e.message.includes("ADDRESSES")) {
+      return "1";
+    }
+
+    return "0";
   }
 }
 
@@ -409,8 +459,10 @@ export async function fetchPrice(
       fetchDfynPrice(t, library),
     polycat: (t: { address: string; decimals: number; symbol: string }) =>
       fetchPolycatPrice(t.address),
-    sushiswap: (t: { address: string; decimals: number }) =>
-      fetchSushiSwapPrice2(t.address, t.decimals),
+    sushiswap: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchSushiSwapPrice2(t.address, t.decimals, t.symbol),
+    viper: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchViperSwapPrice(t, library),
   };
 
   try {

@@ -2279,6 +2279,24 @@
   resolved "https://registry.yarnpkg.com/@uniswap/v2-core/-/v2-core-1.0.1.tgz#af8f508bf183204779938969e2e54043e147d425"
   integrity sha512-MtybtkUPSyysqLY2U210NBDeCHX+ltHt3oADGdjqoThZaFRDKwM6k1Nb3F0A3hk5hwuQvytFWhrWHOEq6nVJ8Q==
 
+"@viperswap/core@^1.0.3":
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/@viperswap/core/-/core-1.0.3.tgz#ff780801938a87265e920a08d73c1cc964a00cc8"
+  integrity sha512-y6zPyuj3OG2Qh4Px6NOJ2+MXELOMZ4CtBo0ykAIbq8ixQh0Do59l34haZfKwsmLFVjjMqhp+v63dBhbtTV4azA==
+
+"@viperswap/sdk@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@viperswap/sdk/-/sdk-1.0.5.tgz#a9d9a0669e690e520bb83f51ab63adb46434e741"
+  integrity sha512-xkR+6hPxhexMWTxDVLZllGnrh2bafdyATzL9Wwyr6sZYz1hnAsYbm2rNlKPzY7uHBm5pT8a4GzgIxa50RI3ZRA==
+  dependencies:
+    "@viperswap/core" "^1.0.3"
+    big.js "^5.2.2"
+    decimal.js-light "^2.5.0"
+    jsbi "^3.1.1"
+    tiny-invariant "^1.1.0"
+    tiny-warning "^1.0.3"
+    toformat "^2.0.0"
+
 "@walletconnect/browser-utils@^1.4.1":
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/@walletconnect/browser-utils/-/browser-utils-1.4.1.tgz#a8d5a038d28c19b739eb0ff4194ced140c922d36"
