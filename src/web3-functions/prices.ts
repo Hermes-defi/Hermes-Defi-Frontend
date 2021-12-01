@@ -5,7 +5,6 @@ import { DEFAULT_CHAIN_ID } from "config/constants";
 import { Fetcher, Route, Token, WETH as WMATIC } from "quickswap-sdk";
 import * as Dfyn from "@dfyn/sdk";
 import * as Sushi from "@sushiswap/sdk";
-import * as Viper from "@viperswap/sdk";
 
 const amms = {
   "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "viper", // plutus
@@ -383,65 +382,33 @@ async function fetchViperSwapPrice(
   library: any
 ) {
   try {
-  const usdc = new Viper.Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.usdc.address,
-    defaultTokens.usdc.decimals,
-    "1USDC"
-  );
+    const resp = await fetch(
+        "https://graph.viper.exchange/subgraphs/name/venomprotocol/venomswap-v2",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: `{
+            tokenDayDatas ( 
+              where: { 
+                token: "${_token.address.toLowerCase()}" 
+              } 
+            ){
+              id
+              date
+              priceUSD
+            }
+          }`,
+          }),
+        }
+    );
 
-  const dai = new Viper.Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.dai.address,
-    defaultTokens.dai.decimals,
-    "1DAI"
-  );
-
-  const token = new Viper.Token(
-    DEFAULT_CHAIN_ID,
-    _token.address,
-    _token.decimals,
-    _token.symbol
-  );
-  console.debug(token);
-  
-    let route;
-    if (token.symbol !== "DAI") {
-      // fetch matic to usdc pair
-      const DaiToUSDCPair = await Viper.Fetcher.fetchPairData(
-        dai,
-        usdc,
-        library
-      );
-
-      // fetch the token to matic pair info
-      const tokenToDaiPair = await Viper.Fetcher.fetchPairData(
-        token,
-        dai,
-        library
-      );
-
-      // find a route
-      route = new Viper.Route([DaiToUSDCPair, tokenToDaiPair], usdc);
-    } else {
-      // use only the MATIC-USDC pair to get the price
-      const pair = await Viper.Fetcher.fetchPairData(token, usdc, library);
-      route = new Viper.Route([pair], usdc);
-    }
-
-    return route.midPrice.invert().toSignificant(6);
-  } catch (e) {
-    console.log("Error for token");
-    // console.log(`error getting price for ${token.symbol}`, e.message, token);
-
-    // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
-    // please refactor
-    // HACK:: we use this for cases where the we're finding a route for a token to the same token,
-    // so we hack the price to be 1 because TOKEN_A_PRICE === TOKEN_A_PRICE (same token!!!)
-    if (e.message.includes("ADDRESSES")) {
-      return "1";
-    }
-
+    const { data } = await resp.json();
+    return new BigNumberJS( data.tokenDayDatas[0]?.priceUSD ).toPrecision(6).toString();
+  } catch (err) {
+    console.log(err);
     return "0";
   }
 }
