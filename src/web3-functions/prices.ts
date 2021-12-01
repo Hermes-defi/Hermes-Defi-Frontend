@@ -677,6 +677,37 @@ export async function fetchPairPrice(
         return "0";
       }
     },
+    viperswap: async () => {
+      const t0 = new Viper.Token(
+        DEFAULT_CHAIN_ID,
+        token0.address,
+        token0.decimals,
+        token0.symbol
+      );
+      const t1 = new Viper.Token(
+        DEFAULT_CHAIN_ID,
+        token1.address,
+        token1.decimals,
+        token1.symbol
+      );
+
+      const pair = await Viper.Fetcher.fetchPairData(t0, t1, library);
+
+      const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
+      const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
+
+      const token0Total = new BigNumberJS(reserve0).times(
+        new BigNumberJS(token0Price)
+      );
+      const token1Total = new BigNumberJS(reserve1).times(
+        new BigNumberJS(token1Price)
+      );
+
+      const tvl = token0Total.plus(token1Total);
+      const price = tvl.dividedBy(new BigNumberJS(totalSupply));
+
+      return price.toString();
+    },
   }[amm];
 
   return await getPrice();
