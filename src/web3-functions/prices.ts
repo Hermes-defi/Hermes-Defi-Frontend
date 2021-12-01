@@ -5,6 +5,7 @@ import { DEFAULT_CHAIN_ID } from "config/constants";
 import { Fetcher, Route, Token, WETH as WMATIC } from "quickswap-sdk";
 import * as Dfyn from "@dfyn/sdk";
 import * as Sushi from "@sushiswap/sdk";
+import * as Viper from "@venomswap/sdk";
 
 const amms = {
   "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "viper", // plutus
@@ -413,6 +414,74 @@ async function fetchViperSwapPrice(
   }
 }
 
+async function fetchViperSwapPrice2(
+  _token: { address: string; decimals: number; symbol: string },
+  library: any
+) {
+  const usdc = new Viper.Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.usdc.address,
+    defaultTokens.usdc.decimals,
+    "1USDC"
+  );
+
+  const dai = new Viper.Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.dai.address,
+    defaultTokens.dai.decimals,
+    "1DAI"
+  )
+
+  const token = new Viper.Token(
+    DEFAULT_CHAIN_ID,
+    _token.address,
+    _token.decimals,
+    _token.symbol
+  );
+
+  try {
+    let route;
+    if (token.symbol !== "1DAI") {
+      // fetch matic to usdc pair
+      const DaiToUSDCPair = await Viper.Fetcher.fetchPairData(
+        dai,
+        usdc,
+        library
+      );
+
+      // fetch the token to matic pair info
+      const tokenToDai = await Viper.Fetcher.fetchPairData(
+        token,
+        dai,
+        library
+      );
+
+      // find a route
+      route = new Viper.Route([DaiToUSDCPair, tokenToDai], usdc);
+    } else {
+      // use only the MATIC-USDC pair to get the price
+      const pair = await Viper.Fetcher.fetchPairData(token, usdc, library);
+      route = new Viper.Route([pair], usdc);
+    }
+
+    console.debug(route.midPrice.invert().toSignificant(6));
+    return route.midPrice.invert().toSignificant(6);
+  } catch (e) {
+    console.log("Error for token", token);
+    // console.log(`error getting price for ${token.symbol}`, e.message, token);
+
+    // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
+    // please refactor
+    // HACK:: we use this for cases where the we're finding a route for a token to the same token,
+    // so we hack the price to be 1 because TOKEN_A_PRICE === TOKEN_A_PRICE (same token!!!)
+    if (e.message.includes("ADDRESSES")) {
+      return "1";
+    }
+
+    return "0";
+  }
+}
+
 export async function fetchPrice(
   token: { address: string; decimals: number; symbol: string },
   library: any
@@ -429,7 +498,7 @@ export async function fetchPrice(
     sushiswap: (t: { address: string; decimals: number; symbol: string }) =>
       fetchSushiSwapPrice2(t.address, t.decimals, t.symbol),
     viper: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchViperSwapPrice(t, library),
+      fetchViperSwapPrice2(t, library),
   };
 
   try {
