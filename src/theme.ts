@@ -1,4 +1,5 @@
-import { extendTheme } from "@chakra-ui/react";
+import { extendTheme, theme as defaultTheme } from "@chakra-ui/react";
+import { mode, transparentize } from "@chakra-ui/theme-tools";
 
 const theme = extendTheme({
   config: {

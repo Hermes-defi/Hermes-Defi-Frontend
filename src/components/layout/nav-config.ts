@@ -46,8 +46,8 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
         href: "/app",
       },
       {
-        label: "Apollo",
-        href: "https://apollo.hermesdefi.io/app",
+        label: "Plutus",
+        href: "https://plutus.hermesdefi.io/app",
         isExternal: true,
       },
     ],
@@ -83,6 +83,16 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
       {
         label: "Liquidity (Dfyn)",
         href: "https://exchange.dfyn.network/#/add/0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174/0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+        isExternal: true,
+      },
+      {
+        label: "Swap (Viper)",
+        href: "https://viperswap.one/#/swap?outputCurrency=0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc",
+        isExternal: true,
+      },
+      {
+        label: "Liquidity (Viper)",
+        href: "https://viperswap.one/#/add/ONE/0x85FD5f8dBD0c9Ef1806E6c7d4B787d438621C1dC",
         isExternal: true,
       },
     ],
@@ -122,8 +132,8 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
-        label: "Telegram",
-        href: "https://t.me/hermesdefinance",
+        label: "Discord",
+        href: "https://discord.gg/k6SX8pkK",
         isExternal: true,
       },
       {
@@ -137,8 +147,9 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
-        label: "Pre Sale",
-        href: "https://apollo.hermesdefi.io/app/pre-sale",
+        label: "Youtube",
+        href: "https://www.youtube.com/channel/UCnLWipB915XYPHMmMZcsnag",
+        isExternal: true,
       },
     ],
   },

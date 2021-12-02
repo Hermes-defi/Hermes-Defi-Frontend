@@ -7,15 +7,15 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 const moduleExports = {
   // Your existing module.exports
-  async redirects() {
-    return [
-      {
-        source: "/app/pre-sale",
-        destination: "https://apollo.hermesdefi.io/app/pre-sale", // Matched parameters can be used in the destination
-        permanent: false,
-      },
-    ];
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/app/pre-sale",
+  //       destination: "https://apollo.hermesdefi.io/app/pre-sale", // Matched parameters can be used in the destination
+  //       permanent: false,
+  //     },
+  //   ];
+  // },
 };
 
 const SentryWebpackPluginOptions = {

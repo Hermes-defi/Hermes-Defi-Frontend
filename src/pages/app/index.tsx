@@ -342,11 +342,7 @@ const Page: React.FC = () => {
                   >
                     <Text fontSize="3xl" fontWeight="700">
                       {displayCurrency(
-                        farmStats.data
-                          .plus(poolStats.data)
-                          .plus(balStats.data)
-                          .plus(vaultStats.data)
-                          .toNumber()
+                        vaultStats.data.toNumber()
                       )}
                     </Text>
                   </Skeleton>
@@ -366,40 +362,6 @@ const Page: React.FC = () => {
                     <Skeleton isLoaded={!farmStats.isLoading}>
                       <Text fontSize="2xl" fontWeight="700">
                         {displayCurrency(vaultStats.data.toNumber())}
-                      </Text>
-                    </Skeleton>
-                  </Box>
-
-                  <Box align={["left", "center"]}>
-                    <Heading
-                      borderBottomWidth="2px"
-                      borderColor="primary.500"
-                      mb={1}
-                      color={useColorModeValue("gray.600", "gray.300")}
-                      fontSize="xl"
-                    >
-                      Farms
-                    </Heading>
-                    <Skeleton isLoaded={!farmStats.isLoading}>
-                      <Text fontSize="2xl" fontWeight="700">
-                        {displayCurrency(farmStats.data.toNumber())}
-                      </Text>
-                    </Skeleton>
-                  </Box>
-
-                  <Box align={["left", "center"]}>
-                    <Heading
-                      borderBottomWidth="2px"
-                      borderColor="primary.500"
-                      mb={1}
-                      color={useColorModeValue("gray.600", "gray.300")}
-                      fontSize="xl"
-                    >
-                      Pools
-                    </Heading>
-                    <Skeleton isLoaded={!poolStats.isLoading}>
-                      <Text fontSize="2xl" fontWeight="700">
-                        {displayCurrency(poolStats.data.toNumber())}
                       </Text>
                     </Skeleton>
                   </Box>
