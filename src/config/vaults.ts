@@ -1,14 +1,22 @@
+import { NumericalBotVersion } from "aws-sdk/clients/lexmodelsv2";
 import { DEFAULT_CHAIN_ID } from "./constants";
 import defaultContracts from "./contracts";
 
 export type Vault = {
   address: string;
   stratAddress: string;
+  type?: string;
+  isBoosted?: boolean;
 
+  // for masterchef vaults
   masterChefAddress?: string;
-  farmAddress?: string;
   farmPid?: number;
   tokenPerBlock?: string;
+
+  farmAddress?: string;
+
+  // for rewardPool vaults
+  rewardPool?: string;
 
   amm: string;
 
@@ -20,6 +28,7 @@ export type Vault = {
   isActive?: boolean;
   isSpecial?: boolean;
 
+  // for masterchef vaults
   projectToken?: {
     address: string;
     symbol: string;
@@ -28,12 +37,30 @@ export type Vault = {
     price?: string;
   };
 
+  // for dfyn vaults
   dfynRewardTokens?: {
     address: string;
     symbol: string;
     decimals: number;
     price?: string;
   }[];
+
+   // for dual vaults
+   farmRewardTokens?: {
+    address: string;
+    symbol: string;
+    decimals: number;
+    price?: string;
+  }[];
+
+  // for rewardPool vaults
+  farmRewardToken?: {
+    address: string;
+    symbol: string;
+    decimals: number;
+    price?: string;
+  };
+  farmXTokenAddress?: string;
 
   stakeToken: {
     address: string;
@@ -59,6 +86,9 @@ export type Vault = {
   apy?: {
     yearly: number;
     daily: number;
+    boostedYearly?: number;
+    dailyWithPool?: number;
+    dailyAll?: number;
   };
 
   hasStaked?: boolean;
@@ -69,6 +99,9 @@ export type Vault = {
 
 export const vaults: Vault[] = {
   137: [
+    //IRIS LAYER
+
+    //IRIS/WMATIC
     {
       address: "0xCBd7b263460ad4807dEAdAd3858DE6654f082cA4",
       stratAddress: "0xd74941d4f9202d7e4c550d344507298a4e3ed2dd",
@@ -76,6 +109,7 @@ export const vaults: Vault[] = {
       farmPid: 8,
       tokenPerBlock: "400000000000000000",
 
+      type: "masterchef",
       isActive: false,
       amm: "quickswap",
       depositFees: 0,
@@ -114,7 +148,7 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //KAVIANL2/WMATIC
     {
       address: "0x75fd7fa818f0d970668dca795b7d79508776a5b1",
       stratAddress: "0x570d669b8e2751dfe65bbdd4db3b34b53c9c6d6f",
@@ -122,6 +156,7 @@ export const vaults: Vault[] = {
       farmPid: 1,
       tokenPerBlock: "80000000000000000",
 
+      type: "masterchef",
       isActive: true,
       amm: "quickswap",
       depositFees: 0,
@@ -160,7 +195,7 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //GBNT/WMATIC
     {
       address: "0x483a58Fd4B023CAE2789cd1E1e5F6F52f93df2C7",
       stratAddress: "0x050170ec42eE569512F5077f736c8fd2D41E7983",
@@ -168,6 +203,7 @@ export const vaults: Vault[] = {
       farmPid: 1,
       tokenPerBlock: "8000000000000000000",
 
+      type: "masterchef",
       isActive: true,
       amm: "polycat",
       depositFees: 0,
@@ -206,7 +242,7 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //WISE/USDC
     {
       address: "0xD4d9a3A705ace962F0813ff0E27c965E1b76357D",
       stratAddress: "0x9291569366739EbA4F9eD8d91794A67EfD26bA65",
@@ -214,6 +250,7 @@ export const vaults: Vault[] = {
       farmPid: 17,
       tokenPerBlock: "7000000000000000",
 
+      type: "masterchef",
       isActive: false,
       amm: "polycat",
       depositFees: 0,
@@ -252,7 +289,7 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //WISE/WMATIC
     {
       address: "0x4806743912E5b4Aeb0426671d1F307FC3372642d",
       stratAddress: "0x72b7Ea43ce4bE6876475F4ef0b29cCC11984e5e8",
@@ -260,6 +297,7 @@ export const vaults: Vault[] = {
       farmPid: 2,
       tokenPerBlock: "7000000000000000",
 
+      type: "masterchef",
       isActive: false,
       amm: "quickswap",
       depositFees: 0,
@@ -298,13 +336,14 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //ROUTE/DFYN
     {
       address: "0xD55D83f4f3c67E02B6a37E9eAd2396B9a5C9E3F9",
       stratAddress: "0xA94c29711dE2250c026E7d420124E9fD59155F32",
 
       farmAddress: "0xe194f2cB4da23B1FB26B41Eb818d25d9FC7367f2",
 
+      type: "dfyn",
       isActive: false,
       amm: "dfyn",
       depositFees: 0,
@@ -349,7 +388,10 @@ export const vaults: Vault[] = {
         },
       ],
     },
+
     //APOLLO LAYER
+    
+    //USDC/WETH
     {
       address: "0x0f8860515B51bBbB3AEe4603Fe8716454a2Ed24C",
       stratAddress: "0x855d94a524249e8B9a7827EBdadeE4D027F6b293",
@@ -394,7 +436,7 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //USDC/USDT
     {
       address: "0xaaF43E30e1Aa6ed2dfED9CCD03AbAF7C34B5B8F6",
       stratAddress: "0x0222b8C573d0484dAc8C02461Bff1F0E070C0075",
@@ -439,7 +481,7 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //WETH/WMATIC
     {
       address: "0xC12b54BAEc88CC4F28501f90Bb189Ac7132ee97F",
       stratAddress: "0xdeA2750F45D641a3a50d7143d849BC0E63cd707a",
@@ -491,7 +533,7 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //WBTC/WETH
     {
       address: "0xf32baBB43226DdF187151Eb392c1e7F8C0F4a2BB",
       stratAddress: "0x41E45FB11E03f4bAC10d9BDB9F1F869452167A99",
@@ -536,7 +578,7 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
+    //DFYN/ROUTE
     {
       address: "0x467cb3cE716e0801355BFb3b3F4070108E46051f",
       stratAddress: "0x031AE02F2A989E50047aCb9Fc1d3DA11a4Fe259D",
