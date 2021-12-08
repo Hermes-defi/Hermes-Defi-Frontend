@@ -9,9 +9,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     switch (method) {
       case "GET": {
+        let irisData = JSON.parse(await redis.get("iris-stats"));
         let plutusData = JSON.parse(await redis.get("plutus-stats"));
 
         return res.status(200).json({
+          iris: irisData,
           plutus: plutusData,
         });
       }
