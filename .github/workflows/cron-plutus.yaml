@@ -1,0 +1,11 @@
+name: hourly-cron-job
+on:
+  schedule:
+    - cron: '*/60 * * * *'
+jobs:
+  cron:
+    runs-on: ubuntu-latest
+    steps:
+      - name: hourly-cron-job
+        run: |
+          curl --request GET --url 'https://plutus.hermesdefi.io/api/tvl-calculator-plutus'

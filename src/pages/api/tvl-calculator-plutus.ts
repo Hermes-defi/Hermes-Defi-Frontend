@@ -12,7 +12,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (method) {
     case "GET": {
       try {
-        let tvlCache: any = await redis.get("tvl-chart");
+        let tvlCache: any = await redis.get("tvl-chart-plutus");
         tvlCache = JSON.parse(tvlCache) || [];
 
         // push the new tvl to the array
@@ -25,8 +25,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         }
 
         // set cache to expire every 60 seconds
-        redis.set("tvl-chart", JSON.stringify(tvlCache));
-        redis.set("iris-stats", JSON.stringify({ tvl, ...otherStats }));
+        redis.set("tvl-chart-plutus", JSON.stringify(tvlCache));
+        redis.set("plutus-stats", JSON.stringify({ tvl, ...otherStats }));
         return res.send(true);
       } catch (e) {
         return res.send(e.message);
