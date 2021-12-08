@@ -5,6 +5,7 @@ export type Pool = {
   pid: number;
   multiplier: string;
   depositFees: number;
+  vaultPool?: boolean;
 
   // ui options
   isSpecial?: boolean;

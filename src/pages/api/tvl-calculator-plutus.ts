@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import Redis from "ioredis";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { withSentry } from "@sentry/nextjs";
-import { getHermesStats } from "api-services/home";
+import { getPlutusStats } from "api-services/home";
 
 const redis = new Redis(process.env.HERMES_REDIS_URL);
 
@@ -14,11 +14,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       try {
         let tvlCache: any = await redis.get("tvl-chart-plutus");
         tvlCache = JSON.parse(tvlCache) || [];
-
+        console.log({tvlCache});
         // push the new tvl to the array
         const currentTime = dayjs().toISOString();
-        const { tvl, ...otherStats } = await getHermesStats();
+        const { tvl, ...otherStats } = await getPlutusStats();
 
+        console.log({tvl});
         tvlCache.push({ time: currentTime, value: tvl });
         if (tvlCache.length > 12) {
           tvlCache.shift();
@@ -27,9 +28,9 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         // set cache to expire every 60 seconds
         redis.set("tvl-chart-plutus", JSON.stringify(tvlCache));
         redis.set("plutus-stats", JSON.stringify({ tvl, ...otherStats }));
-        return res.send(true);
+        return res.json({success: true});
       } catch (e) {
-        return res.send(e.message);
+        return res.json({success: false, error: e.message});
       }
     }
     default: {

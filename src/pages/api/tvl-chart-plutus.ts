@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     switch (method) {
       case "GET": {
-        let data = JSON.parse(await redis.get("tvl-chart"));
+        let data = JSON.parse(await redis.get("tvl-chart-plutus"));
         return res.status(200).json(data || []);
       }
       default: {
