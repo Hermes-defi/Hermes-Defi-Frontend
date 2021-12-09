@@ -264,13 +264,7 @@ function Header() {
             </chakra.a>
           </NextLink>
 
-          <NextLink href="https://apollo.hermesdefi.io/app" passHref>
-            <chakra.a flex="1">
-              <Button isFullWidth variant="solid" bg="#FF775C" color="white" size="lg" _hover={{ bg: "#FF9D8A" }}>
-                Use Apollo
-              </Button>
-            </chakra.a>
-          </NextLink>
+          
         </Stack>
       </Stack>
     </Container>
@@ -329,51 +323,7 @@ const DappStats = () => {
         </Box>
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 2, md: 2 }} spacing={8}>
-        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Skeleton isLoaded={!!apolloPrice}>
-            <Heading size="2xl">{displayCurrency(apolloPrice)}</Heading>
-          </Skeleton>
-
-          <Text color="gray.700" fontSize="sm" fontWeight="600">
-            $APOLLO Price
-          </Text>
-        </Box>
-
-        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Skeleton isLoaded={!!stats.data}>
-            <Heading size="2xl">{displayCurrency(stats.data?.apollo?.totalValueInVaults, true)}</Heading>
-          </Skeleton>
-
-          <Text color="gray.700" fontSize="sm" fontWeight="600">
-            Total in Vaults
-          </Text>
-        </Box>
-
-        {/* <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Skeleton isLoaded={!!stats.data}>
-            <Heading size="2xl">{displayCurrency(stats.data?.apollo?.totalValueInPools, true)}</Heading>
-          </Skeleton>
-          <Text color="gray.700" fontSize="sm" fontWeight="600">
-            Total in Pools
-          </Text>
-        </Box>
-
-        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Skeleton isLoaded={!!stats.data}>
-            <Heading size="2xl">
-              {displayCurrency(
-                parseFloat(stats.data?.apollo?.totalValueInFarms) +
-                  parseFloat(stats.data?.apollo?.totalValueInBalancers),
-                true
-              )}
-            </Heading>
-          </Skeleton>
-          <Text color="gray.700" fontSize="sm" fontWeight="600">
-            Total in Farms
-          </Text>
-        </Box> */}
-      </SimpleGrid>
+      
     </Stack>
   );
 };
