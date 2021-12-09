@@ -40,7 +40,7 @@ function useFetchPoolsRequest() {
     );
 
     newPool.stakeToken.price = await fetchPrice(newPool.stakeToken, library);
-
+    // console.log(newPool.stakeToken.symbol, newPool.totalStaked, newPool.stakeToken.price, new BigNumberJS(newPool.totalStaked).times(newPool.stakeToken.price).toNumber() );
     // APR data
     const rewardsPerWeek = PLUTUS_PER_BLOCK * (SECONDS_PER_WEEK / BLOCKS_PER_SECOND);
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();

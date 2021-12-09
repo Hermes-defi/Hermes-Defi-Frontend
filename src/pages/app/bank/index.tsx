@@ -280,9 +280,9 @@ const Page = () => {
                 py={6}
               >
                 <Stack direction="row" align="center">
-                  <Image objectFit="contain" src={`/dai-logo.png`} boxSize={10} />
+                  <Image objectFit="contain" src={`/1dai-logo.png`} boxSize={10} />
                   <Text fontSize="md" textTransform="uppercase" fontWeight="bold">
-                    dai bank
+                    1dai bank
                   </Text>
                 </Stack>
 

@@ -16,11 +16,6 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     label: "Products",
     children: [
       {
-        label: "Vaults",
-        href: "/app/vaults",
-      },
-
-      {
         label: "Pools",
         href: "/app/pools"
       },

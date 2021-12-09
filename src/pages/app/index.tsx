@@ -320,13 +320,12 @@ const Page: React.FC = () => {
                     Total Value Locked
                   </Heading>
                   <Skeleton
-                    isLoaded={!farmStats.isLoading && !poolStats.isLoading && !balStats.isLoading}
+                    isLoaded={!farmStats.isLoading && !poolStats.isLoading}
                   >
                     <Text fontSize="3xl" fontWeight="700">
                       {displayCurrency(
                         farmStats.data
                           .plus(poolStats.data)
-                          .plus(balStats.data)
                           .plus(vaultStats.data)
                           .toNumber()
                       )}

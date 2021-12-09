@@ -43,7 +43,7 @@ const Page = () => {
 
                   <Skeleton isLoaded={!!rewards.data}>
                     <Text color="primary.400" fontWeight="bold">
-                      {displayNumber(rewards.data?.daiRewards || 0, false, 6)} DAI
+                      {displayNumber(rewards.data?.daiRewards || 0, false, 6)} 1DAI
                     </Text>
                   </Skeleton>
 

@@ -17,7 +17,7 @@ dayjs.extend(duration);
 
 const BANK_REWARD_TOKEN = {
   address: "0xEf977d2f931C1978Db5F6747666fa1eACB0d0339",
-  symbol: "DAI",
+  symbol: "1DAI",
   decimals: 18,
   price: 0,
 };
@@ -62,7 +62,7 @@ export const useFetchMainPool = () => {
     queryKey: "bank-main-pool",
     enabled: !!plutusPrice.data,
     queryFn: async () => {
-      const poolName = "dai";
+      const poolName = "1dai";
 
       const poolInfo = await bankContract.daiinfo();
       const poolEndTime = (await bankContract.endtime()).toString();
@@ -84,17 +84,23 @@ export const useFetchMainPool = () => {
       );
 
       const totalRewardsInUsd = new BigNumberJS(totalRewards).times(rewardTokenPrice).toString();
-
+      console.log({
+        totalRewardsInUsd
+      })
       // calculate APR
       /**
        * to calculate the APR we need the pool rewards per week and then convert this to USD and divide it
        * by the total amount in the pool
        */
       let apr = 0;
-
+      console.log({
+        poolDepositedAmount
+      });
       if (parseFloat(poolDepositedAmount) > 0 && plutusPrice.data && parseFloat(plutusPrice.data) > 0) {
-        const tokenPerSec = utils.formatUnits(poolInfo.usdcPerTime, 18);
-
+        const tokenPerSec = utils.formatUnits(poolInfo.daiPerTime, 18);
+        // console.log({
+        //   daiPerTime: poolInfo.daiPerTime
+        // });
         const yearlyRewards = new BigNumberJS(tokenPerSec).times(SECONDS_PER_YEAR);
 
         const yearlyRewardsUsd = yearlyRewards.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`);
@@ -145,6 +151,8 @@ export const useFetchPools = () => {
         enabled: !!poolLength && !!plutusPrice.data,
         queryKey: ["bank-pool", idx, account],
         queryFn: async ({ queryKey }) => {
+          if (queryKey[1] != 1){
+            
           const pid = queryKey[1] as number;
           const poolInfo = await bankContract.poolInfo(pid);
 
@@ -180,17 +188,18 @@ export const useFetchPools = () => {
           let apr = 0;
 
           // todo:: get plutus price
-
+          // console.log("bank", pid, poolDepositedAmount, plutusPrice.data);
           if (poolDepositedAmount > 0 && plutusPrice.data && parseFloat(plutusPrice.data) > 0) {
             const tokenPerSec = poolInfo.tokenPerSec.toString();
             const yearlyRewards = new BigNumberJS(tokenPerSec).times(SECONDS_PER_YEAR);
             const yearlyRewardsUsd = yearlyRewards.times(poolTokenPrice).dividedBy(`1e${decimals}`);
-
+            // console.log("poolInfo:", poolInfo);
             const totalStakedInUsd = new BigNumberJS(poolDepositedAmount)
               .times(plutusPrice.data)
               .dividedBy(`1e${decimals}`);
 
             apr = yearlyRewardsUsd.dividedBy(totalStakedInUsd).toNumber() * 100;
+            // console.log("tokenPerSec:", tokenPerSec, "yearlyRewards:", yearlyRewards.toNumber(), "yearlyRewardsUSD:", yearlyRewardsUsd.toNumber(), "totalStakedInUSD:", totalStakedInUsd.toNumber(), "apr:", apr);
           }
 
           let enrolled = false;
@@ -211,6 +220,7 @@ export const useFetchPools = () => {
             timeLeft,
             enrolled,
           };
+        }
         },
       };
     })

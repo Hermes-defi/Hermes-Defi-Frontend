@@ -32,7 +32,7 @@ const amms = {
   "0x8a953cfe442c5e8855cc6c61b1293fa648bae472": "quickswap", // polydoge
   "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a": "coingecko", // iron
   "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "viper", // WONE
-  "0xef977d2f931c1978db5f6747666fa1eacb0d0339": "viper", //DAI
+  "0xef977d2f931c1978db5f6747666fa1eacb0d0339": "viper", //1DAI
 };
 const USDCONE = "0xbf255d8c30dbab84ea42110ea7dc870f01c0013a";
 

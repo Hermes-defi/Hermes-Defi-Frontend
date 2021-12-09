@@ -32,8 +32,8 @@ export const AppLayout: React.FC = ({ children }) => {
                 </Text>
 
                 <Stack spacing={5} direction="row">
-                  <Image w={20} src="/iron-logo.png" alt="Iron Finance Logo" />
-                  <Image w={20} src="/dfyn-logo.svg" alt="Dfyn Logo" />
+                  <Image w={16} src="/dfyn-logo.svg" alt="Dfyn Logo" />
+                  <Image w={10} src="/viperswap-logo.png" alt="ViperSwap Logo" />
                 </Stack>
               </Stack>
 
