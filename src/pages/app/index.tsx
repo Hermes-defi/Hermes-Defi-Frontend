@@ -64,7 +64,7 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        <Box
+        {/* <Box
           bg={useColorModeValue("white", "gray.700")}
           rounded="2xl"
           boxShadow="base"
@@ -207,7 +207,7 @@ const Page: React.FC = () => {
               </Stack>
             </Stack>
           </SimpleGrid>
-        </Box>
+        </Box> */}
 
         <ArkenWidget
           chain="polygon"
