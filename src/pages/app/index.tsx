@@ -19,6 +19,7 @@ import {
 
 import { AppLayout } from "components/layout";
 import {
+  AspectRatio,
   Box,
   Button,
   Center,
@@ -63,6 +64,22 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
+      
+          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
+              PLUTUS: The Tokenomics
+            </Heading>
+            <AspectRatio maxH="lg" ratio={16/9}>
+            <iframe
+              title="PLUTUS: The Tokenomics"
+              src="https://www.youtube.com/embed/wkj-VjWGo7c"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+            </AspectRatio>
+        
+          </Box>
+        
         <Box
           bg={useColorModeValue("white", "gray.700")}
           rounded="2xl"
