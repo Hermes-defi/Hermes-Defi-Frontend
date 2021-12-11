@@ -7,14 +7,14 @@ import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
 import { approveLpContract } from "web3-functions";
 
-export function usePresaleInfo(version: "v1" | "v2") {
-  const presaleContract = usePresaleContract(version);
+export function usePresaleInfo() {
+  const presaleContract = usePresaleContract();
   const plutusContract = usePlutusToken();
-  const usdcContract = useERC20_v2(token.usdc.address);
+  const daiContract = useERC20_v2(token.dai.address);
   const { account } = useActiveWeb3React();
 
   return useQuery({
-    queryKey: ["apollo-presale-info"],
+    queryKey: ["plutus-presale-info"],
     queryFn: async () => {
       const data: any = {};
 
@@ -27,8 +27,8 @@ export function usePresaleInfo(version: "v1" | "v2") {
           await plutusContract.allowance(account, presaleContract.address)
         ).isZero();
 
-        data.usdcApproved = !(
-          await usdcContract.allowance(account, presaleContract.address)
+        data.daiApproved = !(
+          await daiContract.allowance(account, presaleContract.address)
         ).isZero();
       }
 
@@ -38,22 +38,22 @@ export function usePresaleInfo(version: "v1" | "v2") {
   });
 }
 
-export function usePresaleQuote(version: "v1" | "v2", amount) {
-  const presaleContract = usePresaleContract(version);
+export function usePresaleQuote(amount) {
+  const presaleContract = usePresaleContract();
   const { account } = useActiveWeb3React();
 
   return useQuery({
-    queryKey: ["apollo-presale-quote", account, amount],
+    queryKey: ["plutus-presale-quote", account, amount],
     queryFn: async () => {
       const resp = await presaleContract.quoteAmounts(utils.parseEther(amount), account);
 
       console.log(resp);
       const amountInPLUTUS = utils.formatEther(resp.amountPLUTUS.toString());
-      const amountInUSDC = utils.formatUnits(resp.inUsdc.toString(), 6);
+      const amountInDAI = utils.formatUnits(resp.inDai.toString(), 6);
 
       return {
         amountInPLUTUS,
-        amountInUSDC,
+        amountInDAI,
       };
     },
     enabled: !!account && !!amount.length,
@@ -61,20 +61,20 @@ export function usePresaleQuote(version: "v1" | "v2", amount) {
   });
 }
 
-export function usePresaleApproveToken(version: "v1" | "v2") {
+export function usePresaleApproveToken() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
-  const presaleContract = usePresaleContract(version);
+  const presaleContract = usePresaleContract();
   const plutusContract = usePlutusToken();
-  const usdcContract = useERC20_v2(token.usdc.address);
+  const daiContract = useERC20_v2(token.dai.address);
   const toast = useToast();
 
   const approveMutation = useMutation(
-    async (token: "plutus" | "usdc") => {
+    async (token: "dai") => {
       if (!account) throw new Error("No connected account");
 
       await approveLpContract(
-        token === "plutus" ? plutusContract : usdcContract,
+        daiContract,
         presaleContract.address
       );
 
@@ -82,13 +82,12 @@ export function usePresaleApproveToken(version: "v1" | "v2") {
     },
 
     {
-      onSuccess: (token: "plutus" | "usdc") => {
-        const data: any = queryClient.getQueryData(["apollo-presale-info"]);
+      onSuccess: (token:"dai") => {
+        const data: any = queryClient.getQueryData(["plutus-presale-info"]);
 
-        queryClient.setQueryData(["apollo-presale-info"], {
+        queryClient.setQueryData(["plutus-presale-info"], {
           ...data,
-          ...(token === "plutus" ? { plutusApproved: true } : {}),
-          ...(token === "usdc" ? { usdcApproved: true } : {}),
+          ...(token === "dai" ? { daiApproved: true } : {}),
         });
 
         ReactGA.event({

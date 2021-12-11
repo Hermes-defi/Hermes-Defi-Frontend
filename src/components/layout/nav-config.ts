@@ -16,6 +16,11 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     label: "Products",
     children: [
       {
+        label: "Waiting Room",
+        href: "/app/waiting-room"
+      },
+      
+      {
         label: "Pools",
         href: "/app/pools"
       },
@@ -105,4 +110,8 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
     ],
   },
+  {
+    label: "Pre-Sale",
+    href: "/app/pre-sale"
+  }
 ];

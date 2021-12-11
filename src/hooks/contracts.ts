@@ -124,9 +124,9 @@ export function useCustomMasterChef() {
   };
 }
 
-export function usePresaleContract(version: "v1" | "v2") {
+export function usePresaleContract() {
   const contract = useContract();
-  return contract(defaultContracts.hermesNft); // TODO: Remove Presale.
+  return contract(defaultContracts.plutusIDO); // TODO: ADD Presale.
 }
 
 export function useBankContract() {

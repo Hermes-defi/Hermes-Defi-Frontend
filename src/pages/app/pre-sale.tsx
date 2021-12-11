@@ -12,11 +12,11 @@ import { Box, Button, Container, Heading, HStack, Link, Skeleton, Stack, Text, u
 const PresaleCard = () => {
   const { account } = useActiveWeb3React();
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const queryResp = usePresaleInfo("v2");
+  const queryResp = usePresaleInfo();
   const isLoaded = !!queryResp.data;
 
-  const approvePlutusMutation = usePresaleApproveToken("v2");
-  const approveUsdcMutation = usePresaleApproveToken("v2");
+  const approvePlutusMutation = usePresaleApproveToken();
+  const approveDaiMutation = usePresaleApproveToken();
 
   return (
     <>
@@ -34,7 +34,7 @@ const PresaleCard = () => {
         <Box>
           <HStack mb={6}>
             <Text fontWeight="700" fontSize="3xl">
-              pAPOLLO pre-sale #2
+              pPLUTUS IDO
             </Text>
           </HStack>
 
@@ -42,19 +42,136 @@ const PresaleCard = () => {
           <Stack mb={6}>
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                USDC/PLUTUS Ratio
+              pPLUTUS/DAI Ratio
               </Text>
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  80:20
+                  0.116:1
                 </Text>
               </Skeleton>
             </Stack>
 
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                pAPOLLO price
+                pPLUTUS Remaining
+              </Text>
+
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {displayTokenCurrency(queryResp.data?.pPlutusRemaining, "pPLUTUS", true)}
+                </Text>
+              </Skeleton>
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                IDO Starts
+              </Text>
+              {/* <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {`Block ${queryResp.data?.startBlock}`}
+                </Text>
+              </Skeleton> */}
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                IDO Ends
+              </Text>
+              {/* <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  {`Block ${queryResp.data?.endBlock}`}
+                </Text>
+              </Skeleton> */}
+            </Stack>
+          </Stack>
+        </Box>
+
+        {/* actions */}
+        <Stack mt="auto" mb={8}>
+          {!account && (
+            <UnlockButton
+              isFullWidth
+              onClick={onOpen}
+              bg="gray.700"
+              size="lg"
+              fontSize="md"
+              _hover={{ bg: "gray.600" }}
+            />
+          )}
+
+          {!queryResp.data?.usdcApproved && (
+            <Button
+              isFullWidth
+              onClick={() => approveDaiMutation.mutate("dai")}
+              isLoading={approveDaiMutation.isLoading}
+              bg="gray.700"
+              size="lg"
+              fontSize="md"
+              _hover={{ bg: "gray.400" }}
+            >
+              Approve DAI
+            </Button>
+          )}
+
+          {queryResp.data?.daiApproved && (
+            <Button isFullWidth onClick={onOpen} bg="gray.700" size="lg" fontSize="md" _hover={{ bg: "gray.600" }}>
+              Buy pPLUTUS with DAI
+            </Button>
+          )}
+        </Stack>
+      </Stack>
+    </>
+  );
+};
+
+const PlutusCard = () => {
+  const { account } = useActiveWeb3React();
+  const { isOpen, onClose, onOpen } = useDisclosure();
+  const queryResp = usePresaleInfo();
+  const isLoaded = !!queryResp.data;
+
+  const approvePlutusMutation = usePresaleApproveToken();
+  const approveDaiMutation = usePresaleApproveToken();
+
+  return (
+    <>
+      <Stack
+        justify="space-between"
+        px={8}
+        py={8}
+        spacing={6}
+        boxShadow="lg"
+        rounded="3xl"
+        bg="secondary.300"
+        bgGradient="linear(to-b, secondary.300, secondary.200)"
+        color="white"
+      >
+        <Box>
+          <HStack mb={6}>
+            <Text fontWeight="700" fontSize="3xl">
+              pPLUTUS PLUTUS
+            </Text>
+          </HStack>
+
+          {/* pool details */}
+          <Stack mb={6}>
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                pPLUTUS/PLUTUS Ratio
+              </Text>
+
+              <Skeleton isLoaded={isLoaded}>
+                <Text fontWeight="700" fontSize="sm">
+                  1:1
+                </Text>
+              </Skeleton>
+            </Stack>
+
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="sm">
+                Your pPlutus
               </Text>
 
               <Skeleton isLoaded={isLoaded}>
@@ -66,34 +183,12 @@ const PresaleCard = () => {
 
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                pAPOLLO remaining
+                pPLUTUS Remaining in the contract
               </Text>
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {displayTokenCurrency(queryResp.data?.pApolloRemaining, "pAPOLLO", true)}
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                Presale starts
-              </Text>
-              <Skeleton isLoaded={isLoaded}>
-                <Text fontWeight="700" fontSize="sm">
-                  {`Block ${queryResp.data?.startBlock}`}
-                </Text>
-              </Skeleton>
-            </Stack>
-
-            <Stack direction="row" justify="space-between">
-              <Text fontWeight="600" fontSize="sm">
-                Presale ends
-              </Text>
-              <Skeleton isLoaded={isLoaded}>
-                <Text fontWeight="700" fontSize="sm">
-                  {`Block ${queryResp.data?.endBlock}`}
+                  {displayTokenCurrency(queryResp.data?.pPlutusRemaining, "pPLUTUS", true)}
                 </Text>
               </Skeleton>
             </Stack>
@@ -113,37 +208,23 @@ const PresaleCard = () => {
             />
           )}
 
-          {!queryResp.data?.plutusApproved && (
+          {!queryResp.data?.daiApproved && (
             <Button
               isFullWidth
-              onClick={() => approvePlutusMutation.mutate("plutus")}
-              isLoading={approvePlutusMutation.isLoading}
-              bg="gray.700"
-              size="lg"
-              fontSize="md"
-              _hover={{ bg: "gray.600" }}
-            >
-              Approve PLUTUS
-            </Button>
-          )}
-
-          {!queryResp.data?.usdcApproved && (
-            <Button
-              isFullWidth
-              onClick={() => approveUsdcMutation.mutate("usdc")}
-              isLoading={approveUsdcMutation.isLoading}
+              onClick={() => approveDaiMutation.mutate("dai")}
+              isLoading={approveDaiMutation.isLoading}
               bg="gray.700"
               size="lg"
               fontSize="md"
               _hover={{ bg: "gray.400" }}
             >
-              Approve USDC
+              Approve DAI
             </Button>
           )}
 
           {queryResp.data?.plutusApproved && queryResp.data?.usdcApproved && (
             <Button isFullWidth onClick={onOpen} bg="gray.700" size="lg" fontSize="md" _hover={{ bg: "gray.600" }}>
-              Buy pAPOLLO with PLUTUS/USDC
+              Buy pPLUTUS with DAI
             </Button>
           )}
         </Stack>
@@ -160,33 +241,33 @@ const Page = () => {
           <Stack spacing={10} direction={["column-reverse", "row"]} align="flex-start" justify="space-between">
             <Stack flex={1}>
               <PresaleCard />
+              <PlutusCard/>
             </Stack>
 
             <Stack flex={1} mb={7} spacing={4}>
-              <Heading fontSize="3xl">Apollo Timeline</Heading>
+              <Heading fontSize="3xl">PLUTUS Timeline</Heading>
 
               <Stack>
                 <Text fontSize="sm">
-                  <del>1. Presale First round. Done</del>
+                  1. IDO starts
                 </Text>
 
                 <Text fontSize="sm">
-                  <del>2. Presale First round ends</del>
+                  2. IDO ends
                 </Text>
 
+                {/* <Text fontSize="sm">
+                  3. Waiting room. Ongoing (<Link href="app/waiting-room">here</Link>)
+                </Text> */}
                 <Text fontSize="sm">
-                  3. Waiting room. Ongoing (<Link href="/apollo/app/waiting-room">here</Link>)
+                  3. Waiting room begins
                 </Text>
 
-                <Text fontSize="sm">4. Presale Second round starts at block #20151640</Text>
+                <Text fontSize="sm">4. Liquidity added at block #20220426</Text>
 
-                <Text fontSize="sm">5. Presale Second round ends at block #20223640</Text>
+                <Text fontSize="sm">5. Swap opens (swap pPLUTUS to PLUTUS) at block #20223426</Text>
 
-                <Text fontSize="sm">6. Liquidity added at block #20220426</Text>
-
-                <Text fontSize="sm">7. Swap opens (swap pAPOLLO to APOLLO) at block #20223426</Text>
-
-                <Text fontSize="sm">8. Farming starts at block #20259426</Text>
+                <Text fontSize="sm">6. Farming starts at block #20259426</Text>
               </Stack>
 
               <Text fontSize="sm">
@@ -194,26 +275,24 @@ const Page = () => {
                 <Link
                   isExternal
                   color="blue.600"
-                  href="https://hermes-defi.gitbook.io/apollo/launch/time-sequence-and-how-to"
+                  href="https://hermes-defi.gitbook.io/plutus/launch/time-sequence-and-how-to"
                 >
-                  https://hermes-defi.gitbook.io/apollo/launch/time-sequence-and-how-to
+                  https://hermes-defi.gitbook.io/plutus/launch/time-sequence-and-how-to
                 </Link>
               </Text>
 
               <Text fontSize="sm">
-                The volatility of the blocks in Polygon is very high. We recommend reviewing them to check the times.
+                The volatility of the blocks in Harmony is very high. We recommend reviewing them to check the times.
               </Text>
 
               <Stack>
                 <Heading fontSize="xl">How To</Heading>
 
-                <Text fontSize="sm">1. Purchase pAPOLLO with USDC + PLUTUS using the First Round Pre-sale Contract</Text>
-
-                <Text fontSize="sm">2. Purchase pAPOLLO with USDC + PLUTUS using the Second Round Pre-sale Contract</Text>
+                <Text fontSize="sm">1. Purchase pPLUTUS with DAI using the IDO Contract</Text>
 
                 <Text fontSize="sm">3. Enjoy the waiting room</Text>
 
-                <Text fontSize="sm">4. Swap pAPOLLO for APOLLO using the Reedem Contract (Swap Contract)</Text>
+                <Text fontSize="sm">4. Swap pPLUTUS for PLUTUS using the Reedem Contract (Swap Contract)</Text>
               </Stack>
             </Stack>
           </Stack>

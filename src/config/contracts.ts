@@ -93,6 +93,13 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: BankABI,
   },
+  plutusIDO: {
+    address: {
+      1666600000: "0x936ed8612605fa29ae1ae02d533733fff708b10a",
+      1666700001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: BankABI,
+  },
   swapUsdc: {
     address: {
       1666600000: "0x217aaa91e252b46e1abff0c8bab63249fbba881b",
