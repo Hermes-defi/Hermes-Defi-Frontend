@@ -151,7 +151,7 @@ export const useFetchPools = () => {
         enabled: !!poolLength && !!plutusPrice.data,
         queryKey: ["bank-pool", idx, account],
         queryFn: async ({ queryKey }) => {
-          if (queryKey[1] != 1){
+          if (queryKey[1] != 1 && queryKey[1] != 0){
             
           const pid = queryKey[1] as number;
           const poolInfo = await bankContract.poolInfo(pid);

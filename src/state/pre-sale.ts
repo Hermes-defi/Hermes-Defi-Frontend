@@ -25,7 +25,7 @@ export function usePresaleInfo() {
       */
       data.startBlock = (await presaleContract.startBlock()).toString();
       data.endBlock = (await presaleContract.endBlock()).toString();
-      data.ratio = (await presaleContract.ratio()).toString();
+      // data.ratio = (await presaleContract.ratio()).toString();
 
       data.maxpPlutus = utils.formatEther(await presaleContract.maxTokenPurchase());
       data.pPlutusPrice = (await presaleContract.pPlutusPrice()).toString();
