@@ -51,6 +51,7 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: ReferralABI,
   },
+  // TODO: change masterchef address
   masterChef: {
     address: {
       1666600000: "0xaFd37A86044528010d0E70cDc58d0A9B5Eb03206",
@@ -58,6 +59,7 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: MasterChefABI,
   },
+  // TODO: change plutus address
   plutusToken: {
     address: {
       1666600000: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
@@ -86,6 +88,7 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: HermesNFTABI,
   },
+  // TODO: change bank address
   bank: {
     address: {
       1666600000: "0x936ed8612605fa29ae1ae02d533733fff708b10a",
@@ -93,6 +96,7 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: BankABI,
   },
+  // TODO: change plutusIDO address
   plutusIDO: {
     address: {
       1666600000: "0x936ed8612605fa29ae1ae02d533733fff708b10a",
@@ -107,6 +111,15 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: UsdcSwapABI,
   },
+  
+  //TODO: change address, add pPlutusABI
+  pPlutus: {
+    address: {
+      1666600000: "0x936ed8612605fa29ae1ae02d533733fff708b10a",
+      1666700001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: PlutusTokenABI,
+  }
 };
 
 export default defaultContracts;

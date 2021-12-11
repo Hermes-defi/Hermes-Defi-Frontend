@@ -126,7 +126,7 @@ export function useCustomMasterChef() {
 
 export function usePresaleContract() {
   const contract = useContract();
-  return contract(defaultContracts.plutusIDO); // TODO: ADD Presale.
+  return contract(defaultContracts.plutusIDO);
 }
 
 export function useBankContract() {
@@ -137,4 +137,9 @@ export function useBankContract() {
 export function useSwapUSDCContract() {
   const contract = useContract();
   return contract(defaultContracts.swapUsdc);
+}
+
+export function usepPlutus(){
+  const contract = useContract();
+  return contract(defaultContracts.pPlutus);
 }
