@@ -180,6 +180,7 @@ export const useFetchPools = () => {
 
           // calculate APR
           const poolTokenPrice = await fetchPrice({ address: lpContract.address, symbol, decimals }, library);
+          console.log("🚀 ~ file: bank.ts ~ line 183 ~ queryFn: ~ poolTokenPrice", poolTokenPrice);
 
           /**
            * to calculate the APR we need the pool rewards per week and then convert this to USD and divide it
@@ -199,7 +200,7 @@ export const useFetchPools = () => {
               .dividedBy(`1e${decimals}`);
 
             apr = yearlyRewardsUsd.dividedBy(totalStakedInUsd).toNumber() * 100;
-            // console.log("tokenPerSec:", tokenPerSec, "yearlyRewards:", yearlyRewards.toNumber(), "yearlyRewardsUSD:", yearlyRewardsUsd.toNumber(), "totalStakedInUSD:", totalStakedInUsd.toNumber(), "apr:", apr);
+            console.log("tokenPerSec:", tokenPerSec, "yearlyRewards:", yearlyRewards.toNumber(), "yearlyRewardsUSD:", yearlyRewardsUsd.toNumber(), "totalStakedInUSD:", totalStakedInUsd.toNumber(), "apr:", apr);
           }
 
           let enrolled = false;

@@ -11,6 +11,8 @@ import DfynFarmABI from "config/abis/DfynFarm.json";
 import HermesNFTABI from "config/abis/HermesNFT.json";
 import BankABI from "config/abis/Bank.json";
 import UsdcSwapABI from "config/abis/UsdcSwap.json";
+import PresaleABI from "config/abis/Presale.json";
+import pPlutusTokenABI from "config/abis/pPlutusToken.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -99,10 +101,10 @@ const defaultContracts = {
   // TODO: change plutusIDO address
   plutusIDO: {
     address: {
-      1666600000: "0x936ed8612605fa29ae1ae02d533733fff708b10a",
+      1666600000: "0x20bb249f16F68940436aC22E18C21b7935c837a5",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
-    abi: BankABI,
+    abi: PresaleABI,
   },
   swapUsdc: {
     address: {
@@ -115,10 +117,10 @@ const defaultContracts = {
   //TODO: change address, add pPlutusABI
   pPlutus: {
     address: {
-      1666600000: "0x936ed8612605fa29ae1ae02d533733fff708b10a",
+      1666600000: "0xdBC1b31CA8F7dCf726b647f4930572850A05E520",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
-    abi: PlutusTokenABI,
+    abi: pPlutusTokenABI,
   }
 };
 
