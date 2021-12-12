@@ -93,7 +93,7 @@ const defaultContracts = {
   // TODO: change bank address
   bank: {
     address: {
-      1666600000: "0x936ed8612605fa29ae1ae02d533733fff708b10a",
+      1666600000: "0x4e4a491b028b90fb8870429c40d6172bba9145b1",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: BankABI,
