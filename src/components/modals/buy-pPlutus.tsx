@@ -14,8 +14,9 @@ import {
   useColorModeValue,
   Skeleton,
 } from "@chakra-ui/react";
-import { displayTokenCurrency } from "libs/utils";
+import { displayCurrency, displayTokenCurrency } from "libs/utils";
 import { usePresaleQuote } from "state/pre-sale";
+import { useBalance } from "hooks/wallet";
 
 type Props = {
   isOpen: boolean;
@@ -26,6 +27,7 @@ type Props = {
 export const BuypPlutusModal: React.FC<Props> = (props) => {
   const [amount, setAmount] = useState("");
   const quotes = usePresaleQuote(amount);
+  const balance = useBalance();
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
@@ -49,7 +51,7 @@ export const BuypPlutusModal: React.FC<Props> = (props) => {
             >
               <Box flex="1">
                 <Text mb={2} fontSize="xs">
-                  Enter pPLUTUS to purchase
+                  Balance: {displayCurrency(balance, true)} DAI
                 </Text>
 
                 <Input
@@ -68,9 +70,20 @@ export const BuypPlutusModal: React.FC<Props> = (props) => {
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
+              <Box>
+                <Button
+                  onClick={() => setAmount(balance)}
+                  size="sm"
+                  variant="outline"
+                  colorScheme="secondary"
+                  isDisabled={props.isLoading}
+                >
+                  Max
+                </Button>
+              </Box>
             </Stack>
 
-            <Stack>
+            {/* <Stack>
               <div>
                 <Text fontSize="xs">DAI amount:</Text>
 
@@ -80,7 +93,7 @@ export const BuypPlutusModal: React.FC<Props> = (props) => {
                   </Text>
                 </Skeleton>
               </div>
-            </Stack>
+            </Stack> */}
 
             <Button
               onClick={() => props.onPurchase(amount).then(() => setAmount(""))}

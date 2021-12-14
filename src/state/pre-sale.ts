@@ -53,8 +53,8 @@ export function usePresaleQuote(amount) {
     queryFn: async () => {
       const resp = await presaleContract.quoteAmounts(utils.parseEther(amount), account);
 
-      console.log(resp);
-      const amountInDAI = utils.formatUnits(resp.inDai.toString(), 6);
+      console.debug(resp);
+      const amountInDAI = utils.formatUnits(resp.inDAI.toString(), 18);
 
       return {
         amountInDAI,
