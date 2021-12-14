@@ -9,8 +9,8 @@ import { approveLpContract } from "web3-functions";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import { fetchPrice } from "web3-functions/prices";
-import { BURN_ADDRESS, SECONDS_PER_YEAR } from "config/constants";
-import { generateTimeDuration } from "libs/utils";
+import { BLOCKS_PER_SECOND, BURN_ADDRESS, SECONDS_PER_YEAR } from "config/constants";
+import { generateTimeDuration, blockToTimestamp, blockDiff } from "libs/utils";
 import { usePlutusPrice } from "hooks/prices";
 
 dayjs.extend(duration);
@@ -23,20 +23,31 @@ const BANK_REWARD_TOKEN = {
 };
 
 // queries
+// TODO
 export const useDepositedAmount = () => {
   const { account } = useActiveWeb3React();
   const bankContract = useBankContract();
-
-  return useQuery({
+  const poolLength = useQuery({
+    queryKey: "banks-pool-length-deposit",
+    queryFn: async () => {
+      const poolLength = await bankContract.poolLength();
+      return poolLength.toString();
+    },
+  });  return useQuery({
     queryKey: "bankDepositAmount",
     enabled: !!account,
     queryFn: async () => {
-      const resp = await bankContract.userinfo(account);
-      return utils.formatUnits(resp.amount, 18);
+      let totalAmount = 0;
+      for(let i = 0; i < poolLength.data; i++){
+        const resp = await bankContract.userInfo(i, account);
+        totalAmount += resp.amount
+      }
+      return utils.formatUnits(totalAmount, 18);
     },
   });
 };
 
+// * DONE
 export const useHasApprovedPool = () => {
   const { account } = useActiveWeb3React();
   const bankContract = useBankContract();
@@ -52,6 +63,7 @@ export const useHasApprovedPool = () => {
   });
 };
 
+// TODO Testing
 export const useFetchMainPool = () => {
   const { library } = useActiveWeb3React();
   const bankContract = useBankContract();
@@ -64,15 +76,20 @@ export const useFetchMainPool = () => {
     queryFn: async () => {
       const poolName = "1dai";
 
-      const poolInfo = await bankContract.daiinfo();
-      const poolEndTime = (await bankContract.endtime()).toString();
+      const poolInfo = await bankContract.poolInfo(0);
+      // TODO: transform blocks to time
+      const poolEndTime = blockToTimestamp(await bankContract.endBlock());
 
-      const timeLeftDiff = dayjs.unix(poolEndTime).diff(dayjs()); // time until pool ends
-      const timeLeft = timeLeftDiff > 0 ? generateTimeDuration(timeLeftDiff) : null;
+      // const timeLeftDiff = dayjs.unix(poolEndTime).diff(dayjs()); // time until pool ends
+      const timeLeftDiff2 = blockDiff(await bankContract.endBlock())
+      const timeLeft = timeLeftDiff2 > 0 ? generateTimeDuration(timeLeftDiff2) : null;
 
       // display total
-      const poolDepositedAmount = utils.formatUnits(await bankContract.totalAmount(), 18);
-      const poolTotalPayout = utils.formatUnits(await bankContract.totalpayout(), 18);
+      //TODO: search about pool stats
+      //* poolInfo.balance got the total tokens in the pool
+      const poolDepositedAmount = utils.formatUnits(poolInfo.balance, 18);
+      //TODO: ASK FOR PAYOUT
+      // const poolTotalPayout = utils.formatUnits(await bankContract.totalpayout(), 18);
 
       // total rewards
       const rewardTokenPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
@@ -98,22 +115,23 @@ export const useFetchMainPool = () => {
       });
       if (parseFloat(poolDepositedAmount) > 0 && plutusPrice.data && parseFloat(plutusPrice.data) > 0) {
         const tokenPerSec = utils.formatUnits(poolInfo.daiPerTime, 18);
+        const tokenPerBlock = (await bankContract.tokenPerBlock());
         // console.log({
-        //   daiPerTime: poolInfo.daiPerTime
+        //   daiPerTime: poolInfo.daiPerTime.toNumber()
         // });
-        const yearlyRewards = new BigNumberJS(tokenPerSec).times(SECONDS_PER_YEAR);
+        const yearlyRewards = new BigNumberJS(tokenPerBlock).times(SECONDS_PER_YEAR).div(BLOCKS_PER_SECOND);
 
         const yearlyRewardsUsd = yearlyRewards.times(rewardTokenPrice).dividedBy(`1e${BANK_REWARD_TOKEN.decimals}`);
 
         const totalStakedInUsd = new BigNumberJS(poolDepositedAmount).times(plutusPrice.data);
 
         apr = yearlyRewardsUsd.dividedBy(totalStakedInUsd).toNumber() * 100;
-        // console.log({
-        //   rewardTokenPrice,
-        //   tokenPerSec,
-        //   yearlyRewards: yearlyRewards.valueOf(),
-        //   yearlyRewardsUsd: yearlyRewardsUsd.valueOf(),
-        // });
+        console.log({
+          rewardTokenPrice,
+          tokenPerSec,
+          yearlyRewards: yearlyRewards.valueOf(),
+          yearlyRewardsUsd: yearlyRewardsUsd.valueOf(),
+        });
       }
 
       return {
@@ -121,7 +139,7 @@ export const useFetchMainPool = () => {
         timeLeft,
         apr,
         totalRewardsInUsd,
-        poolTotalPayout,
+        // poolTotalPayout,
       };
     },
   });
@@ -129,6 +147,7 @@ export const useFetchMainPool = () => {
   return mainPool;
 };
 
+// TODO Testing
 export const useFetchPools = () => {
   const { account, library } = useActiveWeb3React();
   const plutusPrice = usePlutusPrice();
@@ -158,25 +177,27 @@ export const useFetchPools = () => {
 
           // pool lp details
           const lpContract = getLpContract(poolInfo.token);
+          // const lpContract = getLpContract(BANK_REWARD_TOKEN.address);
 
           const symbol = await lpContract.symbol();
           const decimals = await lpContract.decimals();
           if (decimals !== 18) return null;
 
           // time left
-          const poolStartTime = poolInfo.startTime.toString();
-          const poolEndTime = poolInfo.endTime.toString();
+          // const poolStartTime = poolInfo.startTime.toString();
+          // const poolEndTime = poolInfo.endTime.toString();
 
-          const isNew = dayjs.unix(poolStartTime).isBefore(dayjs().add(1, "d")); // if pool is started in less than 2 days
+          // const isNew = dayjs.unix(poolStartTime).isBefore(dayjs().add(1, "d")); // if pool is started in less than 2 days
 
-          const timeLeftDiff = dayjs.unix(poolEndTime).diff(dayjs()); // time until pool ends
-          if (timeLeftDiff < 1) return null;
+          // const timeLeftDiff = dayjs.unix(poolEndTime).diff(dayjs()); // time until pool ends
+          // if (timeLeftDiff < 1) return null;
 
-          const timeLeft = timeLeftDiff > 0 ? generateTimeDuration(timeLeftDiff) : null;
+          // const timeLeft = timeLeftDiff > 0 ? generateTimeDuration(timeLeftDiff) : null;
 
           // display total
-          const poolAmount = poolInfo.initamt.toString();
-          const poolDepositedAmount = poolInfo.amount.toString();
+          // const poolAmount = poolInfo.initamt.toString();
+          const poolDepositedAmount = poolInfo.balance.toString();
+          // const poolDepositedAmount = poolInfo.amount.toString();
 
           // calculate APR
           const poolTokenPrice = await fetchPrice({ address: lpContract.address, symbol, decimals }, library);
@@ -190,9 +211,10 @@ export const useFetchPools = () => {
 
           // todo:: get plutus price
           // console.log("bank", pid, poolDepositedAmount, plutusPrice.data);
-          if (poolDepositedAmount > 0 && plutusPrice.data && parseFloat(plutusPrice.data) > 0) {
+          if (parseFloat(poolDepositedAmount) > 0 && plutusPrice.data && parseFloat(plutusPrice.data) > 0) {
             const tokenPerSec = poolInfo.tokenPerSec.toString();
-            const yearlyRewards = new BigNumberJS(tokenPerSec).times(SECONDS_PER_YEAR);
+            const tokenPerBlock = (await bankContract.tokenPerBlock());
+            const yearlyRewards = new BigNumberJS(tokenPerBlock).times(SECONDS_PER_YEAR).div(BLOCKS_PER_SECOND);
             const yearlyRewardsUsd = yearlyRewards.times(poolTokenPrice).dividedBy(`1e${decimals}`);
             // console.log("poolInfo:", poolInfo);
             const totalStakedInUsd = new BigNumberJS(poolDepositedAmount)
@@ -200,26 +222,26 @@ export const useFetchPools = () => {
               .dividedBy(`1e${decimals}`);
 
             apr = yearlyRewardsUsd.dividedBy(totalStakedInUsd).toNumber() * 100;
-            console.log("tokenPerSec:", tokenPerSec, "yearlyRewards:", yearlyRewards.toNumber(), "yearlyRewardsUSD:", yearlyRewardsUsd.toNumber(), "totalStakedInUSD:", totalStakedInUsd.toNumber(), "apr:", apr);
+            // console.log("tokenPerSec:", tokenPerSec, "yearlyRewards:", yearlyRewards.toNumber(), "yearlyRewardsUSD:", yearlyRewardsUsd.toNumber(), "totalStakedInUSD:", totalStakedInUsd.toNumber(), "apr:", apr);
           }
 
-          let enrolled = false;
-          if (account) {
-            const userinfo = await bankContract.userinfo(account);
-            enrolled = userinfo.pids.find((id) => id.toNumber() == pid) !== undefined;
-          }
+          // let enrolled = false;
+          // if (account) {
+          //   const userinfo = await bankContract.userinfo(account);
+          //   enrolled = userinfo.pids.find((id) => id.toNumber() == pid) !== undefined;
+          // }
 
           return {
             pid,
             poolName: symbol,
-            isNew,
+            // isNew,
             apr,
-            poolAmount,
-            poolAmountInUsd: new BigNumberJS(poolAmount).times(poolTokenPrice).toString(),
-            poolStartTime,
-            poolEndTime,
-            timeLeft,
-            enrolled,
+            poolDepositedAmount,
+            poolAmountInUsd: new BigNumberJS(poolDepositedAmount).times(poolTokenPrice).toString(),
+            // poolStartTime,
+            // poolEndTime,
+            // timeLeft,
+            // enrolled,
           };
         }
         },
@@ -230,6 +252,7 @@ export const useFetchPools = () => {
   return pools;
 };
 
+// * Total Stats
 export const useRewardInfo = () => {
   const pools = useFetchPools();
   const mainPool = useFetchMainPool();
@@ -252,7 +275,7 @@ export const useRewardInfo = () => {
 
   return { isLoading, aprs, totalRewards };
 };
-
+// * Burnt stats
 export const useBankStats = () => {
   const plutusContract = usePlutusToken();
   const bankContract = useBankContract();
@@ -262,7 +285,7 @@ export const useBankStats = () => {
     queryFn: async () => {
       const totalSupply = utils.formatUnits(await plutusContract.totalSupply(), 18);
 
-      const totalBurntInBank = utils.formatUnits(await bankContract.totalBurnt(), 18);
+      const totalBurntInBank = utils.formatUnits(await bankContract.totalLockedUpRewards(), 18);
       const percentageBurntInBank = new BigNumberJS(totalBurntInBank).dividedBy(totalSupply).times(100).toString();
 
       const totalBurnt = utils.formatUnits(await plutusContract.balanceOf(BURN_ADDRESS), 18);
@@ -282,44 +305,73 @@ export const useBankStats = () => {
   return bankStats;
 };
 
+// TODO: Test
 export const useMyBankRewards = () => {
   const { account, library } = useActiveWeb3React();
   const plutusPrice = usePlutusPrice();
   const bankContract = useBankContract();
   const getLpContract = useERC20();
 
+  const poolLength = useQuery({
+    queryKey: "baks-pool-lenght-my-rewards",
+    queryFn: async () => {
+      const poolLength = await bankContract.poolLength();
+      return poolLength.toString();
+    },
+  });
+  // const poolsArr = Array.from( { length: poolLength.data || 0});
+
   const myBankRewards = useQuery({
     queryKey: ["my-bank-rewards", account],
     enabled: !!account,
     queryFn: async () => {
-      const userInfo = await bankContract.userinfo(account);
-      const pids = userInfo.pids.map((p) => p.toNumber());
-
-      const poolRewards = [];
+      
       let totalDollarValue = 0;
-      for (let pid of pids) {
-        const reward = (await bankContract.pendingReward(pid, account)).toString();
-        const poolInfo = await bankContract.poolInfo(pid);
+      const poolRewards = [];
+
+      for(let i = 0; i < poolLength.data; i++){
+        const userInfo = await bankContract.userInfo(i, account);
+        const rewardPool = userInfo.rewardDebt;
+        const poolInfo = await bankContract.poolInfo(i);
         const lpContract = getLpContract(poolInfo.token);
         const symbol = await lpContract.symbol();
 
         const tokenPrice = await fetchPrice({ address: lpContract.address, symbol: symbol, decimals: 18 }, library);
-        const rewardInUsd = new BigNumberJS(reward).times(tokenPrice).toString();
+        const rewardInUsd = new BigNumberJS(rewardPool).times(tokenPrice).toString();
 
         totalDollarValue = new BigNumberJS(totalDollarValue).plus(rewardInUsd).toNumber();
         poolRewards.push({
           name: symbol,
-          reward,
+          rewardPool,
           rewardInUsd,
         });
       }
+      
+      // const pids = userInfo.pids.map((p) => p.toNumber());
 
-      const daiRewards = utils.formatUnits(await bankContract.pendingDAI(account), 18);
-      const daiPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
-      const daiRewardUsd = new BigNumberJS(daiRewards).times(daiPrice).toString();
+      // for (let pid of pids) {
+      //   const reward = (await bankContract.pendingReward(pid, account)).toString();
+      //   const poolInfo = await bankContract.poolInfo(pid);
+      //   const lpContract = getLpContract(poolInfo.token);
+      //   const symbol = await lpContract.symbol();
+
+      //   const tokenPrice = await fetchPrice({ address: lpContract.address, symbol: symbol, decimals: 18 }, library);
+      //   const rewardInUsd = new BigNumberJS(reward).times(tokenPrice).toString();
+
+      //   totalDollarValue = new BigNumberJS(totalDollarValue).plus(rewardInUsd).toNumber();
+      //   poolRewards.push({
+      //     name: symbol,
+      //     reward,
+      //     rewardInUsd,
+      //   });
+      // }
+
+      // const daiRewards = utils.formatUnits(await bankContract.pendingDAI(account), 18);
+      // const daiPrice = await fetchPrice(BANK_REWARD_TOKEN, library);
+      // const daiRewardUsd = new BigNumberJS(daiRewards).times(daiPrice).toString();
 
       // total dollar value
-      totalDollarValue = new BigNumberJS(totalDollarValue).plus(daiRewardUsd).toNumber();
+      // totalDollarValue = new BigNumberJS(totalDollarValue).plus(daiRewardUsd).toNumber();
 
       const inPlutus = !!plutusPrice.data
         ? new BigNumberJS(totalDollarValue).dividedBy(plutusPrice.data).toString()
@@ -327,7 +379,7 @@ export const useMyBankRewards = () => {
 
       console.log({ inPlutus });
       return {
-        daiRewards,
+        // daiRewards,
         poolRewards,
         totalDollarValue,
         inPlutus,
@@ -338,6 +390,7 @@ export const useMyBankRewards = () => {
   return myBankRewards;
 };
 
+// ! Legacy function
 export const useLotteryInfo = () => {
   const { account } = useActiveWeb3React();
   const bankContract = useBankContract();
@@ -379,6 +432,7 @@ export const useLotteryInfo = () => {
 };
 
 // mutations
+// * DONE
 export const useApproveBank = () => {
   const queryClient = useQueryClient();
   const bankContract = useBankContract();
@@ -423,6 +477,7 @@ export const useApproveBank = () => {
   return approveMutation;
 };
 
+// TODO
 export const useDepositInBank = () => {
   const queryClient = useQueryClient();
   const bankContract = useBankContract();
@@ -432,10 +487,10 @@ export const useDepositInBank = () => {
   const toast = useToast();
 
   const depositMutation = useMutation(
-    async (amount: string) => {
+    async ({pid, amount, referrer}:{pid: number, amount: string, referrer: string}) => {
       if (!account) throw new Error("No connected account");
 
-      const tx = await bankContract.deposit(utils.parseUnits(amount, 18));
+      const tx = await bankContract.deposit(pid, utils.parseUnits(amount, 18), referrer);
       await tx.wait();
     },
 
@@ -452,8 +507,8 @@ export const useDepositInBank = () => {
         ReactGA.event({
           category: "Deposits",
           action: `Deposited PLUTUS in Bank`,
-          value: parseInt(amount, 10),
-          label: amount,
+          value: parseInt(amount.amount, 10),
+          label: amount.amount,
         });
       },
 
@@ -476,6 +531,7 @@ export const useDepositInBank = () => {
   return depositMutation;
 };
 
+//! Legacy function
 export const useEnrollInPool = () => {
   const queryClient = useQueryClient();
   const bankContract = useBankContract();
@@ -521,6 +577,7 @@ export const useEnrollInPool = () => {
   return enrollMutation;
 };
 
+//! Legacy function
 export const useCompoundInBank = () => {
   const queryClient = useQueryClient();
   const bankContract = useBankContract();

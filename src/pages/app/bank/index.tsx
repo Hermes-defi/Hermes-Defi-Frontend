@@ -29,6 +29,7 @@ import { displayCurrency, displayNumber } from "libs/utils";
 import { usePlutusBalance } from "hooks/wallet";
 import { useActiveWeb3React } from "wallet";
 import { UnlockButton } from "components/wallet/unlock-wallet";
+const MAIN_POOL_PID = 0;
 
 export function BankNavigation() {
   return (
@@ -49,13 +50,6 @@ export function BankNavigation() {
         </a>
       </NextLink>
 
-      <NextLink href="/app/bank/lottery" passHref>
-        <a>
-          <Button variant="link" color={useColorModeValue("gray.500", "gray.300")}>
-            <Heading fontSize="xl">Lottery</Heading>
-          </Button>
-        </a>
-      </NextLink>
       <NextLink href="https://hermes-defi.gitbook.io/plutus/products/bank" passHref>
         <a>
           <Button variant="link" color={useColorModeValue("gray.500", "gray.300")}>
@@ -178,7 +172,7 @@ function DepositSection() {
               isFullWidth
               isDisabled={!hasApprovedPool.data}
               isLoading={depositeMutation.isLoading}
-              onClick={() => depositeMutation.mutateAsync(amount).then(() => setAmount(""))}
+              onClick={() => depositeMutation.mutateAsync({pid: 0, amount: amount, referrer: "0x00"}).then(() => setAmount(""))}
               variant="solid"
               colorScheme="primary"
             >
@@ -307,7 +301,7 @@ const Page = () => {
                     </Heading>
                   </Stack>
 
-                  <Stack align="center">
+                  {/* <Stack align="center">
                     <Heading color="gray.50" fontSize="xl">
                       DAI paid out
                     </Heading>
@@ -315,7 +309,7 @@ const Page = () => {
                     <Heading color="white" fontSize="4xl">
                       {displayNumber(mainPool.data?.poolTotalPayout, false, 2)}
                     </Heading>
-                  </Stack>
+                  </Stack> */}
                 </Stack>
               </Box>
             )}

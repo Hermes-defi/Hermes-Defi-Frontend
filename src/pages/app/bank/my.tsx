@@ -41,11 +41,11 @@ const Page = () => {
                     All my rewards
                   </Heading>
 
-                  <Skeleton isLoaded={!!rewards.data}>
+                  {/* <Skeleton isLoaded={!!rewards.data}>
                     <Text color="primary.400" fontWeight="bold">
-                      {displayNumber(rewards.data?.daiRewards || 0, false, 6)} 1DAI
+                      {displayNumber(rewards.data?.poolRewards || 0, false, 6)} 1DAI
                     </Text>
-                  </Skeleton>
+                  </Skeleton> */}
 
                   {rewards.data?.poolRewards.map((pool) => (
                     <Text key={pool.name} color="primary.400" fontWeight="bold">
@@ -79,7 +79,7 @@ const Page = () => {
                 </Stack>
               </Stack>
 
-              <Stack flex="1" justify="space-between">
+              {/* <Stack flex="1" justify="space-between">
                 <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.100")}>
                   Note: Make sure to have enough PLUTUS to receive a lottery ticket since the actual amount of PLUTUS
                   you compound will be less than what you see on this page due to slippage (could be up to 10%)
@@ -111,7 +111,7 @@ const Page = () => {
                     compound to get 5% bonus PLUTUS and lottery ticket
                   </Text>
                 </Stack>
-              </Stack>
+              </Stack> */}
             </Stack>
           </Box>
         </Stack>
