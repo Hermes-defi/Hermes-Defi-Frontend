@@ -16,7 +16,8 @@ import {
 } from "@chakra-ui/react";
 import { displayCurrency, displayTokenCurrency } from "libs/utils";
 import { usePresaleQuote } from "state/pre-sale";
-import { useBalance } from "hooks/wallet";
+import { useTokenBalance } from "hooks/wallet";
+import tokens from "config/tokens";
 
 type Props = {
   isOpen: boolean;
@@ -27,7 +28,7 @@ type Props = {
 export const BuypPlutusModal: React.FC<Props> = (props) => {
   const [amount, setAmount] = useState("");
   const quotes = usePresaleQuote(amount);
-  const balance = useBalance();
+  const balance = useTokenBalance(tokens.dai.address, tokens.dai.decimals);
 
   return (
     <Modal isOpen={props.isOpen} onClose={props.onClose} isCentered>
