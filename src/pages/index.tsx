@@ -35,7 +35,7 @@ import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
 import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
 import { FaTwitter, FaMedium, FaGithub, FaDiscord, FaYoutube } from "react-icons/fa";
-import { useIrisPrice, useApolloPrice, usePlutusPrice } from "hooks/prices";
+import { useIrisPrice } from "hooks/prices";
 import {
   useTotalInFarms,
   useTotalInBalancers,
@@ -280,7 +280,7 @@ function Header() {
 // NUMBERS
 const DappStats = () => {
   const { data: irisPrice } = useIrisPrice();
-  const { data: plutusPrice } = usePlutusPrice();
+  // const { data: plutusPrice } = usePlutusPrice();
   const stats = useLandingPageStats();
 
   return (
