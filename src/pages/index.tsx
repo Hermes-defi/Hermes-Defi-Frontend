@@ -264,13 +264,13 @@ function Header() {
             </chakra.a>
           </NextLink>
 
-          <NextLink href="https://plutus.hermesdefi.io/app" passHref>
+          {/* <NextLink href="https://plutus.hermesdefi.io/app" passHref>
             <chakra.a flex="1">
               <Button isFullWidth variant="solid" bg="#B05CFF" color="white" size="lg" _hover={{ bg: "#9A2EFF" }}>
                 Harmony
               </Button>
             </chakra.a>
-          </NextLink>
+          </NextLink> */}
         </Stack>
       </Stack>
     </Container>
