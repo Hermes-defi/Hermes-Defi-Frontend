@@ -13,6 +13,7 @@ import BankABI from "config/abis/Bank.json";
 import UsdcSwapABI from "config/abis/UsdcSwap.json";
 import PresaleABI from "config/abis/Presale.json";
 import pPlutusTokenABI from "config/abis/pPlutusToken.json";
+import StakeBankABI from "config/abis/StakeBank.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -32,6 +33,11 @@ export const uniPair: (address: string) => ContractInfo = (address: string) => (
 
 export const stakePool: (address: string) => ContractInfo = (address: string) => ({
   abi: StakePoolABI,
+  address,
+});
+
+export const stakeBank: (address: string) => ContractInfo = (address: string) => ({
+  abi: StakeBankABI,
   address,
 });
 
@@ -101,7 +107,7 @@ const defaultContracts = {
   // TODO: change plutusIDO address
   plutusIDO: {
     address: {
-      1666600000: "0x20bb249f16F68940436aC22E18C21b7935c837a5",
+      1666600000: "0xc2eaFa6B97194FCC96F04981944F99bbDCF32665",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: PresaleABI,

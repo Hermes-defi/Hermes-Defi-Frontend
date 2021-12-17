@@ -5,15 +5,23 @@ import {
   Box,
   Button,
   Container,
+  Flex,
+  FormControl,
+  FormLabel,
   Heading,
+  HStack,
   Image,
   Input,
   SimpleGrid,
   Skeleton,
+  Spinner,
   Stack,
   StackDivider,
+  Switch,
   Text,
   useColorModeValue,
+  Wrap,
+  WrapItem,
 } from "@chakra-ui/react";
 import {
   useApproveBank,
@@ -29,6 +37,9 @@ import { displayCurrency, displayNumber } from "libs/utils";
 import { usePlutusBalance } from "hooks/wallet";
 import { useActiveWeb3React } from "wallet";
 import { UnlockButton } from "components/wallet/unlock-wallet";
+import { useToggle } from "react-use";
+import { useBankStakeStats, useFetchStakePools } from "state/stake-bank";
+import { BankPoolCard } from "components/cards/bank-card";
 const MAIN_POOL_PID = 0;
 
 export function BankNavigation() {
@@ -42,18 +53,10 @@ export function BankNavigation() {
         </a>
       </NextLink>
 
-      <NextLink href="/app/bank/my" passHref>
-        <a>
-          <Button variant="link" color={useColorModeValue("gray.500", "gray.300")}>
-            <Heading fontSize="xl">My Earnings</Heading>
-          </Button>
-        </a>
-      </NextLink>
-
       <NextLink href="https://hermes-defi.gitbook.io/plutus/products/bank" passHref>
         <a>
           <Button variant="link" color={useColorModeValue("gray.500", "gray.300")}>
-            <Heading fontSize="xl">More Info</Heading>
+            <Heading fontSize="xl">Info</Heading>
           </Button>
         </a>
       </NextLink>
@@ -246,144 +249,98 @@ function Pool({ pool }) {
   );
 }
 
-const Page = () => {
-  const mainPool = useFetchMainPool();
-  const pools = useFetchPools();
-  const stats = useBankStats();
+function BurnStats({  }) {
+  const stakeResp = useBankStakeStats();
+
+  return (
+    <Stack
+      spacing={7}
+      bg={useColorModeValue("white", "gray.700")}
+      rounded="2xl"
+      boxShadow="base"
+      px={[5, 10]}
+      py={6}
+    >
+      <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+        Bank Stats
+      </Heading>
+
+      <Stack spacing={[4, 2]}>
+        <Stack direction={["column", "row"]} justify="space-between">
+          <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+            Total PLUTUS locked in bank
+          </Heading>
+
+          <Skeleton isLoaded={!!stakeResp.data}>
+            <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
+              {displayNumber(stakeResp.data?.totalStaked, false, 2)}
+            </Text>
+          </Skeleton>
+        </Stack>
+
+        <Stack direction={["column", "row"]} justify="space-between">
+          <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+            % PLUTUS locked in bank
+          </Heading>
+          <Skeleton isLoaded={!!stakeResp.data}>
+            <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
+              {displayNumber(stakeResp.data?.stakeToken?.percentageLocked, false, 6)}%
+            </Text>
+          </Skeleton>
+        </Stack>
+
+        {/* <Stack direction={["column", "row"]} justify="space-between">
+          <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
+            DAI shared through bank
+          </Heading>
+
+          <Skeleton isLoaded={!!stats.data}>
+            <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
+              {displayNumber(stats.data?.totalBurnt, false, 2)}
+            </Text>
+          </Skeleton>
+        </Stack> */}
+      </Stack>
+    </Stack>
+  );
+}
+
+const Page: React.FC = () => {
+  const [stakedOnly, toggleStakedOnly] = useToggle(false);
+  const [active, toggleActive] = useToggle(true);
+
+  const stakeResp = useFetchStakePools();
+  const isLoading = stakeResp.every((s) => s.status === "loading");
+
+  let pools = stakeResp
+    .filter((pool: any) => pool.data?.active === active)
+    .filter((pool: any) => (stakedOnly ? pool.data?.hasStaked === stakedOnly : true));
 
   return (
     <AppLayout>
-      <Container maxWidth="container.lg" my={8}>
-        <Stack spacing={8}>
+      <Stack spacing={8}>
           <BankNavigation />
+      </Stack>
+      <HStack align="center" spacing={10} py={10}>
+        <Container align="center" maxWidth="container.lg">
+          {isLoading ? (
+            <Flex mt={16} align="center" justify="center">
+              <Spinner size="xl" />
+            </Flex>
+          ) : (
 
-          <Stack w="100%" rounded="xl" spacing={6} py={[4, 8]} px={[0, 8]}>
-            <Stack direction={{ base: "column-reverse", md: "row" }} align="stretch">
-              <BankStats />
-              <DepositSection />
-            </Stack>
-
-            {mainPool.data && (
-              <Box
-                flex="1"
-                bgGradient={"linear(to-b, primary.200, accent.400)"}
-                color="white"
-                rounded="2xl"
-                boxShadow="base"
-                px={[5, 10]}
-                py={6}
-              >
-                <Stack direction="row" align="center">
-                  <Image objectFit="contain" src={`/1dai-logo.png`} boxSize={10} />
-                  <Text fontSize="md" textTransform="uppercase" fontWeight="bold">
-                    1dai bank
-                  </Text>
-                </Stack>
-
-                <Stack mt={8} direction={["column", "row"]} justify="space-around" spacing={[5, 10]}>
-                  <Stack align="center">
-                    <Heading color="gray.50" fontSize="xl">
-                      APR
-                    </Heading>
-
-                    <Heading color="white" fontSize="4xl">
-                      {displayNumber(mainPool.data?.apr, false, 2)}%
-                    </Heading>
-                  </Stack>
-
-                  <Stack align="center">
-                    <Heading color="gray.50" fontSize="xl">
-                      Rewards
-                    </Heading>
-
-                    <Heading color="white" fontSize="4xl">
-                      {displayCurrency(mainPool.data?.totalRewardsInUsd)}
-                    </Heading>
-                  </Stack>
-
-                  {/* <Stack align="center">
-                    <Heading color="gray.50" fontSize="xl">
-                      DAI paid out
-                    </Heading>
-
-                    <Heading color="white" fontSize="4xl">
-                      {displayNumber(mainPool.data?.poolTotalPayout, false, 2)}
-                    </Heading>
-                  </Stack> */}
-                </Stack>
-              </Box>
-            )}
-
-            {/* rewards */}
-            <SimpleGrid columns={{ base: 1, md: 2 }} spacing={5}>
-              {pools.map(({ data: pool }: any) => {
-                if (!pool) return null;
-                return <Pool pool={pool} key={pool.pid} />;
-              })}
-            </SimpleGrid>
-
-            <Stack
-              spacing={7}
-              bg={useColorModeValue("white", "gray.700")}
-              rounded="2xl"
-              boxShadow="base"
-              px={[5, 10]}
-              py={6}
-            >
-              <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
-                Burn Stats
-              </Heading>
-
-              <Stack spacing={[4, 2]}>
-                <Stack direction={["column", "row"]} justify="space-between">
-                  <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
-                    Total PLUTUS burnt in bank
-                  </Heading>
-
-                  <Skeleton isLoaded={!!stats.data}>
-                    <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
-                      {displayNumber(stats.data?.totalBurntInBank, false, 2)}
-                    </Text>
-                  </Skeleton>
-                </Stack>
-
-                <Stack direction={["column", "row"]} justify="space-between">
-                  <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
-                    % PLUTUS burnt in bank
-                  </Heading>
-                  <Skeleton isLoaded={!!stats.data}>
-                    <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
-                      {displayNumber(stats.data?.percentageBurntInBank, false, 2)}%
-                    </Text>
-                  </Skeleton>
-                </Stack>
-
-                <Stack direction={["column", "row"]} justify="space-between">
-                  <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
-                    Total PLUTUS burnt (bank + tax)
-                  </Heading>
-
-                  <Skeleton isLoaded={!!stats.data}>
-                    <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
-                      {displayNumber(stats.data?.totalBurnt, false, 2)}
-                    </Text>
-                  </Skeleton>
-                </Stack>
-
-                <Stack direction={["column", "row"]} justify="space-between">
-                  <Heading letterSpacing="1px" color={useColorModeValue("gray.600", "gray.200")} fontSize="lg">
-                    % PLUTUS burnt (bank + tax)
-                  </Heading>
-                  <Skeleton isLoaded={!!stats.data}>
-                    <Text fontWeight="bold" fontSize="lg" color={useColorModeValue("primary.400", "primary.200")}>
-                      {displayNumber(stats.data?.percentageBurnt, false, 2)}%
-                    </Text>
-                  </Skeleton>
-                </Stack>
-              </Stack>
-            </Stack>
-          </Stack>
-        </Stack>
+            <Wrap justify="center" spacing="40px" w="100%">
+              {pools.map(({ data }: any) => (
+                <WrapItem key={data.address} w="100%">
+                  <BankPoolCard stakePool={data} />
+                </WrapItem>
+              ))}
+            </Wrap>
+          )}
+        </Container>
+      </HStack>
+      <Container maxWidth="container.lg" my={8}>
+        <BurnStats />
       </Container>
     </AppLayout>
   );

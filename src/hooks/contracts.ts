@@ -1,4 +1,4 @@
-import defaultContracts, { erc20, ContractInfo, uniPair, stakePool, vault, dfynFarm } from "config/contracts";
+import defaultContracts, { erc20, ContractInfo, uniPair, stakePool, vault, dfynFarm, stakeBank } from "config/contracts";
 import { utils, providers, constants, Contract } from "ethers";
 import { useCallback } from "react";
 import { useActiveWeb3React } from "wallet";
@@ -87,6 +87,15 @@ export function useStakePoolContract() {
   return (address: string) => {
     const stakePoolContractInfo = stakePool(address);
     return contract(stakePoolContractInfo);
+  };
+}
+
+export function useStakeBankContract() {
+  const contract = useContract();
+
+  return (address: string) => {
+    const stakeBankContractInfo = stakeBank(address);
+    return contract(stakeBankContractInfo);
   };
 }
 

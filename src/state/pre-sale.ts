@@ -47,11 +47,12 @@ export function usePresaleInfo() {
 export function usePresaleQuote(amount) {
   const presaleContract = usePresaleContract();
   const { account } = useActiveWeb3React();
+  const realAmount = Number(amount) / 0.116;
 
   return useQuery({
-    queryKey: ["plutus-presale-quote", account, amount],
+    queryKey: ["plutus-presale-quote", account, realAmount],
     queryFn: async () => {
-      const resp = await presaleContract.quoteAmounts(utils.parseEther(amount), account);
+      const resp = await presaleContract.quoteAmounts(utils.parseEther(realAmount.toString()), account);
 
       console.debug(resp);
       const amountInDAI = utils.formatUnits(resp.inDAI.toString(), 18);
@@ -74,7 +75,7 @@ export function useSwapInfo() {
   return useQuery({
     queryKey: ["plutus-swap-info"],
     queryFn: async () => {
-      const swapStarts = "20711511"; //TODO: change swapStarts
+      const swapStarts = await presaleContract.swapStartBlock(); //TODO: change swapStarts
 
       const pPlutusRemaining = utils.formatEther(await pPlutusContract.balanceOf(presaleContract.address));
       const plutusRemaining = utils.formatEther(await plutusContract.balanceOf(presaleContract.address));
