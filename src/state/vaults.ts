@@ -4,8 +4,12 @@ import {
   useUniPair,
   useVaultContract,
   useDfynFarmContract,
+  useERC20,
+  useVaultRewardPoolContract,
+  useVaultDualRewardPoolContract
 } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
+// import { useFet}
 import { useIrisPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
@@ -13,19 +17,31 @@ import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Vault, vaults } from "config/vaults";
 import { farms } from "config/farms";
+import { Pool, pools } from "config/pools";
 import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
+import {
+  getDualRewardPoolVaultApy,
+  getDualVaultApy,
+  getMasterChefVaultApy,
+  getRewardPoolVaultApy,
+} from "web3-functions/aprs";
 import { getVaultApy, getVaultDualApy } from "web3-functions/utils";
+// import { useFetchMainPool as useFetchBankMainPool } from "./bank";
 
 function useFetchVaultsRequest() {
+  const queryClient = useQueryClient();
   const getMasterChef = useCustomMasterChef();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
+  const getErc20 = useERC20();
   const getDfynFarmContract = useDfynFarmContract();
+  const getRewardPoolContract = useVaultRewardPoolContract();
+  const getDualRewardPoolContract = useVaultDualRewardPoolContract();
   const { account, library } = useActiveWeb3React();
 
-  return async (vault: Vault) => {
+  return async (vault: Vault, poolPid?: number) => {
     try {
       const vaultContract = getVaultContract(vault.address);
 
@@ -50,7 +66,7 @@ function useFetchVaultsRequest() {
       );
 
       if (vault.isActive) {
-        if (vault.amm === "dfyn") {
+        if (vault.type === "dfyn") {
           vault.dfynRewardTokens[0].price = await fetchPrice(vault.dfynRewardTokens[0], library);
           vault.dfynRewardTokens[1].price = await fetchPrice(vault.dfynRewardTokens[1], library);
 
@@ -86,7 +102,8 @@ function useFetchVaultsRequest() {
             yearly: apy.totalApy * 100,
             daily: (apy.vaultApr / 365) * 100,
           };
-        } else {
+        } 
+        else if(vault.type === "masterchef") {
           const masterChef = getMasterChef(vault.masterChefAddress);
           vault.projectToken.price = await fetchPrice(vault.projectToken, library);
 
@@ -103,8 +120,9 @@ function useFetchVaultsRequest() {
             await farmLpContract.decimals()
           );
 
-          const apy = await getVaultApy({
+          const apy = await getMasterChefVaultApy({
             address: farmLpContract.address,
+            amm: vault.amm,
             multiplier,
             tokenPerBlock: vault.tokenPerBlock,
             totalAllocPoints,
@@ -115,12 +133,164 @@ function useFetchVaultsRequest() {
             totalStakedInFarm,
           });
 
-          vault.apy = {
-            yearly: apy.totalApy * 100,
-            daily: (apy.vaultApr / 365) * 100,
-          };
+          const dailyApy = Math.pow(10, Math.log10(apy.totalApy + 1) / 365) - 1;
+
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: dailyApy * 100,
+        };
+        // add boosted values
+        const pool = queryClient.getQueryData<Pool>(["pool", poolPid, account]);
+        if (pool) {
+          vault.apy.boostedYearly = (pool.apr?.yearlyAPR || 0) + vault.apy.yearly;
+          vault.apy.dailyWithPool = (pool.apr?.dailyAPR || 0) + vault.apy.daily;
         }
-      } else {
+        }
+        else if(vault.type === "dual"){
+          vault.farmRewardTokens[0].price = await fetchPrice(vault.farmRewardTokens[0], library);
+        vault.farmRewardTokens[1].price = await fetchPrice(vault.farmRewardTokens[1], library);
+
+        const dfynFarm = getDfynFarmContract(vault.farmAddress);
+
+        const token0RewardRate = (await dfynFarm.tokenRewardRate(vault.farmRewardTokens[0].address)).toString();
+        const token1RewardRate = (await dfynFarm.tokenRewardRate(vault.farmRewardTokens[1].address)).toString();
+
+        const totalStakedInFarm = utils.formatUnits(
+          await lpContract.balanceOf(dfynFarm.address),
+          await lpContract.decimals()
+        );
+
+        const apy = await getDualVaultApy({
+          address: vault.stakeToken.address,
+          amm: vault.amm,
+          stakePrice: vault.stakeToken.price,
+          totalStakedInFarm,
+          token0RewardRate,
+          token0Price: vault.farmRewardTokens[0].price,
+          token0Decimals: vault.farmRewardTokens[0].decimals,
+          token1RewardRate,
+          token1Price: vault.farmRewardTokens[1].price,
+          token1Decimals: vault.farmRewardTokens[1].decimals,
+          performanceFee: vault.performanceFee,
+        });
+
+        const dailyApy = Math.pow(10, Math.log10(apy.totalApy + 1) / 365) - 1;
+
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: dailyApy * 100,
+        };
+
+        // add boosted values
+        const pool = queryClient.getQueryData<Pool>(["pool", poolPid, account]);
+        if (pool) {
+          vault.apy.boostedYearly = (pool.apr?.yearlyAPR || 0) + vault.apy.yearly;
+          vault.apy.dailyWithPool = (pool.apr?.dailyAPR || 0) + vault.apy.daily;
+        }
+        }
+        else if(vault.type === "rewardPool"){
+          vault.farmRewardToken.price = await fetchPrice(vault.farmRewardToken, library);
+        let rewardTokenPrice = vault.farmRewardToken.price;
+
+        if (vault.farmXTokenAddress) {
+          const farmRewardToken = getErc20(vault.farmRewardToken.address);
+          const farmRewardXToken = getErc20(vault.farmXTokenAddress);
+
+          const stakedInXPool = (await farmRewardToken.balanceOf(vault.farmXTokenAddress)).toString();
+          const totalXSuppy = (await farmRewardXToken.totalSupply()).toString();
+
+          rewardTokenPrice = new BigNumberJS(stakedInXPool)
+            .times(vault.farmRewardToken.price)
+            .dividedBy(totalXSuppy)
+            .toString();
+        }
+
+        const rewardPool = getRewardPoolContract(vault.rewardPool);
+        const totalSupply = (await rewardPool.totalSupply()).toString();
+        const rewardRate = (await rewardPool.rewardRate()).toString();
+
+        const apy = await getRewardPoolVaultApy({
+          address: vault.stakeToken.address,
+          amm: vault.amm,
+          rewardPoolTotalSupply: totalSupply.toString(),
+          stakeTokenPrice: vault.stakeToken.price,
+          stakeTokenDecimals: vault.stakeToken.decimals,
+          rewardRate,
+          rewardTokenPrice,
+          rewardTokenDecimals: "1e18",
+          performanceFee: vault.performanceFee,
+        });
+
+        const dailyApy = Math.pow(10, Math.log10(apy.totalApy + 1) / 365) - 1;
+
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: dailyApy * 100,
+        };
+
+        // add boosted values
+        const pool = queryClient.getQueryData<Pool>(["pool", poolPid, account]);
+        if (pool) {
+          vault.apy.boostedYearly = (pool.apr?.yearlyAPR || 0) + vault.apy.yearly;
+          vault.apy.dailyWithPool = (pool.apr?.dailyAPR || 0) + vault.apy.daily;
+        }
+        }
+        else if(vault.type === "dualRewardPool"){
+          vault.farmRewardTokens[0].price = await fetchPrice(vault.farmRewardTokens[0], library);
+        vault.farmRewardTokens[1].price = await fetchPrice(vault.farmRewardTokens[1], library);
+
+        let rewardTokenAPrice = vault.farmRewardTokens[0].price;
+        let rewardTokenBPrice = vault.farmRewardTokens[1].price;
+
+        if (vault.farmXTokenAddress) {
+          const farmRewardToken = getErc20(vault.farmRewardTokens[0].address);
+          const farmRewardXToken = getErc20(vault.farmXTokenAddress);
+
+          const stakedInXPool = (await farmRewardToken.balanceOf(vault.farmXTokenAddress)).toString();
+          const totalXSuppy = (await farmRewardXToken.totalSupply()).toString();
+
+          rewardTokenAPrice = new BigNumberJS(stakedInXPool)
+            .times(vault.farmRewardTokens[0].price)
+            .dividedBy(totalXSuppy)
+            .toString();
+        }
+
+        const rewardPool = getDualRewardPoolContract(vault.rewardPool);
+        const totalSupply = (await rewardPool.totalSupply()).toString();
+        const rewardRateA = (await rewardPool.rewardRateA()).toString();
+        const rewardRateB = (await rewardPool.rewardRateB()).toString();
+
+        const apy = await getDualRewardPoolVaultApy({
+          address: vault.stakeToken.address,
+          amm: vault.amm,
+          rewardPoolTotalSupply: totalSupply.toString(),
+          stakeTokenPrice: vault.stakeToken.price,
+          stakeTokenDecimals: vault.stakeToken.decimals,
+          rewardRateA,
+          rewardTokenAPrice,
+          rewardTokenADecimals: "1e18",
+          rewardRateB,
+          rewardTokenBPrice,
+          rewardTokenBDecimals: "1e18",
+          performanceFee: vault.performanceFee,
+        });
+
+        const dailyApy = Math.pow(10, Math.log10(apy.totalApy + 1) / 365) - 1;
+
+        vault.apy = {
+          yearly: apy.totalApy * 100,
+          daily: dailyApy * 100,
+        };
+
+        // add boosted values
+        const pool = queryClient.getQueryData<Pool>(["pool", poolPid, account]);
+        if (pool) {
+          vault.apy.boostedYearly = (pool.apr?.yearlyAPR || 0) + vault.apy.yearly;
+          vault.apy.dailyWithPool = (pool.apr?.dailyAPR || 0) + vault.apy.daily;
+        }
+        }
+      } 
+      else {
         vault.apy = {
           yearly: 0,
           daily: 0,

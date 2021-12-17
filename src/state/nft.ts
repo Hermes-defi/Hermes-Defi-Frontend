@@ -18,7 +18,7 @@ export function useNFTInfo() {
       const totalSupply = (await nftContract.nftsNumber()).toString();
       const totalMinted = (await nftContract.minted()).toString();
       const totalAvailable = new BigNumberJS(totalSupply).minus(totalMinted);
-      const percentageAvailable = totalAvailable.dividedBy(totalSupply).toNumber();
+      const percentageAvailable = (1 - totalAvailable.dividedBy(totalSupply).toNumber()) * 100;
 
       let hasUserApproved = false;
       if (account) {

@@ -12,7 +12,7 @@ import {
 import { Box, HStack, Heading, Image, Stack, Text, Link, Badge } from "@chakra-ui/react";
 import { UserSection } from "components/helpers/user-section";
 
-import { displayCurrency, displayNumber } from "libs/utils";
+import { displayCurrency, displayNumber, displayPercentage } from "libs/utils";
 
 export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   const approveMutation = useApproveVault();
@@ -75,7 +75,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {vault.apy ? `${displayNumber(vault.apy.yearly, true)}%` : "N/A"}
+              {vault.apy ? `${displayPercentage(vault.apy.yearly, true, 0)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -86,7 +86,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {vault.apy ? `${displayNumber(vault.apy.daily, false, 3)}%` : "N/A"}
+              {vault.apy ? `${displayNumber(vault.apy.daily, false, 2)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -153,7 +153,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
               LP Token Price
             </Text>
             <Text fontWeight="700" fontSize="sm">
-              {displayCurrency(vault.stakeToken.price || 0)}
+              {displayCurrency(vault.stakeToken.price || 0, true)}
             </Text>
           </Stack>
 
@@ -173,7 +173,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             <Text fontWeight="700" fontSize="sm">
               {vault.totalStaked
                 ? displayCurrency(
-                    new BigNumber(vault.totalStaked).times(vault.stakeToken.price || 0).toNumber()
+                    new BigNumber(vault.totalStaked).times(vault.stakeToken.price || 0).toNumber(),
+                    
                   )
                 : "N/A"}
             </Text>

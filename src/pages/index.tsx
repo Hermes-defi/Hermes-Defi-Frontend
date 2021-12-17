@@ -34,8 +34,8 @@ import { RiWaterFlashFill, RiRoadMapFill, RiBookOpenFill } from "react-icons/ri"
 import { GiFarmTractor, GiMegaphone } from "react-icons/gi";
 import { AiOutlineAudit } from "react-icons/ai";
 import { MdEmail } from "react-icons/md";
-import { FaTwitter, FaMedium, FaTelegram, FaGithub } from "react-icons/fa";
-import { useIrisPrice, useApolloPrice } from "hooks/prices";
+import { FaTwitter, FaMedium, FaGithub, FaDiscord, FaYoutube } from "react-icons/fa";
+import { useIrisPrice } from "hooks/prices";
 import {
   useTotalInFarms,
   useTotalInBalancers,
@@ -259,12 +259,18 @@ function Header() {
           <NextLink href="/app" passHref>
             <chakra.a flex="1">
               <Button isFullWidth variant="solid" colorScheme="primary" size="lg">
-                Use Iris
+                Polygon
               </Button>
             </chakra.a>
           </NextLink>
 
-          
+          <NextLink href="https://plutus.hermesdefi.io/app" passHref>
+            <chakra.a flex="1">
+              <Button isFullWidth variant="solid" bg="#B05CFF" color="white" size="lg" _hover={{ bg: "#9A2EFF" }}>
+                Harmony
+              </Button>
+            </chakra.a>
+          </NextLink>
         </Stack>
       </Stack>
     </Container>
@@ -274,7 +280,7 @@ function Header() {
 // NUMBERS
 const DappStats = () => {
   const { data: irisPrice } = useIrisPrice();
-  const { data: apolloPrice } = useApolloPrice();
+  // const { data: plutusPrice } = usePlutusPrice();
   const stats = useLandingPageStats();
 
   return (
@@ -288,7 +294,7 @@ const DappStats = () => {
           py={10}
           rounded="md"
           bgColor="secondary.200"
-          bgGradient="linear(to-r, primary.300, secondaryL2.200)"
+          bgGradient="linear(to-r, primary.300, purple.200)"
           align="center"
         >
           <Skeleton isLoaded={!!stats.data}>
@@ -300,30 +306,6 @@ const DappStats = () => {
           </Text>
         </Box>
       </Stack>
-
-      <SimpleGrid columns={2} spacing={8}>
-        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Skeleton isLoaded={!!irisPrice}>
-            <Heading size="2xl">{displayCurrency(irisPrice)}</Heading>
-          </Skeleton>
-
-          <Text color="gray.700" fontSize="sm" fontWeight="600">
-            $IRIS Price
-          </Text>
-        </Box>
-
-        <Box boxShadow="2xl" px={10} py={10} rounded="md" bg="secondary.200" align="center">
-          <Skeleton isLoaded={!!stats.data}>
-            <Heading size="2xl">{displayCurrency(stats.data?.iris?.totalValueInVaults, true)}</Heading>
-          </Skeleton>
-
-          <Text color="gray.700" fontSize="sm" fontWeight="600">
-            Total in Vaults
-          </Text>
-        </Box>
-      </SimpleGrid>
-
-      
     </Stack>
   );
 };
@@ -486,9 +468,14 @@ function Footer() {
               <Text>Medium</Text>
             </Stack>
 
-            <Stack as={Link} isExternal href="https://t.me/hermesdefinance" direction="row" align="center">
-              <Icon color="telegram.500" as={FaTelegram} />
-              <Text>Telegram</Text>
+            <Stack as={Link} isExternal href="https://discord.gg/k6SX8pkK" direction="row" align="center">
+              <Icon color="purple.500" as={FaDiscord} />
+              <Text>Discord</Text>
+            </Stack>
+
+            <Stack as={Link} isExternal href="https://www.youtube.com/channel/UCnLWipB915XYPHMmMZcsnag" direction="row" align="center">
+              <Icon color="red.500" as={FaYoutube} />
+              <Text>Youtube</Text>
             </Stack>
           </Stack>
 
@@ -527,7 +514,7 @@ function Footer() {
             <Stack
               as={Link}
               isExternal
-              href="https://hermes-defi.gitbook.io/hermes-finance/products/roadmap"
+              href="https://hermes-defi.gitbook.io/plutus/bonus/roadmap-v.4"
               direction="row"
               align="center"
             >

@@ -7,3 +7,6 @@ export const secondsPerBlock = 2.1;
 export const secondsPerWeek = 604800;
 export const secondsPerYear = 31536000;
 export const blocksPerDay = 28800;
+export const BASE_HPY = 4890;
+export const DFYN_LPF = 0.003;
+export const QUICK_LPF = 0.003;

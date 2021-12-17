@@ -64,7 +64,7 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        <Box
+        {/* <Box
           bg={useColorModeValue("white", "gray.700")}
           rounded="2xl"
           boxShadow="base"
@@ -207,7 +207,7 @@ const Page: React.FC = () => {
               </Stack>
             </Stack>
           </SimpleGrid>
-        </Box>
+        </Box> */}
 
         <ArkenWidget
           chain="polygon"
@@ -265,7 +265,7 @@ const Page: React.FC = () => {
                 </Box>
               </Box>
 
-              <Box align={["left", "center"]}>
+              {/* <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!irisStats.data}>
                     <Text fontSize="lg" fontWeight="700">
@@ -289,7 +289,7 @@ const Page: React.FC = () => {
                     Total Minted
                   </Heading>
                 </Box>
-              </Box>
+              </Box> */}
 
               <Box align={["left", "center"]}>
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">

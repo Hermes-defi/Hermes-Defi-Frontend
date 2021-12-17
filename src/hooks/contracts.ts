@@ -1,4 +1,4 @@
-import defaultContracts, { erc20, ContractInfo, uniPair, stakePool, vault, dfynFarm } from "config/contracts";
+import defaultContracts, { erc20, ContractInfo, uniPair, stakePool, vault, dfynFarm, rewardPools, dualRewardPools } from "config/contracts";
 import { utils, providers, constants, Contract } from "ethers";
 import { useCallback } from "react";
 import { useActiveWeb3React } from "wallet";
@@ -139,4 +139,22 @@ export function usePresaleContract(version: "v1" | "v2") {
 export function usePApollo() {
   const contract = useContract();
   return contract(defaultContracts.pApollo);
+}
+
+export function useVaultRewardPoolContract() {
+  const contract = useContract();
+
+  return (address: string) => {
+    const rewardPoolContractInfo = rewardPools(address);
+    return contract(rewardPoolContractInfo);
+  };
+}
+
+export function useVaultDualRewardPoolContract() {
+  const contract = useContract();
+
+  return (address: string) => {
+    const rewardPoolContractInfo = dualRewardPools(address);
+    return contract(rewardPoolContractInfo);
+  };
 }

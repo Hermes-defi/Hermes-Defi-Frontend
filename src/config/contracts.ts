@@ -12,6 +12,8 @@ import HermesNFTABI from "config/abis/HermesNFT.json";
 import pAPOLLO from "config/abis/pApollo.json";
 import ApolloABI from "config/abis/ApolloABI.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
+import RewardPoolABI from "config/abis/RewardPoolABI.json";
+import DualRewardPoolABI from "config/abis/DualRewardPoolABI.json";
 
 export type ContractInfo = {
   address: string;
@@ -40,6 +42,16 @@ export const vault: (address: string) => ContractInfo = (address: string) => ({
 
 export const dfynFarm: (address: string) => ContractInfo = (address: string) => ({
   abi: DfynFarmABI,
+  address,
+});
+
+export const rewardPools: (address: string) => ContractInfo = (address: string) => ({
+  abi: RewardPoolABI,
+  address,
+});
+
+export const dualRewardPools: (address: string) => ContractInfo = (address: string) => ({
+  abi: DualRewardPoolABI,
   address,
 });
 
