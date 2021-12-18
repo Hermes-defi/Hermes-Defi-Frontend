@@ -26,14 +26,18 @@ export const BankPoolCard: React.FC<{ stakePool: StakeBankInfo; isVaultToken?: b
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={(() => {
-        if (stakePool.isSpecial) return "linear(to-b, primary.300, accent.500)";
+        if (stakePool.isSpecial) return "linear(to-b, pink.300, primary.300)";
         if (isVaultToken) return "linear(to-b, primary.500, pink.300)";
 
         return "linear(to-t, accent.300, accent.500)";
       })()}
       rounded="3xl"
       color="white"
-      w="100%"
+      w={(() => {
+        if(stakePool.isSpecial) return "100%";
+        else return "50%"
+      }
+      )()}
     >
       {/* pool name */}
       <HStack direction={['column', 'row']} align="center" mb={5} spacing={2} justify="space-between">
@@ -74,7 +78,7 @@ export const BankPoolCard: React.FC<{ stakePool: StakeBankInfo; isVaultToken?: b
       {/* pool badges */}
         <Box>
           <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white" >
-            Stake {stakePool.stakeToken.symbol}
+            Lock {stakePool.stakeToken.symbol}
           </Badge>
         </Box>
       </HStack>
@@ -116,7 +120,7 @@ export const BankPoolCard: React.FC<{ stakePool: StakeBankInfo; isVaultToken?: b
       {/* pool user */}
       <Stack mb={8}>
         <UserSection
-          id={stakePool.address}
+          address={stakePool.address}
           canCompound={false}
           stakeToken={stakePool.stakeToken}
           rewardToken={stakePool.rewardToken}
@@ -148,7 +152,7 @@ export const BankPoolCard: React.FC<{ stakePool: StakeBankInfo; isVaultToken?: b
 
           <Stack direction={["column", "row"]} justify="space-between">
           <Heading letterSpacing="1px" color="gray.200" fontSize="lg">
-              Total Liquidity
+              $USD Locked
             </Heading>
             <Text fontWeight="bold" fontSize="md">
               {stakePool.totalStaked
@@ -173,7 +177,7 @@ export const BankPoolCard: React.FC<{ stakePool: StakeBankInfo; isVaultToken?: b
 
         <HStack direction="row" justify="space-between">
           <Link
-            href={`https://polygonscan.com/address/${stakePool.address}`}
+            href={`https://explorer.harmony.one/address/${stakePool.address}`}
             textDecoration="underline"
             fontWeight="700"
             fontSize="sm"

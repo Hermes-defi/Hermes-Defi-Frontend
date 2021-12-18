@@ -49,7 +49,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  0.116:1
+                  1:0.116
                 </Text>
               </Skeleton>
             </Stack>

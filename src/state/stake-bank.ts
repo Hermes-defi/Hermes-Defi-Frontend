@@ -23,25 +23,40 @@ function useFetchStakingPoolRequest() {
     try {
       const poolChef = getStakePoolContract(stakePoolInfo.address);
       const endBlock = await poolChef.bonusEndBlock();
-      
+
       stakePoolInfo.rewardEndBlock = endBlock.toString();
-      stakePoolInfo.active = stakePoolInfo.active ? endBlock.sub(currentBlock || 0).gt(0) : false;
-      
+      stakePoolInfo.active = stakePoolInfo.active
+        ? endBlock.sub(currentBlock || 0).gt(0)
+        : false;
+
       const totalStaked = (await poolChef.totalStakeTokenBalance()).toString();
-      
-      stakePoolInfo.totalStaked = utils.formatUnits(totalStaked, stakePoolInfo.stakeToken.decimals);
+
+      stakePoolInfo.totalStaked = utils.formatUnits(
+        totalStaked,
+        stakePoolInfo.stakeToken.decimals
+      );
 
       // TOKEN PRICE
-      stakePoolInfo.stakeToken.price = await fetchPrice(stakePoolInfo.stakeToken, library);
-      stakePoolInfo.rewardToken.price = await fetchPrice(stakePoolInfo.rewardToken, library);
+      stakePoolInfo.stakeToken.price = await fetchPrice(
+        stakePoolInfo.stakeToken,
+        library
+      );
+      stakePoolInfo.rewardToken.price = await fetchPrice(
+        stakePoolInfo.rewardToken,
+        library
+      );
       // calculate APR
       if (stakePoolInfo.active) {
         const rewardPerBlock = utils.formatUnits(
           await poolChef.rewardPerBlock(),
           stakePoolInfo.rewardToken.decimals
         );
-        const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
-        const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(SECONDS_PER_WEEK / BLOCKS_PER_SECOND).toNumber();
+        const totalAllocPoints = (
+          await poolChef.poolInfo()
+        ).allocPoint.toNumber();
+        const rewardsPerWeek = new BigNumberJS(rewardPerBlock)
+          .times(SECONDS_PER_WEEK / BLOCKS_PER_SECOND)
+          .toNumber();
         const multiplier = 1000; // todo: move to config
 
         const poolRewardsPerWeek = new BigNumberJS(multiplier)
@@ -55,8 +70,6 @@ function useFetchStakingPoolRequest() {
           parseFloat(stakePoolInfo.stakeToken.price || "0"),
           parseFloat(stakePoolInfo.totalStaked || "0")
         );
-
-        
       } else {
         stakePoolInfo.apr = {
           yearlyAPR: 0,
@@ -66,7 +79,9 @@ function useFetchStakingPoolRequest() {
       }
 
       if (account) {
-        let stakeTokenContract = getLpContract(stakePoolInfo.stakeToken.address);
+        let stakeTokenContract = getLpContract(
+          stakePoolInfo.stakeToken.address
+        );
 
         stakePoolInfo.rewardsEarned = utils.formatUnits(
           await poolChef.pendingReward(account),
@@ -75,17 +90,25 @@ function useFetchStakingPoolRequest() {
 
         const userInfo = await poolChef.userInfo(account);
 
-        stakePoolInfo.userTotalStaked = utils.formatUnits(userInfo.amount, stakePoolInfo.stakeToken.decimals);
+        stakePoolInfo.userTotalStaked = utils.formatUnits(
+          userInfo.amount,
+          stakePoolInfo.stakeToken.decimals
+        );
 
         stakePoolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
 
-        const allowance: BigNumber = await stakeTokenContract.allowance(account, stakePoolInfo.address);
+        const allowance: BigNumber = await stakeTokenContract.allowance(
+          account,
+          stakePoolInfo.address
+        );
 
         stakePoolInfo.hasApprovedPool = !allowance.isZero();
       }
       let stakeTokenContract = getLpContract(stakePoolInfo.stakeToken.address);
-      stakePoolInfo.stakeToken.totalSupply = await stakeTokenContract.totalSupply();
-      stakePoolInfo.stakeToken.percentageLocked = totalStaked * 100 / stakePoolInfo.stakeToken.totalSupply;
+      stakePoolInfo.stakeToken.totalSupply =
+        await stakeTokenContract.totalSupply();
+      stakePoolInfo.stakeToken.percentageLocked =
+        (totalStaked * 100) / stakePoolInfo.stakeToken.totalSupply;
 
       return stakePoolInfo;
     } catch (e) {
@@ -95,38 +118,83 @@ function useFetchStakingPoolRequest() {
   };
 }
 
-
 export function useFetchStakePools() {
   const fetchStakingPoolRq = useFetchStakingPoolRequest();
   const currentBlock = useCurrentBlockNumber();
   const { account } = useActiveWeb3React();
+  
+  if (stakingBankPools.some((c) => !c.isSpecial)) {
+    const partnerPools = stakingBankPools.filter((c) => !c.isSpecial);
+    const farmQueries = useQueries(
+      partnerPools.map((stakePool) => {
+        if (!stakePool.isSpecial)
+          return {
+            enabled: !!currentBlock,
+            queryKey: ["bank-pool", stakePool.address, account],
+            queryFn: () => fetchStakingPoolRq(stakePool),
+          };
+      })
+    );
 
-  const farmQueries = useQueries(
-    stakingBankPools.map((stakePool) => {
-      return {
-        enabled: !!currentBlock,
-        queryKey: ["bank-stake", stakePool.address, account],
-        queryFn: () => fetchStakingPoolRq(stakePool),
-      };
-    })
-  );
-
-  return farmQueries;
+    return farmQueries;
+  }
 }
 
-export function useBankStakeStats() {
+export function useMainBankStake() {
   const fetchStakingPoolRq = useFetchStakingPoolRequest();
   const currentBlock = useCurrentBlockNumber();
   const { account } = useActiveWeb3React();
 
-  const statQuery = useQuery(
-    {
-        enabled: !!currentBlock,
-        queryKey: ["bank-stats"],
-        queryFn: () => fetchStakingPoolRq(stakingBankPools[0]),
-    }
-    );
+  console.log(stakingBankPools[0]);
+  const statQuery = useQuery({
+    enabled: !!currentBlock,
+    queryKey: ["bank-pool", stakingBankPools[0].address, account],
+    queryFn: () => fetchStakingPoolRq(stakingBankPools[0]),
+  });
 
+  return statQuery;
+}
+
+export function useBankStakeStats() {
+  const mainPool = useMainBankStake();
+  const pools = useFetchStakePools();
+  const currentBlock = useCurrentBlockNumber();
+  const isLoading = (pools && pools.some((f) => f.status === "loading")) || mainPool.status === "loading";
+
+  const statQuery = useQuery({
+    enabled: !isLoading && !!currentBlock,
+    refetchInterval: 1 * 60 * 1000,
+    queryKey: ["bank-global-stats"],
+    queryFn: () => {
+      const totalPlutusLocked = pools ? 
+        pools
+          .reduce((total, curr: any) => {
+            return total.plus(curr.data?.totalStaked || 0);
+          }, new BigNumberJS(0))
+          .plus(mainPool.data?.totalStaked) || new BigNumberJS(0)
+          :
+          new BigNumberJS(mainPool.data?.totalStaked) || new BigNumberJS(0);
+          console.log("🚀 ~ file: stake-bank.ts ~ line 176 ~ useBankStakeStats ~ mainPool.data?.stakeToken?.totalSupply", mainPool.data?.stakeToken?.totalSupply)
+      const plutusSupply =
+        utils.formatUnits(
+          mainPool.data?.stakeToken?.totalSupply,
+          mainPool?.data?.stakeToken?.decimals
+        ) || 0;
+      const percentagePlutusLocked =
+        (Number(totalPlutusLocked) * 100) / Number(plutusSupply);
+      const totalValueLocked = totalPlutusLocked
+        .times(Number(mainPool.data?.stakeToken?.price))
+        .toString();
+
+      const plutusLockedString = totalPlutusLocked.toString();
+
+      return {
+        plutusLockedString,
+        percentagePlutusLocked,
+        totalValueLocked,
+      };
+    },
+  });
   return statQuery;
 }
 
@@ -140,18 +208,26 @@ export function useApproveStakePool() {
     async (address: string) => {
       if (!account) throw new Error("No connected account");
 
-      const pool = queryClient.getQueryData<StakeBankInfo>(["bank-stake", address, account]);
+      const pool = queryClient.getQueryData<StakeBankInfo>([
+        "bank-pool",
+        address,
+        account
+      ]);
       const lpContract = getLpContract(pool.stakeToken.address);
-
       await approveLpContract(lpContract, pool.address);
+      // const pool = stakingBankPools.find((c) => c.address === address);
+      
       return address;
     },
 
     {
       onSuccess: (address) => {
-        const stakePool = queryClient.getQueryData<StakeBankInfo>(["bank-stake", address, account]);
-
-        queryClient.setQueryData(["bank-stake", address, account], {
+        const stakePool = queryClient.getQueryData<StakeBankInfo>([
+          "bank-pool",
+          address,
+          account,
+        ]);
+        queryClient.setQueryData(["bank-pool", address, account], {
           ...stakePool,
           hasApprovedPool: true,
         });
@@ -190,19 +266,30 @@ export function useDepositIntoStakePool() {
   const toast = useToast();
 
   const depositMutation = useMutation(
-    async ({ id, amount }: { id: string; amount: string }) => {
+    async ({ address, amount }: { address: string; amount: string }) => {
       if (!account) throw new Error("No connected account");
-
-      const pool = queryClient.getQueryData<StakeBankInfo>(["bank-stake", id, account]);
+      console.log(address);
+      const pool = queryClient.getQueryData<StakeBankInfo>([
+        "bank-pool",
+        address,
+        account,
+      ]);
       const poolChef = getStakePoolContract(pool.address);
 
-      const tx = await poolChef.deposit(utils.parseUnits(amount, pool.stakeToken.decimals));
+      const tx = await poolChef.deposit(
+        utils.parseUnits(amount, pool.stakeToken.decimals)
+      );
       await tx.wait();
     },
     {
-      onSuccess: (_, { id, amount }) => {
-        const pool = queryClient.getQueryData<StakeBankInfo>(["bank-stake", id, account]);
-        queryClient.invalidateQueries(["bank-stake", id, account]);
+      onSuccess: (_, { address, amount }) => {
+        const pool = queryClient.getQueryData<StakeBankInfo>([
+          "bank-pool",
+          address,
+          account,
+        ]);
+        queryClient.invalidateQueries(["bank-pool", address, account]);
+        queryClient.invalidateQueries(["bank-global-stats"]);
 
         ReactGA.event({
           category: "Deposits",
@@ -238,24 +325,32 @@ export function useStakeWithdraw() {
   const toast = useToast();
 
   const withdrawMutation = useMutation(
-    async ({ id, amount }: { id: string; amount: string }) => {
+    async (address: string) => {
       if (!account) throw new Error("No connected account");
 
-      const pool = queryClient.getQueryData<StakeBankInfo>(["bank-stake", id, account]);
+      const pool = queryClient.getQueryData<StakeBankInfo>([
+        "bank-pool",
+        address,
+        account,
+      ]);
       const poolChef = getStakePoolContract(pool.address);
 
-      const tx = await poolChef.withdraw(utils.parseUnits(amount, pool.stakeToken.decimals));
+      const tx = await poolChef.withdrawReward();
       await tx.wait();
     },
     {
-      onSuccess: (_, { id, amount }) => {
-        const pool = queryClient.getQueryData<StakeBankInfo>(["bank-stake", id, account]);
-        queryClient.invalidateQueries(["bank-stake", id, account]);
+      onSuccess: (_,  address ) => {
+        const pool = queryClient.getQueryData<StakeBankInfo>([
+          "bank-pool",
+          address,
+          account,
+        ]);
+        queryClient.invalidateQueries(["bank-pool", address, account]);
+        queryClient.invalidateQueries(["bank-global-stats"]);
 
         ReactGA.event({
           category: "Withdrawals",
           action: `Withdrawing ${pool.stakeToken.symbol}`,
-          value: parseInt(amount, 10),
           label: pool.stakeToken.symbol,
         });
       },

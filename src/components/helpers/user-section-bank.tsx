@@ -9,11 +9,12 @@ import { UnlockButton } from "components/wallet/unlock-wallet";
 
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
+import { useStakeWithdraw } from "state/stake-bank";
 
 type IDepositProps = {
   primary?: boolean;
 
-  id: number | string;
+  address: string;
   stakeToken: {
     symbol: string;
     address: string;
@@ -44,7 +45,7 @@ const DepositButton: React.FC<IDepositProps> = (props) => {
         tokenDecimals={props.stakeToken.decimals}
         isLoading={props.deposit.isLoading}
         onDeposit={(amount: string) =>
-          props.deposit.mutateAsync({ amount, id: props.id }).then(() => onClose())
+          props.deposit.mutateAsync({ amount, address: props.address }).then(() => onClose())
         }
       />
     </>
@@ -54,7 +55,7 @@ const DepositButton: React.FC<IDepositProps> = (props) => {
 type IUnstakeProps = {
   primary?: boolean;
 
-  id: string | number;
+  address: string;
   hasWithdrawAll?: boolean;
   userTotalStaked: string;
   stakeToken: {
@@ -80,9 +81,9 @@ const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
         token={props.stakeToken.symbol}
         tokenBalance={props.userTotalStaked}
         isLoading={props.withdraw.isLoading}
-        onWithdrawAll={() => props.withdrawAll.mutateAsync({ id: props.id }).then(() => onClose())}
+        onWithdrawAll={() => props.withdrawAll.mutateAsync({ address: props.address }).then(() => onClose())}
         onWithdraw={(amount: string) =>
-          props.withdraw.mutateAsync({ amount, id: props.id }).then(() => onClose())
+          props.withdraw.mutateAsync({ amount, address: props.address }).then(() => onClose())
         }
       />
     </>
@@ -90,7 +91,7 @@ const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
 };
 
 type IProps = {
-  id: number | string;
+  address: string;
   canCompound: boolean;
   disableRewards?: boolean;
   hasWithdrawAll?: boolean;
@@ -125,7 +126,7 @@ type IProps = {
 };
 export const UserSection: React.FC<IProps> = (props) => {
   const { account } = useActiveWeb3React();
-
+  const harvestMutation = useStakeWithdraw();
   if (!account) {
     return <UnlockButton boxShadow="2xl" />;
   }
@@ -165,7 +166,7 @@ export const UserSection: React.FC<IProps> = (props) => {
               <Button
                 isFullWidth
                 isLoading={props.approve.isLoading}
-                onClick={() => props.approve.mutate(props.id)}
+                onClick={() => props.approve.mutate(props.address)}
                 bg="gray.700"
                 boxShadow="lg"
                 _hover={{ bg: "gray.600" }}
@@ -175,37 +176,23 @@ export const UserSection: React.FC<IProps> = (props) => {
               </Button>
             )}
 
-            {props.hasApprovedPool ? (
-                <>
-                  {/* <UnstakeButton
-                    id={props.id}
-                    hasWithdrawAll={props.hasWithdrawAll}
-                    stakeToken={props.unstakeToken || props.stakeToken}
-                    userTotalStaked={props.userAvailableToUnstake || props.userTotalStaked}
-                    withdraw={props.withdraw}
-                    withdrawAll={props.withdrawAll}
-                  >
-                    -
-                  </UnstakeButton> */}
-
+            {props.hasApprovedPool && (
+              
                   <DepositButton
-                    id={props.id}
+                    address={props.address}
                     stakeToken={props.stakeToken}
                     deposit={props.deposit}
                   >
                     Deposit $PLUTUS
                   </DepositButton>
-                </>
-              ) : (
-                <DepositButton id={props.id} stakeToken={props.stakeToken} deposit={props.deposit}>
-                  Stake
-                </DepositButton>
-              )}
+              )
+            }
               {props.hasApprovedPool && (
               <Stack direction="row">
                 <Button
-                  isLoading={props.harvest.isLoading}
-                  onClick={() => props.harvest.mutate({ id: props.id, amount: "0" })}
+                  isDisabled={!props.userTotalStaked}
+                  isLoading={harvestMutation.isLoading}
+                  onClick={() => harvestMutation.mutate(props.address)}
                   size="sm"
                   bg="gray.700"
                   _hover={{ bg: "gray.600" }}
