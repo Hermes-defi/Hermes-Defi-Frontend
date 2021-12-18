@@ -32,27 +32,29 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
     ],
   },
+  // TODO: change address
   {
     label: "Trade",
     children: [
       {
-        label: "Swap (Sushiswap)",
-        href: "https://app.sushi.com/swap?inputCurrency=0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a&outputCurrency=0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        label: "Swap (Viper)",
+        href: "https://viper.exchange/#/swap?inputCurrency=0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a&outputCurrency=0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
       {
-        label: "Liquidity (Sushiswap)",
-        href: "https://app.sushi.com/add/0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        label: "Liquidity (Viper)",
+        href: "https://viper.exchange/#/add/0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
         isExternal: true,
       },
     ],
   },
+  //TODO: change address
   {
     label: "Charts",
     children: [
       {
-        label: "Defined",
-        href: "https://www.defined.fi/matic/0x86ad6271809f350522085f95f5a67d46ff7ed3ab",
+        label: "DexScreener",
+        href: "https://dexscreener.com/harmony/0x86ad6271809f350522085f95f5a67d46ff7ed3ab",
         isExternal: true,
       }
     ],

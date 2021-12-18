@@ -44,16 +44,16 @@ export function usePlutusData() {
 export function usePlutusStats() {
   const plutusContract = usePlutusToken();
   const plutusPrice = usePlutusPrice();
-
+  
+  //TODO: get plutus_per_block
   const plutusStats = useQuery({
     enabled: !!plutusPrice.data,
     refetchInterval: 0.5 * 60 * 1000,
     queryKey: ["plutusStats", plutusPrice.data],
     queryFn: async () => {
-      const maximumSupply = 1_000_000;
+      const maximumSupply = 3_000_000;
       const totalMinted = (await plutusContract.totalSupply()) as BigNumber;
       const totalBurned = (await plutusContract.balanceOf(BURN_ADDRESS)) as BigNumber;
-
       const circulatingSupply = totalMinted.sub(totalBurned);
 
       let marketCap = "N/A";
