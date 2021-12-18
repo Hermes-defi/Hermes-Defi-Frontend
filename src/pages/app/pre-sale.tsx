@@ -49,7 +49,7 @@ const PresaleCard = () => {
 
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  1:0.116
+                  1 : 0.116
                 </Text>
               </Skeleton>
             </Stack>
@@ -171,7 +171,7 @@ const SwapCard = () => {
 
             <Skeleton isLoaded={!!swapInfo.data}>
               <Text fontWeight="700" fontSize="sm">
-                1:1
+                1 : 1
               </Text>
             </Skeleton>
           </Stack>
@@ -271,6 +271,8 @@ const SwapCard = () => {
 
 
 const Page = () => {
+  const queryResp = usePresaleInfo();
+  const isLoaded = !!queryResp.data;
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={5}>
@@ -286,25 +288,26 @@ const Page = () => {
 
               <Stack>
                 <Text fontSize="sm">
-                  1. IDO starts
+                  1. IDO starts at block
                 </Text>
+                
 
                 <Text fontSize="sm">
-                  2. IDO ends
+                  2. IDO ends at block
                 </Text>
 
                 {/* <Text fontSize="sm">
                   3. Waiting room. Ongoing (<Link href="app/waiting-room">here</Link>)
                 </Text> */}
                 <Text fontSize="sm">
-                  3. Waiting room begins
+                  3. Waiting room begins at block
                 </Text>
 
-                <Text fontSize="sm">4. Liquidity added at block #20220426</Text>
+                <Text fontSize="sm">4. Liquidity added at block</Text>
 
-                <Text fontSize="sm">5. Swap opens (swap pPLUTUS to PLUTUS) at block #20223426</Text>
+                <Text fontSize="sm">5. Swap opens (swap pPLUTUS to PLUTUS) at block</Text>
 
-                <Text fontSize="sm">6. Farming starts at block #20259426</Text>
+                <Text fontSize="sm">6. Farming starts at block</Text>
               </Stack>
 
               <Text fontSize="sm">
