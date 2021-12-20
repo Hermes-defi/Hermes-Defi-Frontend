@@ -53,13 +53,13 @@ export const stakingBankPools: StakeBankInfo[] = {
   1666600000: [
     //Simple stack token example
     {
-      address: "0xDdC070986A4048257E73aABB103612E228E852D9",
+      address: "0x3074cf20ecd1cfe96b3ee43968d0c426f775171a",
       poolSite: "https://hermesdefi.io/",
       active: true,
       isSpecial: true,
 
       stakeToken: {
-        address: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
         symbol: "PLUTUS",
         decimals: 18,
         logo: "/plutus-logo.png",

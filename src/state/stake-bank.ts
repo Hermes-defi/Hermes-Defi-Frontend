@@ -145,7 +145,6 @@ export function useMainBankStake() {
   const currentBlock = useCurrentBlockNumber();
   const { account } = useActiveWeb3React();
 
-  console.log(stakingBankPools[0]);
   const statQuery = useQuery({
     enabled: !!currentBlock,
     queryKey: ["bank-pool", stakingBankPools[0].address, account],
@@ -174,7 +173,6 @@ export function useBankStakeStats() {
           .plus(mainPool.data?.totalStaked) || new BigNumberJS(0)
           :
           new BigNumberJS(mainPool.data?.totalStaked) || new BigNumberJS(0);
-          console.log("🚀 ~ file: stake-bank.ts ~ line 176 ~ useBankStakeStats ~ mainPool.data?.stakeToken?.totalSupply", mainPool.data?.stakeToken?.totalSupply)
       const plutusSupply =
         utils.formatUnits(
           mainPool.data?.stakeToken?.totalSupply,
@@ -268,7 +266,6 @@ export function useDepositIntoStakePool() {
   const depositMutation = useMutation(
     async ({ address, amount }: { address: string; amount: string }) => {
       if (!account) throw new Error("No connected account");
-      console.log(address);
       const pool = queryClient.getQueryData<StakeBankInfo>([
         "bank-pool",
         address,

@@ -49,7 +49,7 @@ export const ApoolStakePoolCard: React.FC<{ stakePool: PlutusStakeInfo; isVaultT
         {/* pool badges */}
         <HStack mb={6} spacing={2}>
           <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white">
-            Stake plutus
+            Stake pplutus
           </Badge>
         </HStack>
 
@@ -105,7 +105,7 @@ export const ApoolStakePoolCard: React.FC<{ stakePool: PlutusStakeInfo; isVaultT
                 Deposit
               </Text>
               <Link
-                href={`https://quickswap.exchange/#/swap/${stakePool.stakeToken.address}`}
+                href={`https://viperswap.one/#/swap/${stakePool.stakeToken.address}`}
                 isExternal
                 fontWeight="700"
                 fontSize="sm"
@@ -116,7 +116,7 @@ export const ApoolStakePoolCard: React.FC<{ stakePool: PlutusStakeInfo; isVaultT
 
             <Stack direction="row" justify="space-between">
               <Text fontWeight="700" fontSize="sm">
-                Total Liquidity
+                Total Staked
               </Text>
               <Text fontWeight="700" fontSize="sm">
                 {stakePool.totalStaked
@@ -137,7 +137,7 @@ export const ApoolStakePoolCard: React.FC<{ stakePool: PlutusStakeInfo; isVaultT
 
           <Stack direction="row" justify="space-between">
             <Link
-              href={`https://polygonscan.com/address/${stakePool.address}`}
+              href={`https://explorer.harmony.one/address/${stakePool.address}`}
               textDecoration="underline"
               fontWeight="700"
               fontSize="sm"

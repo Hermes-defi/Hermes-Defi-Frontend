@@ -206,7 +206,8 @@ const SwapCard = () => {
             </Text>
             <Skeleton isLoaded={!!swapInfo.data}>
               <Text fontWeight="700" fontSize="sm">
-                {`Block ${swapInfo.data?.swapStarts}`}
+                {/* {`Block ${swapInfo.data?.swapStarts}`} */}
+                Block 21006024
               </Text>
             </Skeleton>
           </Stack>
@@ -288,26 +289,26 @@ const Page = () => {
 
               <Stack>
                 <Text fontSize="sm">
-                  1. IDO starts at block
+                  1. IDO starts at block 20833224
                 </Text>
                 
 
                 <Text fontSize="sm">
-                  2. IDO ends at block
+                  2. IDO ends at block 20962824
                 </Text>
 
                 {/* <Text fontSize="sm">
                   3. Waiting room. Ongoing (<Link href="app/waiting-room">here</Link>)
                 </Text> */}
                 <Text fontSize="sm">
-                  3. Waiting room begins at block
+                  3. Waiting room begins at block 20962824
                 </Text>
 
-                <Text fontSize="sm">4. Liquidity added at block</Text>
+                <Text fontSize="sm">4. Liquidity added at block 21002424</Text>
 
-                <Text fontSize="sm">5. Swap opens (swap pPLUTUS to PLUTUS) at block</Text>
+                <Text fontSize="sm">5. Swap opens (swap pPLUTUS to PLUTUS) at block 21006024</Text>
 
-                <Text fontSize="sm">6. Farming starts at block</Text>
+                <Text fontSize="sm">6. Waiting room ends and farming starts at block 21048525</Text>
               </Stack>
 
               <Text fontSize="sm">

@@ -17,7 +17,7 @@ const provider = new ethers.providers.JsonRpcProvider(RPC_URLS[DEFAULT_CHAIN_ID]
 
 export async function getPlutusPrice() {
   const plutusPrice = await fetchPrice(
-    { address: defaultContracts.plutusToken.address, decimals: 18, symbol: "PLTS" },
+    { address: defaultContracts.plutusToken.address, decimals: 18, symbol: "PLUTUS" },
     provider
   );
 
@@ -198,7 +198,8 @@ export async function getPlutusStats() {
   // }, Promise.resolve(new BigNumberJS(0)));
 
   const tvl = totalValueInPools;
-  // .plus(totalValueInFarms).plus(totalValueInBalancers).plus(totalValueInVaults);
+    // .plus(totalValueInFarms);
+    // .plus(totalValueInVaults);
 
   return {
     totalValueInPools: totalValueInPools.toString(),

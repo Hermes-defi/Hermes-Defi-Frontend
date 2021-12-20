@@ -38,41 +38,41 @@ export type PlutusStakeInfo = {
 export const plutusStakingPools: PlutusStakeInfo[] = {
     1666600000: [
     {
-      address: "0x948bc903a311D42a003FC9b39F90cF27aCcEbD4A",
-      poolSite: "https://dfyn.network/",
+      address: "0xc96ea6b1ce00e21e468024f15cabddace598303f",
+      poolSite: "https://www.harmony.one/",
       active: true,
 
       stakeToken: {
-        address: "0xe644be5d4d5e7f16f0039cd67bcd438d1a62ef13",
-        symbol: "pAPOLLO",
+        address: "0x6c322c67dcab641549066beb849538de3b1f8600",
+        symbol: "pPLUTUS",
         decimals: 18,
-        logo: "/apollo-logo.png",
+        logo: "/plutus-logo.png",
       },
 
       rewardToken: {
-        address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
-        symbol: "DFYN",
+        address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+        symbol: "WONE",
         decimals: 18,
-        logo: "/dfyn-logo.svg",
+        logo: "/harmony-one-logo.png",
       },
     },
     {
-      address: "0x077E13f5e25E94bc1429AC24200F8a0a21AD390A",
-      poolSite: "https://www.xdollar.fi/",
+      address: "0x98281f1f68c1deabe01582369b2d374046e5fe40",
+      poolSite: "https://makerdao.com/en/",
       active: true,
 
       stakeToken: {
-        address: "0xe644be5d4d5e7f16f0039cd67bcd438d1a62ef13",
-        symbol: "pAPOLLO",
+        address: "0x6c322c67dcab641549066beb849538de3b1f8600",
+        symbol: "pPLUTUS",
         decimals: 18,
-        logo: "/apollo-logo.png",
+        logo: "/plutus-logo.png",
       },
 
       rewardToken: {
-        address: "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97",
-        symbol: "XUSD",
+        address: "0xef977d2f931c1978db5f6747666fa1eacb0d0339",
+        symbol: "1DAI",
         decimals: 18,
-        logo: "/xusd-logo.png",
+        logo: "/1dai-logo.png",
       },
     },
   ],

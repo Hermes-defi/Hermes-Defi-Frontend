@@ -1,967 +1,941 @@
 [
   {
-    "type": "constructor",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "type": "address",
-        "internalType": "address",
-        "name": "_token"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_startBlock",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "type": "address",
-        "name": "_devAddress"
-      },
-      {
-        "name": "_feeAddress",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "name": "_nft",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
+      "stateMutability": "nonpayable",
+      "inputs": [],
+      "type": "constructor"
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "to",
-        "type": "address"
-      },
-      {
-        "type": "uint256",
-        "indexed": false,
-        "name": "requested",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": "amount",
-        "indexed": false
-      }
-    ],
-    "name": "ApolloTransfer",
-    "type": "event"
+      "type": "event",
+      "name": "ApolloTransfer",
+      "anonymous": false,
+      "inputs": [
+          {
+              "internalType": "address",
+              "indexed": false,
+              "name": "to",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "requested",
+              "type": "uint256"
+          },
+          {
+              "name": "amount",
+              "indexed": false,
+              "internalType": "uint256",
+              "type": "uint256"
+          }
+      ]
   },
   {
-    "type": "event",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "to",
-        "indexed": false,
-        "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "indexed": false,
-        "name": "multiplier"
-      },
-      {
-        "name": "bonus",
-        "internalType": "uint256",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "anonymous": false,
-    "name": "Bonus"
+      "anonymous": false,
+      "type": "event",
+      "inputs": [
+          {
+              "name": "to",
+              "internalType": "address",
+              "type": "address",
+              "indexed": false
+          },
+          {
+              "internalType": "uint256",
+              "type": "uint256",
+              "indexed": false,
+              "name": "multiplier"
+          },
+          {
+              "name": "bonus",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+          }
+      ],
+      "name": "Bonus"
   },
   {
-    "name": "Deposit",
-    "anonymous": false,
-    "type": "event",
-    "inputs": [
-      {
-        "name": "user",
-        "internalType": "address",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "internalType": "uint256",
-        "name": "pid",
-        "indexed": true,
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ]
+      "type": "event",
+      "name": "Deposit",
+      "anonymous": false,
+      "inputs": [
+          {
+              "name": "user",
+              "type": "address",
+              "internalType": "address",
+              "indexed": true
+          },
+          {
+              "internalType": "uint256",
+              "name": "pid",
+              "indexed": true,
+              "type": "uint256"
+          },
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "amount",
+              "indexed": false
+          }
+      ]
   },
   {
-    "name": "EmergencyWithdraw",
-    "type": "event",
-    "anonymous": false,
-    "inputs": [
-      {
-        "internalType": "address",
-        "indexed": true,
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "indexed": true,
-        "name": "pid"
-      },
-      {
-        "indexed": false,
-        "name": "amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ]
+      "anonymous": false,
+      "name": "EmergencyWithdraw",
+      "inputs": [
+          {
+              "indexed": true,
+              "name": "user",
+              "internalType": "address",
+              "type": "address"
+          },
+          {
+              "type": "uint256",
+              "name": "pid",
+              "indexed": true,
+              "internalType": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "name": "amount",
+              "indexed": false,
+              "type": "uint256"
+          }
+      ],
+      "type": "event"
   },
   {
-    "anonymous": false,
-    "name": "OwnershipTransferred",
-    "type": "event",
-    "inputs": [
-      {
-        "indexed": true,
-        "name": "previousOwner",
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "internalType": "address",
-        "type": "address",
-        "name": "newOwner",
-        "indexed": true
-      }
-    ]
+      "type": "event",
+      "name": "OwnershipTransferred",
+      "inputs": [
+          {
+              "name": "previousOwner",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+          },
+          {
+              "internalType": "address",
+              "type": "address",
+              "indexed": true,
+              "name": "newOwner"
+          }
+      ],
+      "anonymous": false
   },
   {
-    "type": "event",
-    "anonymous": false,
-    "inputs": [
-      {
-        "name": "user",
-        "indexed": true,
-        "type": "address",
-        "internalType": "address"
-      },
-      {
-        "internalType": "contract IERC20",
-        "name": "lpToken",
-        "type": "address",
-        "indexed": false
-      },
-      {
-        "type": "uint256",
-        "name": "allocPoint",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "type": "uint256",
-        "indexed": false,
-        "name": "lastRewardBlock"
-      },
-      {
-        "name": "depositFeeBP",
-        "indexed": false,
-        "internalType": "uint16",
-        "type": "uint16"
-      }
-    ],
-    "name": "PoolAdd"
+      "anonymous": false,
+      "name": "PoolAdd",
+      "type": "event",
+      "inputs": [
+          {
+              "type": "address",
+              "internalType": "address",
+              "name": "user",
+              "indexed": true
+          },
+          {
+              "indexed": false,
+              "name": "lpToken",
+              "type": "address",
+              "internalType": "contract IERC20"
+          },
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "allocPoint",
+              "indexed": false
+          },
+          {
+              "name": "lastRewardBlock",
+              "type": "uint256",
+              "indexed": false,
+              "internalType": "uint256"
+          },
+          {
+              "name": "depositFeeBP",
+              "type": "uint16",
+              "indexed": false,
+              "internalType": "uint16"
+          }
+      ]
   },
   {
-    "name": "PoolSet",
-    "inputs": [
-      {
-        "type": "address",
-        "internalType": "address",
-        "indexed": true,
-        "name": "user"
-      },
-      {
-        "indexed": false,
-        "type": "address",
-        "name": "lpToken",
-        "internalType": "contract IERC20"
-      },
-      {
-        "name": "allocPoint",
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": "lastRewardBlock",
-        "indexed": false
-      },
-      {
-        "name": "depositFeeBP",
-        "type": "uint16",
-        "indexed": false,
-        "internalType": "uint16"
-      }
-    ],
-    "anonymous": false,
-    "type": "event"
+      "inputs": [
+          {
+              "name": "user",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+          },
+          {
+              "type": "address",
+              "name": "lpToken",
+              "indexed": false,
+              "internalType": "contract IERC20"
+          },
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "allocPoint",
+              "indexed": false
+          },
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "lastRewardBlock",
+              "indexed": false
+          },
+          {
+              "name": "depositFeeBP",
+              "type": "uint16",
+              "internalType": "uint16",
+              "indexed": false
+          }
+      ],
+      "name": "PoolSet",
+      "type": "event",
+      "anonymous": false
   },
   {
-    "type": "event",
-    "anonymous": false,
-    "inputs": [
-      {
-        "name": "user",
-        "internalType": "address",
-        "type": "address",
-        "indexed": true
-      },
-      {
-        "internalType": "address",
-        "indexed": true,
-        "type": "address",
-        "name": "newAddress"
-      }
-    ],
-    "name": "SetDevAddress"
+      "type": "event",
+      "inputs": [
+          {
+              "internalType": "address",
+              "indexed": true,
+              "type": "address",
+              "name": "user"
+          },
+          {
+              "name": "newAddress",
+              "internalType": "address",
+              "indexed": true,
+              "type": "address"
+          }
+      ],
+      "anonymous": false,
+      "name": "SetDevAddress"
   },
   {
-    "type": "event",
-    "inputs": [
-      {
-        "internalType": "address",
-        "indexed": true,
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "type": "address",
-        "internalType": "address",
-        "name": "newAddress",
-        "indexed": true
-      }
-    ],
-    "name": "SetFeeAddress",
-    "anonymous": false
+      "name": "SetFeeAddress",
+      "type": "event",
+      "inputs": [
+          {
+              "type": "address",
+              "internalType": "address",
+              "name": "user",
+              "indexed": true
+          },
+          {
+              "indexed": true,
+              "internalType": "address",
+              "type": "address",
+              "name": "newAddress"
+          }
+      ],
+      "anonymous": false
   },
   {
-    "name": "UpdateEmissionRate",
-    "inputs": [
-      {
-        "indexed": true,
-        "type": "address",
-        "name": "user",
-        "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "name": "tokenPerBlock",
-        "internalType": "uint256",
-        "indexed": false
-      }
-    ],
-    "type": "event",
-    "anonymous": false
+      "type": "event",
+      "name": "UpdateEmissionRate",
+      "anonymous": false,
+      "inputs": [
+          {
+              "internalType": "address",
+              "indexed": true,
+              "type": "address",
+              "name": "user"
+          },
+          {
+              "indexed": false,
+              "name": "tokenPerBlock",
+              "internalType": "uint256",
+              "type": "uint256"
+          }
+      ]
   },
   {
-    "anonymous": false,
-    "name": "UpdateStartBlock",
-    "inputs": [
-      {
-        "internalType": "address",
-        "type": "address",
-        "indexed": true,
-        "name": "user"
-      },
-      {
-        "name": "startBlock",
-        "internalType": "uint256",
-        "indexed": false,
-        "type": "uint256"
-      }
-    ],
-    "type": "event"
+      "inputs": [
+          {
+              "type": "address",
+              "name": "user",
+              "internalType": "address",
+              "indexed": true
+          },
+          {
+              "internalType": "uint256",
+              "name": "startBlock",
+              "indexed": false,
+              "type": "uint256"
+          }
+      ],
+      "type": "event",
+      "name": "UpdateStartBlock",
+      "anonymous": false
   },
   {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "type": "address",
-        "name": "user",
-        "internalType": "address"
-      },
-      {
-        "name": "pid",
-        "type": "uint256",
-        "indexed": true,
-        "internalType": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256",
-        "indexed": false
-      }
-    ],
-    "name": "Withdraw",
-    "type": "event"
+      "anonymous": false,
+      "inputs": [
+          {
+              "name": "user",
+              "type": "address",
+              "indexed": true,
+              "internalType": "address"
+          },
+          {
+              "name": "pid",
+              "internalType": "uint256",
+              "indexed": true,
+              "type": "uint256"
+          },
+          {
+              "name": "amount",
+              "type": "uint256",
+              "internalType": "uint256",
+              "indexed": false
+          }
+      ],
+      "name": "Withdraw",
+      "type": "event"
   },
   {
-    "stateMutability": "view",
-    "inputs": [],
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "BONUS_MULTIPLIER",
-    "type": "function"
+      "name": "BONUS_MULTIPLIER",
+      "inputs": [],
+      "stateMutability": "view",
+      "type": "function",
+      "outputs": [
+          {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ]
   },
   {
-    "type": "function",
-    "inputs": [],
-    "name": "BURN_ADDRESS",
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view"
+      "stateMutability": "view",
+      "inputs": [],
+      "outputs": [
+          {
+              "name": "",
+              "type": "address",
+              "internalType": "address"
+          }
+      ],
+      "type": "function",
+      "name": "BURN_ADDRESS"
   },
   {
-    "type": "function",
-    "name": "MAXIMUM_EMISSION_RATE",
-    "stateMutability": "view",
-    "inputs": [],
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ]
+      "inputs": [],
+      "type": "function",
+      "outputs": [
+          {
+              "type": "uint256",
+              "name": "",
+              "internalType": "uint256"
+          }
+      ],
+      "name": "MAXIMUM_EMISSION_RATE",
+      "stateMutability": "view"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "outputs": [
-      {
-        "type": "address",
-        "name": "",
-        "internalType": "address"
-      }
-    ],
-    "name": "NULL_ADDRESS",
-    "inputs": []
+      "stateMutability": "view",
+      "inputs": [],
+      "name": "NULL_ADDRESS",
+      "type": "function",
+      "outputs": [
+          {
+              "name": "",
+              "internalType": "address",
+              "type": "address"
+          }
+      ]
   },
   {
-    "name": "devAddress",
-    "inputs": [],
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "address",
-        "type": "address"
-      }
-    ]
+      "type": "function",
+      "name": "devAddress",
+      "inputs": [],
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view"
   },
   {
-    "name": "feeAddress",
-    "type": "function",
-    "inputs": [],
-    "outputs": [
-      {
-        "type": "address",
-        "internalType": "address",
-        "name": ""
-      }
-    ],
-    "stateMutability": "view"
+      "name": "feeAddress",
+      "stateMutability": "view",
+      "inputs": [],
+      "outputs": [
+          {
+              "name": "",
+              "type": "address",
+              "internalType": "address"
+          }
+      ],
+      "type": "function"
   },
   {
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "inputs": [],
-    "name": "minNftToBoost",
-    "stateMutability": "view",
-    "type": "function"
+      "name": "minNftToBoost",
+      "type": "function",
+      "outputs": [
+          {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "inputs": []
   },
   {
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "internalType": "contract IERC721",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "nft",
-    "type": "function",
-    "inputs": []
+      "outputs": [
+          {
+              "name": "",
+              "type": "address",
+              "internalType": "contract IERC721"
+          }
+      ],
+      "inputs": [],
+      "name": "nft",
+      "type": "function",
+      "stateMutability": "view"
   },
   {
-    "name": "nftBoost",
-    "inputs": [],
-    "type": "function",
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view"
+      "inputs": [],
+      "outputs": [
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": ""
+          }
+      ],
+      "name": "nftBoost",
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "name": "owner",
-    "type": "function",
-    "inputs": [],
-    "outputs": [
-      {
-        "internalType": "address",
-        "type": "address",
-        "name": ""
-      }
-    ],
-    "stateMutability": "view"
+      "type": "function",
+      "name": "owner",
+      "inputs": [],
+      "outputs": [
+          {
+              "name": "",
+              "internalType": "address",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view"
   },
   {
-    "name": "poolExistence",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "type": "bool",
-        "name": ""
-      }
-    ],
-    "type": "function",
-    "stateMutability": "view",
-    "inputs": [
-      {
-        "name": "",
-        "internalType": "contract IERC20",
-        "type": "address"
-      }
-    ]
+      "type": "function",
+      "inputs": [
+          {
+              "internalType": "contract IERC20",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "name": "poolExistence",
+      "stateMutability": "view",
+      "outputs": [
+          {
+              "name": "",
+              "type": "bool",
+              "internalType": "bool"
+          }
+      ]
   },
   {
-    "inputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": ""
-      }
-    ],
-    "name": "poolInfo",
-    "outputs": [
-      {
-        "name": "lpToken",
-        "type": "address",
-        "internalType": "contract IERC20"
-      },
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": "allocPoint"
-      },
-      {
-        "name": "lastRewardBlock",
-        "internalType": "uint256",
-        "type": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "accApolloPerShare",
-        "internalType": "uint256"
-      },
-      {
-        "name": "depositFeeBP",
-        "type": "uint16",
-        "internalType": "uint16"
-      },
-      {
-        "type": "uint256",
-        "name": "lpSupply",
-        "internalType": "uint256"
-      }
-    ],
-    "type": "function",
-    "stateMutability": "view"
+      "name": "poolInfo",
+      "type": "function",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "",
+              "internalType": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "outputs": [
+          {
+              "type": "address",
+              "internalType": "contract IERC20",
+              "name": "lpToken"
+          },
+          {
+              "name": "allocPoint",
+              "type": "uint256",
+              "internalType": "uint256"
+          },
+          {
+              "name": "lastRewardBlock",
+              "type": "uint256",
+              "internalType": "uint256"
+          },
+          {
+              "type": "uint256",
+              "name": "accApolloPerShare",
+              "internalType": "uint256"
+          },
+          {
+              "name": "depositFeeBP",
+              "type": "uint16",
+              "internalType": "uint16"
+          },
+          {
+              "name": "lpSupply",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ]
   },
   {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "inputs": [],
-    "outputs": [],
-    "name": "renounceOwnership"
+      "stateMutability": "nonpayable",
+      "name": "renounceOwnership",
+      "inputs": [],
+      "outputs": [],
+      "type": "function"
   },
   {
-    "type": "function",
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ],
-    "name": "startBlock",
-    "stateMutability": "view",
-    "inputs": []
+      "name": "startBlock",
+      "inputs": [],
+      "type": "function",
+      "outputs": [
+          {
+              "name": "",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "stateMutability": "view"
   },
   {
-    "outputs": [
-      {
-        "internalType": "contract Plutus",
-        "type": "address",
-        "name": ""
-      }
-    ],
-    "name": "token",
-    "type": "function",
-    "stateMutability": "view",
-    "inputs": []
+      "type": "function",
+      "inputs": [],
+      "outputs": [
+          {
+              "internalType": "contract Plutus",
+              "type": "address",
+              "name": ""
+          }
+      ],
+      "name": "token",
+      "stateMutability": "view"
   },
   {
-    "inputs": [],
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": ""
-      }
-    ],
-    "name": "tokenPerBlock"
+      "name": "tokenPerBlock",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "type": "function",
+      "stateMutability": "view",
+      "inputs": []
   },
   {
-    "name": "totalAllocPoint",
-    "inputs": [],
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": ""
-      }
-    ]
+      "name": "totalAllocPoint",
+      "inputs": [],
+      "outputs": [
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": ""
+          }
+      ],
+      "type": "function",
+      "stateMutability": "view"
   },
   {
-    "name": "transferOwnership",
-    "type": "function",
-    "outputs": [],
-    "inputs": [
-      {
-        "type": "address",
-        "name": "newOwner",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "nonpayable"
+      "outputs": [],
+      "name": "transferOwnership",
+      "inputs": [
+          {
+              "type": "address",
+              "name": "newOwner",
+              "internalType": "address"
+          }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
   },
   {
-    "type": "function",
-    "name": "userInfo",
-    "stateMutability": "view",
-    "inputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "name": "amount",
-        "internalType": "uint256",
-        "type": "uint256"
-      },
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": "rewardDebt"
-      }
-    ]
+      "type": "function",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "type": "uint256",
+              "name": "rewardDebt"
+          }
+      ],
+      "name": "userInfo",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "",
+              "internalType": "uint256"
+          },
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view"
   },
   {
-    "name": "poolLength",
-    "inputs": [],
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": ""
-      }
-    ]
+      "name": "poolLength",
+      "stateMutability": "view",
+      "inputs": [],
+      "type": "function",
+      "outputs": [
+          {
+              "type": "uint256",
+              "name": "",
+              "internalType": "uint256"
+          }
+      ]
   },
   {
-    "type": "function",
-    "outputs": [],
-    "name": "add",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "_allocPoint",
-        "internalType": "uint256",
-        "type": "uint256"
-      },
-      {
-        "internalType": "contract IERC20",
-        "type": "address",
-        "name": "_lpToken"
-      },
-      {
-        "internalType": "uint16",
-        "type": "uint16",
-        "name": "_depositFeeBP"
-      }
-    ]
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "type": "function",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "_allocPoint",
+              "internalType": "uint256"
+          },
+          {
+              "name": "_lpToken",
+              "type": "address",
+              "internalType": "contract IERC20"
+          },
+          {
+              "type": "uint16",
+              "internalType": "uint16",
+              "name": "_depositFeeBP"
+          }
+      ],
+      "name": "add"
   },
   {
-    "outputs": [],
-    "name": "set",
-    "inputs": [
-      {
-        "name": "_pid",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "_allocPoint",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint16",
-        "name": "_depositFeeBP",
-        "internalType": "uint16"
-      }
-    ],
-    "type": "function",
-    "stateMutability": "nonpayable"
+      "name": "set",
+      "type": "function",
+      "stateMutability": "nonpayable",
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "_pid",
+              "type": "uint256"
+          },
+          {
+              "internalType": "uint256",
+              "name": "_allocPoint",
+              "type": "uint256"
+          },
+          {
+              "name": "_depositFeeBP",
+              "internalType": "uint16",
+              "type": "uint16"
+          }
+      ],
+      "outputs": []
   },
   {
-    "name": "getMultiplier",
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "type": "uint256",
-        "name": "_from"
-      },
-      {
-        "name": "_to",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ]
+      "name": "getMultiplier",
+      "inputs": [
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "_from"
+          },
+          {
+              "name": "_to",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "type": "function",
+      "stateMutability": "view",
+      "outputs": [
+          {
+              "type": "uint256",
+              "name": "",
+              "internalType": "uint256"
+          }
+      ]
   },
   {
-    "type": "function",
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "type": "uint256",
-        "name": "_pid"
-      },
-      {
-        "name": "_user",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "name": "pendingApollo",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ]
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "inputs": [
+          {
+              "name": "_pid",
+              "type": "uint256",
+              "internalType": "uint256"
+          },
+          {
+              "type": "address",
+              "internalType": "address",
+              "name": "_user"
+          }
+      ],
+      "name": "pendingApollo",
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "inputs": [],
-    "stateMutability": "nonpayable",
-    "name": "massUpdatePools",
-    "type": "function",
-    "outputs": []
+      "type": "function",
+      "outputs": [],
+      "inputs": [],
+      "name": "massUpdatePools",
+      "stateMutability": "nonpayable"
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "name": "updatePool",
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_pid",
-        "type": "uint256"
-      }
-    ],
-    "outputs": []
+      "outputs": [],
+      "name": "updatePool",
+      "type": "function",
+      "stateMutability": "nonpayable",
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "type": "uint256",
+              "name": "_pid"
+          }
+      ]
   },
   {
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "deposit",
-    "inputs": [
-      {
-        "name": "_pid",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "type": "uint256",
-        "name": "_amount",
-        "internalType": "uint256"
-      }
-    ],
-    "type": "function"
+      "outputs": [],
+      "name": "deposit",
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "_pid",
+              "internalType": "uint256"
+          },
+          {
+              "type": "uint256",
+              "name": "_amount",
+              "internalType": "uint256"
+          }
+      ]
   },
   {
-    "name": "withdraw",
-    "outputs": [],
-    "type": "function",
-    "inputs": [
-      {
-        "name": "_pid",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "name": "_amount",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable"
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "inputs": [
+          {
+              "name": "_pid",
+              "internalType": "uint256",
+              "type": "uint256"
+          },
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "_amount"
+          }
+      ],
+      "outputs": [],
+      "name": "withdraw"
   },
   {
-    "name": "emergencyWithdraw",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "_pid",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "outputs": [],
-    "type": "function"
+      "type": "function",
+      "stateMutability": "nonpayable",
+      "name": "emergencyWithdraw",
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "_pid",
+              "internalType": "uint256"
+          }
+      ],
+      "outputs": []
   },
   {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "outputs": [],
-    "name": "setDevAddress",
-    "inputs": [
-      {
-        "type": "address",
-        "name": "_devAddress",
-        "internalType": "address"
-      }
-    ]
+      "name": "setDevAddress",
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "_devAddress",
+              "type": "address"
+          }
+      ],
+      "outputs": [],
+      "type": "function",
+      "stateMutability": "nonpayable"
   },
   {
-    "outputs": [],
-    "name": "setFeeAddress",
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "_feeAddress",
-        "type": "address",
-        "internalType": "address"
-      }
-    ]
+      "name": "setFeeAddress",
+      "inputs": [
+          {
+              "type": "address",
+              "name": "_feeAddress",
+              "internalType": "address"
+          }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function",
+      "outputs": []
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_tokenPerBlock",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "name": "updateEmissionRate",
-    "type": "function",
-    "stateMutability": "nonpayable"
+      "name": "updateEmissionRate",
+      "type": "function",
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "_tokenPerBlock",
+              "internalType": "uint256"
+          }
+      ]
   },
   {
-    "outputs": [],
-    "name": "updateStartBlock",
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "inputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": "_startBlock"
-      }
-    ]
+      "outputs": [],
+      "type": "function",
+      "name": "updateStartBlock",
+      "stateMutability": "nonpayable",
+      "inputs": [
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "_startBlock"
+          }
+      ]
   },
   {
-    "type": "function",
-    "inputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": "_minNftToBoost"
-      }
-    ],
-    "name": "setMinNftBoost",
-    "stateMutability": "nonpayable",
-    "outputs": []
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "type": "function",
+      "name": "setMinNftBoost",
+      "inputs": [
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": "_minNftToBoost"
+          }
+      ]
   },
   {
-    "name": "setNftBoost",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "name": "_nftBoost",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "type": "function",
-    "outputs": []
+      "type": "function",
+      "inputs": [
+          {
+              "name": "_nftBoost",
+              "type": "uint256",
+              "internalType": "uint256"
+          }
+      ],
+      "stateMutability": "nonpayable",
+      "name": "setNftBoost",
+      "outputs": []
   },
   {
-    "stateMutability": "nonpayable",
-    "name": "setNftContract",
-    "inputs": [
-      {
-        "name": "_nft",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [],
-    "type": "function"
+      "inputs": [
+          {
+              "name": "_nft",
+              "type": "address",
+              "internalType": "address"
+          }
+      ],
+      "name": "setNftContract",
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "name": "isNftHolder",
-    "inputs": [
-      {
-        "name": "_address",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "outputs": [
-      {
-        "internalType": "bool",
-        "type": "bool",
-        "name": ""
-      }
-    ]
+      "stateMutability": "view",
+      "outputs": [
+          {
+              "type": "bool",
+              "name": "",
+              "internalType": "bool"
+          }
+      ],
+      "name": "isNftHolder",
+      "type": "function",
+      "inputs": [
+          {
+              "type": "address",
+              "name": "_address",
+              "internalType": "address"
+          }
+      ]
   },
   {
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "calculateBonus",
-    "inputs": [
-      {
-        "name": "_user",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "type": "function",
-    "stateMutability": "view"
+      "type": "function",
+      "stateMutability": "view",
+      "inputs": [
+          {
+              "name": "_user",
+              "type": "address",
+              "internalType": "address"
+          }
+      ],
+      "outputs": [
+          {
+              "type": "uint256",
+              "internalType": "uint256",
+              "name": ""
+          }
+      ],
+      "name": "calculateBonus"
   },
   {
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "inputs": [],
-    "type": "function",
-    "name": "setRewardTo4"
+      "type": "function",
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "name": "setRewardTo4",
+      "inputs": []
   },
   {
-    "name": "setRewardTo04",
-    "stateMutability": "nonpayable",
-    "inputs": [],
-    "outputs": [],
-    "type": "function"
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "inputs": [],
+      "type": "function",
+      "name": "setRewardTo04"
   },
   {
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "name": "setRewardTo05",
-    "type": "function",
-    "inputs": []
+      "name": "setRewardTo05",
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "type": "function",
+      "inputs": []
   },
   {
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "type": "function",
-    "inputs": [],
-    "name": "setRewardTo06"
+      "inputs": [],
+      "name": "setRewardTo06",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
   },
   {
-    "type": "function",
-    "name": "setMaxSupply",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": "val"
-      }
-    ],
-    "outputs": []
+      "name": "setMaxSupply",
+      "type": "function",
+      "stateMutability": "nonpayable",
+      "outputs": [],
+      "inputs": [
+          {
+              "type": "uint256",
+              "name": "val",
+              "internalType": "uint256"
+          }
+      ]
   }
 ]

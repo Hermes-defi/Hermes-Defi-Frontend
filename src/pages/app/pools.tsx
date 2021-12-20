@@ -78,7 +78,7 @@ const Page: React.FC = () => {
           </HStack>
         </HStack>
 
-        <Container align="center" maxWidth="container.lg">
+        <Container align="center" maxWidth="container.md">
           {isLoading ? (
             <Flex mt={16} align="center" justify="center">
               <Spinner size="xl" />

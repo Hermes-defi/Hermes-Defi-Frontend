@@ -109,11 +109,11 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     ],
   },
   {
-    label: "Pre-Sale",
+    label: "IDO",
     href: "/app/pre-sale",
     children: [
       {
-        label: "Pre-Sale",
+        label: "IDO",
         href: "/app/pre-sale"
       },
       {

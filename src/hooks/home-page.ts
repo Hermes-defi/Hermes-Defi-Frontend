@@ -44,6 +44,7 @@ export function usePlutusData() {
 export function usePlutusStats() {
   const plutusContract = usePlutusToken();
   const plutusPrice = usePlutusPrice();
+  const masterChefContract = useMasterChef();
   
   //TODO: get plutus_per_block
   const plutusStats = useQuery({
@@ -55,6 +56,7 @@ export function usePlutusStats() {
       const totalMinted = (await plutusContract.totalSupply()) as BigNumber;
       const totalBurned = (await plutusContract.balanceOf(BURN_ADDRESS)) as BigNumber;
       const circulatingSupply = totalMinted.sub(totalBurned);
+      const plutusPerBlock = (await masterChefContract.tokenPerBlock()) as BigNumber;
 
       let marketCap = "N/A";
       if (plutusPrice) {
@@ -69,6 +71,7 @@ export function usePlutusStats() {
         totalMinted: utils.formatEther(totalMinted),
         totalBurned: utils.formatEther(totalBurned),
         circulatingSupply: utils.formatEther(circulatingSupply),
+        plutusPerBlock: utils.formatEther(plutusPerBlock),
       };
     },
   });
@@ -174,7 +177,7 @@ export function useTotalInBalancers() {
 
 export function useTvlChart() {
   return useQuery("tvl-chart-data", async () => {
-    const resp = await fetch("/api/tvl-chart");
+    const resp = await fetch("/api/tvl-chart-plutus");
     const data = await resp.json() || [];
 
     // format data

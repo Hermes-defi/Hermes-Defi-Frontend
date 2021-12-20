@@ -59,18 +59,16 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: ReferralABI,
   },
-  // TODO: change masterchef address
   masterChef: {
     address: {
-      1666600000: "0xaFd37A86044528010d0E70cDc58d0A9B5Eb03206",
+      1666600000: "0x8c8dca27e450d7d93fa951e79ec354dce543629e",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: MasterChefABI,
   },
-  // TODO: change plutus address
   plutusToken: {
     address: {
-      1666600000: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+      1666600000: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: PlutusTokenABI,
@@ -107,7 +105,7 @@ const defaultContracts = {
   // TODO: change plutusIDO address
   plutusIDO: {
     address: {
-      1666600000: "0xc2eaFa6B97194FCC96F04981944F99bbDCF32665",
+      1666600000: "0xae3b27d1d16b5364398266ac1dcafcdd22fe471f",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: PresaleABI,
@@ -120,10 +118,9 @@ const defaultContracts = {
     abi: UsdcSwapABI,
   },
   
-  //TODO: change address, add pPlutusABI
   pPlutus: {
     address: {
-      1666600000: "0xdBC1b31CA8F7dCf726b647f4930572850A05E520",
+      1666600000: "0x6c322c67dcab641549066beb849538de3b1f8600",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: pPlutusTokenABI,

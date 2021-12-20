@@ -268,7 +268,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayNumber("0.4", false, 1)}
+                      {displayNumber(plutusStats.data?.plutusPerBlock, false, 2)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.300")} fontSize="md">

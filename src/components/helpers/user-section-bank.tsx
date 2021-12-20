@@ -128,7 +128,11 @@ export const UserSection: React.FC<IProps> = (props) => {
   const { account } = useActiveWeb3React();
   const harvestMutation = useStakeWithdraw();
   if (!account) {
-    return <UnlockButton boxShadow="2xl" />;
+    return <UnlockButton boxShadow="2xl" colorScheme={( () =>{
+      if(props.rewardToken.symbol === "1DAI") return "secondary"
+      else "primary"
+    }
+    )()}/>;
   }
 
   return (

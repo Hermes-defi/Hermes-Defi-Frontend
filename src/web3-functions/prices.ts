@@ -8,7 +8,7 @@ import * as Sushi from "@sushiswap/sdk";
 import * as Viper from "@venomswap/sdk";
 
 const amms = {
-  "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B": "viper", // plutus
+  "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3": "viper", // plutus
   "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
   "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc
   "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "coingecko", // wmatic
@@ -34,8 +34,13 @@ const amms = {
   "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "viper", // WONE
   "0xef977d2f931c1978db5f6747666fa1eacb0d0339": "viper", //1DAI
   "0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79": "viper", //VIPER
+  "0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc": "viper", //1IRIS
+  "0xbb948620fa9cd554ef9a331b13edea9b181f9d45": "viper", //wsWAGMI
+  "0xe064a68994e9380250cfee3e8c0e2ac5c0924548": "viper", //xVIPER
+  "0x72cb10c6bfa5624dd07ef608027e366bd690048f": "kingdom", //JEWEL
+  "0x6983d1e6def3690c4d616b13597a09e6193ea013": "sushiswap", //1ETH
+  "0x3095c7557bcb296ccc6e363de01b760ba031f2d9": "sushiswap", //1WBTC
 };
-const USDCONE = "0xbf255d8c30dbab84ea42110ea7dc870f01c0013a";
 
 async function fetchCoinGeckoPrice(address: string) {
   try {
@@ -228,6 +233,8 @@ async function fetchSushiswapPrice(address: string) {
         body: JSON.stringify({
           query: `{
             tokenDayDatas ( 
+              orderBy: date
+              orderDirection: desc
               where: { 
                 token: "${address.toLowerCase()}" 
               } 
@@ -497,7 +504,7 @@ export async function fetchPrice(
     polycat: (t: { address: string; decimals: number; symbol: string }) =>
       fetchPolycatPrice(t.address),
     sushiswap: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchSushiSwapPrice2(t.address, t.decimals, t.symbol),
+      fetchSushiswapPrice(t.address),
     viper: (t: { address: string; decimals: number; symbol: string }) =>
       fetchViperSwapPrice2(t, library),
   };
@@ -670,8 +677,19 @@ export async function fetchPairPrice(
         );
 
         const tvl = token0Total.plus(token1Total);
+        
         const price = tvl.dividedBy(new BigNumberJS(totalSupply));
-
+        console.log({
+          token0: token0.symbol,
+          token0Price,
+          token0Total: token0Total.toString(),
+          token1: token1.symbol,
+          token1Price,
+          token1Total: token1Total.toString(),
+          tvl: tvl.toString(),
+          totalSupply: totalSupply.toString(),
+          price: price.toString()
+        });
         return price.toString();
       } catch (err) {
         console.log(err);

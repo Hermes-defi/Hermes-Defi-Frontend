@@ -23,7 +23,8 @@ function useFetchStakingPoolRequest() {
       const endBlock = await poolChef.bonusEndBlock();
 
       stakePoolInfo.rewardEndBlock = endBlock.toString();
-      stakePoolInfo.active = stakePoolInfo.active ? endBlock.sub(currentBlock || 0).gt(0) : false;
+      // stakePoolInfo.active = stakePoolInfo.active ? endBlock.sub(currentBlock || 0).gt(0) : false;
+      
 
       const totalStaked = (await poolChef.totalStakeTokenBalance()).toString();
 
