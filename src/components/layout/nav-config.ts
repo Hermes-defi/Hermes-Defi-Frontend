@@ -41,11 +41,11 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
         label: "Iris",
         href: "/app",
       },
-      // {
-      //   label: "Plutus",
-      //   href: "https://plutus.hermesdefi.io/app",
-      //   isExternal: true,
-      // },
+      {
+        label: "Plutus",
+        href: "https://plutus.hermesdefi.io/app",
+        isExternal: true,
+      },
     ],
   },
   {
