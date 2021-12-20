@@ -150,21 +150,21 @@ export async function getPlutusStats() {
       return total.plus(poolPrice);
     }, Promise.resolve(new BigNumberJS(0)));
 
-  // const totalValueInFarms = await farms.reduce(async (_total: Promise<BigNumberJS>, farm: Farm) => {
-  //   const lpContract = new ethers.Contract(farm.stakeToken.address, ERC20_ABI, provider);
+  const totalValueInFarms = await farms.reduce(async (_total: Promise<BigNumberJS>, farm: Farm) => {
+    const lpContract = new ethers.Contract(farm.stakeToken.address, ERC20_ABI, provider);
 
-  //   const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
-  //   const totalSupply = utils.formatUnits(await lpContract.totalSupply(), farm.stakeToken.decimals);
+    const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
+    const totalSupply = utils.formatUnits(await lpContract.totalSupply(), farm.stakeToken.decimals);
 
-  //   const tokenPrice = await fetchPairPrice(farm.pairs[0], farm.pairs[1], totalSupply, provider, farm.farmDx);
+    const tokenPrice = await fetchPairPrice(farm.pairs[0], farm.pairs[1], totalSupply, provider, farm.farmDx);
 
-  //   const total = await _total;
-  //   const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, farm.stakeToken.decimals)).multipliedBy(
-  //     tokenPrice
-  //   );
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, farm.stakeToken.decimals)).multipliedBy(
+      tokenPrice
+    );
 
-  //   return total.plus(poolPrice);
-  // }, Promise.resolve(new BigNumberJS(0)));
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
 
   // const totalValueInBalancers = await balancers.reduce(async (_total: Promise<BigNumberJS>, bal: Balancer) => {
   //   const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, provider);
@@ -197,13 +197,13 @@ export async function getPlutusStats() {
   //   return total.plus(poolPrice);
   // }, Promise.resolve(new BigNumberJS(0)));
 
-  const tvl = totalValueInPools;
-    // .plus(totalValueInFarms);
+  const tvl = totalValueInPools
+    .plus(totalValueInFarms);
     // .plus(totalValueInVaults);
 
   return {
     totalValueInPools: totalValueInPools.toString(),
-    // totalValueInFarms: totalValueInFarms.toString(),
+    totalValueInFarms: totalValueInFarms.toString(),
     // totalValueInBalancers: totalValueInBalancers.toString(),
     // totalValueInVaults: totalValueInVaults.toString(),
     tvl: tvl.toString(),
