@@ -38,12 +38,16 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     children: [
       {
         label: "Swap (Viper)",
-        href: "https://viper.exchange/#/swap?inputCurrency=0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a&outputCurrency=0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        href: "https://viper.exchange/#/swap",
         isExternal: true,
       },
       {
-        label: "Liquidity (Viper)",
-        href: "https://viper.exchange/#/add/0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a/0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        label: "Add PLUTUS Liquidity (Viper)",
+        href: "",
+      },
+      {
+        label: "Add IRIS Liquidity (Viper)",
+        href: "https://viper.exchange/#/add/ONE/0x85FD5f8dBD0c9Ef1806E6c7d4B787d438621C1dC",
         isExternal: true,
       },
     ],
@@ -53,9 +57,14 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     label: "Charts",
     children: [
       {
-        label: "DexScreener",
-        href: "https://dexscreener.com/harmony/0x86ad6271809f350522085f95f5a67d46ff7ed3ab",
-        isExternal: true,
+        label: "Viper (PLUTUS)",
+        href: "",
+      },
+      
+      {
+        label: "Viper (IRIS)",
+        href: "https://info.viper.exchange/token/0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc",
+        isExternal: true
       }
     ],
   },
