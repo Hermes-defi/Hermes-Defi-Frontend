@@ -255,7 +255,7 @@ function Header() {
           <Text color={"gray.500"}>Safe, transparent and fast. A platform at the level of the gods.</Text>
         </Stack>
 
-        <Stack w="70%" direction="row" spacing={5} align="center" alignSelf="center" position="relative">
+        <Stack w="80%" direction="row" spacing={5} align="center" alignSelf="center" position="relative">
           <NextLink href="/app" passHref>
             <chakra.a flex="1">
               <Button isFullWidth variant="solid" colorScheme="primary" size="lg">
