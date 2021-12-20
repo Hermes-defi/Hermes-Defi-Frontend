@@ -194,7 +194,7 @@ export function useLandingPageStats() {
     const resp = await fetch("/api/stats");
     const data = await resp.json();
 
-    const totalTvl = new BigNumberJS(data.iris?.tvl).plus(data.apollo?.tvl).toString();
+    const totalTvl = new BigNumberJS(data.iris?.tvl).plus(data.plutus?.tvl).toString();
     return {
       ...data,
       totalTvl,

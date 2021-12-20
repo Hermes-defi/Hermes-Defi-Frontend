@@ -264,13 +264,13 @@ function Header() {
             </chakra.a>
           </NextLink>
 
-          {/* <NextLink href="https://plutus.hermesdefi.io/app" passHref>
+          <NextLink href="https://plutus.hermesdefi.io/app" passHref>
             <chakra.a flex="1">
               <Button isFullWidth variant="solid" bg="#B05CFF" color="white" size="lg" _hover={{ bg: "#9A2EFF" }}>
                 Harmony
               </Button>
             </chakra.a>
-          </NextLink> */}
+          </NextLink>
         </Stack>
       </Stack>
     </Container>
@@ -357,7 +357,7 @@ function Services() {
               Much more
             </Heading>
 
-            <Text>Enter and discover our vaults, stakes, governance, NFTs & DEX section.</Text>
+            <Text>Enter and discover our vaults, stakes, banks, governance, NFTs & DEX section.</Text>
           </Box>
         </Box>
       </Stack>
