@@ -468,7 +468,7 @@ function Footer() {
               <Text>Medium</Text>
             </Stack>
 
-            <Stack as={Link} isExternal href="https://discord.gg/k6SX8pkK" direction="row" align="center">
+            <Stack as={Link} isExternal href="https://discord.gg/hermesdefi" direction="row" align="center">
               <Icon color="purple.500" as={FaDiscord} />
               <Text>Discord</Text>
             </Stack>

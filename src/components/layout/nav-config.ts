@@ -129,7 +129,7 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Discord",
-        href: "https://discord.gg/k6SX8pkK",
+        href: "https://discord.gg/hermesdefi",
         isExternal: true,
       },
       {
