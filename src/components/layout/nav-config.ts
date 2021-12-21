@@ -119,7 +119,6 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: "IDO",
-    href: "/app/pre-sale",
     children: [
       {
         label: "IDO",
