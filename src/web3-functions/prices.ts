@@ -433,6 +433,13 @@ async function fetchViperSwapPrice2(
     "1USDC"
   );
 
+  const wone = new Viper.Token(
+    DEFAULT_CHAIN_ID,
+    defaultTokens.wone.address,
+    defaultTokens.wone.decimals,
+    "WONE"
+  )
+
   const dai = new Viper.Token(
     DEFAULT_CHAIN_ID,
     defaultTokens.dai.address,
@@ -449,30 +456,48 @@ async function fetchViperSwapPrice2(
 
   try {
     let route;
-    if (token.symbol !== "1DAI") {
-      // fetch matic to usdc pair
-      const DaiToUSDCPair = await Viper.Fetcher.fetchPairData(
+    if(token.symbol === "PLUTUS"){
+      // fetch dai to usdc pair
+      const DAIToUSDCPair = await Viper.Fetcher.fetchPairData(
         dai,
         usdc,
         library
       );
 
-      // fetch the token to matic pair info
-      const tokenToDai = await Viper.Fetcher.fetchPairData(
+      // fetch plutus to dai pair info
+      const tokenToDAI = await Viper.Fetcher.fetchPairData(
         token,
         dai,
         library
       );
 
       // find a route
-      route = new Viper.Route([DaiToUSDCPair, tokenToDai], usdc);
+      route = new Viper.Route([DAIToUSDCPair, tokenToDAI], usdc);
+    }
+    else if (token.symbol !== "WONE") {
+      // fetch wone to usdc pair
+      const WONEToUSDCPair = await Viper.Fetcher.fetchPairData(
+        wone,
+        usdc,
+        library
+      );
+
+      // fetch the token to wone pair info
+      const tokenToWONE = await Viper.Fetcher.fetchPairData(
+        token,
+        wone,
+        library
+      );
+
+      // find a route
+      route = new Viper.Route([WONEToUSDCPair, tokenToWONE], usdc);
     } else {
-      // use only the MATIC-USDC pair to get the price
+      // use only the WONE-USDC pair to get the price
       const pair = await Viper.Fetcher.fetchPairData(token, usdc, library);
       route = new Viper.Route([pair], usdc);
     }
 
-    console.debug(route.midPrice.invert().toSignificant(6));
+    // console.debug(route.midPrice.invert().toSignificant(6));
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
     console.log("Error for token", token);
@@ -679,17 +704,17 @@ export async function fetchPairPrice(
         const tvl = token0Total.plus(token1Total);
         
         const price = tvl.dividedBy(new BigNumberJS(totalSupply));
-        console.log({
-          token0: token0.symbol,
-          token0Price,
-          token0Total: token0Total.toString(),
-          token1: token1.symbol,
-          token1Price,
-          token1Total: token1Total.toString(),
-          tvl: tvl.toString(),
-          totalSupply: totalSupply.toString(),
-          price: price.toString()
-        });
+        // console.log({
+        //   token0: token0.symbol,
+        //   token0Price,
+        //   token0Total: token0Total.toString(),
+        //   token1: token1.symbol,
+        //   token1Price,
+        //   token1Total: token1Total.toString(),
+        //   tvl: tvl.toString(),
+        //   totalSupply: totalSupply.toString(),
+        //   price: price.toString()
+        // });
         return price.toString();
       } catch (err) {
         console.log(err);
