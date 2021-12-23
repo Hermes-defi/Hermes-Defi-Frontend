@@ -202,12 +202,13 @@ export function useBuyPPlutus() {
   const queryClient = useQueryClient();
   const presaleContract = usePresaleContract();
   const toast = useToast();
+  
 
   const purchaseMutation = useMutation(
     async (amount: string) => {
       if (!account) throw new Error("No connected account");
-
-      const tx = await presaleContract.buy(utils.parseUnits(amount, 18));
+      const realAmount = Number(amount) / 0.116;
+      const tx = await presaleContract.buy(utils.parseUnits(realAmount.toString(), 18));
       await tx.wait();
 
       return amount;
