@@ -115,7 +115,7 @@ export const farms: Farm[] = {
         address: "0x96025483bd32c645b822a5a08004b84d674537cb",
         symbol: "ONE/VIPER",
         decimals: 18,
-        logo: ["/viper-logo.png", "/harmony-one-logo.png"],
+        logo: ["/harmony-one-logo.png", "/viper-logo.png"],
       },
 
       pairs: [

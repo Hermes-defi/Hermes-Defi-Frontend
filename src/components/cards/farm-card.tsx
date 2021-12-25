@@ -20,6 +20,8 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
   const lpLink = {
     quickswap: `https://quickswap.exchange/#/add/${farm.pairs[0].address}/${farm.pairs[1].address}`,
     dfyn: `https://info.dfyn.network/pair/${farm.stakeToken.address}`,
+    sushiswap: `https://analytics-harmony.sushi.com/pairs/${farm.stakeToken.address}`,
+    viperswap: `https://info.viper.exchange/pair/${farm.stakeToken.address}`,
   };
 
   return (
@@ -174,7 +176,8 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
         </Stack>
 
         <Link
-          href={`https://explorer.harmony.one/address/${farm.stakeToken.address}`}
+          href={`https://explorer.harmony.one/address/${farm.stakeToken.address}`} 
+          isExternal
           textDecoration="underline"
           fontWeight="700"
           fontSize="sm"
