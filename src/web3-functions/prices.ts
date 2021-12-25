@@ -494,7 +494,6 @@ async function fetchViperSwapPrice2(
       
       // find a route
       route = new Viper.Route([WONEToUSDCPair, tokenToWONE], usdc, token);
-      console.log("🚀 ~ file: prices.ts ~ line 497 ~ route", route)
       
     } else {
       // use only the WONE-USDC pair to get the price
@@ -502,7 +501,7 @@ async function fetchViperSwapPrice2(
       route = new Viper.Route([pair], usdc);
     }
 
-    console.log("TOKEN: ", token.symbol, " PRICE: ", route.midPrice.invert().toSignificant(10));
+    // console.log("TOKEN: ", token.symbol, " PRICE: ", route.midPrice.invert().toSignificant(10));
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
     console.log("Error for token", token);
@@ -751,20 +750,22 @@ export async function fetchPairPrice(
       const token1Total = new BigNumberJS(reserve1).times(
         new BigNumberJS(token1Price)
       );
-      console.log("------------LP: ", t0.symbol, "/", t1.symbol, "------------------")
-      console.log("🚀 ~ file: prices.ts ~ line 741 ~ viperswap: ~ reserve0", reserve0)
-      console.log("🚀 ~ file: prices.ts ~ line 743 ~ viperswap: ~ reserve1", reserve1)
-      console.log("🚀 ~ file: prices.ts ~ line 747 ~ viperswap: ~ token0Price", token0Price)
-      console.log("🚀 ~ file: prices.ts ~ line 750 ~ viperswap: ~ token1Price", token1Price)
-      console.log("🚀 ~ file: prices.ts ~ line 756 ~ viperswap: ~ token0Total", token0Total.toString())
-      console.log("🚀 ~ file: prices.ts ~ line 756 ~ viperswap: ~ token1Total", token1Total.toString())
+      
 
       const tvl = token0Total.plus(token1Total);
-      console.log("🚀 ~ file: prices.ts ~ line 758 ~ viperswap: ~ tvl", tvl.toString())
       
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
-      console.log("🚀 ~ file: prices.ts ~ line 761 ~ viperswap: ~ totalSupply", totalSupply)
-      console.log("🚀 ~ file: prices.ts ~ line 761 ~ viperswap: ~ price", price.toString())
+
+      // console.log("------------LP: ", t0.symbol, "/", t1.symbol, "------------------")
+      // console.log("🚀 ~ file: prices.ts ~ line 741 ~ viperswap: ~ reserve0", reserve0)
+      // console.log("🚀 ~ file: prices.ts ~ line 743 ~ viperswap: ~ reserve1", reserve1)
+      // console.log("🚀 ~ file: prices.ts ~ line 747 ~ viperswap: ~ token0Price", token0Price)
+      // console.log("🚀 ~ file: prices.ts ~ line 750 ~ viperswap: ~ token1Price", token1Price)
+      // console.log("🚀 ~ file: prices.ts ~ line 756 ~ viperswap: ~ token0Total", token0Total.toString())
+      // console.log("🚀 ~ file: prices.ts ~ line 756 ~ viperswap: ~ token1Total", token1Total.toString())
+      // console.log("🚀 ~ file: prices.ts ~ line 761 ~ viperswap: ~ totalSupply", totalSupply)
+      // console.log("🚀 ~ file: prices.ts ~ line 758 ~ viperswap: ~ tvl", tvl.toString())
+      // console.log("🚀 ~ file: prices.ts ~ line 761 ~ viperswap: ~ price", price.toString())
 
       return price.toString();
     },
