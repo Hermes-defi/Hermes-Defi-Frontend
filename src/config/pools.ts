@@ -95,6 +95,20 @@ export const pools: Pool[] = {
       },
     },
 
+    {
+      pid: 10,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
+
+      stakeToken: {
+        address: "0xd3a50c0dce15c12fe64941ffd2b864e887c9b9e1",
+        symbol: "APE",
+        decimals: 9,
+        logo: "/harmonape-logo.jpg",
+      },
+    },
+
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);

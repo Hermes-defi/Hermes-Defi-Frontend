@@ -38,7 +38,7 @@ export type PlutusStakeInfo = {
 export const plutusStakingPools: PlutusStakeInfo[] = {
     1666600000: [
     {
-      address: "0xc96ea6b1ce00e21e468024f15cabddace598303f",
+      address: "0x6544D6Af6DC69Da88307a198852388c4Dec77e59",
       poolSite: "https://www.harmony.one/",
       active: true,
 

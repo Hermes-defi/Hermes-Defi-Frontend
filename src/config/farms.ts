@@ -113,21 +113,21 @@ export const farms: Farm[] = {
 
       stakeToken: {
         address: "0x96025483bd32c645b822a5a08004b84d674537cb",
-        symbol: "VIPER/ONE",
+        symbol: "ONE/VIPER",
         decimals: 18,
         logo: ["/viper-logo.png", "/harmony-one-logo.png"],
       },
 
       pairs: [
         {
-          address: "0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79",
-          decimals: 18,
-          symbol: "VIPER",
-        },
-        {
           address: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
           decimals: 18,
           symbol: "WONE",
+        },
+        {
+          address: "0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79",
+          decimals: 18,
+          symbol: "VIPER",
         },
       ],
     },

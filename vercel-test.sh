@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$VERCEL_GIT_COMMIT_REF" == "hermes-layer-plutus" ]] ; then
+if [[ "$VERCEL_GIT_COMMIT_REF" == "stg-hermes-layer-plutus" ]] ; then
   echo ">> Proceeding with deploy."
   exit 1; 
 else
