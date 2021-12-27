@@ -675,55 +675,52 @@ export async function fetchPairPrice(
     },
 
     sushiswap: async () => {
-      try {
-        const resp = await fetch(
-          "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              query: `{
-                pairs (where: { token0: "${token0.address.toLowerCase()}", token1: "${token1.address.toLowerCase()}"}) {
-                  id
-                  reserve0
-                  reserve1
-                }
-              }`,
-            }),
-          }
-        );
+      const t0 = new Sushi.Token(
+        DEFAULT_CHAIN_ID,
+        token0.address,
+        token0.decimals,
+        token0.symbol
+      );
+      const t1 = new Sushi.Token(
+        DEFAULT_CHAIN_ID,
+        token1.address,
+        token1.decimals,
+        token1.symbol
+      );
+      const pairAddress = Sushi.Pair.getAddress(
+        t0,
+        t1
+      ).toLowerCase()
+      const pair = await fetchSushiPairData(pairAddress);
 
-        const { data } = await resp.json();
+      const reserve0 = Math.round(Number(pair.pair.reserve0)); // no need for decimals formatting
+      const reserve1 = Math.round(Number(pair.pair.reserve1)); // no need for decimals formatting
 
-        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(
-          new BigNumberJS(token0Price)
-        );
+      const token0Total = new BigNumberJS(reserve0).times(
+        new BigNumberJS(token0Price)
+      );
+      const token1Total = new BigNumberJS(reserve1).times(
+        new BigNumberJS(token1Price)
+      );
+      
 
-        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(
-          new BigNumberJS(token1Price)
-        );
+      const tvl = token0Total.plus(token1Total);
+      
+      const price = tvl.dividedBy(new BigNumberJS(totalSupply));
 
-        const tvl = token0Total.plus(token1Total);
-        
-        const price = tvl.dividedBy(new BigNumberJS(totalSupply));
-        // console.log({
-        //   token0: token0.symbol,
-        //   token0Price,
-        //   token0Total: token0Total.toString(),
-        //   token1: token1.symbol,
-        //   token1Price,
-        //   token1Total: token1Total.toString(),
-        //   tvl: tvl.toString(),
-        //   totalSupply: totalSupply.toString(),
-        //   price: price.toString()
-        // });
-        return price.toString();
-      } catch (err) {
-        console.log(err);
-        return "0";
-      }
+      // console.log("------------LP: ", t0.symbol, "/", t1.symbol, "------------------")
+      // console.log("🚀 ~ file: prices.ts ~ line 741 ~ viperswap: ~ reserve0", reserve0)
+      // console.log("🚀 ~ file: prices.ts ~ line 743 ~ viperswap: ~ reserve1", reserve1)
+      // console.log("🚀 ~ file: prices.ts ~ line 747 ~ viperswap: ~ token0Price", token0Price)
+      // console.log("🚀 ~ file: prices.ts ~ line 750 ~ viperswap: ~ token1Price", token1Price)
+      // console.log("🚀 ~ file: prices.ts ~ line 756 ~ viperswap: ~ token0Total", token0Total.toString())
+      // console.log("🚀 ~ file: prices.ts ~ line 756 ~ viperswap: ~ token1Total", token1Total.toString())
+      // console.log("🚀 ~ file: prices.ts ~ line 761 ~ viperswap: ~ totalSupply", totalSupply)
+      // console.log("🚀 ~ file: prices.ts ~ line 758 ~ viperswap: ~ tvl", tvl.toString())
+      // console.log("🚀 ~ file: prices.ts ~ line 761 ~ viperswap: ~ price", price.toString())
+
+      return price.toString();
+
     },
     viperswap: async () => {
       const t0 = new Viper.Token(

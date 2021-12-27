@@ -32,6 +32,7 @@ const Page: React.FC = () => {
     .filter((farm: any) => farm.data?.isActive === active)
     .filter((farm: any) => (stakedOnly ? farm.data?.hasStaked === stakedOnly : true));
 
+
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>
@@ -84,7 +85,12 @@ const Page: React.FC = () => {
             </Flex>
           ) : (
             <Wrap justify="center" spacing="40px">
-              {farms.map(({ data }: any) => (
+              {farms.filter(({ data }: any) => data.isSpecial === true).map(({ data }: any) => (
+                <WrapItem key={data.pid}>
+                  <FarmCard key={data.pid} farm={data} />
+                </WrapItem>
+              ))}
+              {farms.filter(({ data }: any) => data.isSpecial === false).map(({ data }: any) => (
                 <WrapItem key={data.pid}>
                   <FarmCard key={data.pid} farm={data} />
                 </WrapItem>

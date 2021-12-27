@@ -42,12 +42,12 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
-        label: "Add PLUTUS Liquidity (Viper)",
-        href: "",
+        label: "Add Liquidity PLUTUS / DAI",
+        href: "https://viper.exchange/#/add/0xd32858211FCEFd0bE0dD3FD6D069c3E821e0AEf3/0xEf977d2f931C1978Db5F6747666fa1eACB0d0339",
       },
       {
-        label: "Add IRIS Liquidity (Viper)",
-        href: "https://viper.exchange/#/add/ONE/0x85FD5f8dBD0c9Ef1806E6c7d4B787d438621C1dC",
+        label: "Add Liquidity IRIS / WONE",
+        href: "https://viper.exchange/#/add/0x85FD5f8dBD0c9Ef1806E6c7d4B787d438621C1dC/ONE",
         isExternal: true,
       },
     ],
@@ -57,13 +57,14 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     label: "Charts",
     children: [
       {
-        label: "Viper (PLUTUS)",
-        href: "",
+        label: "DEX Screener (PLUTUS)",
+        href: "https://dexscreener.com/harmony/0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+        isExternal: true
       },
-      
+
       {
-        label: "Viper (IRIS)",
-        href: "https://info.viper.exchange/token/0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc",
+        label: "DEX Screener (IRIS)",
+        href: "https://dexscreener.com/harmony/0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc",
         isExternal: true
       }
     ],
