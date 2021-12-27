@@ -459,7 +459,7 @@ async function fetchViperSwapPrice2(
     if(token.symbol === "PLUTUS"){
       // TODO: delete this return 
       // ! ONLY 4 PRESALE
-      return new BigNumberJS(0.1515);
+      // return new BigNumberJS(0.1515);
       // fetch dai to usdc pair
       const DAIToUSDCPair = await Viper.Fetcher.fetchPairData(
         dai,
