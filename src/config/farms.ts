@@ -218,6 +218,35 @@ export const farms: Farm[] = {
         },
       ],
     },
+
+    {
+      pid: 11,
+      multiplier: "50",
+      depositFees: 0,
+      isSpecial: true,
+      isActive: true,
+      farmDx: "viperswap",
+
+      stakeToken: {
+        address: "0xbbdcb6445b06df78db0b67ea3a0a03e16dc59936",
+        symbol: "PLTS/1DAI",
+        decimals: 18,
+        logo: ["/plutus-logo.png", "/1dai-logo.png"],
+      },
+
+      pairs: [
+        {
+          address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+          decimals: 18,
+          symbol: "PLTS",
+        },
+        {
+          address: "0xef977d2f931c1978db5f6747666fa1eacb0d0339",
+          decimals: 18,
+          symbol: "1DAI",
+        },
+      ],
+    },
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((farm: Farm) => !farm.isDisabled);

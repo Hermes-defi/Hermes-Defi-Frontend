@@ -3,7 +3,7 @@ import React from "react";
 import defaultContracts from "config/contracts";
 
 import { addTokenToWallet } from "wallet/utils";
-import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils";
+import { blockDiff, displayCurrency, displayNumber, displayTokenCurrency, generateTimeDuration } from "libs/utils";
 import {
   useFarmAPRStats,
   usePoolsAPRStats,
@@ -20,10 +20,12 @@ import {
 import { AppLayout } from "components/layout";
 import {
   AspectRatio,
+  Badge,
   Box,
   Button,
   Center,
   Heading,
+  HStack,
   Icon,
   Image,
   Link,
@@ -45,6 +47,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { useCurrentBlockNumber } from "hooks/wallet";
 
 const Page: React.FC = () => {
   const plutusStats = usePlutusStats();
@@ -52,6 +55,7 @@ const Page: React.FC = () => {
   const balStats = useTotalInBalancers();
   const poolStats = useTotalInPools();
   const vaultStats = useTotalInVaults();
+  const currentBlock = useCurrentBlockNumber();
 
   const [isFarmAprLoading, farmApr] = useFarmAPRStats();
   const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
@@ -64,8 +68,32 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-      
-          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+      <Stack direction={["column", "row"]} justify="center" spacing={10}>
+        <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+            <Badge colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
+            <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
+              FARM STARTS
+            </Heading>
+            <Skeleton isLoaded={!!currentBlock}>
+              <Text align="center" letterSpacing="1px" fontWeight="700">
+                {generateTimeDuration(blockDiff(21048525 - currentBlock))}
+              </Text>
+            </Skeleton>
+            </Badge>
+        </Box>
+        {/* <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+            <Heading color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
+              Finish emissions increased
+            </Heading>
+            <Skeleton isLoaded={!!currentBlock}>
+              <Text letterSpacing="1px" fontWeight="700">
+                {generateTimeDuration(blockDiff(21003939 - 20985939 + currentBlock))}
+              </Text>
+            </Skeleton>
+        </Box> */}
+      </Stack>
+      <HStack spacing="10">
+          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
               PLUTUS: The Tokenomics
             </Heading>
@@ -79,7 +107,21 @@ const Page: React.FC = () => {
             </AspectRatio>
         
           </Box>
+          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
+            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
+              Three Easy Ways to Bridge to Harmony
+            </Heading>
+            <AspectRatio maxH="lg" ratio={16/9}>
+            <iframe
+              title="Three Easy Ways to Bridge to Harmony"
+              src="https://www.youtube.com/embed/PTOJOjidwJI"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+            </AspectRatio>
         
+          </Box>
+          </HStack>
         <Box
           bg={useColorModeValue("white", "gray.700")}
           rounded="2xl"

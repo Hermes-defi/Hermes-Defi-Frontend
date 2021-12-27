@@ -58,6 +58,7 @@ export function generateTimeDuration(diff: number) {
   const days = duration.days();
   const hours = duration.hours();
   const minutes = duration.minutes();
+  const seconds = duration.seconds();
 
   let resp = "";
   if (days > 0) {
@@ -68,8 +69,8 @@ export function generateTimeDuration(diff: number) {
     resp += hours > 1 ? `${hours} hours, ` : `${hours} hour, `;
   }
 
-  resp += minutes > 1 ? `${minutes} minutes` : `${minutes} minute`;
-
+  resp += minutes > 1 ? `${minutes} minutes, ` : `${minutes} minute, `;
+  resp += seconds > 1 ? `${seconds} seconds` : `${seconds} second`;
   return resp;
 }
 
