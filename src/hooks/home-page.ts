@@ -213,15 +213,15 @@ export function useHarvestAll(plutusToHarvest: string) {
   const harvestAll = useMutation(
     async () => {
       return Promise.all(
-        [...farms, ...pools, ...balancers].map(async (pool) => {
+        [...farms, ...pools].map(async (pool) => {
           const lpContract = getLpContract(pool.stakeToken.address);
           const allowance: BigNumber = await lpContract.allowance(account, defaultContracts.masterChef.address);
 
           const hasApprovedPool = !allowance.isZero();
 
           if (!hasApprovedPool) return;
-
-          const tx = await masterChef.deposit(pool.pid, utils.parseEther("0"), constants.AddressZero);
+          console.log("klk");
+          const tx = await masterChef.deposit(pool.pid, utils.parseEther("0"));
           await tx.wait();
         })
       );

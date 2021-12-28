@@ -27,7 +27,7 @@ export const APRModal: React.FC<{
       <ModalOverlay />
       <ModalContent rounded="2xl">
         <ModalCloseButton />
-        <ModalHeader fontSize="md">ROI</ModalHeader>
+        <ModalHeader fontSize="md">APY</ModalHeader>
 
         <ModalBody px={8} pb={6}>
           <Stack mb={3} justify="space-between" direction="row">
@@ -45,7 +45,7 @@ export const APRModal: React.FC<{
               fontWeight="bold"
               fontSize="sm"
             >
-              ROI
+              APY
             </Text>
             <Text
               color={useColorModeValue("accent.600", "accent.200")}

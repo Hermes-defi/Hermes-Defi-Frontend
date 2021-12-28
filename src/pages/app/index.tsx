@@ -68,7 +68,7 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-      <Stack direction={["column", "row"]} justify="center" spacing={10}>
+      {/* <Stack direction={["column", "row"]} justify="center" spacing={10}>
         <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Badge colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
             <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
@@ -81,17 +81,8 @@ const Page: React.FC = () => {
             </Skeleton>
             </Badge>
         </Box>
-        {/* <Box flex="1" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-            <Heading color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              Finish emissions increased
-            </Heading>
-            <Skeleton isLoaded={!!currentBlock}>
-              <Text letterSpacing="1px" fontWeight="700">
-                {generateTimeDuration(blockDiff(21003939 - 20985939 + currentBlock))}
-              </Text>
-            </Skeleton>
-        </Box> */}
-      </Stack>
+        
+      </Stack> */}
       <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">

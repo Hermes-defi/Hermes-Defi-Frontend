@@ -8,7 +8,7 @@ import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
-import { BLOCKS_PER_SECOND, PLUTUS_PER_BLOCK, SECONDS_PER_WEEK } from 'config/constants';
+import { BLOCKS_PER_SECOND, SECONDS_PER_WEEK } from 'config/constants';
 import { fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
@@ -42,7 +42,9 @@ function useFetchPoolsRequest() {
     newPool.stakeToken.price = await fetchPrice(newPool.stakeToken, library);
     // console.log(newPool.stakeToken.symbol, newPool.totalStaked, newPool.stakeToken.price, new BigNumberJS(newPool.totalStaked).times(newPool.stakeToken.price).toNumber() );
     // APR data
-    const rewardsPerWeek = PLUTUS_PER_BLOCK * (SECONDS_PER_WEEK / BLOCKS_PER_SECOND);
+    const plutusPerBlockWEI = (await masterChef.tokenPerBlock()) as BigNumber;
+    const plutusPerBlock = new Number (utils.formatEther(plutusPerBlockWEI));
+    const rewardsPerWeek =  plutusPerBlock.valueOf() * SECONDS_PER_WEEK / BLOCKS_PER_SECOND;
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
     const poolRewardsPerWeek = new BigNumberJS(newPool.multiplier)

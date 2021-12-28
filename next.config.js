@@ -11,7 +11,7 @@ const moduleExports = {
     return [
       {
         source: "/",
-        destination: "/app/waiting-room", // Matched parameters can be used in the destination
+        destination: "/app", // Matched parameters can be used in the destination
         permanent: false,
       },
     ];
