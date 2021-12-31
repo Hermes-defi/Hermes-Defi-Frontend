@@ -96,7 +96,7 @@ export const BankPoolCard: React.FC<{ stakePool: StakeBankInfo; isVaultToken?: b
           </Box>
         </HStack>
 
-        <HStack direction="row" justify="space-between">
+        {/* <HStack direction="row" justify="space-between">
         <Heading letterSpacing="1px" color="gray.200" fontSize="lg">
             Daily ROI
           </Heading>
@@ -105,7 +105,7 @@ export const BankPoolCard: React.FC<{ stakePool: StakeBankInfo; isVaultToken?: b
               {stakePool.apr ? `${displayNumber(stakePool.apr.dailyAPR, true, 2)}%` : "N/A"}
             </Heading>
           </Box>
-        </HStack>
+        </HStack> */}
 
         <HStack direction="row" justify="space-between">
         <Heading letterSpacing="1px" color="gray.200" fontSize="lg">

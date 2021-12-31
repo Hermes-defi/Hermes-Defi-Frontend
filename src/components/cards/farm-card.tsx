@@ -84,7 +84,7 @@ export const FarmCard: React.FC<{ farm: Farm }> = ({ farm }) => {
       <Stack mb={6}>
         <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
-            APR
+            APY
           </Text>
           <Box display="flex" alignItems="center">
             {farm.apr && (

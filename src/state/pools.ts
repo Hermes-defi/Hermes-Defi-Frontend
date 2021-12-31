@@ -43,8 +43,14 @@ function useFetchPoolsRequest() {
     // console.log(newPool.stakeToken.symbol, newPool.totalStaked, newPool.stakeToken.price, new BigNumberJS(newPool.totalStaked).times(newPool.stakeToken.price).toNumber() );
     // APR data
     const plutusPerBlockWEI = (await masterChef.tokenPerBlock()) as BigNumber;
-    const plutusPerBlock = new Number (utils.formatEther(plutusPerBlockWEI));
-    const rewardsPerWeek =  plutusPerBlock.valueOf() * SECONDS_PER_WEEK / BLOCKS_PER_SECOND;
+    const plutusPerBlock = utils.formatEther(plutusPerBlockWEI).toString();
+    const rewardsPerWeek =  new BigNumberJS(plutusPerBlock).times(SECONDS_PER_WEEK).div(BLOCKS_PER_SECOND).toNumber();
+    // console.log({
+    //   plutusPerBlock,
+    //   rewardsPerWeek,
+    //   SECONDS_PER_WEEK,
+    //   BLOCKS_PER_SECOND
+    // });
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
     const poolRewardsPerWeek = new BigNumberJS(newPool.multiplier)

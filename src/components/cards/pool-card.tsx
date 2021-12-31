@@ -66,7 +66,7 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
       <Stack mb={6}>
         <Stack direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="sm">
-            APR
+            APY
           </Text>
           <Box display="flex" alignItems="center">
             {pool.apr && (
