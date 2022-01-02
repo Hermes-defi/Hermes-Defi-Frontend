@@ -206,7 +206,7 @@ export const farms: Farm[] = {
         address: "0xeb049f1ed546f8efc3ad57f6c7d22f081ccc7375",
         symbol: "1ETH/WONE",
         decimals: 18,
-        logo: ["/harmony-one-logo.png", "/eth-logo.png"],
+        logo: ["/eth-logo.png", "/harmony-one-logo.png"],
       },
 
       pairs: [
