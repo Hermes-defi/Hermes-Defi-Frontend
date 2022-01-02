@@ -57,7 +57,7 @@ export const farms: Farm[] = {
         address: "0x54c59cc0ad2ec1de3c5b7057d900d306f16453ef",
         symbol: "IRIS/ONE",
         decimals: 18,
-        logo: ["/hermes-logo-1.png", "/harmony-one-logo.png"],
+        logo: ["/harmony-one-logo.png", "/hermes-logo-1.png"],
       },
 
       pairs: [
@@ -87,7 +87,7 @@ export const farms: Farm[] = {
         address: "0x1cb93763241e0eee22b098f7d26baa0562f688e7",
         symbol: "wsWAGMI/ONE",
         decimals: 18,
-        logo: ["/wswagmi-logo.png", "/harmony-one-logo.png"],
+        logo: ["/harmony-one-logo.png", "/wswagmi-logo.png"],
       },
 
       pairs: [
@@ -206,7 +206,7 @@ export const farms: Farm[] = {
         address: "0xeb049f1ed546f8efc3ad57f6c7d22f081ccc7375",
         symbol: "1ETH/WONE",
         decimals: 18,
-        logo: ["/eth-logo.png", "/harmony-one-logo.png"],
+        logo: ["/harmony-one-logo.png", "/eth-logo.png"],
       },
 
       pairs: [
@@ -235,7 +235,7 @@ export const farms: Farm[] = {
         address: "0xbbdcb6445b06df78db0b67ea3a0a03e16dc59936",
         symbol: "PLTS/1DAI",
         decimals: 18,
-        logo: ["/plutus-logo.png", "/1dai-logo.png"],
+        logo: ["/1dai-logo.png", "/plutus-logo.png"],
       },
 
       pairs: [

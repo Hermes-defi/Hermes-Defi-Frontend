@@ -118,7 +118,7 @@ export const pools: Pool[] = {
         address: "0x72cb10c6bfa5624dd07ef608027e366bd690048f",
         symbol: "JEWEL",
         decimals: 18,
-        logo: "/jewel-logo"
+        logo: "/jewel-logo.png"
       }
     }
 

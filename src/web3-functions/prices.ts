@@ -38,9 +38,10 @@ const amms = {
   "0xbb948620fa9cd554ef9a331b13edea9b181f9d45": "viper", //wsWAGMI
   "0xe064a68994e9380250cfee3e8c0e2ac5c0924548": "viper", //xVIPER
   "0xd3a50c0dce15c12fe64941ffd2b864e887c9b9e1": "viper", //HARMONAPE
-  "0x72cb10c6bfa5624dd07ef608027e366bd690048f": "kingdom", //JEWEL
   "0x6983d1e6def3690c4d616b13597a09e6193ea013": "sushiswap", //1ETH
   "0x3095c7557bcb296ccc6e363de01b760ba031f2d9": "sushiswap", //1WBTC
+  "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "viper", //JEWEL
+  "0xfa7191d292d5633f702b0bd7e3e3bccc0e633200": "sushiswap", //FRAX
 };
 
 async function fetchCoinGeckoPrice(address: string) {
