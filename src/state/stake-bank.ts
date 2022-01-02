@@ -273,6 +273,9 @@ export function useDepositIntoStakePool() {
       ]);
       const poolChef = getStakePoolContract(pool.address);
 
+      const txReward = await poolChef.withdrawReward();
+      await txReward.wait();
+      
       const tx = await poolChef.deposit(
         utils.parseUnits(amount, pool.stakeToken.decimals)
       );

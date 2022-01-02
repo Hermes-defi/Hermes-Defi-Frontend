@@ -251,6 +251,34 @@ export const farms: Farm[] = {
         },
       ],
     },
+    {
+      pid: 13,
+      multiplier: "10",
+      depositFees: 3,
+      isSpecial: false,
+      isActive: true,
+      farmDx: "sushiswap",
+
+      stakeToken: {
+        address: "0x29fc6e830ca8586a68dff325f6d2349fb58be951",
+        symbol: "1USDC/FRAX",
+        decimals: 18,
+        logo: ["/usdc-logo.png", "/frax-logo.png"],
+      },
+
+      pairs: [
+        {
+          address: "0x985458e523db3d53125813ed68c274899e9dfab4",
+          decimals: 18,
+          symbol: "1USDC",
+        },
+        {
+          address: "0xfa7191d292d5633f702b0bd7e3e3bccc0e633200",
+          decimals: 18,
+          symbol: "FRAX",
+        },
+      ],
+    },
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((farm: Farm) => !farm.isDisabled);

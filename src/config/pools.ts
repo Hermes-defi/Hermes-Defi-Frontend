@@ -108,6 +108,19 @@ export const pools: Pool[] = {
         logo: "/harmonape-logo.jpg",
       },
     },
+    {
+      pid: 12,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
+
+      stakeToken: {
+        address: "0x72cb10c6bfa5624dd07ef608027e366bd690048f",
+        symbol: "JEWEL",
+        decimals: 18,
+        logo: "/jewel-logo"
+      }
+    }
 
   ],
   1666700001: [],
