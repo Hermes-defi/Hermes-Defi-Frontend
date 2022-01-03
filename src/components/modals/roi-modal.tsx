@@ -27,7 +27,7 @@ export const APRModal: React.FC<{
       <ModalOverlay />
       <ModalContent rounded="2xl">
         <ModalCloseButton />
-        <ModalHeader fontSize="md">APY</ModalHeader>
+        <ModalHeader fontSize="md">APR</ModalHeader>
 
         <ModalBody px={8} pb={6}>
           <Stack mb={3} justify="space-between" direction="row">
