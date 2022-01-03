@@ -46,7 +46,7 @@ export const pools: Pool[] = {
 
       stakeToken: {
         address: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
-        symbol: "PLUTUS",
+        symbol: "PLTS",
         decimals: 18,
         logo: "/plutus-logo.png",
       },

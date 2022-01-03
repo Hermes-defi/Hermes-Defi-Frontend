@@ -9,7 +9,7 @@ export function usePlutusPrice() {
   return useQuery({
     queryKey: "plutus-price",
     queryFn: async () => {
-      return await fetchPrice({ address: defaultContracts.plutusToken.address, decimals: 18, symbol: "PLUTUS" }, library);
+      return await fetchPrice({ address: defaultContracts.plutusToken.address, decimals: 18, symbol: "PLTS" }, library);
     },
     refetchInterval: 0.5 * 60 * 1000,
   });

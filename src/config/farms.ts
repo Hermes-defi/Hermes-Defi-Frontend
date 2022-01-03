@@ -62,14 +62,14 @@ export const farms: Farm[] = {
 
       pairs: [
         {
-          address: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
-          decimals: 18,
-          symbol: "WONE",
-        },
-        {
           address: "0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc",
           decimals: 18,
           symbol: "IRIS",
+        },
+        {
+          address: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
+          decimals: 18,
+          symbol: "WONE",
         },
       ],
     },

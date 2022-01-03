@@ -11,7 +11,7 @@ import { BigNumber, utils } from "ethers";
 import { approveLpContract } from "web3-functions";
 import { fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
-import { BLOCKS_PER_SECOND, SECONDS_PER_WEEK } from "config/constants";
+import { BLOCKS_PER_SECOND, BLOCK_TIME, SECONDS_PER_WEEK } from "config/constants";
 
 function useFetchStakingPoolRequest() {
   const getLpContract = useERC20();
@@ -47,16 +47,12 @@ function useFetchStakingPoolRequest() {
       );
       // calculate APR
       if (stakePoolInfo.active) {
-        const rewardPerBlock = utils.formatUnits(
-          await poolChef.rewardPerBlock(),
-          stakePoolInfo.rewardToken.decimals
-        );
+        const rewardPerBlock = 
+          await poolChef.rewardPerBlock();
         const totalAllocPoints = (
           await poolChef.poolInfo()
         ).allocPoint.toNumber();
-        const rewardsPerWeek = new BigNumberJS(rewardPerBlock)
-          .times(SECONDS_PER_WEEK / BLOCKS_PER_SECOND)
-          .toNumber();
+        const rewardsPerWeek = rewardPerBlock / 1e18 * SECONDS_PER_WEEK / BLOCK_TIME;
         const multiplier = 1000; // todo: move to config
 
         const poolRewardsPerWeek = new BigNumberJS(multiplier)

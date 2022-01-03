@@ -8,15 +8,17 @@ import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
-import { BLOCKS_PER_SECOND, SECONDS_PER_WEEK } from 'config/constants';
+import { BLOCKS_PER_SECOND, BLOCK_TIME, SECONDS_PER_WEEK } from 'config/constants';
 import { fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
+import { useCurrentBlockNumber } from "hooks/wallet";
 
 function useFetchPoolsRequest() {
   const plutusPrice = usePlutusPrice();
   const masterChef = useMasterChef();
   const getLpContract = useERC20();
+  const currentBlock = useCurrentBlockNumber();
   const { account, library } = useActiveWeb3React();
 
   return async (pool: Pool) => {
@@ -26,6 +28,8 @@ function useFetchPoolsRequest() {
     let masterChefInfo = await masterChef.poolInfo(pool.pid);
 
     newPool.multiplier = masterChefInfo.allocPoint.toString();
+    
+    
     newPool.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
 
     // newPool.isActive = masterChefInfo.allocPoint.toString() !== "0";
@@ -42,14 +46,12 @@ function useFetchPoolsRequest() {
     newPool.stakeToken.price = await fetchPrice(newPool.stakeToken, library);
     // console.log(newPool.stakeToken.symbol, newPool.totalStaked, newPool.stakeToken.price, new BigNumberJS(newPool.totalStaked).times(newPool.stakeToken.price).toNumber() );
     // APR data
-    const plutusPerBlockWEI = (await masterChef.tokenPerBlock()) as BigNumber;
-    const plutusPerBlock = utils.formatEther(plutusPerBlockWEI).toString();
-    const rewardsPerWeek =  new BigNumberJS(plutusPerBlock).times(SECONDS_PER_WEEK).div(BLOCKS_PER_SECOND).toNumber();
+    const plutusPerBlockWEI = (await masterChef.tokenPerBlock());
+    const rewardsPerWeek = plutusPerBlockWEI / 1e18 * SECONDS_PER_WEEK / BLOCK_TIME;
     // console.log({
-    //   plutusPerBlock,
     //   rewardsPerWeek,
     //   SECONDS_PER_WEEK,
-    //   BLOCKS_PER_SECOND
+    //   BLOCK_TIME
     // });
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 

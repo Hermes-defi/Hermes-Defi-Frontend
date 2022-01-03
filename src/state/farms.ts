@@ -8,7 +8,7 @@ import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Farm, farms } from "config/farms";
 import { BigNumber, constants, utils } from "ethers";
-import { BLOCKS_PER_SECOND, SECONDS_PER_WEEK } from 'config/constants';
+import { BLOCKS_PER_SECOND, BLOCK_TIME, SECONDS_PER_WEEK } from 'config/constants';
 import { fetchPairPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
@@ -52,9 +52,9 @@ function useFetchFarmRequest() {
     );
 
     // APR data
-    const plutusPerBlockWEI = (await masterChef.tokenPerBlock()) as BigNumber;
+    const plutusPerBlockWEI = (await masterChef.tokenPerBlock());
     const plutusPerBlock = new Number (utils.formatEther(plutusPerBlockWEI));
-    const rewardsPerWeek =  plutusPerBlock.valueOf() * SECONDS_PER_WEEK / BLOCKS_PER_SECOND;
+    const rewardsPerWeek = plutusPerBlockWEI / 1e18 * SECONDS_PER_WEEK / BLOCK_TIME;
     const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
 
     const poolRewardsPerWeek = new BigNumberJS(newFarm.multiplier)

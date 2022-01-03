@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="410.151" height="472.365"
+    viewBox="0 0 410.151 472.365">
+    <defs>
+        <style>
+            .a {
+                fill: url(#a);
+            }
+
+            .b {
+                fill: url(#b);
+            }
+
+            .c {
+                fill: url(#c);
+            }
+
+            .d {
+                fill: url(#d);
+            }
+        </style>
+        <radialGradient id="a" cx="0.164" cy="0.652" r="0.804" gradientTransform="translate(-0.141) scale(1.282 1)"
+            gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#3891b5" />
+            <stop offset="0.494" stop-color="#b7b7b7" />
+            <stop offset="1" stop-color="#a11b35" />
+        </radialGradient>
+        <radialGradient id="b" cx="0.164" cy="0.652" r="0.804" gradientTransform="translate(-0.141) scale(1.282 1)"
+            gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#d2b3d1" />
+            <stop offset="0.628" stop-color="#7994a7" />
+            <stop offset="1" stop-color="#406887" />
+        </radialGradient>
+        <linearGradient id="c" x1="0.366" y1="1" x2="0.803" y2="0.658" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#c9bcc6" />
+            <stop offset="1" stop-color="#39687a" />
+        </linearGradient>
+        <radialGradient id="d" cx="0.164" cy="0.652" r="0.804" gradientTransform="translate(-0.141) scale(1.282 1)"
+            gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#8dbfd4" />
+            <stop offset="0.54" stop-color="#ece8f3" />
+            <stop offset="1" stop-color="#ffbbc8" />
+        </radialGradient>
+    </defs>
+    <g transform="translate(-876.751 -310)">
+        <path class="a"
+            d="M138.918,305.526l7.021-27.08a1.277,1.277,0,0,0-1.185-1.55H13.73a1.185,1.185,0,0,1-1.185-1.5L79.789,24.923a1.231,1.231,0,0,1,1.185-.912L149.47-10s84.137,47.372,103.239,66.519,27.354,43.355,27.354,74.083A138.318,138.318,0,0,1,255.49,209.97a1.185,1.185,0,0,0,.957,1.869h96.741a1.231,1.231,0,0,1,.866,2.1L100.988,461.851a1.185,1.185,0,0,1-2.006-1.185Z"
+            transform="translate(864.251 320.109)" />
+        <path class="b"
+            d="M145.774,124.112c.081-.367-.81-1.532-132.209-1.55a1.185,1.185,0,0,1-.975-.451c-.234-.3,68.757-32.739,67.874-32.739,48.948-35.216,168.708,0,168.708,0s-49.306,121.114-148.35,218.146a1.185,1.185,0,0,1-2.006-1.185Z"
+            transform="translate(864.415 474.442)" />
+        <path class="c"
+            d="M145.774,124.112c.081-.367-.81-1.532-132.209-1.55a1.185,1.185,0,0,1-.975-.451c-.234-.3,68.757-32.739,67.874-32.739,48.948-35.216,132.675,0,132.675,0S144.992,124.355,145.774,124.112Z"
+            transform="translate(864.416 474.442)" />
+        <path class="d"
+            d="M145.939,256.394a1.276,1.276,0,0,0-1.185-1.55H13.73a1.185,1.185,0,0,1-1.185-1.5L79.789,2.872a1.231,1.231,0,0,1,1.185-.912h72.943c48.963.182,79.69,13.358,98.792,32.505s27.354,43.355,27.354,74.083a138.318,138.318,0,0,1-24.573,79.371,1.185,1.185,0,0,0,.957,1.869h96.741a1.231,1.231,0,0,1,.866,2.1C100.612,440.229,31.434,474.138,31.628,473.6Z"
+            transform="translate(932.492 308.04)" />
+    </g>
+</svg>

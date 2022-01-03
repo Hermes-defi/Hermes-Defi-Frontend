@@ -60,7 +60,7 @@ export const stakingBankPools: StakeBankInfo[] = {
 
       stakeToken: {
         address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
-        symbol: "PLUTUS",
+        symbol: "PLTS",
         decimals: 18,
         logo: "/plutus-logo.png",
       },
