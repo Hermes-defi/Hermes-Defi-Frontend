@@ -45,7 +45,7 @@ export const APRModal: React.FC<{
               fontWeight="bold"
               fontSize="sm"
             >
-              APY
+              APR
             </Text>
             <Text
               color={useColorModeValue("accent.600", "accent.200")}
@@ -108,9 +108,9 @@ export const APRModal: React.FC<{
             <Text as="li" fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
               Calculated based on current rates
             </Text>
-            <Text as="li" fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
+            {/* <Text as="li" fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
               Compounding once daily
-            </Text>
+            </Text> */}
             <Text as="li" fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
               Rates are estimates provided for your convenience only. No means represent guaranteed
               returns
