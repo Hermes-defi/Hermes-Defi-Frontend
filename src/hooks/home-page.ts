@@ -160,7 +160,7 @@ export function useTotalInStakingPools() {
 
   const data = poolsResp.reduce((total, poolResp) => {
     const pool = poolResp.data as StakeInfo;
-    if (!pool || !pool.active) return new BigNumberJS(0);
+    if (!pool) return new BigNumberJS(0);
 
     const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
 
