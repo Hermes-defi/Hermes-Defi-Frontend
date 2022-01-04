@@ -1,6 +1,7 @@
 import defaultContracts from "config/contracts";
 import ERC20_ABI from "config/abis/ERC20.json";
 import VAULT_ABI from "config/abis/Vault.json";
+import BANK_ABI from "config/abis/StakeBank.json";
 import BigNumberJS from "bignumber.js";
 import { ethers, utils } from "ethers";
 import { fetchBalancerPrice, fetchPairPrice, fetchPrice } from "web3-functions/prices";
@@ -10,6 +11,7 @@ import { Pool, pools } from "config/pools";
 import { Farm, farms } from "config/farms";
 import { Balancer, balancers } from "config/balancers";
 import { vaults, Vault } from "config/vaults";
+import { StakeBankInfo, stakingBankPools } from "config/stake-bank";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { RPC_URLS } from "wallet/connectors";
 
@@ -166,6 +168,26 @@ export async function getPlutusStats() {
     return total.plus(poolPrice);
   }, Promise.resolve(new BigNumberJS(0)));
 
+  const totalValueInBank = await stakingBankPools.reduce(async (_total: Promise<BigNumberJS>, bank: StakeBankInfo) => {
+    const lpContract = new ethers.Contract(bank.stakeToken.address, ERC20_ABI, provider);
+    const bankContract = new ethers.Contract(bank.address, BANK_ABI, provider);
+    const totalLpStaked = await bankContract.totalStaked();
+
+    const tokenPrice = await fetchPrice(
+      { address: lpContract.address, decimals: bank.stakeToken.decimals, symbol: bank.stakeToken.symbol },
+      provider
+    );
+
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, bank.stakeToken.decimals)).multipliedBy(
+      tokenPrice
+    );
+
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
+
+  
+
   // const totalValueInBalancers = await balancers.reduce(async (_total: Promise<BigNumberJS>, bal: Balancer) => {
   //   const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, provider);
 
@@ -198,12 +220,14 @@ export async function getPlutusStats() {
   // }, Promise.resolve(new BigNumberJS(0)));
 
   const tvl = totalValueInPools
-    .plus(totalValueInFarms);
+    .plus(totalValueInFarms)
+    .plus(totalValueInBank);
     // .plus(totalValueInVaults);
 
   return {
     totalValueInPools: totalValueInPools.toString(),
     totalValueInFarms: totalValueInFarms.toString(),
+    totalValueInBank: totalValueInBank.toString(),
     // totalValueInBalancers: totalValueInBalancers.toString(),
     // totalValueInVaults: totalValueInVaults.toString(),
     tvl: tvl.toString(),
