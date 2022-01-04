@@ -157,7 +157,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "80000000000000000",
 
       type: "masterchef",
-      isActive: true,
+      isActive: false,
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -204,7 +204,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "8000000000000000000",
 
       type: "masterchef",
-      isActive: true,
+      isActive: false,
       amm: "polycat",
       depositFees: 0,
       withdrawFees: 0,

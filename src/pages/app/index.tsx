@@ -15,6 +15,7 @@ import {
   useIrisStats,
   useTvlChart,
   useTotalInVaults,
+  useTotalInStakingPools,
 } from "hooks/home-page";
 
 import { AppLayout } from "components/layout";
@@ -48,18 +49,19 @@ import {
 
 const Page: React.FC = () => {
   const irisStats = useIrisStats();
-  const farmStats = useTotalInFarms();
-  const balStats = useTotalInBalancers();
-  const poolStats = useTotalInPools();
+  // const farmStats = useTotalInFarms();
+  // const balStats = useTotalInBalancers();
+  // const poolStats = useTotalInPools();
   const vaultStats = useTotalInVaults();
+  const stakePoolStats = useTotalInStakingPools();
 
-  const [isFarmAprLoading, farmApr] = useFarmAPRStats();
-  const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
+  // const [isFarmAprLoading, farmApr] = useFarmAPRStats();
+  // const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
 
-  const { irisInWallet, irisToHarvest } = useIrisData();
+  // const { irisInWallet, irisToHarvest } = useIrisData();
   const chartData = useTvlChart();
 
-  const harvestAll = useHarvestAll(irisToHarvest.data);
+  // const harvestAll = useHarvestAll(irisToHarvest.data);
 
   return (
     <AppLayout>
@@ -338,17 +340,33 @@ const Page: React.FC = () => {
                     Total Value Locked
                   </Heading>
                   <Skeleton
-                    isLoaded={!farmStats.isLoading && !poolStats.isLoading && !balStats.isLoading}
+                    isLoaded={!vaultStats.isLoading && !stakePoolStats.isLoading}
                   >
                     <Text fontSize="3xl" fontWeight="700">
                       {displayCurrency(
-                        vaultStats.data.toNumber()
+                        vaultStats.data.toNumber() + stakePoolStats.data.toNumber()
                       )}
                     </Text>
                   </Skeleton>
                 </div>
 
                 <Stack spacing={[5, 10]} direction={["column", "row"]}>
+                <Box align={["left", "center"]}>
+                    <Heading
+                      borderBottomWidth="2px"
+                      borderColor="primary.500"
+                      mb={1}
+                      color={useColorModeValue("gray.600", "gray.300")}
+                      fontSize="xl"
+                    >
+                      Staking Pools
+                    </Heading>
+                    <Skeleton isLoaded={!stakePoolStats.isLoading}>
+                      <Text fontSize="2xl" fontWeight="700">
+                        {displayCurrency(stakePoolStats.data.toNumber())}
+                      </Text>
+                    </Skeleton>
+                  </Box>
                   <Box align={["left", "center"]}>
                     <Heading
                       borderBottomWidth="2px"
@@ -359,7 +377,7 @@ const Page: React.FC = () => {
                     >
                       Vaults
                     </Heading>
-                    <Skeleton isLoaded={!farmStats.isLoading}>
+                    <Skeleton isLoaded={!vaultStats.isLoading}>
                       <Text fontSize="2xl" fontWeight="700">
                         {displayCurrency(vaultStats.data.toNumber())}
                       </Text>

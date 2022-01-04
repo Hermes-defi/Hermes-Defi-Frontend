@@ -1,6 +1,7 @@
 import defaultContracts from "config/contracts";
 import ERC20_ABI from "config/abis/ERC20.json";
 import VAULT_ABI from "config/abis/Vault.json";
+import STAKE_ABI from "config/abis/StakePool.json";
 import BigNumberJS from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { ethers, utils } from "ethers";
@@ -11,6 +12,7 @@ import { Pool, pools } from "config/pools";
 import { Farm, farms } from "config/farms";
 import { Balancer, balancers } from "config/balancers";
 import { vaults, Vault } from "config/vaults";
+import { StakeInfo, stakingPools } from "config/stake";
 
 const provider = new ethers.providers.JsonRpcProvider(RPC_URLS[DEFAULT_CHAIN_ID]);
 
@@ -66,6 +68,37 @@ export async function getHermesStats() {
     return total.plus(poolPrice);
   }, Promise.resolve(new BigNumberJS(0)));
 
+  const totalValueInStakePools = await stakingPools.reduce(async (_total: Promise<BigNumberJS>, stakePool: StakeInfo) => {
+    const lpContract = new ethers.Contract(stakePool.stakeToken.address, ERC20_ABI, provider);
+    const stakePoolContract = new ethers.Contract(stakePool.address, STAKE_ABI, provider);
+
+    const totalLpStaked = await stakePoolContract.totalStakeTokenBalance();
+    const totalSupply = utils.formatUnits(await lpContract.totalSupply(), stakePool.stakeToken.decimals);
+    let tokenPrice = 0;
+    if(stakePool.stakeToken.isLp){
+      tokenPrice = await fetchPairPrice(
+        stakePool.stakeToken.pairs[0],
+        stakePool.stakeToken.pairs[1],
+        totalSupply,
+        provider,
+        stakePool.stakeToken.farmDx
+      );
+    }
+    else{
+      tokenPrice = await fetchPrice(
+        { address: lpContract.address, decimals: stakePool.stakeToken.decimals, symbol: stakePool.stakeToken.symbol },
+        provider
+      );
+    }
+
+    const total = await _total;
+    const poolPrice = new BigNumberJS(
+      utils.formatUnits(totalLpStaked, stakePool.stakeToken.decimals)
+    ).multipliedBy(tokenPrice);
+
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
+
   const totalValueInBalancers = await balancers.reduce(
     async (_total: Promise<BigNumberJS>, bal: Balancer) => {
       const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, provider);
@@ -114,16 +147,20 @@ export async function getHermesStats() {
     Promise.resolve(new BigNumberJS(0))
   );
 
+
+
   const tvl = totalValueInPools
     .plus(totalValueInFarms)
     .plus(totalValueInBalancers)
-    .plus(totalValueInVaults);
+    .plus(totalValueInVaults)
+    .plus(totalValueInStakePools);
 
   return {
     totalValueInPools: totalValueInPools.toString(),
     totalValueInFarms: totalValueInFarms.toString(),
     totalValueInBalancers: totalValueInBalancers.toString(),
     totalValueInVaults: totalValueInVaults.toString(),
+    totalValueInStakePools: totalValueInStakePools.toString(),
     tvl: tvl.toString(),
   };
 }

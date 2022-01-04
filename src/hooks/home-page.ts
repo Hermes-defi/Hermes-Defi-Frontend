@@ -15,9 +15,11 @@ import { useFetchFarms } from "state/farms";
 import { useFetchVaults } from "state/vaults";
 import { Farm, farms } from "config/farms";
 import { Vault } from "config/vaults";
+import { StakeInfo, stakingPools } from "config/stake";
 import { useFetchPools } from "state/pools";
 import { useFetchBalancers } from "state/balancers";
 import { Balancer, balancers } from "config/balancers";
+import { useFetchStakePools } from "state/stake";
 
 export function useIrisData() {
   const { account } = useActiveWeb3React();
@@ -152,6 +154,26 @@ export function useTotalInPools() {
     isLoading,
   };
 }
+export function useTotalInStakingPools() {
+  const poolsResp = useFetchStakePools();
+  const isLoading = poolsResp.every((f) => f.status === "loading");
+
+  const data = poolsResp.reduce((total, poolResp) => {
+    const pool = poolResp.data as StakeInfo;
+    if (!pool || !pool.active) return new BigNumberJS(0);
+
+    const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
+
+    return total.plus(totalLockedInFarm);
+  }, new BigNumberJS(0));
+
+  return {
+    data,
+    isLoading,
+  };
+}
+
+
 
 export function useTotalInBalancers() {
   const balsResp = useFetchBalancers();
