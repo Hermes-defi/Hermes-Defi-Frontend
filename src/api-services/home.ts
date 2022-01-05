@@ -152,15 +152,15 @@ export async function getHermesStats() {
   const tvl = totalValueInPools
     .plus(totalValueInFarms)
     .plus(totalValueInBalancers)
-    .plus(totalValueInVaults);
-    // .plus(totalValueInStakePools);
+    .plus(totalValueInVaults)
+    .plus(totalValueInStakePools);
 
   return {
     totalValueInPools: totalValueInPools.toString(),
     totalValueInFarms: totalValueInFarms.toString(),
     totalValueInBalancers: totalValueInBalancers.toString(),
     totalValueInVaults: totalValueInVaults.toString(),
-    // totalValueInStakePools: totalValueInStakePools.toString(),
+    totalValueInStakePools: totalValueInStakePools.toString(),
     tvl: tvl.toString(),
   };
 }
