@@ -18,6 +18,8 @@ import { Vault } from "config/vaults";
 import { useFetchPools } from "state/pools";
 import { useFetchBalancers } from "state/balancers";
 import { Balancer, balancers } from "config/balancers";
+import { StakeBankInfo, stakingBankPools } from "config/stake-bank";
+import { useMainBankStake, useFetchStakePools } from "state/stake-bank";
 
 export function usePlutusData() {
   const { account } = useActiveWeb3React();
@@ -149,6 +151,27 @@ export function useTotalInPools() {
 
     return total.plus(totalLockedInFarm);
   }, new BigNumberJS(0));
+
+  return {
+    data,
+    isLoading,
+  };
+}
+
+export function useTotalInBank() {
+  const mainBankResp = useMainBankStake();
+  const isLoading = mainBankResp.status === "loading"
+
+  const data = new BigNumberJS(mainBankResp.data?.totalStaked).multipliedBy(mainBankResp.data?.stakeToken.price) ?? new BigNumberJS(0);
+
+  // const data = poolsResp.reduce((total, poolResp) => {
+  //   const pool = poolResp.data as Pool;
+  //   if (!pool) return new BigNumberJS(0);
+
+  //   const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
+
+  //   return total.plus(totalLockedInFarm);
+  // }, new BigNumberJS(0));
 
   return {
     data,

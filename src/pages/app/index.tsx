@@ -15,6 +15,7 @@ import {
   usePlutusStats,
   useTvlChart,
   useTotalInVaults,
+  useTotalInBank,
 } from "hooks/home-page";
 
 import { AppLayout } from "components/layout";
@@ -55,6 +56,7 @@ const Page: React.FC = () => {
   const balStats = useTotalInBalancers();
   const poolStats = useTotalInPools();
   const vaultStats = useTotalInVaults();
+  const bankStats = useTotalInBank();
   const currentBlock = useCurrentBlockNumber();
 
   const [isFarmAprLoading, farmApr] = useFarmAPRStats();
@@ -377,13 +379,14 @@ const Page: React.FC = () => {
                         farmStats.data
                           .plus(poolStats.data)
                           .plus(vaultStats.data)
+                          .plus(bankStats.data)
                           .toNumber()
                       )}
                     </Text>
                   </Skeleton>
                 </div>
 
-                <Stack spacing={[5, 10]} direction={["column", "row"]}>
+                <Stack spacing={[2, 5]} direction={["column", "row"]}>
                   <Box align={["left", "center"]}>
                     <Heading
                       borderBottomWidth="2px"
@@ -395,7 +398,7 @@ const Page: React.FC = () => {
                       Vaults
                     </Heading>
                     <Skeleton isLoaded={!farmStats.isLoading}>
-                      <Text fontSize="2xl" fontWeight="700">
+                      <Text fontSize="xl" fontWeight="700">
                         {displayCurrency(vaultStats.data.toNumber())}
                       </Text>
                     </Skeleton>
@@ -412,7 +415,7 @@ const Page: React.FC = () => {
                       Farms
                     </Heading>
                     <Skeleton isLoaded={!farmStats.isLoading}>
-                      <Text fontSize="2xl" fontWeight="700">
+                      <Text fontSize="xl" fontWeight="700">
                         {displayCurrency(farmStats.data.toNumber())}
                       </Text>
                     </Skeleton>
@@ -429,8 +432,24 @@ const Page: React.FC = () => {
                       Pools
                     </Heading>
                     <Skeleton isLoaded={!poolStats.isLoading}>
-                      <Text fontSize="2xl" fontWeight="700">
+                      <Text fontSize="xl" fontWeight="700">
                         {displayCurrency(poolStats.data.toNumber())}
+                      </Text>
+                    </Skeleton>
+                  </Box>
+                  <Box align={["left", "center"]}>
+                    <Heading
+                      borderBottomWidth="2px"
+                      borderColor="primary.500"
+                      mb={1}
+                      color={useColorModeValue("gray.600", "gray.300")}
+                      fontSize="xl"
+                    >
+                      Bank
+                    </Heading>
+                    <Skeleton isLoaded={!poolStats.isLoading}>
+                      <Text fontSize="xl" fontWeight="700">
+                        {displayCurrency(bankStats.data.toNumber())}
                       </Text>
                     </Skeleton>
                   </Box>
