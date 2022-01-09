@@ -72,51 +72,97 @@ export type Vault = {
 
 export const vaults: Vault[] = {
   1666600000: [
-    // {
-    //   address: "0xCBd7b263460ad4807dEAdAd3858DE6654f082cA4",
-    //   stratAddress: "0xd74941d4f9202d7e4c550d344507298a4e3ed2dd",
-    //   masterChefAddress: defaultContracts.masterChef.address,
-    //   farmPid: 8,
-    //   tokenPerBlock: "400000000000000000",
+    {
+      address: "0x0B4F4dD7aF72d4Ac34BCb7979856757371Be0AE5",
+      stratAddress: "0x61fc9316D5Cd856ECf15064E922a014D2d690494",
+      masterChefAddress: defaultContracts.masterChef.address,
+      farmPid: 8,
+      tokenPerBlock: "400000000000000000",
 
-    //   isActive: false,
-    //   amm: "quickswap",
-    //   depositFees: 0,
-    //   withdrawFees: 0,
-    //   performanceFee: 0.0075,
+      isActive: true,
+      amm: "sushiswap",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.0075,
 
-    //   projectToken: {
-    //     address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
-    //     symbol: "IRIS",
-    //     decimals: 18,
-    //     logo: "/hermes-logo-1.png",
-    //   },
+      projectToken: {
+        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+        symbol: "PLTS",
+        decimals: 18,
+        logo: "/plutus-logo.png",
+      },
 
-    //   stakeToken: {
-    //     address: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
-    //     symbol: "IRIS/WMATIC",
-    //     decimals: 18,
-    //     logo: ["/hermes-logo-1.png", "/matic-logo.png"],
-    //   },
+      stakeToken: {
+        address: "0x39be7c95276954a6f7070f9baa38db2123691ed0",
+        symbol: "1WBTC/1ETH",
+        decimals: 18,
+        logo: ["/btc-logo.png", "/eth-logo.png"],
+      },
 
-    //   rewardToken: {
-    //     symbol: "godIRISWMATIC",
-    //     decimals: 18,
-    //   },
+      rewardToken: {
+        symbol: "pSushiWBTC-ETH",
+        decimals: 18,
+      },
 
-    //   pairs: [
-    //     {
-    //       address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
-    //       decimals: 18,
-    //       symbol: "WMATIC",
-    //     },
-    //     {
-    //       address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
-    //       decimals: 18,
-    //       symbol: "IRIS",
-    //     },
-    //   ],
-    // },
+      pairs: [
+        {
+          address: "0x3095c7557bcb296ccc6e363de01b760ba031f2d9",
+          decimals: 8,
+          symbol: "1WBTC",
+        },
+        {
+          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
+          decimals: 18,
+          symbol: "1ETH",
+        },
+      ],
+    },
+
+    {
+      address: "0xf2eB51Fbc4A8552d8d235560Ea8bA80C1D57E663",
+      stratAddress: "0x96ef81dA9778b9BCB0f7a7702574C9E99af93487",
+      masterChefAddress: defaultContracts.masterChef.address,
+      farmPid: 9,
+      tokenPerBlock: "400000000000000000",
+
+      isActive: true,
+      amm: "sushiswap",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.0075,
+
+      projectToken: {
+        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+        symbol: "PLTS",
+        decimals: 18,
+        logo: "/plutus-logo.png",
+      },
+
+      stakeToken: {
+        address: "0x468dc50884962D6F81733aC0c23c04611aC219F9",
+        symbol: "1SUSHI/WONE",
+        decimals: 18,
+        logo: ["/sushi-logo.jpeg", "/harmony-one-logo.png"],
+      },
+
+      rewardToken: {
+        symbol: "pSUSHI-ONE",
+        decimals: 18,
+      },
+
+      pairs: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          decimals: 8,
+          symbol: "1SUSHI",
+        },
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "1ETH",
+        },
+      ],
+    },
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((vault: Vault) => !vault.isDisabled);
