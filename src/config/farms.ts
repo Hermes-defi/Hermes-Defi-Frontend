@@ -279,6 +279,34 @@ export const farms: Farm[] = {
         },
       ],
     },
+    {
+      pid: 15,
+      multiplier: "10",
+      depositFees: 3,
+      isSpecial: false,
+      isActive: true,
+      farmDx: "sushiswap",
+
+      stakeToken: {
+        address: "0x6b53ca1ed597ed7ccd5664ec9e03329992c2ba87",
+        symbol: "stONE/WONE",
+        decimals: 18,
+        logo: ["/harmony-one-logo.png", "/stone-logo.svg"],
+      },
+
+      pairs: [
+        {
+          address: "0x22d62b19b7039333ad773b7185bb61294f3adc19",
+          decimals: 18,
+          symbol: "stONE",
+        },
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+      ],
+    },
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((farm: Farm) => !farm.isDisabled);
