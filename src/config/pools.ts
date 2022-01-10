@@ -120,6 +120,19 @@ export const pools: Pool[] = {
         decimals: 18,
         logo: "/jewel-logo.png"
       }
+    },
+    {
+      pid: 14,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
+
+      stakeToken: {
+        address: "0xfe1b516A7297eb03229A8B5AfAD80703911E81cB",
+        symbol: "ROY",
+        decimals: 18,
+        logo: "/roy-logo.png"
+      }
     }
 
   ],

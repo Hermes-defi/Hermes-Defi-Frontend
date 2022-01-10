@@ -43,6 +43,8 @@ const amms = {
   "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "viper", //JEWEL
   "0xfa7191d292d5633f702b0bd7e3e3bccc0e633200": "sushiswap", //FRAX
   "0x985458e523db3d53125813ed68c274899e9dfab4": "sushiswap", //1USDC
+  "0xfe1b516A7297eb03229A8B5AfAD80703911E81cB": "viper", //ROY
+  "0x22d62b19b7039333ad773b7185bb61294f3adc19": "sushiswap" //stONE
 };
 
 async function fetchCoinGeckoPrice(address: string) {
