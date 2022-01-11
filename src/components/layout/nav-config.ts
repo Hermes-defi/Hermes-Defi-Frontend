@@ -103,7 +103,7 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Discord",
-        href: "https://discord.gg/F6n3WUCX",
+        href: "https://discord.gg/CsNtpfFqST",
         isExternal: true,
       },
       {
