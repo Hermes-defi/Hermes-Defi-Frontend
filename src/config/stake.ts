@@ -204,5 +204,39 @@ export const stakingPools: StakeInfo[] = {
         logo: "/hermes-logo-1.png",
       },
     },
+
+    {
+      address: "0x92D11AB10A69223E52660a5D8d1634cFeDDE0f91",
+      active: true,
+      isSpecial: true,
+
+      stakeToken: {
+        address: "0x86ad6271809f350522085F95F5A67d46ff7ed3AB",
+        symbol: "IRIS/WMATIC",
+        decimals: 18,
+        logo: "/hermes-logo-1.png",
+        isLp: true,
+        pairs: [
+          {
+            address: "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270",
+            decimals: 18,
+            symbol: "WMATIC",
+          },
+          {
+            address: "0xdaB35042e63E93Cc8556c9bAE482E5415B5Ac4B1",
+            decimals: 18,
+            symbol: "IRIS",
+          },
+        ],
+        farmDx: "quickswap",
+      },
+
+      rewardToken: {
+        address: "0x8f3cf7ad23cd3cadbd9735aff958023239c6a063",
+        symbol: "DAI",
+        decimals: 18,
+        logo: "/dai-logo.png",
+      },
+    },
   ],
 }[DEFAULT_CHAIN_ID].filter((p: StakeInfo) => !p.isDisabled);
