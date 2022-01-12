@@ -28,7 +28,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         // set cache to expire every 60 seconds
         redis.set("tvl-chart-plutus", JSON.stringify(tvlCache));
         redis.set("plutus-stats", JSON.stringify({ tvl, ...otherStats }));
-        return res.json({success: true});
+        return res.json({
+          success: true,
+          tvl,
+          otherStats
+        });
       } catch (e) {
         return res.json({success: false, error: e.message});
       }
