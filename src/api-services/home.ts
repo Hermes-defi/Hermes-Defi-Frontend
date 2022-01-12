@@ -148,7 +148,10 @@ export async function getPlutusStats() {
 
       const total = await _total;
       const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(tokenPrice);
-
+      console.log({
+        stakeToken: pool.stakeToken.symbol,
+        poolPrice: poolPrice
+      })
       return total.plus(poolPrice);
     }, Promise.resolve(new BigNumberJS(0)));
 
