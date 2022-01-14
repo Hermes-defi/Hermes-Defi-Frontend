@@ -239,8 +239,8 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               );
             }}
           >
-            {console.log("deposit", depositPercentage)}
-            {console.log("value", depositValue)}
+            {/* {console.log("deposit", depositPercentage)} */}
+            {/* {console.log("value", depositValue)} */}
             <SliderMark value={0} mt="7" ml="-2.5" fontSize="xx-small">
               0%
             </SliderMark>
@@ -312,7 +312,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               <>
               </>
               }
-              {console.log(balance)}
+              {/* {console.log(balance)} */}
           </Stack>
         </Stack>
       </Box>
@@ -364,8 +364,8 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               );
             }}
           >
-            {console.log("withdraw", withdrawPercentage)}
-            {console.log("value", withdrawValue)}
+            {/* {console.log("withdraw", withdrawPercentage)} */}
+            {/* {console.log("value", withdrawValue)} */}
             <SliderMark value={0} mt="7" ml="-2.5" fontSize="xx-small">
               0%
             </SliderMark>

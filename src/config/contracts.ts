@@ -14,6 +14,7 @@ import UsdcSwapABI from "config/abis/UsdcSwap.json";
 import PresaleABI from "config/abis/Presale.json";
 import pPlutusTokenABI from "config/abis/pPlutusToken.json";
 import StakeBankABI from "config/abis/StakeBank.json";
+import MiniChefSushiABI from "config/abis/MiniChefSushi.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -48,6 +49,11 @@ export const vault: (address: string) => ContractInfo = (address: string) => ({
 
 export const dfynFarm: (address: string) => ContractInfo = (address: string) => ({
   abi: DfynFarmABI,
+  address,
+});
+
+export const miniChefSushi: (address: string) => ContractInfo = (address: string) => ({
+  abi: MiniChefSushiABI,
   address,
 });
 

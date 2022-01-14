@@ -32,7 +32,6 @@ import {
 } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 import { useTokenBalance } from "hooks/wallet";
-import { ST } from "next/dist/next-server/lib/utils";
 
 export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   const approveMutation = useApproveVault();

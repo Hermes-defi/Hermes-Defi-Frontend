@@ -4,6 +4,7 @@ import {
   useUniPair,
   useVaultContract,
   useDfynFarmContract,
+  useMiniChefSushi,
 } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
 import { usePlutusPrice } from "hooks/prices";
@@ -17,9 +18,10 @@ import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
 import { getVaultApy, getVaultDualApy } from "web3-functions/utils";
+import { BLOCKS_PER_SECOND } from "config/constants";
 
 function useFetchVaultsRequest() {
-  const getMasterChef = useCustomMasterChef();
+  const getMasterChef = useMiniChefSushi();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
   const getDfynFarmContract = useDfynFarmContract();
@@ -95,20 +97,32 @@ function useFetchVaultsRequest() {
           const farmInfo = await masterChef.poolInfo(vault.farmPid);
 
           const multiplier = farmInfo.allocPoint.toString();
-          const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
-          const farmLpContract = getPairContract(farmInfo.lpToken);
-
+          //* NO DEPOSIT FEES
+          // const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
+          // console.log("🚀 ~ file: vaults.ts ~ line 103 ~ return ~ depositFees", depositFees)
+          const farmLpContract = getPairContract(vault.stakeToken.address);
+          
           const totalStakedInFarm = utils.formatUnits(
             await farmLpContract.balanceOf(masterChef.address),
             await farmLpContract.decimals()
           );
+          
+          //* EXPECIFIC 4 SUSHI VAULTS
+          // const sushiPerSecondWEI = (await masterChef.sushiPerSecond());
+          const sushiPerSecond = utils.formatUnits(
+            await masterChef.sushiPerSecond(),
+            18
+          );
+          console.log("🚀 ~ file: vaults.ts ~ line 112 ~ return ~ sushiPerSecond", sushiPerSecond.toString())
+          const tokenPerBlock = new BigNumberJS(sushiPerSecond).div(BLOCKS_PER_SECOND);
+          console.log("🚀 ~ file: vaults.ts ~ line 115 ~ return ~ vault.tokenPerBlock", tokenPerBlock.toString())
 
           const apy = await getVaultApy({
             address: farmLpContract.address,
             multiplier,
             tokenPerBlock: vault.tokenPerBlock,
             totalAllocPoints,
-            depositFees,
+            depositFees: 0,
             performanceFee: vault.performanceFee,
             rewardToken: vault.projectToken,
             stakeToken: vault.stakeToken,

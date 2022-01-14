@@ -1,576 +1,576 @@
 [
-  {
-      "type": "constructor",
-      "inputs": [
-          {
-              "name": "_strategy",
-              "type": "address",
-              "internalType": "contract IStrategy"
-          },
-          {
-              "name": "_name",
-              "type": "string",
-              "internalType": "string"
-          },
-          {
-              "type": "string",
-              "name": "_symbol",
-              "internalType": "string"
-          },
-          {
-              "name": "_approvalDelay",
-              "type": "uint256",
-              "internalType": "uint256"
-          }
-      ],
-      "stateMutability": "nonpayable"
-  },
-  {
-      "name": "Approval",
-      "type": "event",
-      "inputs": [
-          {
-              "name": "owner",
-              "internalType": "address",
-              "type": "address",
-              "indexed": true
-          },
-          {
-              "internalType": "address",
-              "type": "address",
-              "name": "spender",
-              "indexed": true
-          },
-          {
-              "internalType": "uint256",
-              "indexed": false,
-              "type": "uint256",
-              "name": "value"
-          }
-      ],
-      "anonymous": false
-  },
-  {
-      "name": "NewStratCandidate",
-      "inputs": [
-          {
-              "indexed": false,
-              "type": "address",
-              "internalType": "address",
-              "name": "implementation"
-          }
-      ],
-      "type": "event",
-      "anonymous": false
-  },
-  {
-      "name": "OwnershipTransferred",
-      "anonymous": false,
-      "type": "event",
-      "inputs": [
-          {
-              "type": "address",
-              "name": "previousOwner",
-              "internalType": "address",
-              "indexed": true
-          },
-          {
-              "name": "newOwner",
-              "type": "address",
-              "internalType": "address",
-              "indexed": true
-          }
-      ]
-  },
-  {
-      "inputs": [
-          {
-              "type": "address",
-              "internalType": "address",
-              "indexed": true,
-              "name": "from"
-          },
-          {
-              "indexed": true,
-              "name": "to",
-              "type": "address",
-              "internalType": "address"
-          },
-          {
-              "name": "value",
-              "type": "uint256",
-              "internalType": "uint256",
-              "indexed": false
-          }
-      ],
-      "name": "Transfer",
-      "type": "event",
-      "anonymous": false
-  },
-  {
-      "anonymous": false,
-      "name": "UpgradeStrat",
-      "type": "event",
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "implementation",
-              "type": "address",
-              "indexed": false
-          }
-      ]
-  },
-  {
-      "outputs": [
-          {
-              "type": "uint256",
-              "name": "",
-              "internalType": "uint256"
-          }
-      ],
-      "type": "function",
-      "stateMutability": "view",
-      "name": "allowance",
-      "inputs": [
-          {
-              "name": "owner",
-              "type": "address",
-              "internalType": "address"
-          },
-          {
-              "name": "spender",
-              "type": "address",
-              "internalType": "address"
-          }
-      ]
-  },
-  {
-      "stateMutability": "view",
-      "name": "approvalDelay",
-      "outputs": [
-          {
-              "type": "uint256",
-              "internalType": "uint256",
-              "name": ""
-          }
-      ],
-      "type": "function",
-      "inputs": [],
-      "constant": true,
-      "signature": "0xe2d1e75c"
-  },
-  {
-      "stateMutability": "nonpayable",
-      "type": "function",
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "spender",
-              "type": "address"
-          },
-          {
-              "type": "uint256",
-              "name": "amount",
-              "internalType": "uint256"
-          }
-      ],
-      "name": "approve",
-      "outputs": [
-          {
-              "name": "",
-              "type": "bool",
-              "internalType": "bool"
-          }
-      ]
-  },
-  {
-      "stateMutability": "view",
-      "type": "function",
-      "name": "balanceOf",
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "account",
-              "type": "address"
-          }
-      ],
-      "outputs": [
-          {
-              "internalType": "uint256",
-              "type": "uint256",
-              "name": ""
-          }
-      ]
-  },
-  {
-      "name": "decimals",
-      "inputs": [],
-      "stateMutability": "view",
-      "outputs": [
-          {
-              "name": "",
-              "type": "uint8",
-              "internalType": "uint8"
-          }
-      ],
-      "type": "function",
-      "constant": true,
-      "signature": "0x313ce567"
-  },
-  {
-      "type": "function",
-      "outputs": [
-          {
-              "name": "",
-              "type": "bool",
-              "internalType": "bool"
-          }
-      ],
-      "stateMutability": "nonpayable",
-      "inputs": [
-          {
-              "name": "spender",
-              "type": "address",
-              "internalType": "address"
-          },
-          {
-              "type": "uint256",
-              "name": "subtractedValue",
-              "internalType": "uint256"
-          }
-      ],
-      "name": "decreaseAllowance"
-  },
-  {
-      "outputs": [
-          {
-              "name": "",
-              "type": "bool",
-              "internalType": "bool"
-          }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "function",
-      "inputs": [
-          {
-              "internalType": "address",
-              "type": "address",
-              "name": "spender"
-          },
-          {
-              "name": "addedValue",
-              "type": "uint256",
-              "internalType": "uint256"
-          }
-      ],
-      "name": "increaseAllowance"
-  },
-  {
-      "type": "function",
-      "outputs": [
-          {
-              "name": "",
-              "type": "string",
-              "internalType": "string"
-          }
-      ],
-      "stateMutability": "view",
-      "name": "name",
-      "inputs": [],
-      "constant": true,
-      "signature": "0x06fdde03"
-  },
-  {
-      "name": "owner",
-      "inputs": [],
-      "stateMutability": "view",
-      "type": "function",
-      "outputs": [
-          {
-              "type": "address",
-              "internalType": "address",
-              "name": ""
-          }
-      ],
-      "constant": true,
-      "signature": "0x8da5cb5b"
-  },
-  {
-      "type": "function",
-      "stateMutability": "nonpayable",
-      "outputs": [],
-      "inputs": [],
-      "name": "renounceOwnership"
-  },
-  {
-      "type": "function",
-      "inputs": [],
-      "stateMutability": "view",
-      "outputs": [
-          {
-              "name": "implementation",
-              "internalType": "address",
-              "type": "address"
-          },
-          {
-              "type": "uint256",
-              "name": "proposedTime",
-              "internalType": "uint256"
-          }
-      ],
-      "name": "stratCandidate",
-      "constant": true,
-      "signature": "0x76dfabb8"
-  },
-  {
-      "inputs": [],
-      "outputs": [
-          {
-              "name": "",
-              "type": "address",
-              "internalType": "contract IStrategy"
-          }
-      ],
-      "name": "strategy",
-      "type": "function",
-      "stateMutability": "view",
-      "constant": true,
-      "signature": "0xa8c62e76"
-  },
-  {
-      "inputs": [],
-      "type": "function",
-      "outputs": [
-          {
-              "internalType": "string",
-              "name": "",
-              "type": "string"
-          }
-      ],
-      "name": "symbol",
-      "stateMutability": "view",
-      "constant": true,
-      "signature": "0x95d89b41"
-  },
-  {
-      "name": "totalSupply",
-      "inputs": [],
-      "type": "function",
-      "stateMutability": "view",
-      "outputs": [
-          {
-              "name": "",
-              "type": "uint256",
-              "internalType": "uint256"
-          }
-      ],
-      "constant": true,
-      "signature": "0x18160ddd"
-  },
-  {
-      "name": "transfer",
-      "type": "function",
-      "stateMutability": "nonpayable",
-      "inputs": [
-          {
-              "type": "address",
-              "name": "recipient",
-              "internalType": "address"
-          },
-          {
-              "name": "amount",
-              "internalType": "uint256",
-              "type": "uint256"
-          }
-      ],
-      "outputs": [
-          {
-              "type": "bool",
-              "internalType": "bool",
-              "name": ""
-          }
-      ]
-  },
-  {
-      "outputs": [
-          {
-              "type": "bool",
-              "internalType": "bool",
-              "name": ""
-          }
-      ],
-      "inputs": [
-          {
-              "type": "address",
-              "internalType": "address",
-              "name": "sender"
-          },
-          {
-              "name": "recipient",
-              "internalType": "address",
-              "type": "address"
-          },
-          {
-              "type": "uint256",
-              "internalType": "uint256",
-              "name": "amount"
-          }
-      ],
-      "stateMutability": "nonpayable",
-      "name": "transferFrom",
-      "type": "function"
-  },
-  {
-      "type": "function",
-      "outputs": [],
-      "name": "transferOwnership",
-      "stateMutability": "nonpayable",
-      "inputs": [
-          {
-              "name": "newOwner",
-              "type": "address",
-              "internalType": "address"
-          }
-      ]
-  },
-  {
-      "stateMutability": "view",
-      "outputs": [
-          {
-              "type": "address",
-              "internalType": "contract IERC20",
-              "name": ""
-          }
-      ],
-      "inputs": [],
-      "name": "want",
-      "type": "function",
-      "constant": true,
-      "signature": "0x1f1fcd51"
-  },
-  {
-      "stateMutability": "view",
-      "outputs": [
-          {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-          }
-      ],
-      "inputs": [],
-      "type": "function",
-      "name": "balance",
-      "constant": true,
-      "signature": "0xb69ef8a8"
-  },
-  {
-      "name": "available",
-      "inputs": [],
-      "stateMutability": "view",
-      "outputs": [
-          {
-              "name": "",
-              "type": "uint256",
-              "internalType": "uint256"
-          }
-      ],
-      "type": "function",
-      "constant": true,
-      "signature": "0x48a0d754"
-  },
-  {
-      "type": "function",
-      "stateMutability": "view",
-      "inputs": [],
-      "name": "getPricePerFullShare",
-      "outputs": [
-          {
-              "type": "uint256",
-              "name": "",
-              "internalType": "uint256"
-          }
-      ],
-      "constant": true,
-      "signature": "0x77c7b8fc"
-  },
-  {
-      "outputs": [],
-      "type": "function",
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "name": "depositAll"
-  },
-  {
-      "type": "function",
-      "name": "deposit",
-      "stateMutability": "nonpayable",
-      "inputs": [
-          {
-              "name": "_amount",
-              "type": "uint256",
-              "internalType": "uint256"
-          }
-      ],
-      "outputs": []
-  },
-  {
-      "stateMutability": "nonpayable",
-      "name": "earn",
-      "inputs": [],
-      "type": "function",
-      "outputs": []
-  },
-  {
-      "name": "withdrawAll",
-      "type": "function",
-      "stateMutability": "nonpayable",
-      "inputs": [],
-      "outputs": []
-  },
-  {
-      "type": "function",
-      "name": "withdraw",
-      "inputs": [
-          {
-              "name": "_shares",
-              "type": "uint256",
-              "internalType": "uint256"
-          }
-      ],
-      "outputs": [],
-      "stateMutability": "nonpayable"
-  },
-  {
-      "type": "function",
-      "stateMutability": "nonpayable",
-      "name": "proposeStrat",
-      "outputs": [],
-      "inputs": [
-          {
-              "name": "_implementation",
-              "type": "address",
-              "internalType": "address"
-          }
-      ]
-  },
-  {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "name": "upgradeStrat",
-      "outputs": [],
-      "type": "function"
-  },
-  {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "_token",
-              "type": "address"
-          }
-      ],
-      "name": "inCaseTokensGetStuck",
-      "stateMutability": "nonpayable",
-      "type": "function",
-      "outputs": []
-  }
+    {
+        "inputs": [
+            {
+                "name": "_strategy",
+                "internalType": "contract IStrategy",
+                "type": "address"
+            },
+            {
+                "type": "string",
+                "internalType": "string",
+                "name": "_name"
+            },
+            {
+                "type": "string",
+                "internalType": "string",
+                "name": "_symbol"
+            },
+            {
+                "type": "uint256",
+                "name": "_approvalDelay",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "anonymous": false,
+        "name": "Approval",
+        "type": "event",
+        "inputs": [
+            {
+                "indexed": true,
+                "name": "owner",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "type": "address",
+                "indexed": true,
+                "internalType": "address",
+                "name": "spender"
+            },
+            {
+                "indexed": false,
+                "name": "value",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ]
+    },
+    {
+        "anonymous": false,
+        "name": "NewStratCandidate",
+        "type": "event",
+        "inputs": [
+            {
+                "name": "implementation",
+                "type": "address",
+                "indexed": false,
+                "internalType": "address"
+            }
+        ]
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "name": "previousOwner",
+                "type": "address",
+                "indexed": true,
+                "internalType": "address"
+            },
+            {
+                "indexed": true,
+                "name": "newOwner",
+                "internalType": "address",
+                "type": "address"
+            }
+        ],
+        "name": "OwnershipTransferred",
+        "type": "event"
+    },
+    {
+        "name": "Transfer",
+        "anonymous": false,
+        "type": "event",
+        "inputs": [
+            {
+                "name": "from",
+                "internalType": "address",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "indexed": true,
+                "type": "address",
+                "internalType": "address",
+                "name": "to"
+            },
+            {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256",
+                "indexed": false
+            }
+        ]
+    },
+    {
+        "type": "event",
+        "anonymous": false,
+        "name": "UpgradeStrat",
+        "inputs": [
+            {
+                "type": "address",
+                "indexed": false,
+                "internalType": "address",
+                "name": "implementation"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "outputs": [
+            {
+                "name": "",
+                "internalType": "uint256",
+                "type": "uint256"
+            }
+        ],
+        "name": "allowance",
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            },
+            {
+                "type": "address",
+                "internalType": "address",
+                "name": "spender"
+            }
+        ],
+        "stateMutability": "view"
+    },
+    {
+        "name": "approvalDelay",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "type": "function",
+        "inputs": [],
+        "stateMutability": "view",
+        "constant": true,
+        "signature": "0xe2d1e75c"
+    },
+    {
+        "name": "approve",
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "spender",
+                "type": "address"
+            },
+            {
+                "type": "uint256",
+                "name": "amount",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "type": "bool",
+                "internalType": "bool",
+                "name": ""
+            }
+        ],
+        "type": "function",
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "stateMutability": "view",
+        "inputs": [
+            {
+                "name": "account",
+                "type": "address",
+                "internalType": "address"
+            }
+        ],
+        "name": "balanceOf",
+        "outputs": [
+            {
+                "name": "",
+                "internalType": "uint256",
+                "type": "uint256"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "inputs": [],
+        "name": "decimals",
+        "outputs": [
+            {
+                "type": "uint8",
+                "internalType": "uint8",
+                "name": ""
+            }
+        ],
+        "stateMutability": "view",
+        "constant": true,
+        "signature": "0x313ce567"
+    },
+    {
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "name": "decreaseAllowance",
+        "inputs": [
+            {
+                "internalType": "address",
+                "type": "address",
+                "name": "spender"
+            },
+            {
+                "type": "uint256",
+                "name": "subtractedValue",
+                "internalType": "uint256"
+            }
+        ],
+        "type": "function",
+        "stateMutability": "nonpayable"
+    },
+    {
+        "name": "increaseAllowance",
+        "inputs": [
+            {
+                "type": "address",
+                "name": "spender",
+                "internalType": "address"
+            },
+            {
+                "internalType": "uint256",
+                "type": "uint256",
+                "name": "addedValue"
+            }
+        ],
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool",
+                "internalType": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "stateMutability": "view",
+        "name": "name",
+        "inputs": [],
+        "type": "function",
+        "constant": true,
+        "signature": "0x06fdde03"
+    },
+    {
+        "name": "owner",
+        "inputs": [],
+        "type": "function",
+        "outputs": [
+            {
+                "name": "",
+                "internalType": "address",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "constant": true,
+        "signature": "0x8da5cb5b"
+    },
+    {
+        "stateMutability": "nonpayable",
+        "name": "renounceOwnership",
+        "outputs": [],
+        "type": "function",
+        "inputs": []
+    },
+    {
+        "stateMutability": "view",
+        "inputs": [],
+        "name": "stratCandidate",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "implementation",
+                "type": "address"
+            },
+            {
+                "name": "proposedTime",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "type": "function",
+        "constant": true,
+        "signature": "0x76dfabb8"
+    },
+    {
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "internalType": "contract IStrategy",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "type": "function",
+        "name": "strategy",
+        "inputs": [],
+        "constant": true,
+        "signature": "0xa8c62e76"
+    },
+    {
+        "name": "symbol",
+        "type": "function",
+        "stateMutability": "view",
+        "inputs": [],
+        "outputs": [
+            {
+                "type": "string",
+                "internalType": "string",
+                "name": ""
+            }
+        ],
+        "constant": true,
+        "signature": "0x95d89b41"
+    },
+    {
+        "name": "totalSupply",
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "inputs": [],
+        "constant": true,
+        "signature": "0x18160ddd"
+    },
+    {
+        "inputs": [
+            {
+                "type": "address",
+                "name": "recipient",
+                "internalType": "address"
+            },
+            {
+                "name": "amount",
+                "internalType": "uint256",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "transfer",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bool",
+                "internalType": "bool"
+            }
+        ]
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "name": "transferFrom",
+        "inputs": [
+            {
+                "name": "sender",
+                "type": "address",
+                "internalType": "address"
+            },
+            {
+                "type": "address",
+                "name": "recipient",
+                "internalType": "address"
+            },
+            {
+                "name": "amount",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "outputs": [
+            {
+                "type": "bool",
+                "internalType": "bool",
+                "name": ""
+            }
+        ]
+    },
+    {
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "name": "transferOwnership",
+        "type": "function",
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ]
+    },
+    {
+        "name": "want",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "internalType": "contract IERC20",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "type": "function",
+        "inputs": [],
+        "constant": true,
+        "signature": "0x1f1fcd51"
+    },
+    {
+        "type": "function",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "name": "balance",
+        "inputs": [],
+        "constant": true,
+        "signature": "0xb69ef8a8"
+    },
+    {
+        "inputs": [],
+        "type": "function",
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256",
+                "internalType": "uint256"
+            }
+        ],
+        "name": "available",
+        "constant": true,
+        "signature": "0x48a0d754"
+    },
+    {
+        "stateMutability": "view",
+        "outputs": [
+            {
+                "type": "uint256",
+                "name": "",
+                "internalType": "uint256"
+            }
+        ],
+        "inputs": [],
+        "name": "getPricePerFullShare",
+        "type": "function",
+        "constant": true,
+        "signature": "0x77c7b8fc"
+    },
+    {
+        "outputs": [],
+        "type": "function",
+        "inputs": [],
+        "name": "depositAll",
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "inputs": [
+            {
+                "type": "uint256",
+                "internalType": "uint256",
+                "name": "_amount"
+            }
+        ],
+        "outputs": [],
+        "name": "deposit"
+    },
+    {
+        "outputs": [],
+        "name": "earn",
+        "inputs": [],
+        "type": "function",
+        "stateMutability": "nonpayable"
+    },
+    {
+        "name": "withdrawAll",
+        "outputs": [],
+        "type": "function",
+        "stateMutability": "nonpayable",
+        "inputs": []
+    },
+    {
+        "inputs": [
+            {
+                "type": "uint256",
+                "internalType": "uint256",
+                "name": "_shares"
+            }
+        ],
+        "type": "function",
+        "outputs": [],
+        "name": "withdraw",
+        "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_implementation",
+                "type": "address"
+            }
+        ],
+        "name": "proposeStrat",
+        "stateMutability": "nonpayable",
+        "outputs": []
+    },
+    {
+        "name": "upgradeStrat",
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "outputs": [],
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "type": "address",
+                "name": "_token",
+                "internalType": "address"
+            }
+        ],
+        "type": "function",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "name": "inCaseTokensGetStuck"
+    }
 ]
