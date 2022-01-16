@@ -8,43 +8,30 @@ import * as Sushi from "@sushiswap/sdk";
 import * as Viper from "@venomswap/sdk";
 
 const amms = {
-  "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3": "viper", // plutus
-  "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619": "coingecko", // weth
-  "0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6": "coingecko", // wbtc
-  "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270": "coingecko", // wmatic
-  "0x831753DD7087CaC61aB5644b308642cc1c33Dc13": "coingecko", // quick
-  "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174": "coingecko", // usdc
-  "0xc2132D05D31c914a87C6611C10748AEb04B58e8F": "coingecko", // usdt
-  "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063": "coingecko", // dai
-  "0x5aC3ceEe2C3E6790cADD6707Deb2E87EA83b0631": "quickswap", // aes
-  "0xbc7cB585346f4F59d07121Bb9Ed7358076243539": "dfyn", // silver
-  "0x3a3Df212b7AA91Aa0402B9035b098891d276572B": "quickswap", // fish
-  "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104": "quickswap", // kavian
-  "0x9a33bac266b02faff8fa566c8cb5da08820e28ba": "quickswap", // kavianl2
-  "0xf9b4dEFdDe04fe18F5ee6456607F8A2eC9fF6A75": "quickswap", // sandman
-  "0x8c9aAcA6e712e2193acCCbAC1a024e09Fb226E51": "polycat", // GBNT
-  "0x13748d548D95D78a3c83fe3F32604B4796CFfa23": "coingecko", // koge
-  "0xc168e40227e4ebd8c1cae80f7a55a4f0e6d66c97": "dfyn", // dfyn
-  "0x16eccfdbb4ee1a85a33f3a9b21175cd7ae753db4": "dfyn", // router
-  "0x255707b70bf90aa112006e1b07b9aea6de021424": "quickswap", // tetu
-  "0x40ed0565ecfb14ebcdfe972624ff2364933a8ce3": "polycat", // GPUL
-  "0x4c19ddeebaf84ca3a255730295ad9d824d4ff51f": "polycat", // wise
-  "0x8a953cfe442c5e8855cc6c61b1293fa648bae472": "quickswap", // polydoge
-  "0xD86b5923F3AD7b585eD81B448170ae026c65ae9a": "coingecko", // iron
-  "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "viper", // WONE
+  "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3": "viper", //PLTS
+  "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a": "viper", //WONE
   "0xef977d2f931c1978db5f6747666fa1eacb0d0339": "viper", //1DAI
   "0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79": "viper", //VIPER
   "0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc": "viper", //1IRIS
   "0xbb948620fa9cd554ef9a331b13edea9b181f9d45": "viper", //wsWAGMI
   "0xe064a68994e9380250cfee3e8c0e2ac5c0924548": "viper", //xVIPER
   "0xd3a50c0dce15c12fe64941ffd2b864e887c9b9e1": "viper", //HARMONAPE
+  "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "viper", //JEWEL
+  "0xfe1b516A7297eb03229A8B5AfAD80703911E81cB": "viper", //ROY
+
   "0x6983d1e6def3690c4d616b13597a09e6193ea013": "sushiswap", //1ETH
   "0x3095c7557bcb296ccc6e363de01b760ba031f2d9": "sushiswap", //1WBTC
-  "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "viper", //JEWEL
+  "0xdc54046c0451f9269fee1840aec808d36015697d": "sushiswap", //1BTC
   "0xfa7191d292d5633f702b0bd7e3e3bccc0e633200": "sushiswap", //FRAX
+  "0xeb6c08ccb4421b6088e581ce04fcfbed15893ac3": "sushiswap", //1FRAX
   "0x985458e523db3d53125813ed68c274899e9dfab4": "sushiswap", //1USDC
-  "0xfe1b516A7297eb03229A8B5AfAD80703911E81cB": "viper", //ROY
-  "0x22d62b19b7039333ad773b7185bb61294f3adc19": "sushiswap" //stONE
+  "0x3c2b8be99c50593081eaa2a724f0b8285f5aba8f": "sushiswap", //1USDT
+  "0x22d62b19b7039333ad773b7185bb61294f3adc19": "sushiswap", //stONE
+  "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a": "sushiswap", //1SUSHI
+  "0x0ab43550a6915f9f67d0c454c2e90385e6497eaa": "sushiswap", //bscBUSD
+  "0xe176ebe47d621b984a73036b9da5d834411ef734": "sushiswap", //BUSD
+  "0x224e64ec1bdce3870a6a6c777edd450454068fec": "sushiswap", //UST
+
 };
 
 async function fetchCoinGeckoPrice(address: string) {

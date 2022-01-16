@@ -96,10 +96,9 @@ function useFetchVaultsRequest() {
           const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
           const farmInfo = await masterChef.poolInfo(vault.farmPid);
 
-          const multiplier = farmInfo.allocPoint.toString();
+          const multiplier = farmInfo.allocPoint.toNumber();
           //* NO DEPOSIT FEES
           // const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
-          // console.log("🚀 ~ file: vaults.ts ~ line 103 ~ return ~ depositFees", depositFees)
           const farmLpContract = getPairContract(vault.stakeToken.address);
           
           const totalStakedInFarm = utils.formatUnits(
@@ -107,8 +106,7 @@ function useFetchVaultsRequest() {
             await farmLpContract.decimals()
           );
           
-          //* EXPECIFIC 4 SUSHI VAULTS
-          // const sushiPerSecondWEI = (await masterChef.sushiPerSecond());
+          //* ESPECIFIC 4 SUSHI VAULTS
           const sushiPerSecond = utils.formatUnits(
             await masterChef.sushiPerSecond(),
             18
@@ -120,7 +118,7 @@ function useFetchVaultsRequest() {
           const apy = await getVaultApy({
             address: farmLpContract.address,
             multiplier,
-            tokenPerBlock: vault.tokenPerBlock,
+            tokenPerBlock: tokenPerBlock,
             totalAllocPoints,
             depositFees: 0,
             performanceFee: vault.performanceFee,
@@ -128,7 +126,7 @@ function useFetchVaultsRequest() {
             stakeToken: vault.stakeToken,
             totalStakedInFarm,
           });
-
+          console.log(apy.vaultApr)
           vault.apy = {
             yearly: apy.totalApy * 100,
             daily: (apy.vaultApr / 365) * 100,

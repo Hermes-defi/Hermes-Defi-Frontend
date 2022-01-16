@@ -1,5 +1,7 @@
 import BigNumberJS from "bignumber.js";
+import { Web3ReactManager } from "components/web3-manager";
 import { BLOCKS_PER_DAY, BLOCKS_PER_SECOND, SECONDS_PER_YEAR } from "config/constants";
+import { Vault } from "config/vaults";
 
 export function compound(r, n = 365, t = 1, c = 1) {
   return (1 + (r * c) / n) ** (n * t) - 1;
@@ -21,7 +23,7 @@ const getFarmWithTradingFeesApy = ({
 async function getTradingFeeApr(address: string, lpFee: number, amm: string) {
   try {
     const url = {
-      sushiswap: "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange/graphql"
+      sushiswap: "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange"
     };
     
 
@@ -76,67 +78,42 @@ export function getPoolApr(
   };
 }
 
-export async function getSingleVaultApy({
-  address,
-  tokenPerBlock,
-  depositFees,
-  performanceFee,
-  rewardToken,
-  stakeToken,
-  totalStakedInFarm,
-}: any) {
-  //Compounds per year with sushi
-  const BASE_HPY = 35040;
-  //Sushiswap LP trading fees
-  const SUSHI_LPF = 0.0025;
-  const PERFORMANCE_FEE = performanceFee;
-  const SHARE_AFTER_PERFORMANCE_FEE = 1 - PERFORMANCE_FEE;
+// async function getFarmApys({
+//   miniChefTokenPerSecond,
+//   miniChefTotalAllocPoint,
+//   miniChefAllocPoints,
+//   miniChefTokenPrice,
+//   miniChefTotalStaked,
+//   rewarderTokenPerSecond,
+//   rewarderTotalAllocPoints,
+//   rewarderAllocPoints,
+//   rewarderTokenPrice,
+//   rewarderTotalStaked
+// }){
+//   const miniChefPoolBlockRewards = 
+//     new BigNumberJS(miniChefTokenPerSecond)
+//     .times(miniChefAllocPoints)
+//     .dividedBy(miniChefTotalAllocPoint);
+//   const miniChefYearlyRewards = 
+//     miniChefPoolBlockRewards.times()
+// }
 
-  // get trading apr of farm
-  const tradingFeeApr = await getTradingFeeApr(address, SUSHI_LPF, "sushiswap");
-  const tradingApy = tradingFeeApr ? compound(tradingFeeApr, BASE_HPY, 1, 1) : 0; // no fee on trading
-  // get farm apr from masterChef
-  // const totalStakedInUSD = new BigNumberJS(totalStakedInFarm).times(stakeToken.price);
-  // const poolBlockRewards = new BigNumberJS(tokenPerBlock)
-  //   .times(multiplier)
-  //   .dividedBy(totalAllocPoints)
-  //   .times(1 - (depositFees ?? 0));
+// async function getMiniChefApys(vault: Vault, farmAddress: string) {
+//   const SUSHI_LPF = 0.0025;
 
-  // const yearlyRewards = poolBlockRewards.dividedBy(BLOCKS_PER_SECOND).times(SECONDS_PER_YEAR);
-  // const yearlyRewardsInUsd = yearlyRewards
-  //   .times(rewardToken.price)
-  //   .dividedBy(`1e${rewardToken.decimals}`);
+//   //* 1st we get the Vault trading fees
+//   const tradingFeeApr = await getTradingFeeApr(
+//     vault.stakeToken.address,
+//     SUSHI_LPF,
+//     "sushiswap"
+//   );
+  
+//   const farmApy = async (params:type) => {
+    
+//     const minichefContract = 
 
-  // const simpleApr = yearlyRewardsInUsd.dividedBy(totalStakedInUSD);
-
-  // get the apr breakdown for farm
-  // const vaultApr = simpleApr.toNumber() * SHARE_AFTER_PERFORMANCE_FEE;
-  // const vaultApy = compound(simpleApr, BASE_HPY, 1, SHARE_AFTER_PERFORMANCE_FEE);
-
-  // calculate total apy
-  // const totalApy = getFarmWithTradingFeesApy({
-  //   farmApr: simpleApr.toNumber(),
-  //   tradingApr: tradingFeeApr.toNumber(),
-  //   compoundingsPerYear: BASE_HPY,
-  //   t: 1,
-  //   shareAfterPerformanceFee: SHARE_AFTER_PERFORMANCE_FEE,
-  // });
-
-  // console.log({
-  //   totalApy: totalApy,
-  //   vaultApy: vaultApy,
-  //   vaultApr,
-  //   poolBlockRewards: poolBlockRewards.valueOf(),
-  //   yearlyRewardsInUsd: yearlyRewardsInUsd.valueOf(),
-  //   yearlyRewards: yearlyRewards.valueOf(),
-  //   tradingFeeApr: tradingFeeApr.valueOf(),
-  // });
-
-  return {
-    tradingApr: tradingFeeApr.toNumber(),
-    tradingApy,
-  };
-}
+//   }
+// } 
 
 export async function getVaultApy({
   address,
@@ -159,24 +136,25 @@ export async function getVaultApy({
 
   // get farm apr from masterChef
   const totalStakedInUSD = new BigNumberJS(totalStakedInFarm).times(stakeToken.price);
-  console.log("🚀 ~ file: utils.ts ~ line 162 ~ totalStakedInUSD", totalStakedInUSD)
   const poolBlockRewards = new BigNumberJS(tokenPerBlock)
     .times(multiplier)
     .dividedBy(totalAllocPoints)
     .times(1 - (depositFees ?? 0));
-    console.log("🚀 ~ file: utils.ts ~ line 164 ~ poolBlockRewards", poolBlockRewards)
 
 
-  const yearlyRewards = poolBlockRewards.dividedBy(BLOCKS_PER_SECOND).times(SECONDS_PER_YEAR);
+  const yearlyRewards = poolBlockRewards.times(BLOCKS_PER_SECOND).times(SECONDS_PER_YEAR);
   const yearlyRewardsInUsd = yearlyRewards
     .times(rewardToken.price)
     .dividedBy(`1e${rewardToken.decimals}`);
 
   const simpleApr = yearlyRewardsInUsd.dividedBy(totalStakedInUSD);
 
+  //Rewarder APR
+
+
   // get the apr breakdown for farm
   const vaultApr = simpleApr.toNumber() * SHARE_AFTER_PERFORMANCE_FEE;
-  const vaultApy = compound(simpleApr, BASE_HPY, 1, SHARE_AFTER_PERFORMANCE_FEE);
+  const vaultApy = compound(vaultApr, BASE_HPY, 1, SHARE_AFTER_PERFORMANCE_FEE);
 
   // calculate total apy
   const totalApy = getFarmWithTradingFeesApy({
@@ -187,15 +165,15 @@ export async function getVaultApy({
     shareAfterPerformanceFee: SHARE_AFTER_PERFORMANCE_FEE,
   });
 
-  // console.log({
-  //   totalApy: totalApy,
-  //   vaultApy: vaultApy,
-  //   vaultApr,
-  //   poolBlockRewards: poolBlockRewards.valueOf(),
-  //   yearlyRewardsInUsd: yearlyRewardsInUsd.valueOf(),
-  //   yearlyRewards: yearlyRewards.valueOf(),
-  //   tradingFeeApr: tradingFeeApr.valueOf(),
-  // });
+  console.log({
+    totalApy: totalApy,
+    vaultApy: vaultApy,
+    vaultApr,
+    poolBlockRewards: poolBlockRewards.valueOf(),
+    yearlyRewardsInUsd: yearlyRewardsInUsd.valueOf(),
+    yearlyRewards: yearlyRewards.valueOf(),
+    tradingFeeApr: tradingFeeApr.valueOf(),
+  });
 
   return {
     tradingApr: tradingFeeApr.toNumber(),
