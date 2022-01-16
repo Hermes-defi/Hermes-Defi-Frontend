@@ -34,6 +34,7 @@ import { useTokenBalance } from "hooks/wallet";
 import { FaDollarSign } from "react-icons/fa";
 import { vault } from "config/contracts";
 import { Label } from "recharts";
+import { set } from "js-cookie";
 
 type IDepositProps = {
   primary?: boolean;
@@ -153,9 +154,11 @@ type IProps = {
   hasApprovedPool: boolean;
   userTotalStaked: string;
   userAvailableToUnstake?: string;
+  balance: string;
 
   approve: UseMutationResult;
   deposit: UseMutationResult;
+  depositAll: UseMutationResult;
   withdraw: UseMutationResult;
   withdrawAll?: UseMutationResult;
   harvest?: UseMutationResult;
@@ -163,10 +166,6 @@ type IProps = {
 };
 export const UserSectionAlt: React.FC<IProps> = (props) => {
   const { account } = useActiveWeb3React();
-  const balance = useTokenBalance(
-    props.stakeToken.address,
-    props.stakeToken.decimals
-  );
   const [depositValue, setDepositValue] = useState(0);
   const [depositPercentage, setDepositPercentage] = useState(50);
   const [withdrawValue, setWithdrawValue] = useState(0);
@@ -198,9 +197,32 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
           <Text fontWeight="400" fontSize="xs">
             Balance:
           </Text>
-          <Text fontWeight="600" fontSize="sm">
-            {balance ? displayTokenCurrencyDecimals(balance, props.stakeToken.symbol, true, 6) : "N/A"}
-          </Text>
+          <Button
+            isDisabled={props.balance === "0.0"}
+            onClick={() => {
+              if (props.balance !== "0.0") {
+                setDepositPercentage(100);
+                setDepositValue(
+                  new BigNumberJS(props.balance)
+                    .times(100)
+                    .div(100)
+                    .decimalPlaces(18)
+                    .toNumber()
+                );
+              }
+            }}
+          >
+            <Text fontWeight="600" fontSize={["xs", "sm"]}>
+              {props.balance
+                ? displayTokenCurrencyDecimals(
+                    props.balance,
+                    props.stakeToken.symbol,
+                    true,
+                    6
+                  )
+                : "N/A"}
+            </Text>
+          </Button>
         </HStack>
 
         <Stack h="7rem" w={["100%", "100%", "sm"]}>
@@ -217,7 +239,9 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               type="number"
               onChange={(depositValue) =>
                 setDepositValue(
-                  new BigNumberJS(depositValue.target.value).decimalPlaces(18).toNumber()
+                  new BigNumberJS(depositValue.target.value)
+                    .decimalPlaces(18)
+                    .toNumber()
                 )
               }
               value={depositValue}
@@ -232,7 +256,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
             onChange={(depositPercentage) => {
               setDepositPercentage(depositPercentage);
               setDepositValue(
-                new BigNumberJS(balance)
+                new BigNumberJS(props.balance)
                   .times(depositPercentage)
                   .div(100)
                   .decimalPlaces(18)
@@ -242,19 +266,19 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
           >
             {/* {console.log("deposit", depositPercentage)} */}
             {/* {console.log("value", depositValue)} */}
-            <SliderMark value={0} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={0} mt="7" fontSize="xx-small">
               0%
             </SliderMark>
-            <SliderMark value={25} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={25} mt="7" fontSize="xx-small">
               25%
             </SliderMark>
-            <SliderMark value={50} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={50} mt="7" fontSize="xx-small">
               50%
             </SliderMark>
-            <SliderMark value={75} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={75} mt="7" fontSize="xx-small">
               75%
             </SliderMark>
-            <SliderMark value={100} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={100} mt="7" fontSize="xx-small">
               100%
             </SliderMark>
             <SliderTrack mt={5} boxSize="1.5" bg="pink.100">
@@ -293,15 +317,26 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                 Approve
               </Button>
             )}
-
+            {console.log("balance: ", props.balance)}
             {props.hasApprovedPool ? (
-                
+              <>
                 <Button
-                isDisabled={balance === '0.0' ? true : false}
-                  isLoading={props.deposit.isLoading}
-                  onClick={() =>
-                    props.deposit.mutateAsync({ amount: depositValue.toString(), id: props.id })
+                  isDisabled={
+                    props.balance === "0.0" || props.balance === undefined
+                      ? true
+                      : false
                   }
+                  isLoading={props.deposit.isLoading}
+                  onClick={() => {
+                    props.deposit.mutateAsync({
+                      amount: depositValue.toString(),
+                      id: props.id,
+                    }).then(() => {
+                      setDepositPercentage(0);
+                      setDepositValue(0);
+                    });
+                  }}
+                  
                   size="md"
                   bg={"gray.700"}
                   _hover={{ bg: "gray.600" }}
@@ -309,11 +344,42 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                 >
                   Stake
                 </Button>
-              ):
-              <>
+                <Button
+                  isDisabled={
+                    props.balance === "0.0" || props.balance === undefined
+                      ? true
+                      : false
+                  }
+                  isLoading={props.depositAll.isLoading}
+                  onClick={() => {
+                    setDepositPercentage(100);
+                    setDepositValue(
+                      new BigNumberJS(props.balance)
+                        .times(100)
+                        .div(100)
+                        .decimalPlaces(18)
+                        .toNumber()
+                    );
+                    props.depositAll.mutateAsync({
+                      id: props.id,
+                    }).then(() => {
+                      setDepositPercentage(0);
+                      setDepositValue(0);
+                    });
+                  }}
+                  
+                  size="md"
+                  bg={"gray.700"}
+                  _hover={{ bg: "gray.600" }}
+                  w={["36", "48"]}
+                >
+                  Stake All
+                </Button>
               </>
-              }
-              {/* {console.log(balance)} */}
+            ) : (
+              <></>
+            )}
+            {/* {console.log(balance)} */}
           </Stack>
         </Stack>
       </Box>
@@ -325,9 +391,32 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
           <Text fontWeight="400" fontSize="xs">
             Staked:
           </Text>
-          <Text fontWeight="600" fontSize="sm">
-            {props.userTotalStaked ? displayTokenCurrencyDecimals(props.userTotalStaked, props.stakeToken.symbol, false, 6) : "N/A"}
-          </Text>
+          <Button
+            isDisabled={props.userTotalStaked === "0"}
+            onClick={() => {
+              if (props.userTotalStaked !== "0") {
+                setWithdrawPercentage(100);
+                setWithdrawValue(
+                  new BigNumberJS(100)
+                    .times(props.userTotalStaked)
+                    .div(100)
+                    .decimalPlaces(18)
+                    .toNumber()
+                );
+              }
+            }}
+          >
+            <Text fontWeight="600" fontSize={["xs", "sm"]}>
+              {props.userTotalStaked
+                ? displayTokenCurrencyDecimals(
+                    props.userTotalStaked,
+                    props.stakeToken.symbol,
+                    false,
+                    6
+                  )
+                : "N/A"}
+            </Text>
+          </Button>
         </HStack>
         <Stack h="7rem" w={["100%", "100%", "sm"]}>
           <InputGroup>
@@ -343,7 +432,9 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               type="number"
               onChange={(withdrawValue) =>
                 setWithdrawValue(
-                  new BigNumberJS(withdrawValue.target.value).decimalPlaces(18).toNumber()
+                  new BigNumberJS(withdrawValue.target.value)
+                    .decimalPlaces(18)
+                    .toNumber()
                 )
               }
               value={withdrawValue}
@@ -368,19 +459,19 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
           >
             {/* {console.log("withdraw", withdrawPercentage)} */}
             {/* {console.log("value", withdrawValue)} */}
-            <SliderMark value={0} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={0} mt="7" fontSize="xx-small">
               0%
             </SliderMark>
-            <SliderMark value={25} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={25} mt="7" fontSize="xx-small">
               25%
             </SliderMark>
-            <SliderMark value={50} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={50} mt="7" fontSize="xx-small">
               50%
             </SliderMark>
-            <SliderMark value={75} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={75} mt="7" fontSize="xx-small">
               75%
             </SliderMark>
-            <SliderMark value={100} mt="7" ml="-2.5" fontSize="xx-small">
+            <SliderMark value={100} mt="7" fontSize="xx-small">
               100%
             </SliderMark>
 
@@ -410,23 +501,56 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
           {
             <>
               <Button
-              isDisabled={withdrawValue === 0 ? true : false}
+                isDisabled={
+                  withdrawValue === 0 || props.userTotalStaked === "0"
+                    ? true
+                    : false
+                }
+                isLoading={props.withdraw.isLoading}
                 size="md"
                 bg={"gray.700"}
                 _hover={{ bg: "gray.600" }}
                 w={["36", "48"]}
-                onClick={() =>
-                  props.withdraw.mutateAsync({ amount: withdrawValue.toString(), id: props.id })}
+                onClick={() => {
+                  withdrawPercentage === 100
+                    ? props.withdrawAll.mutateAsync({ id: props.id }).then(() => {
+                      setWithdrawPercentage(0);
+                      setWithdrawValue(0);
+                    })
+                    : props.withdraw.mutateAsync({
+                        amount: withdrawValue.toString(),
+                        id: props.id,
+                      }).then(() => {
+                        setWithdrawPercentage(0);
+                        setWithdrawValue(0);
+                      })
+                }}
+                
               >
                 Withdraw
               </Button>
+              {console.log("user staked: ", props.userTotalStaked)}
               <Button
-                isDisabled={withdrawValue === 0 ? true : false}
+                isDisabled={props.userTotalStaked === "0" ? true : false}
+                isLoading={props.withdrawAll.isLoading}
                 size="md"
                 bg={"gray.700"}
                 _hover={{ bg: "gray.600" }}
-                onClick={() =>
-                  props.withdrawAll.mutateAsync({ id: props.id })}
+                onClick={() => {
+                  setWithdrawPercentage(100);
+                  setWithdrawValue(
+                    new BigNumberJS(100)
+                      .times(props.userTotalStaked)
+                      .div(100)
+                      .decimalPlaces(18)
+                      .toNumber()
+                  );
+                  props.withdrawAll.mutateAsync({ id: props.id }).then(() => {
+                    setWithdrawPercentage(0);
+                    setWithdrawValue(0);
+                  });
+                }}
+                on={() => {}}
                 w={["36", "48"]}
               >
                 Withdraw All

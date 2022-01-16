@@ -252,6 +252,7 @@ export function useDepositIntoVault() {
       onSuccess: (_, { id, amount }) => {
         const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
         queryClient.invalidateQueries(["vault", id, account]);
+        queryClient.invalidateQueries(["tokenBalance", account, vault.stakeToken.address]);
 
         ReactGA.event({
           category: "Deposits",
@@ -263,6 +264,55 @@ export function useDepositIntoVault() {
 
       onError: ({ data }) => {
         console.error(`[useDepositIntoVault][error] general error`, {
+          data,
+        });
+
+        toast({
+          title: "Error depositing token",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return depositMutation;
+}
+
+export function useDepositAllIntoVault() {
+  const { account } = useActiveWeb3React();
+  const queryClient = useQueryClient();
+  const getVaultContract = useVaultContract();
+  const toast = useToast();
+
+  const depositMutation = useMutation(
+    async ({ id }: { id: string }) => {
+      if (!account) throw new Error("No connected account");
+
+      const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+      const vaultContract = getVaultContract(vault.address);
+
+      const tx = await vaultContract.depositAll();
+      await tx.wait();
+    },
+    {
+      onSuccess: (_, { id }) => {
+        const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+        queryClient.invalidateQueries(["vault", id, account]);
+        queryClient.invalidateQueries(["tokenBalance", account, vault.stakeToken.address]);
+
+
+        ReactGA.event({
+          category: "Deposits",
+          action: `Depositing all ${vault.stakeToken.symbol} into vault`,
+          label: vault.stakeToken.symbol,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[useDepositAll][error] general error`, {
           data,
         });
 
@@ -299,7 +349,10 @@ export function useWithdrawFromVault() {
     {
       onSuccess: (_, { amount, id }) => {
         const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+        // const wallet = queryClient.getQueryData<string>(["tokenBalance", account, id]);
         queryClient.invalidateQueries(["vault", id, account]);
+        queryClient.invalidateQueries(["tokenBalance", account, vault.stakeToken.address]);
+        
 
         ReactGA.event({
           category: "Withdrawals",
@@ -348,6 +401,8 @@ export function useWithdrawAllFromVault() {
       onSuccess: (_, { id }) => {
         const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
         queryClient.invalidateQueries(["vault", id, account]);
+        queryClient.invalidateQueries(["tokenBalance", account, vault.stakeToken.address]);
+
 
         ReactGA.event({
           category: "Withdrawals",

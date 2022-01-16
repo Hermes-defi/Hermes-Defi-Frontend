@@ -83,7 +83,7 @@ export const vaults: Vault[] = {
     //   amm: "sushiswap",
     //   depositFees: 0,
     //   withdrawFees: 0,
-    //   performanceFee: 0.0075,
+    //   performanceFee: 0.025,
 
     //   projectToken: {
     //     address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
@@ -129,7 +129,7 @@ export const vaults: Vault[] = {
     //   amm: "sushiswap",
     //   depositFees: 0,
     //   withdrawFees: 0,
-    //   performanceFee: 0.0075,
+    //   performanceFee: 0.025,
 
     //   projectToken: {
     //     address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
@@ -175,7 +175,7 @@ export const vaults: Vault[] = {
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.0075,
+      performanceFee: 0.025,
 
       projectToken: {
         address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
@@ -221,7 +221,7 @@ export const vaults: Vault[] = {
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.0075,
+      performanceFee: 0.025,
 
       projectToken: {
         address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
@@ -267,7 +267,7 @@ export const vaults: Vault[] = {
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.0075,
+      performanceFee: 0.025,
 
       projectToken: {
         address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
@@ -313,7 +313,7 @@ export const vaults: Vault[] = {
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.0075,
+      performanceFee: 0.025,
 
       projectToken: {
         address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
@@ -336,15 +336,16 @@ export const vaults: Vault[] = {
 
       pairs: [
         {
-          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
-          decimals: 18,
-          symbol: "WONE",
-        },
-        {
           address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
           decimals: 18,
           symbol: "1ETH",
         },
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+        
       ],
     },
 
@@ -359,7 +360,7 @@ export const vaults: Vault[] = {
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.0075,
+      performanceFee: 0.025,
 
       projectToken: {
         address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
@@ -382,14 +383,14 @@ export const vaults: Vault[] = {
 
       pairs: [
         {
-          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
-          decimals: 18,
-          symbol: "1ETH",
-        },
-        {
           address: "0x224e64ec1bdce3870a6a6c777edd450454068fec",
           decimals: 18,
           symbol: "UST",
+        },
+        {
+          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
+          decimals: 18,
+          symbol: "1ETH",
         },
       ],
     },
@@ -405,7 +406,7 @@ export const vaults: Vault[] = {
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.0075,
+      performanceFee: 0.025,
 
       projectToken: {
         address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
@@ -451,7 +452,7 @@ export const vaults: Vault[] = {
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
-      performanceFee: 0.0075,
+      performanceFee: 0.025,
 
       projectToken: {
         address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
@@ -474,14 +475,14 @@ export const vaults: Vault[] = {
 
       pairs: [ 
         {
-          address: "0xeb6c08ccb4421b6088e581ce04fcfbed15893ac3",
-          decimals: 18,
-          symbol: "1FRAX",
-        },
-        {
           address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
           decimals: 18,
           symbol: "1ETH",
+        },
+        {
+          address: "0xeb6c08ccb4421b6088e581ce04fcfbed15893ac3",
+          decimals: 18,
+          symbol: "1FRAX",
         },
       ],
     },
