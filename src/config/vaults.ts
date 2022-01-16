@@ -428,14 +428,14 @@ export const vaults: Vault[] = {
 
       pairs: [
         {
-          address: "0x985458e523db3d53125813ed68c274899e9dfab4",
-          decimals: 6,
-          symbol: "1USDC",
-        },
-        {
           address: "0x3c2b8be99c50593081eaa2a724f0b8285f5aba8f",
           decimals: 6,
           symbol: "1USDT",
+        },
+        {
+          address: "0x985458e523db3d53125813ed68c274899e9dfab4",
+          decimals: 6,
+          symbol: "1USDC",
         },
       ],
     },
