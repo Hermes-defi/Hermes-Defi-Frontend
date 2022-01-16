@@ -264,8 +264,6 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               );
             }}
           >
-            {/* {console.log("deposit", depositPercentage)} */}
-            {/* {console.log("value", depositValue)} */}
             <SliderMark value={0} mt="7" fontSize="xx-small">
               0%
             </SliderMark>
@@ -317,7 +315,6 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                 Approve
               </Button>
             )}
-            {console.log("balance: ", props.balance)}
             {props.hasApprovedPool ? (
               <>
                 <Button
@@ -379,7 +376,6 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
             ) : (
               <></>
             )}
-            {/* {console.log(balance)} */}
           </Stack>
         </Stack>
       </Box>
@@ -457,8 +453,6 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               );
             }}
           >
-            {/* {console.log("withdraw", withdrawPercentage)} */}
-            {/* {console.log("value", withdrawValue)} */}
             <SliderMark value={0} mt="7" fontSize="xx-small">
               0%
             </SliderMark>
@@ -529,7 +523,6 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               >
                 Withdraw
               </Button>
-              {console.log("user staked: ", props.userTotalStaked)}
               <Button
                 isDisabled={props.userTotalStaked === "0" ? true : false}
                 isLoading={props.withdrawAll.isLoading}
@@ -550,23 +543,10 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                     setWithdrawValue(0);
                   });
                 }}
-                on={() => {}}
                 w={["36", "48"]}
               >
                 Withdraw All
               </Button>
-              {/* <UnstakeButton
-                  id={props.id}
-                  hasWithdrawAll={props.hasWithdrawAll}
-                  stakeToken={props.unstakeToken || props.stakeToken}
-                  userTotalStaked={
-                    props.userAvailableToUnstake || props.userTotalStaked
-                  }
-                  withdraw={props.withdraw}
-                  withdrawAll={props.withdrawAll}
-                >
-                  Withdraw
-                </UnstakeButton> */}
             </>
           }
         </Stack>

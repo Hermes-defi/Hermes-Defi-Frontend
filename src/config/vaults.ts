@@ -448,7 +448,7 @@ export const vaults: Vault[] = {
       farmPid: 13,
       tokenPerBlock: "400000000000000000",
 
-      isActive: false,
+      isActive: true,
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,

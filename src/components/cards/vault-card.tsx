@@ -35,12 +35,19 @@ import {
 } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 import { useTokenBalance } from "hooks/wallet";
-import { FaArrowAltCircleDown, FaArrowCircleDown, FaArrowDown, FaCartArrowDown, FaLongArrowAltDown, FaRegArrowAltCircleDown } from "react-icons/fa";
+import {
+  FaArrowAltCircleDown,
+  FaArrowCircleDown,
+  FaArrowDown,
+  FaCartArrowDown,
+  FaLongArrowAltDown,
+  FaRegArrowAltCircleDown,
+} from "react-icons/fa";
 
 export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   const approveMutation = useApproveVault();
   const depositMutation = useDepositIntoVault();
-  const depositAllMutation = useDepositAllIntoVault()
+  const depositAllMutation = useDepositAllIntoVault();
   const withdrawMutation = useWithdrawFromVault();
   const withdrawAllMutation = useWithdrawAllFromVault();
   const { isOpen, onToggle } = useDisclosure();
@@ -67,9 +74,14 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
       rounded="3xl"
       color="white"
     >
-      
+      <Stack direction={["column", "column", "row"]} justify="center"></Stack>
+
       {/* farm name */}
-      <Stack direction={["column", "column", "row"]} justify="space-between" onClick={onToggle}>
+      <Stack
+        direction={["column", "column", "row"]}
+        justify="space-between"
+        onClick={onToggle}
+      >
         <Stack align="center" mb={5} spacing={2}>
           <Box w={12} h={12} pos="relative">
             <Image
@@ -126,54 +138,62 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </HStack>
         </Stack>
 
-        <Stack direction={["row", "row", "column"]} justify={"center"}>
-        <Box alignItems="center" justifyContent={"center"}>
+        <Stack direction={["row", "row", "column"]}>
+          <Box alignItems="center" justifyContent={"center"} mt={"10"} mb={"-1"}>
+            <Text fontWeight="700" fontSize="lg">
+              {balance
+                ? displayTokenCurrencyDecimals(balance, "", true, 6)
+                : "N/A"}
+            </Text>
+            <Text>Wallet</Text>
+          </Box>
           <Text fontWeight="thin" fontSize="xs">
-              {balance !== "0.0" ? displayCurrency(
+            {balance !== "0.0"
+              ? displayCurrency(
                   new BigNumber(balance)
                     .times(vault.stakeToken.price || 0)
-                    .toNumber())
-                    :
-                    ""
-                  }
+                    .toNumber()
+                )
+              : ""}
           </Text>
-          <Text fontWeight="700" fontSize="lg">
-            {balance ? displayTokenCurrencyDecimals(balance, "", true, 6) : "N/A"}
-          </Text>
-          <Text>Wallet</Text>
-          </Box>
         </Stack>
 
-        <Stack direction={["row", "row","column"]} justify="center">
-        <Box alignItems="center" justifyContent={"center"}>
-        <Text fontWeight="thin" fontSize="xs">
-              {vault.userTotalStaked !== "0" ? displayCurrency(
+        <Stack direction={["row", "row", "column"]}>
+          <Box alignItems="center" justifyContent={"center"} mt={"10"} mb={"-1"}>
+            <Text fontWeight="700" fontSize="lg">
+              {vault.userTotalStaked
+                ? displayTokenCurrencyDecimals(
+                    vault.userTotalStaked,
+                    "",
+                    true,
+                    6
+                  )
+                : "N/A"}
+            </Text>
+            <Text>Staked</Text>
+          </Box>
+          <Text fontWeight="thin" fontSize="xs">
+            {vault.userTotalStaked !== "0"
+              ? displayCurrency(
                   new BigNumber(vault.userTotalStaked)
                     .times(vault.stakeToken.price || 0)
-                    .toNumber())
-                    :
-                    ""
-                  }
+                    .toNumber()
+                )
+              : ""}
           </Text>
-          <Text fontWeight="700" fontSize="lg">
-            {vault.userTotalStaked
-              ? displayTokenCurrencyDecimals(vault.userTotalStaked, "", true, 6)
-              : "N/A"}
-          </Text>
-          <Text>Staked</Text>
-          </Box>
         </Stack>
 
-        <Stack direction={["row","row", "column"]} justify="center">
-          <Box alignItems="center" justifyContent={"center"}>
+        <Stack direction={["row", "row", "column"]}>
+          <Box alignItems="center" justifyContent={"center"} mt={"10"}>
             <Text fontWeight="700" fontSize="lg">
               {vault.apy ? `${displayNumber(vault.apy.yearly, true)}%` : "N/A"}
             </Text>
             <Text>APY</Text>
           </Box>
         </Stack>
-        <Stack direction={["row", "row","column"]} justify="center">
-          <Box alignItems="center">
+
+        <Stack direction={["row", "row", "column"]}>
+          <Box alignItems="center" mt={"10"}>
             <Text fontWeight="700" fontSize="lg">
               {vault.apy
                 ? `${displayNumber(vault.apy.daily, false, 6)}%`
@@ -182,29 +202,29 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             <Text>Daily</Text>
           </Box>
         </Stack>
-        <Stack direction={["row", "row","column"]} justify="center">
-        <Box alignItems="center" justifyContent={"center"}>
-          <Text fontWeight="700" fontSize="lg">
-            {vault.totalStaked
-              ? displayCurrency(
-                  new BigNumber(vault.totalStaked)
-                    .times(vault.stakeToken.price || 0)
-                    .toNumber()
-                )
-              : "N/A"}
-          </Text>
-          <Text>Total Liquidity</Text>
+        <Stack direction={["row", "row", "column"]}>
+          <Box alignItems="center" justifyContent={"center"} mt={"10"}>
+            <Text fontWeight="700" fontSize="lg">
+              {vault.totalStaked
+                ? displayCurrency(
+                    new BigNumber(vault.totalStaked)
+                      .times(vault.stakeToken.price || 0)
+                      .toNumber()
+                  )
+                : "N/A"}
+            </Text>
+            <Text>Total Liquidity</Text>
           </Box>
         </Stack>
       </Stack>
       <Stack>
-      <Box visibility={isOpen ? "hidden" : "visible"}>
-        <Icon boxSize="1rem" as={FaRegArrowAltCircleDown}/>
-      </Box>
+        <Box visibility={isOpen ? "hidden" : "visible"}>
+          <Icon boxSize="1rem" as={FaRegArrowAltCircleDown} />
+        </Box>
       </Stack>
       <Collapse in={isOpen} animateOpacity>
         <Divider borderColor="gray.200" mb={7} />
-        <Stack mb={8} >
+        <Stack mb={8}>
           <UserSectionAlt
             id={vault.address}
             disableRewards
@@ -232,7 +252,10 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           {account ? (
             <>
               {/* <Box align="center" w="md" ml="-8"> */}
-              <Stack direction={["column", "column", "row"]} justify="space-between">
+              <Stack
+                direction={["column", "column", "row"]}
+                justify="space-between"
+              >
                 <Text
                   fontWeight="thin"
                   fontSize="xs"
@@ -247,7 +270,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                 <Stack align="center">
                   <Text fontWeight="thin" fontSize="xs" w="sm">
                     Withdrawal will result in:
-                    <br/>
+                    <br />
                     Redeem {vault.rewardToken.symbol} token for{" "}
                     {vault.stakeToken.symbol}
                   </Text>
