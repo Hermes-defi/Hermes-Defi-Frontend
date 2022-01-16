@@ -30,6 +30,11 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
         label: "Bank",
         href: "/app/bank",
       },
+
+      {
+        label: "Vaults",
+        href: "/app/vaults"
+      }
     ],
   },
   // TODO: change address
