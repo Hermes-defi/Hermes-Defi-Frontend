@@ -336,14 +336,14 @@ export const vaults: Vault[] = {
 
       pairs: [
         {
-          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
-          decimals: 18,
-          symbol: "1ETH",
-        },
-        {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
+        },
+        {
+          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
+          decimals: 18,
+          symbol: "1ETH",
         },
       ],
     },
@@ -382,14 +382,14 @@ export const vaults: Vault[] = {
 
       pairs: [
         {
-          address: "0x224e64ec1bdce3870a6a6c777edd450454068fec",
-          decimals: 18,
-          symbol: "UST",
-        },
-        {
           address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
           decimals: 18,
           symbol: "1ETH",
+        },
+        {
+          address: "0x224e64ec1bdce3870a6a6c777edd450454068fec",
+          decimals: 18,
+          symbol: "UST",
         },
       ],
     },
@@ -428,14 +428,14 @@ export const vaults: Vault[] = {
 
       pairs: [
         {
-          address: "0x3c2b8be99c50593081eaa2a724f0b8285f5aba8f",
-          decimals: 6,
-          symbol: "1USDT",
-        },
-        {
           address: "0x985458e523db3d53125813ed68c274899e9dfab4",
           decimals: 6,
           symbol: "1USDC",
+        },
+        {
+          address: "0x3c2b8be99c50593081eaa2a724f0b8285f5aba8f",
+          decimals: 6,
+          symbol: "1USDT",
         },
       ],
     },
@@ -472,16 +472,16 @@ export const vaults: Vault[] = {
         decimals: 18,
       },
 
-      pairs: [
-        {
-          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
-          decimals: 18,
-          symbol: "1ETH",
-        },
+      pairs: [ 
         {
           address: "0xeb6c08ccb4421b6088e581ce04fcfbed15893ac3",
           decimals: 18,
           symbol: "1FRAX",
+        },
+        {
+          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
+          decimals: 18,
+          symbol: "1ETH",
         },
       ],
     },
