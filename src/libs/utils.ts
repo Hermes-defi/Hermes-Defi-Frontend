@@ -29,6 +29,15 @@ export function displayTokenCurrency(number: number | string, token: string, com
   return `${value} ${token}`;
 }
 
+export function displayTokenCurrencyDecimals(number: number | string, token: string, compact?: boolean, fractionDigits?: number) {
+  const value = new Intl.NumberFormat(undefined, {
+    maximumFractionDigits: fractionDigits ? fractionDigits : 2,
+    ...(compact ? { notation: "compact", compactDisplay: "short" } : {}),
+  }).format(number as number);
+
+  return `${value} ${token}`;
+}
+
 export function displayCurrency(number: number | string, compact?: boolean) {
   const value = new Intl.NumberFormat(undefined, {
     style: "currency",

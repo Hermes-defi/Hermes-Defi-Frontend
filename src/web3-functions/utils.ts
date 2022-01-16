@@ -133,21 +133,23 @@ export async function getVaultApy({
 
   // get trading apr of farm
   const tradingFeeApr = await getTradingFeeApr(address, QUICK_LPF, "sushiswap");
+  console.log("🚀 ~ file: utils.ts ~ line 136 ~ tradingFeeApr", tradingFeeApr.toNumber())
 
   // get farm apr from masterChef
   const totalStakedInUSD = new BigNumberJS(totalStakedInFarm).times(stakeToken.price);
   const poolBlockRewards = new BigNumberJS(tokenPerBlock)
     .times(multiplier)
-    .dividedBy(totalAllocPoints)
-    .times(1 - (depositFees ?? 0));
+    .dividedBy(totalAllocPoints);
+    // .times(1 - (depositFees ?? 0));
 
 
-  const yearlyRewards = poolBlockRewards.times(BLOCKS_PER_SECOND).times(SECONDS_PER_YEAR);
+  const yearlyRewards = poolBlockRewards.times(SECONDS_PER_YEAR);
   const yearlyRewardsInUsd = yearlyRewards
     .times(rewardToken.price)
     .dividedBy(`1e${rewardToken.decimals}`);
 
   const simpleApr = yearlyRewardsInUsd.dividedBy(totalStakedInUSD);
+  console.log("🚀 ~ file: utils.ts ~ line 152 ~ simpleApr", simpleApr.toNumber())
 
   //Rewarder APR
 

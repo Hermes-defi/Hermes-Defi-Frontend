@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { UseMutationResult } from "react-query";
 
-import { displayTokenCurrency } from "libs/utils";
+import { displayTokenCurrencyDecimals, displayTokenCurrency } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 
 import {
@@ -194,12 +194,12 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
     <Stack direction={["column", "column", "row"]} justify="space-between">
       {/* DEPOSIT SIDE */}
       <Box align="left">
-        <HStack align="center">
-          <Text mb={1} fontWeight="400" fontSize="xs">
+        <HStack align="center" mb={1}>
+          <Text fontWeight="400" fontSize="xs">
             Balance:
           </Text>
-          <Text fontWeight="700" fontSize="xl">
-            {balance ? displayTokenCurrency(balance, "") : "N/A"}
+          <Text fontWeight="600" fontSize="sm">
+            {balance ? displayTokenCurrencyDecimals(balance, props.stakeToken.symbol, true, 6) : "N/A"}
           </Text>
         </HStack>
 
@@ -217,7 +217,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               type="number"
               onChange={(depositValue) =>
                 setDepositValue(
-                  new BigNumberJS(depositValue.target.value).toNumber()
+                  new BigNumberJS(depositValue.target.value).decimalPlaces(18).toNumber()
                 )
               }
               value={depositValue}
@@ -235,6 +235,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                 new BigNumberJS(balance)
                   .times(depositPercentage)
                   .div(100)
+                  .decimalPlaces(18)
                   .toNumber()
               );
             }}
@@ -320,12 +321,12 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
       {/* WITHDRAW SIDE */}
 
       <Box align="left">
-        <HStack align="center">
-          <Text mb={1} fontWeight="400" fontSize="xs">
+        <HStack align="center" mb={1}>
+          <Text fontWeight="400" fontSize="xs">
             Staked:
           </Text>
-          <Text fontWeight="700" fontSize="xl">
-            {props.userTotalStaked ? displayTokenCurrency(balance, "") : "N/A"}
+          <Text fontWeight="600" fontSize="sm">
+            {props.userTotalStaked ? displayTokenCurrencyDecimals(props.userTotalStaked, props.stakeToken.symbol, false, 6) : "N/A"}
           </Text>
         </HStack>
         <Stack h="7rem" w={["100%", "100%", "sm"]}>
@@ -342,7 +343,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               type="number"
               onChange={(withdrawValue) =>
                 setWithdrawValue(
-                  new BigNumberJS(withdrawValue.target.value).toNumber()
+                  new BigNumberJS(withdrawValue.target.value).decimalPlaces(18).toNumber()
                 )
               }
               value={withdrawValue}
@@ -360,6 +361,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                 new BigNumberJS(withdrawPercentage)
                   .times(props.userTotalStaked)
                   .div(100)
+                  .decimalPlaces(18)
                   .toNumber()
               );
             }}

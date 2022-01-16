@@ -235,7 +235,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             fontSize="xs"
             textDecoration="underline"
           >
-            Deposit in {vault.amm.toUpperCase()}
+            Add liquidity in {vault.amm.toUpperCase()}
           </Link>
           <Link
             href={`https://explorer.harmony.one/address/${vault.address}`}

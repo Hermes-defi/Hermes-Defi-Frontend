@@ -111,9 +111,7 @@ function useFetchVaultsRequest() {
             await masterChef.sushiPerSecond(),
             18
           );
-          console.log("🚀 ~ file: vaults.ts ~ line 112 ~ return ~ sushiPerSecond", sushiPerSecond.toString())
           const tokenPerBlock = new BigNumberJS(sushiPerSecond).div(BLOCKS_PER_SECOND);
-          console.log("🚀 ~ file: vaults.ts ~ line 115 ~ return ~ vault.tokenPerBlock", tokenPerBlock.toString())
 
           const apy = await getVaultApy({
             address: farmLpContract.address,
