@@ -6,7 +6,7 @@ import dayjs from "dayjs";
 import { BURN_ADDRESS } from "config/constants";
 import { Pool, pools } from "config/pools";
 import { BigNumber, constants, utils } from "ethers";
-import { useMasterChef, usePlutusToken, useERC20 } from "hooks/contracts";
+import { useMasterChef, usePlutusToken, useERC20, useBankContract, useStakeBankContract } from "hooks/contracts";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
@@ -47,33 +47,37 @@ export function usePlutusStats() {
   const plutusContract = usePlutusToken();
   const plutusPrice = usePlutusPrice();
   const masterChefContract = useMasterChef();
+  const bankContract = useTotalInBank();
   
-  //TODO: get plutus_per_block
+  //TODO: substract plutus
   const plutusStats = useQuery({
     enabled: !!plutusPrice.data,
     refetchInterval: 0.5 * 60 * 1000,
     queryKey: ["plutusStats", plutusPrice.data],
     queryFn: async () => {
       const maximumSupply = 3_000_000;
-      const totalMinted = (await plutusContract.totalSupply()) as BigNumber;
-      const totalBurned = (await plutusContract.balanceOf(BURN_ADDRESS)) as BigNumber;
-      const circulatingSupply = totalMinted.sub(totalBurned);
+      const totalMinted = new BigNumberJS(utils.formatEther(await plutusContract.totalSupply()));
+      const plutusLocked = new BigNumberJS(await bankContract.data);
+      const totalBurned = new BigNumberJS(utils.formatEther(await plutusContract.balanceOf(BURN_ADDRESS)));
+      const circulatingSupply = totalMinted.minus(totalBurned);
       const plutusPerBlock = (await masterChefContract.tokenPerBlock()) as BigNumber;
+      
 
       let marketCap = "N/A";
       if (plutusPrice) {
         // convert circulating supply to real price
-        const circulatingSupplyInPlutus = utils.formatEther(circulatingSupply);
-        marketCap = new BigNumberJS(circulatingSupplyInPlutus).multipliedBy(plutusPrice.data).toString();
+        // const circulatingSupplyInPlutus = utils.formatEther(circulatingSupply);
+        marketCap = new BigNumberJS(circulatingSupply).multipliedBy(plutusPrice.data).toString();
       }
 
       return {
         maximumSupply,
         marketCap,
-        totalMinted: utils.formatEther(totalMinted),
-        totalBurned: utils.formatEther(totalBurned),
-        circulatingSupply: utils.formatEther(circulatingSupply),
+        totalMinted: totalMinted.toString(),
+        totalBurned: totalBurned.toString(),
+        circulatingSupply: circulatingSupply.toString(),
         plutusPerBlock: utils.formatEther(plutusPerBlock),
+        plutusLocked: plutusLocked.toString(),
       };
     },
   });

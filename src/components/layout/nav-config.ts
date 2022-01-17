@@ -36,8 +36,21 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
         href: "/app/vaults"
       }
     ],
+  },  
+
+  {
+    label: "Delegation",
+    href: "https://staking.harmony.one/validators/mainnet/one1ac8yehqexdnam9yza4q4y3zwrkyhrf4hqcpqy5",
+    isExternal: true
   },
-  // TODO: change address
+
+  {
+    label: "Governance",
+    href: "https://snapshot.org/#/hermesdefi.eth",
+    isExternal: true,
+  },
+
+
   {
     label: "Trade",
     children: [
@@ -62,7 +75,7 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
     ],
   },
-  //TODO: change address
+
   {
     label: "Charts",
     children: [
@@ -93,6 +106,8 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
     ],
   },
+
+
   {
     label: "Community",
     children: [

@@ -74,11 +74,11 @@ const Page: React.FC = () => {
         <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Badge colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
             <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              FARM STARTS
+              BANK UNLOCKS
             </Heading>
             <Skeleton isLoaded={!!currentBlock}>
               <Text align="center" letterSpacing="1px" fontWeight="700">
-                {generateTimeDuration(blockDiff(21048525 - currentBlock))}
+                {generateTimeDuration(blockDiff(24896039 - currentBlock))}
               </Text>
             </Skeleton>
             </Badge>
@@ -88,12 +88,12 @@ const Page: React.FC = () => {
       <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
-              PLUTUS: The Tokenomics
+              Community Brainstorming Event #1
             </Heading>
             <AspectRatio maxH="lg" ratio={16/9}>
             <iframe
-              title="PLUTUS: The Tokenomics"
-              src="https://www.youtube.com/embed/wkj-VjWGo7c"
+              title="Community Brainstorming Event #1"
+              src="https://www.youtube.com/embed/U73k2DdV52g"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
@@ -102,12 +102,12 @@ const Page: React.FC = () => {
           </Box>
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
-              Three Easy Ways to Bridge to Harmony
+              Crypto Royale AMA
             </Heading>
             <AspectRatio maxH="lg" ratio={16/9}>
             <iframe
-              title="Three Easy Ways to Bridge to Harmony"
-              src="https://www.youtube.com/embed/PTOJOjidwJI"
+              title="Crypto Royale AMA"
+              src="https://www.youtube.com/embed/WxA0eeWT6rQ"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />

@@ -98,7 +98,6 @@ export async function getVaultApy({
 
   // get trading apr of farm
   const tradingFeeApr = await getTradingFeeApr(address, QUICK_LPF, "sushiswap");
-  console.log("🚀 ~ file: utils.ts ~ line 136 ~ tradingFeeApr", tradingFeeApr.toNumber())
 
   // get farm apr from masterChef
   const totalStakedInUSD = new BigNumberJS(totalStakedInFarm).times(stakeToken.price);
@@ -119,11 +118,8 @@ export async function getVaultApy({
     .dividedBy(`1e${rewardToken[1].decimals}`);
   
   const totalYearlyRewardsInUsd = yearlyRewardsInUsd.plus(yearlyNativeRewardsInUsd);
-  console.log("🚀 ~ file: utils.ts ~ line 157 ~ yearlyNativeRewardsInUsd", yearlyNativeRewardsInUsd.toString())
-  console.log("🚀 ~ file: utils.ts ~ line 157 ~ yearlyRewardsInUsd", yearlyRewardsInUsd.toString())
 
   const simpleApr = yearlyRewardsInUsd.dividedBy(totalStakedInUSD);
-  console.log("🚀 ~ file: utils.ts ~ line 152 ~ simpleApr", simpleApr.toNumber())
 
   
 
