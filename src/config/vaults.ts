@@ -28,7 +28,7 @@ export type Vault = {
     price?: string;
   };
 
-  dfynRewardTokens?: {
+  sushiRewardTokens?: {
     address: string;
     symbol: string;
     decimals: number;
@@ -177,12 +177,20 @@ export const vaults: Vault[] = {
       withdrawFees: 0,
       performanceFee: 0.025,
 
-      projectToken: {
-        address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
-        symbol: "1SUSHI",
-        decimals: 18,
-        logo: "/sushi-logo.png",
-      },
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+
+      ],
 
       stakeToken: {
         address: "0xc3670b927ef42eed252e483e2446352c238d9905",
@@ -223,12 +231,20 @@ export const vaults: Vault[] = {
       withdrawFees: 0,
       performanceFee: 0.025,
 
-      projectToken: {
-        address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
-        symbol: "1SUSHI",
-        decimals: 18,
-        logo: "/sushi-logo.png",
-      },
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+        
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+
+      ],
 
       stakeToken: {
         address: "0xbf255d8c30dbab84ea42110ea7dc870f01c0013a",
@@ -269,12 +285,20 @@ export const vaults: Vault[] = {
       withdrawFees: 0,
       performanceFee: 0.025,
 
-      projectToken: {
-        address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
-        symbol: "1SUSHI",
-        decimals: 18,
-        logo: "/sushi-logo.png",
-      },
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+        
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+
+      ],
 
       stakeToken: {
         address: "0xda64f9053a971531a75071a729a6432fb65ed60d",
@@ -315,12 +339,20 @@ export const vaults: Vault[] = {
       withdrawFees: 0,
       performanceFee: 0.025,
 
-      projectToken: {
-        address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
-        symbol: "1SUSHI",
-        decimals: 18,
-        logo: "/sushi-logo.png",
-      },
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+        
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+
+      ],
 
       stakeToken: {
         address: "0xeb049f1ed546f8efc3ad57f6c7d22f081ccc7375",
@@ -362,12 +394,20 @@ export const vaults: Vault[] = {
       withdrawFees: 0,
       performanceFee: 0.025,
 
-      projectToken: {
-        address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
-        symbol: "1SUSHI",
-        decimals: 18,
-        logo: "/sushi-logo.png",
-      },
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+        
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+
+      ],
 
       stakeToken: {
         address: "0x9293dfdd719ee2163f2e158e66ef75722ed712b4",
@@ -408,12 +448,20 @@ export const vaults: Vault[] = {
       withdrawFees: 0,
       performanceFee: 0.025,
 
-      projectToken: {
-        address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
-        symbol: "1SUSHI",
-        decimals: 18,
-        logo: "/sushi-logo.png",
-      },
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+        
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+
+      ],
 
       stakeToken: {
         address: "0x0c51171b913db10ade3fd625548e69c9c63afb96",
@@ -454,12 +502,20 @@ export const vaults: Vault[] = {
       withdrawFees: 0,
       performanceFee: 0.025,
 
-      projectToken: {
-        address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
-        symbol: "1SUSHI",
-        decimals: 18,
-        logo: "/sushi-logo.png",
-      },
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+        
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+
+      ],
 
       stakeToken: {
         address: "0xa46bba980512e328e344ce12bb969563f3429f05",

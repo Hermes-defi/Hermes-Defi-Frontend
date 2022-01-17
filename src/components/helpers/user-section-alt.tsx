@@ -22,6 +22,7 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
+  useColorModeValue,
 } from "@chakra-ui/react";
 // import * as Slider from "@radix-ui/react-slider";
 
@@ -211,6 +212,8 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                 );
               }
             }}
+            colorScheme={"white"}
+            variant="link"
           >
             <Text fontWeight="600" fontSize={["xs", "sm"]}>
               {props.balance
@@ -401,6 +404,8 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                 );
               }
             }}
+            colorScheme={"white"}
+            variant="link"
           >
             <Text fontWeight="600" fontSize={["xs", "sm"]}>
               {props.userTotalStaked

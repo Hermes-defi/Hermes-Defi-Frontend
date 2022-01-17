@@ -1,9 +1,7 @@
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import {
-  useCustomMasterChef,
   useUniPair,
   useVaultContract,
-  useDfynFarmContract,
   useMiniChefSushi,
 } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
@@ -13,18 +11,16 @@ import { useToast } from "@chakra-ui/react";
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Vault, vaults } from "config/vaults";
-import { farms } from "config/farms";
 import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
-import { getVaultApy, getVaultDualApy } from "web3-functions/utils";
+import { getVaultApy } from "web3-functions/utils";
 import { BLOCKS_PER_SECOND } from "config/constants";
 
 function useFetchVaultsRequest() {
   const getMasterChef = useMiniChefSushi();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
-  const getDfynFarmContract = useDfynFarmContract();
   const { account, library } = useActiveWeb3React();
 
   return async (vault: Vault) => {
@@ -52,45 +48,10 @@ function useFetchVaultsRequest() {
       );
 
       if (vault.isActive) {
-        if (vault.amm === "dfyn") {
-          vault.dfynRewardTokens[0].price = await fetchPrice(vault.dfynRewardTokens[0], library);
-          vault.dfynRewardTokens[1].price = await fetchPrice(vault.dfynRewardTokens[1], library);
-
-          const dfynFarm = getDfynFarmContract(vault.farmAddress);
-
-          const token0RewardRate = (
-            await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[0].address)
-          ).toString();
-
-          const token1RewardRate = (
-            await dfynFarm.tokenRewardRate(vault.dfynRewardTokens[1].address)
-          ).toString();
-
-          const totalStakedInFarm = utils.formatUnits(
-            await lpContract.balanceOf(dfynFarm.address),
-            await lpContract.decimals()
-          );
-
-          const apy = await getVaultDualApy({
-            address: vault.stakeToken.address,
-            stakePrice: vault.stakeToken.price,
-            totalStakedInFarm,
-            token0RewardRate,
-            token0Price: vault.dfynRewardTokens[0].price,
-            token0Decimals: vault.dfynRewardTokens[0].decimals,
-            token1RewardRate,
-            token1Price: vault.dfynRewardTokens[1].price,
-            token1Decimals: vault.dfynRewardTokens[1].decimals,
-            performanceFee: vault.performanceFee,
-          });
-
-          vault.apy = {
-            yearly: apy.totalApy * 100,
-            daily: (apy.vaultApr / 365) * 100,
-          };
-        } else {
           const masterChef = getMasterChef(vault.masterChefAddress);
-          vault.projectToken.price = await fetchPrice(vault.projectToken, library);
+          vault.sushiRewardTokens[0].price = await fetchPrice(vault.sushiRewardTokens[0], library);
+          vault.sushiRewardTokens[1].price = await fetchPrice(vault.sushiRewardTokens[1], library);
+
 
           // caculate apy
           const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
@@ -107,29 +68,24 @@ function useFetchVaultsRequest() {
           );
           
           //* ESPECIFIC 4 SUSHI VAULTS
-          const sushiPerSecond = utils.formatUnits(
-            await masterChef.sushiPerSecond(),
-            18
-          );
-          const tokenPerBlock = new BigNumberJS(sushiPerSecond).div(BLOCKS_PER_SECOND);
+          const sushiPerSecond = (await masterChef.sushiPerSecond()).toString();
 
           const apy = await getVaultApy({
             address: farmLpContract.address,
             multiplier,
-            tokenPerBlock: tokenPerBlock,
+            tokenPerBlock: sushiPerSecond,
             totalAllocPoints,
             depositFees: 0,
             performanceFee: vault.performanceFee,
-            rewardToken: vault.projectToken,
+            rewardToken: vault.sushiRewardTokens,
             stakeToken: vault.stakeToken,
             totalStakedInFarm,
           });
           console.log(apy.vaultApr)
           vault.apy = {
-            yearly: apy.totalApy * 100,
+            yearly: apy.vaultApy * 100,
             daily: (apy.vaultApr / 365) * 100,
           };
-        }
       } else {
         vault.apy = {
           yearly: 0,
