@@ -36,6 +36,7 @@ export const AppLayout: React.FC = ({ children }) => {
                   <Image w={10} src="/viper-logo.png" alt="ViperSwap Logo" />
                   <Image w={10} src="/euphoria-logo.png" alt="Euphoria Logo" />
                   <Image w={10} src="/roy-logo.png" alt="CryptoRoyale Logo" />
+                  <Image w={9} src="/ape-logo.svg" alt="Harmonape Logo" />
                 </Stack>
               </Stack>
 
