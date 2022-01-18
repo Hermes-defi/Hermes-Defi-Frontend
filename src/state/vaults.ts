@@ -200,8 +200,9 @@ export function useDepositIntoVault() {
 
       const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
       const vaultContract = getVaultContract(vault.address);
-
+      console.log(amount);
       const tx = await vaultContract.deposit(utils.parseUnits(amount, vault.stakeToken.decimals));
+      
       await tx.wait();
     },
     {

@@ -221,7 +221,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                     props.balance,
                     props.stakeToken.symbol,
                     true,
-                    6
+                    8
                   )
                 : "N/A"}
             </Text>
@@ -329,7 +329,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                   isLoading={props.deposit.isLoading}
                   onClick={() => {
                     props.deposit.mutateAsync({
-                      amount: new BigNumberJS(depositValue).toString(),
+                      amount: depositValue.toFixed(18).toString(),
                       id: props.id,
                     }).then(() => {
                       setDepositPercentage(0);
@@ -413,7 +413,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                     props.userTotalStaked,
                     props.stakeToken.symbol,
                     false,
-                    6
+                    8
                   )
                 : "N/A"}
             </Text>
@@ -517,7 +517,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                       setWithdrawValue(0);
                     })
                     : props.withdraw.mutateAsync({
-                        amount: new BigNumberJS(withdrawValue).toString(),
+                        amount: withdrawValue.toFixed(18).toString(),
                         id: props.id,
                       }).then(() => {
                         setWithdrawPercentage(0);

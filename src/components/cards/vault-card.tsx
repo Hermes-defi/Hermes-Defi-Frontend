@@ -142,7 +142,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           <Box alignItems="center" justifyContent={"center"} mt={"10"} mb={"-1"}>
             <Text fontWeight="700" fontSize="lg">
               {balance
-                ? displayTokenCurrencyDecimals(balance, "", true, 6)
+                ? displayTokenCurrencyDecimals(balance, "", true, 8)
                 : "N/A"}
             </Text>
             <Text>Wallet</Text>
@@ -166,7 +166,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                     vault.userTotalStaked,
                     "",
                     true,
-                    6
+                    8
                   )
                 : "N/A"}
             </Text>
