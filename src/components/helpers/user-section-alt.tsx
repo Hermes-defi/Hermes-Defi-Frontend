@@ -329,7 +329,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                   isLoading={props.deposit.isLoading}
                   onClick={() => {
                     props.deposit.mutateAsync({
-                      amount: depositValue.toString(),
+                      amount: new BigNumberJS(depositValue).toString(),
                       id: props.id,
                     }).then(() => {
                       setDepositPercentage(0);
@@ -517,7 +517,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                       setWithdrawValue(0);
                     })
                     : props.withdraw.mutateAsync({
-                        amount: withdrawValue.toString(),
+                        amount: new BigNumberJS(withdrawValue).toString(),
                         id: props.id,
                       }).then(() => {
                         setWithdrawPercentage(0);
