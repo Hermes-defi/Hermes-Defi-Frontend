@@ -141,19 +141,11 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
         href: "https://www.youtube.com/channel/UCnLWipB915XYPHMmMZcsnag",
         isExternal: true,
       },
+      {
+        label: "Reddit",
+        href: "https://www.reddit.com/r/HermesDefi/",
+        isExternal: true
+      }
     ],
   },
-  // {
-  //   label: "IDO",
-  //   children: [
-  //     {
-  //       label: "IDO",
-  //       href: "/app/pre-sale"
-  //     },
-  //     {
-  //       label: "Waiting Room",
-  //       href: "/app/waiting-room"
-  //     }
-  //   ]
-  // }
 ];

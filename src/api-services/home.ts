@@ -205,34 +205,34 @@ export async function getPlutusStats() {
   //   return total.plus(poolPrice);
   // }, Promise.resolve(new BigNumberJS(0)));
 
-  // const totalValueInVaults = await vaults.reduce(async (_total: Promise<BigNumberJS>, vault: Vault) => {
-  //   const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
-  //   const lpContract = new ethers.Contract(vault.stakeToken.address, ERC20_ABI, provider);
+  const totalValueInVaults = await vaults.reduce(async (_total: Promise<BigNumberJS>, vault: Vault) => {
+    const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
+    const lpContract = new ethers.Contract(vault.stakeToken.address, ERC20_ABI, provider);
 
-  //   const totalLpStaked = await vaultContract.balance();
-  //   const totalSupply = utils.formatUnits(await lpContract.totalSupply(), vault.stakeToken.decimals);
+    const totalLpStaked = await vaultContract.balance();
+    const totalSupply = utils.formatUnits(await lpContract.totalSupply(), vault.stakeToken.decimals);
 
-  //   const tokenPrice = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, provider, vault.amm);
+    const tokenPrice = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, provider, vault.amm);
 
-  //   const total = await _total;
-  //   const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, vault.stakeToken.decimals)).multipliedBy(
-  //     tokenPrice
-  //   );
+    const total = await _total;
+    const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, vault.stakeToken.decimals)).multipliedBy(
+      tokenPrice
+    );
 
-  //   return total.plus(poolPrice);
-  // }, Promise.resolve(new BigNumberJS(0)));
+    return total.plus(poolPrice);
+  }, Promise.resolve(new BigNumberJS(0)));
 
   const tvl = totalValueInPools
     .plus(totalValueInFarms)
-    .plus(totalValueInBank);
-    // .plus(totalValueInVaults);
+    .plus(totalValueInBank)
+    .plus(totalValueInVaults);
 
   return {
     totalValueInPools: totalValueInPools.toString(),
     totalValueInFarms: totalValueInFarms.toString(),
     totalValueInBank: totalValueInBank.toString(),
     // totalValueInBalancers: totalValueInBalancers.toString(),
-    // totalValueInVaults: totalValueInVaults.toString(),
+    totalValueInVaults: totalValueInVaults.toString(),
     tvl: tvl.toString(),
   };
 }
