@@ -73,26 +73,6 @@ export const stakingBankPools: StakeBankInfo[] = {
       },
     },
 
-    // {
-    //   address: "0x1e65212E33EBD11c878920f3dD86524E18b160EC",
-    //   poolSite: "https://hermesdefi.io/",
-    //   active: false,
-    //   isSpecial: false,
-
-    //   stakeToken: {
-    //     address: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
-    //     symbol: "PLUTUS",
-    //     decimals: 18,
-    //     logo: "/plutus-logo.png",
-    //   },
-
-    //   rewardToken: {
-    //     address: "0xef977d2f931c1978db5f6747666fa1eacb0d0339",
-    //     symbol: "1DAI",
-    //     decimals: 18,
-    //     logo: "/1dai-logo.png",
-    //   },
-    // },
     
     //Lp stack token example
     // {

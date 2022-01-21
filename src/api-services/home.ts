@@ -136,22 +136,19 @@ export async function getPlutusStats() {
     .filter((pool) => !pool.vaultPool)
     .reduce(async (_total: Promise<BigNumberJS>, pool: Pool) => {
       const lpContract = new ethers.Contract(pool.stakeToken.address, ERC20_ABI, provider);
-
       const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
       const tokenDecimal = await lpContract.decimals();
       const tokenSymbol = await lpContract.symbol();
-
+     
       const tokenPrice = await fetchPrice(
         { address: lpContract.address, decimals: tokenDecimal, symbol: tokenSymbol },
         provider
       );
+      
 
       const total = await _total;
       const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(tokenPrice);
-      console.debug({
-        stakeToken: pool.stakeToken.symbol,
-        poolPrice: poolPrice
-      })
+
       return total.plus(poolPrice);
     }, Promise.resolve(new BigNumberJS(0)));
 
@@ -189,21 +186,6 @@ export async function getPlutusStats() {
     return total.plus(poolPrice);
   }, Promise.resolve(new BigNumberJS(0)));
 
-  
-
-  // const totalValueInBalancers = await balancers.reduce(async (_total: Promise<BigNumberJS>, bal: Balancer) => {
-  //   const lpContract = new ethers.Contract(bal.stakeToken.address, ERC20_ABI, provider);
-
-  //   const totalLpStaked = await lpContract.balanceOf(defaultContracts.masterChef.address);
-  //   const tokenDecimal = await lpContract.decimals();
-
-  //   const tokenPrice = await fetchBalancerPrice(bal.balancerAddress);
-
-  //   const total = await _total;
-  //   const poolPrice = new BigNumberJS(utils.formatUnits(totalLpStaked, tokenDecimal)).multipliedBy(tokenPrice);
-
-  //   return total.plus(poolPrice);
-  // }, Promise.resolve(new BigNumberJS(0)));
 
   const totalValueInVaults = await vaults.reduce(async (_total: Promise<BigNumberJS>, vault: Vault) => {
     const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
