@@ -42,7 +42,7 @@ export const pools: Pool[] = {
       multiplier: "30",
       depositFees: 0,
       isSpecial: true,
-      isActive: true,
+      isActive: false,
 
       stakeToken: {
         address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
