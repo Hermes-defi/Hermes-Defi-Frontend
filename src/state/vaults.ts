@@ -6,7 +6,7 @@ import {
 } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
 import { usePlutusPrice } from "hooks/prices";
-import { useToast } from "@chakra-ui/react";
+import { useToast, useToken } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
@@ -16,6 +16,9 @@ import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract } from "web3-functions";
 import { getVaultApy } from "web3-functions/utils";
 import { BLOCKS_PER_SECOND } from "config/constants";
+import { useTokenBalance } from "hooks/wallet";
+import { getTokenBalance } from "web3-functions";
+
 
 function useFetchVaultsRequest() {
   const getMasterChef = useMiniChefSushi();
@@ -106,6 +109,9 @@ function useFetchVaultsRequest() {
 
         vault.hasStaked = !new BigNumberJS(vault.userTotalStaked).isZero();
 
+        const balance = getTokenBalance(lpContract, account, vault.stakeToken.decimals);
+        vault.hasWalletBalance = await balance === "0.0" ? false : true;
+        
         const allowance: BigNumber = await lpContract.allowance(account, vault.address);
         vault.hasApprovedPool = !allowance.isZero();
       }
