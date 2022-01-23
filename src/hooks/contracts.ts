@@ -1,4 +1,14 @@
-import defaultContracts, { erc20, ContractInfo, uniPair, stakePool, vault, dfynFarm, stakeBank, miniChefSushi } from "config/contracts";
+import defaultContracts, {
+  erc20,
+  ContractInfo,
+  uniPair,
+  stakePool,
+  vault,
+  dfynFarm,
+  stakeBank,
+  miniChefSushi,
+  vaultZap,
+} from "config/contracts";
 import { utils, providers, constants, Contract } from "ethers";
 import { useCallback } from "react";
 import { useActiveWeb3React } from "wallet";
@@ -133,13 +143,13 @@ export function useCustomMasterChef() {
   };
 }
 
-export function useMiniChefSushi(){
+export function useMiniChefSushi() {
   const contract = useContract();
 
   return (address: string) => {
-    const miniChefSushiInfo = miniChefSushi(address)
+    const miniChefSushiInfo = miniChefSushi(address);
     return contract(miniChefSushiInfo);
-  }
+  };
 }
 
 export function usePresaleContract() {
@@ -157,7 +167,16 @@ export function useSwapUSDCContract() {
   return contract(defaultContracts.swapUsdc);
 }
 
-export function usepPlutus(){
+export function usepPlutus() {
   const contract = useContract();
   return contract(defaultContracts.pPlutus);
+}
+
+export function useVaultZapContract() {
+  const contract = useContract();
+
+  return (address: string) => {
+    const vaultZapInfo = vaultZap(address);
+    return contract(vaultZapInfo);
+  };
 }

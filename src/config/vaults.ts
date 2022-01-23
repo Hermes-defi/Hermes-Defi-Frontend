@@ -1,11 +1,11 @@
 import { DEFAULT_CHAIN_ID } from "./constants";
-import defaultContracts from "./contracts";
 
 export type Vault = {
   address: string;
   stratAddress: string;
 
   masterChefAddress?: string;
+  zapAddress?: string;
   farmAddress?: string;
   farmPid?: number;
   tokenPerBlock?: string;
@@ -64,6 +64,7 @@ export type Vault = {
     dailyAll?: number;
   };
 
+  approvedTokens?: string[];
   hasStaked?: boolean;
   hasApprovedPool?: boolean;
   userTotalStaked?: string;
@@ -80,6 +81,7 @@ export const vaults: Vault[] = {
       farmPid: 5,
       tokenPerBlock: "400000000000000000",
 
+      isDisabled: true,
       isActive: true,
       amm: "sushiswap",
       depositFees: 0,
@@ -98,12 +100,11 @@ export const vaults: Vault[] = {
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0xc3670b927ef42eed252e483e2446352c238d9905",
-        symbol: "1WBTC/WONE",
+        symbol: "1WBTC-WONE",
         decimals: 18,
         logo: ["/btc-logo.png", "/harmony-one-logo.png"],
       },
@@ -131,6 +132,7 @@ export const vaults: Vault[] = {
       address: "0xdC01AC238a0f841a7750f456BFcf1ede486ce7a1",
       stratAddress: "0xF01E18D4F9c51a2d9bE9b0f379be428644EA12A6",
       masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0x304bb886cc4e65ab6551338179e94cdbe9e96a1b",
       farmPid: 1,
       tokenPerBlock: "400000000000000000",
 
@@ -146,18 +148,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0xbf255d8c30dbab84ea42110ea7dc870f01c0013a",
-        symbol: "1USDC/WONE",
+        symbol: "1USDC-WONE",
         decimals: 18,
         logo: ["/usdc-logo.png", "/harmony-one-logo.png"],
       },
@@ -188,6 +189,7 @@ export const vaults: Vault[] = {
       farmPid: 4,
       tokenPerBlock: "400000000000000000",
 
+      isDisabled: true,
       isActive: true,
       amm: "sushiswap",
       depositFees: 0,
@@ -200,18 +202,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0xda64f9053a971531a75071a729a6432fb65ed60d",
-        symbol: "bscBUSD/BUSD",
+        symbol: "bscBUSD-BUSD",
         decimals: 18,
         logo: ["/busd-logo.png", "/busd-logo.png"],
       },
@@ -242,6 +243,7 @@ export const vaults: Vault[] = {
       farmPid: 3,
       tokenPerBlock: "400000000000000000",
 
+      isDisabled: true,
       isActive: true,
       amm: "sushiswap",
       depositFees: 0,
@@ -254,18 +256,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0xeb049f1ed546f8efc3ad57f6c7d22f081ccc7375",
-        symbol: "1ETH/WONE",
+        symbol: "1ETH-WONE",
         decimals: 18,
         logo: ["/eth-logo.png", "/harmony-one-logo.png"],
       },
@@ -286,7 +287,6 @@ export const vaults: Vault[] = {
           decimals: 18,
           symbol: "WONE",
         },
-        
       ],
     },
     //UST/ETH
@@ -297,6 +297,7 @@ export const vaults: Vault[] = {
       farmPid: 12,
       tokenPerBlock: "400000000000000000",
 
+      isDisabled: true,
       isActive: true,
       amm: "sushiswap",
       depositFees: 0,
@@ -309,18 +310,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0x9293dfdd719ee2163f2e158e66ef75722ed712b4",
-        symbol: "UST/1ETH",
+        symbol: "UST-1ETH",
         decimals: 18,
         logo: ["/ust-logo.png", "/eth-logo.png"],
       },
@@ -352,6 +352,7 @@ export const vaults: Vault[] = {
       farmPid: 6,
       tokenPerBlock: "400000000000000000",
 
+      isDisabled: true,
       isActive: true,
       amm: "sushiswap",
       depositFees: 0,
@@ -364,18 +365,16 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0x0c51171b913db10ade3fd625548e69c9c63afb96",
-        symbol: "1USDT/1USDC",
+        symbol: "1USDT-1USDC",
         decimals: 18,
         logo: ["/usdt-logo.png", "/usdc-logo.png"],
       },
@@ -406,6 +405,7 @@ export const vaults: Vault[] = {
       farmPid: 7,
       tokenPerBlock: "400000000000000000",
 
+      isDisabled: true,
       isActive: true,
       amm: "sushiswap",
       depositFees: 0,
@@ -418,18 +418,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0x468dc50884962d6f81733ac0c23c04611ac219f9",
-        symbol: "1SUSHI/WONE",
+        symbol: "1SUSHI-WONE",
         decimals: 18,
         logo: ["/sushi-logo.jpeg", "/harmony-one-logo.png"],
       },
@@ -439,13 +438,13 @@ export const vaults: Vault[] = {
         decimals: 18,
       },
 
-      pairs: [ 
+      pairs: [
         {
           address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
@@ -453,7 +452,6 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((vault: Vault) => !vault.isDisabled);

@@ -6,7 +6,6 @@ import { displayTokenCurrencyDecimals, displayTokenCurrency } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 
 import {
-  useDisclosure,
   Button,
   Stack,
   Box,
@@ -19,115 +18,12 @@ import {
   SliderThumb,
   SliderMark,
   Tooltip,
-  InputGroup,
-  InputLeftElement,
-  InputRightElement,
-  useColorModeValue,
+  StackDivider,
+  Select,
 } from "@chakra-ui/react";
-// import * as Slider from "@radix-ui/react-slider";
 
 import { UnlockButton } from "components/wallet/unlock-wallet";
 import BigNumberJS from "bignumber.js";
-
-import { DepositModal } from "components/modals/deposit-modal";
-import { WithdrawModal } from "components/modals/withdraw-modal";
-import { useTokenBalance } from "hooks/wallet";
-import { FaDollarSign } from "react-icons/fa";
-import { vault } from "config/contracts";
-import { Label } from "recharts";
-import { set } from "js-cookie";
-
-type IDepositProps = {
-  primary?: boolean;
-
-  id: number | string;
-  stakeToken: {
-    symbol: string;
-    address: string;
-    decimals: number;
-  };
-
-  deposit: UseMutationResult;
-};
-const DepositButton: React.FC<IDepositProps> = (props) => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
-  const [amount, setAmount] = useState("");
-  return (
-    <>
-      <Button
-        size="md"
-        bg={props.primary ? "primary.600" : "gray.700"}
-        _hover={{ bg: props.primary ? "primary.500" : "gray.600" }}
-        onClick={onOpen}
-        w={["36", "48"]}
-      >
-        {props.children}
-      </Button>
-
-      <DepositModal
-        isOpen={isOpen}
-        onClose={onClose}
-        token={props.stakeToken.symbol}
-        tokenAddress={props.stakeToken.address}
-        tokenDecimals={props.stakeToken.decimals}
-        isLoading={props.deposit.isLoading}
-        onDeposit={(amount: string) =>
-          props.deposit
-            .mutateAsync({ amount, id: props.id })
-            .then(() => onClose())
-        }
-      />
-    </>
-  );
-};
-
-type IUnstakeProps = {
-  primary?: boolean;
-
-  id: string | number;
-  hasWithdrawAll?: boolean;
-  userTotalStaked: string;
-  stakeToken: {
-    symbol: string;
-  };
-
-  withdraw: UseMutationResult;
-  withdrawAll?: UseMutationResult;
-};
-const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
-  const { isOpen, onClose, onOpen } = useDisclosure();
-
-  return (
-    <>
-      <Button
-        size="sm"
-        bg={"gray.700"}
-        _hover={{ bg: "gray.600" }}
-        onClick={onOpen}
-        w="sm"
-      >
-        {props.children}
-      </Button>
-
-      <WithdrawModal
-        isOpen={isOpen}
-        onClose={onClose}
-        hasWithdrawAll={props.hasWithdrawAll}
-        token={props.stakeToken.symbol}
-        tokenBalance={props.userTotalStaked}
-        isLoading={props.withdraw.isLoading}
-        onWithdrawAll={() =>
-          props.withdrawAll.mutateAsync({ id: props.id }).then(() => onClose())
-        }
-        onWithdraw={(amount: string) =>
-          props.withdraw
-            .mutateAsync({ amount, id: props.id })
-            .then(() => onClose())
-        }
-      />
-    </>
-  );
-};
 
 type IProps = {
   id: number | string;
@@ -139,11 +35,11 @@ type IProps = {
     symbol: string;
   };
 
-  stakeToken: {
+  stakeTokens: {
     symbol: string;
     address: string;
     decimals: number;
-  };
+  }[];
 
   unstakeToken?: {
     symbol: string;
@@ -155,7 +51,7 @@ type IProps = {
   hasApprovedPool: boolean;
   userTotalStaked: string;
   userAvailableToUnstake?: string;
-  balance: string;
+  balances: any;
 
   approve: UseMutationResult;
   deposit: UseMutationResult;
@@ -167,11 +63,14 @@ type IProps = {
 };
 export const UserSectionAlt: React.FC<IProps> = (props) => {
   const { account } = useActiveWeb3React();
-  const [depositValue, setDepositValue] = useState(0);
-  const [depositPercentage, setDepositPercentage] = useState(50);
-  const [withdrawValue, setWithdrawValue] = useState(0);
+
+  const [depositValue, setDepositValue] = useState("");
+  const [depositPercentage, setDepositPercentage] = useState(0);
+  const [withdrawValue, setWithdrawValue] = useState("");
   const [withdrawPercentage, setWithdrawPercentage] = useState(0);
-  const [showTooltip, setShowTooltip] = useState(false);
+
+  const [stateTokenAddress, setStakeAddress] = useState(props.stakeTokens[0].address || "");
+  const [unstakeTokenAddress, setUnstakeAddress] = useState(props.stakeTokens[0].address || "");
 
   if (!account) {
     return (
@@ -179,91 +78,92 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
         <Text fontSize="md" mb={5}>
           Connect your wallet to access the vault
         </Text>
-        <UnlockButton
-          boxShadow="md"
-          w={["100%", "50%"]}
-          h={["4rem", "5rem"]}
-          fontSize={["lg", "xl"]}
-          colorScheme="accent"
-        />
+        <UnlockButton boxShadow="md" w={["100%", "50%"]} h={["4rem", "5rem"]} fontSize={["lg", "xl"]} colorScheme="accent" />
       </Stack>
     );
   }
+
+  const stakeToken = props.stakeTokens.find((token) => token.address === stateTokenAddress)!;
 
   return (
     <Stack direction={["column", "column", "row"]} justify="space-between">
       {/* DEPOSIT SIDE */}
       <Box align="left">
         <HStack align="center" mb={1}>
-          <Text fontWeight="400" fontSize="xs">
+          <Text fontWeight="400" fontSize="sm">
             Balance:
           </Text>
+
           <Button
-            isDisabled={props.balance === "0.0"}
             onClick={() => {
-              if (props.balance !== "0.0") {
+              if (props.balances[stateTokenAddress] !== "0.0") {
                 setDepositPercentage(100);
-                setDepositValue(
-                  new BigNumberJS(props.balance)
-                    .times(100)
-                    .div(100)
-                    .decimalPlaces(18)
-                    .toNumber()
-                );
+                setDepositValue(new BigNumberJS(props.balances[stateTokenAddress]).times(100).div(100).decimalPlaces(18).toString());
               }
             }}
-            colorScheme={"white"}
+            colorScheme="white"
             variant="link"
           >
             <Text fontWeight="600" fontSize={["xs", "sm"]}>
-              {props.balance
-                ? displayTokenCurrencyDecimals(
-                    props.balance,
-                    props.stakeToken.symbol,
-                    true,
-                    8
-                  )
+              {props.balances[stateTokenAddress]
+                ? displayTokenCurrencyDecimals(props.balances[stateTokenAddress], stakeToken.symbol, true, 8)
                 : "N/A"}
             </Text>
           </Button>
         </HStack>
 
         <Stack h="7rem" w={["100%", "100%", "sm"]}>
-          <InputGroup>
-            <InputRightElement
-              pointerEvents="none"
-              color="gray.300"
-              fontSize="1.2em"
-              children="$"
-            />
+          <Stack
+            mt={2}
+            spacing={0}
+            borderWidth="1px"
+            borderColor="rgb(255 255 255 / 35%)"
+            p={1}
+            rounded="xl"
+            direction="row"
+            align="center"
+            divider={<StackDivider alignSelf="center" h="70%" borderColor="rgb(255 255 255 / 15%)" />}
+          >
             <Input
+              flex={1.5}
+              _focus={{ outline: "none" }}
+              border="0px"
+              pattern="^[0-9]*[.,]?[0-9]*$"
               focusBorderColor="secondary.500"
-              placeholder={"0.0"}
+              placeholder="0.00"
+              min="0"
               type="number"
-              onChange={(depositValue) =>
-                setDepositValue(
-                  new BigNumberJS(depositValue.target.value)
-                    .decimalPlaces(18)
-                    .toNumber()
-                )
-              }
+              onChange={(e) => setDepositValue(new BigNumberJS(e.target.value).decimalPlaces(18).toString())}
               value={depositValue}
             />
-          </InputGroup>
+
+            <Select
+              fontSize="xs"
+              size="sm"
+              flex={1}
+              border="0px"
+              _focus={{ outline: "none" }}
+              value={stateTokenAddress}
+              onChange={(e) => setStakeAddress(e.target.value)}
+            >
+              {props.stakeTokens.map((token) => (
+                <option key={token.address} value={token.address}>
+                  {token.symbol}
+                </option>
+              ))}
+            </Select>
+          </Stack>
+
           <Slider
             aria-label="deposit-slider"
-            defaultValue={50}
+            defaultValue={0}
             min={0}
             max={100}
             value={depositPercentage}
             onChange={(depositPercentage) => {
               setDepositPercentage(depositPercentage);
               setDepositValue(
-                new BigNumberJS(props.balance)
-                  .times(depositPercentage)
-                  .div(100)
-                  .decimalPlaces(18)
-                  .toNumber()
+                new BigNumberJS(props.balances[stateTokenAddress]).times(depositPercentage).div(100).decimalPlaces(18).toString()
               );
             }}
           >
@@ -283,27 +183,15 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
               100%
             </SliderMark>
             <SliderTrack mt={5} boxSize="1.5" bg="pink.100">
-              <SliderFilledTrack
-                bgGradient={`linear(to-l,green.500, green.100)`}
-              />
+              <SliderFilledTrack bgGradient={`linear(to-l,green.500, green.100)`} />
             </SliderTrack>
-            <Tooltip
-              hasArrow
-              bg="blue.400"
-              color="white"
-              placement="top"
-              label={`${depositPercentage}%`}
-            >
+            <Tooltip hasArrow bg="blue.400" color="white" placement="top" label={`${depositPercentage}%`}>
               <SliderThumb mt={5} boxSize={4}></SliderThumb>
             </Tooltip>
           </Slider>
         </Stack>
-        <Stack
-          align="center"
-          justify="space-between"
-          mt="8"
-          w={["100%", "100%", "sm"]}
-        >
+
+        <Stack align="center" justify="space-between" mt="8" w={["100%", "100%", "sm"]}>
           <Stack direction="row">
             {!props.hasApprovedPool && (
               <Button
@@ -321,22 +209,19 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
             {props.hasApprovedPool ? (
               <>
                 <Button
-                  isDisabled={
-                    props.balance === "0.0" || props.balance === undefined
-                      ? true
-                      : false
-                  }
+                  isDisabled={props.balances[stateTokenAddress] === "0.0" || props.balances[stateTokenAddress] === undefined ? true : false}
                   isLoading={props.deposit.isLoading}
                   onClick={() => {
-                    props.deposit.mutateAsync({
-                      amount: depositValue.toFixed(18).toString(),
-                      id: props.id,
-                    }).then(() => {
-                      setDepositPercentage(0);
-                      setDepositValue(0);
-                    });
+                    props.deposit
+                      .mutateAsync({
+                        amount: parseInt(depositValue, 10).toFixed(18).toString(),
+                        id: props.id,
+                      })
+                      .then(() => {
+                        setDepositPercentage(0);
+                        setDepositValue("");
+                      });
                   }}
-                  
                   size="md"
                   bg={"gray.700"}
                   _hover={{ bg: "gray.600" }}
@@ -345,29 +230,20 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                   Stake
                 </Button>
                 <Button
-                  isDisabled={
-                    props.balance === "0.0" || props.balance === undefined
-                      ? true
-                      : false
-                  }
+                  isDisabled={props.balances[stateTokenAddress] === "0.0" || props.balances[stateTokenAddress] === undefined ? true : false}
                   isLoading={props.depositAll.isLoading}
                   onClick={() => {
                     setDepositPercentage(100);
-                    setDepositValue(
-                      new BigNumberJS(props.balance)
-                        .times(100)
-                        .div(100)
-                        .decimalPlaces(18)
-                        .toNumber()
-                    );
-                    props.depositAll.mutateAsync({
-                      id: props.id,
-                    }).then(() => {
-                      setDepositPercentage(0);
-                      setDepositValue(0);
-                    });
+                    setDepositValue(new BigNumberJS(props.balances[stateTokenAddress]).times(100).div(100).decimalPlaces(18).toString());
+                    props.depositAll
+                      .mutateAsync({
+                        id: props.id,
+                      })
+                      .then(() => {
+                        setDepositPercentage(0);
+                        setDepositValue("");
+                      });
                   }}
-                  
                   size="md"
                   bg={"gray.700"}
                   _hover={{ bg: "gray.600" }}
@@ -376,71 +252,74 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
                   Stake All
                 </Button>
               </>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </Stack>
         </Stack>
       </Box>
 
       {/* WITHDRAW SIDE */}
-
       <Box align="left">
         <HStack align="center" mb={1}>
           <Text fontWeight="400" fontSize="xs">
             Staked:
           </Text>
           <Button
-            isDisabled={props.userTotalStaked === "0"}
             onClick={() => {
               if (props.userTotalStaked !== "0") {
                 setWithdrawPercentage(100);
-                setWithdrawValue(
-                  new BigNumberJS(100)
-                    .times(props.userTotalStaked)
-                    .div(100)
-                    .decimalPlaces(18)
-                    .toNumber()
-                );
+                setWithdrawValue(new BigNumberJS(100).times(props.userTotalStaked).div(100).decimalPlaces(18).toString());
               }
             }}
             colorScheme={"white"}
             variant="link"
           >
             <Text fontWeight="600" fontSize={["xs", "sm"]}>
-              {props.userTotalStaked
-                ? displayTokenCurrencyDecimals(
-                    props.userTotalStaked,
-                    props.stakeToken.symbol,
-                    false,
-                    8
-                  )
-                : "N/A"}
+              {props.userTotalStaked ? displayTokenCurrencyDecimals(props.userTotalStaked, props.stakeTokens[0].symbol, false, 8) : "N/A"}
             </Text>
           </Button>
         </HStack>
+
         <Stack h="7rem" w={["100%", "100%", "sm"]}>
-          <InputGroup>
-            <InputRightElement
-              pointerEvents="none"
-              color="gray.300"
-              fontSize="1.2em"
-              children="$"
-            />
+          <Stack
+            mt={2}
+            spacing={0}
+            borderWidth="1px"
+            borderColor="rgb(255 255 255 / 35%)"
+            p={1}
+            rounded="xl"
+            direction="row"
+            align="center"
+            divider={<StackDivider alignSelf="center" h="70%" borderColor="rgb(255 255 255 / 15%)" />}
+          >
             <Input
+              flex={1.5}
+              _focus={{ outline: "none" }}
+              border="0px"
+              pattern="^[0-9]*[.,]?[0-9]*$"
               focusBorderColor="secondary.500"
-              placeholder={"0.0"}
+              placeholder="0.00"
+              min="0"
               type="number"
-              onChange={(withdrawValue) =>
-                setWithdrawValue(
-                  new BigNumberJS(withdrawValue.target.value)
-                    .decimalPlaces(18)
-                    .toNumber()
-                )
-              }
+              onChange={(withdrawValue) => setWithdrawValue(new BigNumberJS(withdrawValue.target.value).decimalPlaces(18).toString())}
               value={withdrawValue}
             />
-          </InputGroup>
+
+            <Select
+              fontSize="xs"
+              size="sm"
+              flex={1}
+              border="0px"
+              _focus={{ outline: "none" }}
+              value={unstakeTokenAddress}
+              onChange={(e) => setUnstakeAddress(e.target.value)}
+            >
+              {props.stakeTokens.map((token) => (
+                <option key={token.address} value={token.address}>
+                  {token.symbol}
+                </option>
+              ))}
+            </Select>
+          </Stack>
           <Slider
             aria-label="withdraw-slider"
             defaultValue={0}
@@ -449,13 +328,7 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
             value={withdrawPercentage}
             onChange={(withdrawPercentage) => {
               setWithdrawPercentage(withdrawPercentage);
-              setWithdrawValue(
-                new BigNumberJS(withdrawPercentage)
-                  .times(props.userTotalStaked)
-                  .div(100)
-                  .decimalPlaces(18)
-                  .toNumber()
-              );
+              setWithdrawValue(new BigNumberJS(withdrawPercentage).times(props.userTotalStaked).div(100).decimalPlaces(18).toString());
             }}
           >
             <SliderMark value={0} mt="7" fontSize="xx-small">
@@ -475,87 +348,63 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
             </SliderMark>
 
             <SliderTrack mt={5} boxSize="1.5" bg="pink.100">
-              <SliderFilledTrack
-                bgGradient={`linear(to-l, pink.400, green.200)`}
-              />
+              <SliderFilledTrack bgGradient={`linear(to-l, pink.400, green.200)`} />
             </SliderTrack>
-            <Tooltip
-              hasArrow
-              bg="blue.400"
-              color="white"
-              placement="top"
-              label={`${withdrawPercentage}%`}
-            >
+            <Tooltip hasArrow bg="blue.400" color="white" placement="top" label={`${withdrawPercentage}%`}>
               <SliderThumb mt={5} boxSize={4}></SliderThumb>
             </Tooltip>
           </Slider>
         </Stack>
-        <Stack
-          direction={["column", "row"]}
-          align="center"
-          justify="space-evenly"
-          mt={["4", "8"]}
-          w={["100%", "100%", "sm"]}
-        >
-          {
-            <>
-              <Button
-                isDisabled={
-                  withdrawValue === 0 || props.userTotalStaked === "0"
-                    ? true
-                    : false
-                }
-                isLoading={props.withdraw.isLoading}
-                size="md"
-                bg={"gray.700"}
-                _hover={{ bg: "gray.600" }}
-                w={["36", "48"]}
-                onClick={() => {
-                  withdrawPercentage === 100
-                    ? props.withdrawAll.mutateAsync({ id: props.id }).then(() => {
-                      setWithdrawPercentage(0);
-                      setWithdrawValue(0);
-                    })
-                    : props.withdraw.mutateAsync({
-                        amount: withdrawValue.toFixed(18).toString(),
-                        id: props.id,
-                      }).then(() => {
-                        setWithdrawPercentage(0);
-                        setWithdrawValue(0);
-                      })
-                }}
-                
-              >
-                Withdraw
-              </Button>
-              <Button
-                isDisabled={props.userTotalStaked === "0" ? true : false}
-                isLoading={props.withdrawAll.isLoading}
-                size="md"
-                bg={"gray.700"}
-                _hover={{ bg: "gray.600" }}
-                onClick={() => {
-                  setWithdrawPercentage(100);
-                  setWithdrawValue(
-                    new BigNumberJS(100)
-                      .times(props.userTotalStaked)
-                      .div(100)
-                      .decimalPlaces(18)
-                      .toNumber()
-                  );
-                  props.withdrawAll.mutateAsync({ id: props.id }).then(() => {
+
+        <Stack direction={["column", "row"]} align="center" justify="space-evenly" mt={["4", "8"]} w={["100%", "100%", "sm"]}>
+          <Button
+            isDisabled={!withdrawValue || props.userTotalStaked === "0" ? true : false}
+            isLoading={props.withdraw.isLoading}
+            size="md"
+            bg={"gray.700"}
+            _hover={{ bg: "gray.600" }}
+            w={["36", "48"]}
+            onClick={() => {
+              withdrawPercentage === 100
+                ? props.withdrawAll.mutateAsync({ id: props.id }).then(() => {
                     setWithdrawPercentage(0);
-                    setWithdrawValue(0);
-                  });
-                }}
-                w={["36", "48"]}
-              >
-                Withdraw All
-              </Button>
-            </>
-          }
+                    setWithdrawValue("");
+                  })
+                : props.withdraw
+                    .mutateAsync({
+                      amount: parseInt(withdrawValue, 10).toFixed(18).toString(),
+                      id: props.id,
+                    })
+                    .then(() => {
+                      setWithdrawPercentage(0);
+                      setWithdrawValue("");
+                    });
+            }}
+          >
+            Withdraw
+          </Button>
+
+          <Button
+            isDisabled={props.userTotalStaked === "0" ? true : false}
+            isLoading={props.withdrawAll.isLoading}
+            size="md"
+            bg={"gray.700"}
+            _hover={{ bg: "gray.600" }}
+            onClick={() => {
+              setWithdrawPercentage(100);
+              setWithdrawValue(new BigNumberJS(100).times(props.userTotalStaked).div(100).decimalPlaces(18).toString());
+              props.withdrawAll.mutateAsync({ id: props.id }).then(() => {
+                setWithdrawPercentage(0);
+                setWithdrawValue("");
+              });
+            }}
+            w={["36", "48"]}
+          >
+            Withdraw All
+          </Button>
         </Stack>
       </Box>
+
       {!props.disableRewards && (
         <Box align="left">
           <Text mb={1} fontWeight="600" fontSize="sm">
@@ -564,18 +413,14 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
 
           <Stack align="center" direction="row" justify="space-between">
             <Text fontWeight="700" fontSize="2xl">
-              {props.rewardsEarned
-                ? displayTokenCurrency(props.rewardsEarned, "")
-                : "N/A"}
+              {props.rewardsEarned ? displayTokenCurrency(props.rewardsEarned, "") : "N/A"}
             </Text>
 
             {props.hasApprovedPool && (
               <Stack direction="row">
                 <Button
                   isLoading={props.harvest.isLoading}
-                  onClick={() =>
-                    props.harvest.mutate({ id: props.id, amount: "0" })
-                  }
+                  onClick={() => props.harvest.mutate({ id: props.id, amount: "0" })}
                   size="xs"
                   bg="gray.700"
                   _hover={{ bg: "gray.600" }}

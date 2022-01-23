@@ -1,25 +1,26 @@
 import React, { useState, useEffect, useRef } from "react";
 import { injected } from "./connectors";
 import { providers } from "ethers";
-import { useWeb3React } from "@web3-react/core";
+import { UnsupportedChainIdError, useWeb3React } from "@web3-react/core";
 import { Web3ReactContextInterface } from "@web3-react/core/dist/types";
-import { simpleRpcProvider } from 'libs/providers';
-import { DEFAULT_CHAIN_ID } from '../config/constants';
+import { simpleRpcProvider } from "libs/providers";
+import { DEFAULT_CHAIN_ID } from "../config/constants";
+import { switchNetwork } from "./utils";
 
 export function useActiveWeb3React(): Web3ReactContextInterface<providers.Web3Provider> {
-  const { library, chainId, ...web3React } = useWeb3React()
-  const refEth = useRef( library )
-  const [ provider, setProvider ] = useState( library || simpleRpcProvider )
+  const { library, chainId, ...web3React } = useWeb3React();
+  const refEth = useRef(library);
+  const [provider, setProvider] = useState(library || simpleRpcProvider);
 
-  useEffect( () => {
+  useEffect(() => {
     // console.debug('Current provider:', provider.connection);
-    if ( library !== refEth.current ) {
-      setProvider( library || simpleRpcProvider )
-      refEth.current = library
+    if (library !== refEth.current) {
+      setProvider(library || simpleRpcProvider);
+      refEth.current = library;
     }
-  }, [ library ] )
+  }, [library]);
 
-  return { library: provider, chainId: chainId ?? DEFAULT_CHAIN_ID, ...web3React }
+  return { library: provider, chainId: chainId ?? DEFAULT_CHAIN_ID, ...web3React };
 }
 
 export function useEagerConnect() {
@@ -32,6 +33,12 @@ export function useEagerConnect() {
     injected.isAuthorized().then((isAuthorized: boolean) => {
       if (isAuthorized) {
         activate(injected, undefined, true).catch((error) => {
+          if (error instanceof UnsupportedChainIdError) {
+            switchNetwork().then(() => {
+              activate(injected, undefined, true);
+            });
+          }
+
           console.error("Failed to eagerly activate", error);
           setTried(true);
         });
