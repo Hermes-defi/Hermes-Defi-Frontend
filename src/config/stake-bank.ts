@@ -73,6 +73,48 @@ export const stakingBankPools: StakeBankInfo[] = {
       },
     },
 
+    {
+      address: "0xB3617363eDEc16cB0D30a5912Eb7A6B1D48e2875",
+      poolSite: "https://hermesdefi.io/",
+      active: true,
+      isSpecial: false,
+
+      stakeToken: {
+        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+        symbol: "PLTS",
+        decimals: 18,
+        logo: "/plutus-logo.png",
+      },
+
+      rewardToken: {
+        address: "0xda7fe71960cd1c19e1b86d6929efd36058f60a03",
+        symbol: "LUMEN",
+        decimals: 18,
+        logo: "/lumen-logo.svg",
+      },
+    },
+
+    // {
+    //   address: "0x3074cf20ecd1cfe96b3ee43968d0c426f775171a",
+    //   poolSite: "https://hermesdefi.io/",
+    //   active: true,
+    //   isSpecial: true,
+
+    //   stakeToken: {
+    //     address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+    //     symbol: "PLTS",
+    //     decimals: 18,
+    //     logo: "/plutus-logo.png",
+    //   },
+
+    //   rewardToken: {
+    //     address: "0xb4441013ea8aa3a9e35c5aca2b037e577948c59e",
+    //     symbol: "UNITE",
+    //     decimals: 18,
+    //     logo: "/unite-logo.svg",
+    //   },
+    // },
+
     
     //Lp stack token example
     // {

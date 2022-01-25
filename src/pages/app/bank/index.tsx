@@ -133,10 +133,6 @@ const Page: React.FC = () => {
           )}
         </Container>
       </HStack>
-      <Container maxWidth="container.lg" my={8}>
-      
-            <BurnStats /> 
-      </Container>
       <HStack align="center" spacing={10} py={10}>
         {pools ? (
         <Container align="center" maxWidth="container.lg">
@@ -157,6 +153,10 @@ const Page: React.FC = () => {
         </Container>
         ) : <></>}
       </HStack>
+      <Container maxWidth="container.lg" my={8}>
+      
+            <BurnStats /> 
+      </Container>
     </AppLayout>
   );
 };

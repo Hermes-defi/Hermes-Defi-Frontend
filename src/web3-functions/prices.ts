@@ -31,13 +31,14 @@ const amms = {
   "0x0ab43550a6915f9f67d0c454c2e90385e6497eaa": "sushiswap", //bscBUSD
   "0xe176ebe47d621b984a73036b9da5d834411ef734": "sushiswap", //BUSD
   "0x224e64ec1bdce3870a6a6c777edd450454068fec": "sushiswap", //UST
+  "0xda7fe71960cd1c19e1b86d6929efd36058f60a03": "coingecko", //LUMEN
 
 };
 
 async function fetchCoinGeckoPrice(address: string) {
   try {
     const resp = await fetch(
-      `https://api.coingecko.com/api/v3/simple/token_price/polygon-pos?contract_addresses=${address}&vs_currencies=usd`
+      `https://api.coingecko.com/api/v3/simple/token_price/harmony-shard-0?contract_addresses=${address}&vs_currencies=usd`
     );
 
     const data = await resp.json();

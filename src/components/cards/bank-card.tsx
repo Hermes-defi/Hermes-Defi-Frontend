@@ -170,7 +170,7 @@ export const BankPoolCard: React.FC<{
             Deposit
           </Heading>
           <Link
-            href={`https://quickswap.exchange/#/swap/${stakePool.stakeToken.address}`}
+            href={`https://viperswap.one/#/swap?outputCurrency=${stakePool.stakeToken.address}`}
             isExternal
             fontWeight="700"
             fontSize="md"
