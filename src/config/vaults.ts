@@ -405,7 +405,7 @@ export const vaults: Vault[] = {
         decimals: 18,
       },
 
-      isActive: true,
+      isActive: false,
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -450,7 +450,7 @@ export const vaults: Vault[] = {
         decimals: 18,
       },
 
-      isActive: true,
+      isActive: false,
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -502,7 +502,7 @@ export const vaults: Vault[] = {
         },
       ],
 
-      isActive: true,
+      isActive: false,
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -547,7 +547,7 @@ export const vaults: Vault[] = {
         decimals: 18,
       },
 
-      isActive: true,
+      isActive: false,
       amm: "quickswap",
       depositFees: 0,
       withdrawFees: 0,

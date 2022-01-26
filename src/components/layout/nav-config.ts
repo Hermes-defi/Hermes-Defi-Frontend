@@ -13,19 +13,6 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
     href: "/app",
   },
   {
-    label: "Products",
-    children: [
-      {
-        label: "Stake IRIS",
-        href: "/app/stake",
-      },
-      {
-        label: "Vaults",
-        href: "/app/vaults",
-      },
-    ],
-  },
-  {
     label: "NFT",
     href: "/app/nfts",
   },

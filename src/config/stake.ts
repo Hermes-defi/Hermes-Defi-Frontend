@@ -52,7 +52,7 @@ export const stakingPools: StakeInfo[] = {
     {
       address: "0xFE3583513Ba38B228C7A62B200F71a0ecF337Eb9",
       poolSite: "https://kavian.finance/",
-      active: true,
+      active: false,
 
       stakeToken: {
         address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
@@ -207,7 +207,7 @@ export const stakingPools: StakeInfo[] = {
 
     {
       address: "0x92D11AB10A69223E52660a5D8d1634cFeDDE0f91",
-      active: true,
+      active: false,
       isSpecial: true,
 
       stakeToken: {
