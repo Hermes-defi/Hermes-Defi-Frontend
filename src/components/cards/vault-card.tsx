@@ -33,12 +33,14 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
+  Icon,
 } from "@chakra-ui/react";
 
 import { WRAPPED_NATIVE_TOKEN_ADDRESS } from "config/constants";
 import { displayCurrency, displayNumber, displayTokenCurrencyDecimals } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 import { useTokenBalance } from "hooks/wallet";
+import { FaRegArrowAltCircleDown } from "react-icons/fa";
 
 export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   const lpLink = {
@@ -148,7 +150,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           flexBasis="50%"
           justify="space-between"
         >
-          <Stack py={{ base: 5, md: 0 }} spacing={0} direction="column" alignItems="center" justifyContent="center">
+          <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontSize="sm">{displayCurrency(new BigNumber(mainBalance).times(vault.stakeToken.price || 0).toNumber())}</Text>
             <Text fontWeight="700" fontSize="lg">
               {mainBalance ? displayTokenCurrencyDecimals(mainBalance, "", true, 8) : "N/A"}
@@ -156,7 +158,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             <Text>Wallet</Text>
           </Stack>
 
-          <Stack py={{ base: 5, md: 0 }} spacing={0} direction="column" alignItems="center" justifyContent="center">
+          <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontSize="sm">
               {displayCurrency(new BigNumber(vault.userTotalStaked || 0).times(vault.stakeToken.price || 0).toNumber())}
             </Text>
@@ -168,21 +170,21 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             <Text>Staked</Text>
           </Stack>
 
-          <Stack py={{ base: 5, md: 0 }} spacing={0} direction="column" alignItems="center" justifyContent="center">
+          <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontWeight="700" fontSize="lg">
               {vault.apy ? `${displayNumber(vault.apy.yearly, true)}%` : "N/A"}
             </Text>
             <Text>APY</Text>
           </Stack>
 
-          <Stack py={{ base: 5, md: 0 }} spacing={0} direction="column" alignItems="center">
+          <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center">
             <Text fontWeight="700" fontSize="lg">
               {vault.apy ? `${displayNumber(vault.apy.daily, false, 6)}%` : "N/A"}
             </Text>
             <Text>Daily</Text>
           </Stack>
 
-          <Stack py={{ base: 5, md: 0 }} spacing={0} direction="column" alignItems="center" justifyContent="center">
+          <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontWeight="700" fontSize="lg">
               {vault.totalStaked ? displayCurrency(new BigNumber(vault.totalStaked).times(vault.stakeToken.price || 0).toNumber()) : "N/A"}
             </Text>
@@ -190,7 +192,11 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Stack>
         </Stack>
       </Stack>
-
+      <Stack>
+        <Box visibility={isOpen ? "hidden" : "visible"}>
+          <Icon boxSize="1rem" as={FaRegArrowAltCircleDown} />
+        </Box>
+      </Stack>
       <Collapse in={isOpen} animateOpacity>
         <Divider borderColor="gray.200" my={7} />
 
@@ -293,7 +299,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                 </Slider>
               </Stack>
 
-              <Stack w="100%" spacing={8} pt={7} direction="row" align="center" justify="center">
+              <Stack w="100%" spacing={8} pt={7} direction={["column", "row"]} align="center" justify="center">
                 {!vault.approvedTokens?.includes(depositTokenAddress) && (
                   <Button
                     size="md"
@@ -467,7 +473,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                 </Slider>
               </Stack>
 
-              <Stack w="100%" spacing={8} pt={7} direction="row" align="center" justify="center">
+              <Stack w="100%" spacing={8} pt={7} direction={["column", "row"]} align="center" justify="center">
                 {withdrawTokenAddress !== vault.stakeToken.address && !vault.hasApprovedZap && (
                   <Button
                     size="md"
