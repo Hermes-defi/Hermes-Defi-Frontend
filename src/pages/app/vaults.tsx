@@ -144,7 +144,7 @@ const Page: React.FC = () => {
         >
           <Stack direction={["column", "row", "row"]} justify={"space-between"} mb={"3"}>
             <Stack mb="3" boxShadow="md" rounded={"lg"}>
-              <Button size={"sm"} onClick={() =>{
+              <Button bg={"secondary.400"} size={"sm"} onClick={() =>{
                 setPlatform("all")
                 setVaultType("all")
                 setAsset("all")
