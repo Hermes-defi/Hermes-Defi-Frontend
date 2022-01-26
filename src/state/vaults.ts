@@ -4,14 +4,16 @@ import { useActiveWeb3React } from "wallet";
 import { usePlutusPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
 
-import ReactGA, { pageview } from "react-ga";
+import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Vault, vaults } from "config/vaults";
 import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
-import { approveLpContract } from "web3-functions";
+import { approveLpContract, getTokenBalance } from "web3-functions";
 import { getVaultApy } from "web3-functions/utils";
 import { WRAPPED_NATIVE_TOKEN_ADDRESS } from "config/constants";
+
+const RouterAddr = "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506";
 
 function useFetchVaultsRequest() {
   const getMasterChef = useMiniChefSushi();
@@ -91,14 +93,25 @@ function useFetchVaultsRequest() {
         const hasNativeHrc20 = tokens.find((token) => token.address === WRAPPED_NATIVE_TOKEN_ADDRESS);
         if (hasNativeHrc20) tokens.push({ address: "native", decimals: 18, symbol: "ONE" });
 
+        if (vault.zapAddress) {
+          const contract = getPairContract(vault.stakeToken.address);
+          const zapAllowance: BigNumber = await contract.allowance(account, vault.zapAddress);
+          vault.hasApprovedZap = !zapAllowance.isZero();
+        }
+
         const approvedTokens = await Promise.all(
           tokens.map(async (token) => {
             // get allowance
             if (token.address === "native") return token.address;
 
+            if (vault.zapAddress && token.address !== vault.stakeToken.address) {
+              const contract = getPairContract(token.address);
+              const allowance: BigNumber = await contract.allowance(account, vault.zapAddress);
+              return !allowance.isZero() ? token.address : null;
+            }
+
             const contract = getPairContract(token.address);
             const allowance: BigNumber = await contract.allowance(account, vault.address);
-
             return !allowance.isZero() ? token.address : null;
           })
         );
@@ -142,10 +155,15 @@ export function useApproveVault() {
       if (!account) throw new Error("No connected account");
 
       const vault = queryClient.getQueryData<Vault>(["vault", address, account]);
-      const lpContract = getPairContract(tokenAddress);
-      console.log(`${lpContract.address} ${tokenAddress} ${vault.address}`);
 
-      await approveLpContract(lpContract, vault.address);
+      if (vault.zapAddress && vault.stakeToken.address !== tokenAddress) {
+        const lpContract = getPairContract(tokenAddress);
+        await approveLpContract(lpContract, vault.zapAddress);
+      } else {
+        const lpContract = getPairContract(tokenAddress);
+        await approveLpContract(lpContract, vault.address);
+      }
+
       return { address, tokenAddress };
     },
 
@@ -183,6 +201,57 @@ export function useApproveVault() {
   return approveMutation;
 }
 
+export function useApproveVaultZap() {
+  const { account } = useActiveWeb3React();
+  const queryClient = useQueryClient();
+  const getPairContract = useUniPair();
+  const toast = useToast();
+
+  const approveMutation = useMutation(
+    async ({ address }: { address: string }) => {
+      if (!account) throw new Error("No connected account");
+
+      const vault = queryClient.getQueryData<Vault>(["vault", address, account]);
+      const lpContract = getPairContract(vault.stakeToken.address);
+
+      await approveLpContract(lpContract, vault.zapAddress);
+      return { address };
+    },
+
+    {
+      onSuccess: ({ address }) => {
+        const vault = queryClient.getQueryData<Vault>(["vault", address, account]);
+        queryClient.setQueryData(["vault", address, account], {
+          ...vault,
+          hasApprovedZap: true,
+        });
+
+        ReactGA.event({
+          category: "Approval",
+          action: `Approving vault zap - ${vault.stakeToken.address}`,
+          label: vault.stakeToken.address,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[useApproveVaultZap][error] general error `, {
+          data,
+        });
+
+        toast({
+          title: "Error approving vault zap for token",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return approveMutation;
+}
+
 export function useDepositIntoVault() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
@@ -194,28 +263,30 @@ export function useDepositIntoVault() {
     async ({ id, amount, tokenAddress }: { id: string; amount: string; tokenAddress?: string }) => {
       if (!account) throw new Error("No connected account");
 
+      // convert amount to number
       const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
 
       if (vault.zapAddress && tokenAddress !== vault.stakeToken.address) {
-        const RouterAddr = "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506";
         const zapContract = getVaultZapContract(vault.zapAddress);
 
         let tx: any;
         if (tokenAddress === "native") {
+          const newAmount = parseFloat(amount).toFixed(18);
           tx = await zapContract.zapInAndStake(
             vault.stakeToken.address,
             RouterAddr,
             [WRAPPED_NATIVE_TOKEN_ADDRESS, vault.pairs[0].address],
             [WRAPPED_NATIVE_TOKEN_ADDRESS, vault.pairs[1].address],
             {
-              value: utils.parseUnits(amount, 18),
+              value: utils.parseUnits(newAmount, 18),
             }
           );
         } else {
           const token = vault.pairs.find((p) => p.address === tokenAddress);
+          const newAmount = parseFloat(amount).toFixed(token.decimals);
           tx = await zapContract.zapInTokenAndStake(
             tokenAddress,
-            utils.parseUnits(amount, token.decimals),
+            utils.parseUnits(newAmount, token.decimals),
             vault.stakeToken.address,
             RouterAddr,
             [tokenAddress, vault.pairs[0].address],
@@ -226,8 +297,9 @@ export function useDepositIntoVault() {
         return await tx.wait();
       }
 
+      const newAmount = parseFloat(amount).toFixed(vault.stakeToken.decimals);
       const vaultContract = getVaultContract(vault.address);
-      const tx = await vaultContract.deposit(utils.parseUnits(amount, vault.stakeToken.decimals));
+      const tx = await vaultContract.deposit(utils.parseUnits(newAmount, vault.stakeToken.decimals));
       await tx.wait();
     },
     {
@@ -264,9 +336,11 @@ export function useDepositIntoVault() {
 }
 
 export function useDepositAllIntoVault() {
-  const { account } = useActiveWeb3React();
+  const { account, library } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const getVaultContract = useVaultContract();
+  const getVaultZapContract = useVaultZapContract();
+  const getPairContract = useUniPair();
   const toast = useToast();
 
   const depositMutation = useMutation(
@@ -274,9 +348,47 @@ export function useDepositAllIntoVault() {
       if (!account) throw new Error("No connected account");
 
       const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
-      const vaultContract = getVaultContract(vault.address);
 
-      const tx = await vaultContract.depositAll();
+      let balance: any;
+      if (tokenAddress === "native") {
+        balance = library.getBalance(account);
+      } else {
+        const lpContract = getPairContract(tokenAddress);
+        balance = await lpContract.balanceOf(account);
+      }
+
+      if (vault.zapAddress && tokenAddress !== vault.stakeToken.address) {
+        const zapContract = getVaultZapContract(vault.zapAddress);
+
+        let tx: any;
+        if (tokenAddress === "native") {
+          tx = await zapContract.zapInAndStake(
+            vault.stakeToken.address,
+            RouterAddr,
+            [WRAPPED_NATIVE_TOKEN_ADDRESS, vault.pairs[0].address],
+            [WRAPPED_NATIVE_TOKEN_ADDRESS, vault.pairs[1].address],
+            {
+              value: balance,
+            }
+          );
+        } else {
+          const token = vault.pairs.find((p) => p.address === tokenAddress);
+          console.log(token);
+          tx = await zapContract.zapInTokenAndStake(
+            tokenAddress,
+            balance,
+            vault.stakeToken.address,
+            RouterAddr,
+            [tokenAddress, vault.pairs[0].address],
+            [tokenAddress, vault.pairs[1].address]
+          );
+        }
+
+        return await tx.wait();
+      }
+
+      const vaultContract = getVaultContract(vault.address);
+      const tx = await vaultContract.deposit(balance);
       await tx.wait();
     },
     {
@@ -315,24 +427,59 @@ export function useWithdrawFromVault() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const getVaultContract = useVaultContract();
+  const getVaultZapContract = useVaultZapContract();
   const toast = useToast();
 
   const withdrawMutation = useMutation(
-    async ({ id, amount }: { id: string; amount: string }) => {
+    async ({ id, amount, tokenAddress }: { id: string; amount: string; tokenAddress?: string }) => {
       if (!account) throw new Error("No connected account");
 
       const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
-      const vaultContract = getVaultContract(vault.address);
 
-      const tx = await vaultContract.withdraw(utils.parseUnits(amount, vault.stakeToken.decimals));
+      // withdraw LP
+
+      const newAmount = parseFloat(amount).toFixed(vault.stakeToken.decimals);
+      const vaultContract = getVaultContract(vault.address);
+      const tx = await vaultContract.withdraw(utils.parseUnits(newAmount, vault.stakeToken.decimals));
       await tx.wait();
+
+      if (vault.zapAddress && tokenAddress !== vault.stakeToken.address) {
+        const zapContract = getVaultZapContract(vault.zapAddress);
+
+        let tx: any;
+        if (tokenAddress === "native") {
+          const newAmount = parseFloat(amount).toFixed(18);
+          tx = await zapContract.zapOut(
+            vault.stakeToken.address,
+            utils.parseUnits(newAmount, 18),
+            RouterAddr,
+            account,
+            [vault.pairs[0].address, WRAPPED_NATIVE_TOKEN_ADDRESS],
+            [vault.pairs[1].address, WRAPPED_NATIVE_TOKEN_ADDRESS]
+          );
+        } else {
+          const token = vault.pairs.find((p) => p.address === tokenAddress);
+
+          const newAmount = parseFloat(amount).toFixed(token.decimals);
+          tx = await zapContract.zapOutToken(
+            vault.stakeToken.address,
+            utils.parseUnits(newAmount, token.decimals),
+            token.address,
+            RouterAddr,
+            [vault.pairs[0].address, tokenAddress],
+            [vault.pairs[1].address, tokenAddress]
+          );
+        }
+
+        return await tx.wait();
+      }
     },
     {
-      onSuccess: (_, { amount, id }) => {
+      onSuccess: (_, { amount, id, tokenAddress }) => {
         const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
-        // const wallet = queryClient.getQueryData<string>(["tokenBalance", account, id]);
+
         queryClient.invalidateQueries(["vault", id, account]);
-        queryClient.invalidateQueries(["tokenBalance", account, vault.stakeToken.address]);
+        queryClient.invalidateQueries(["tokenBalance", account, tokenAddress]);
 
         ReactGA.event({
           category: "Withdrawals",
@@ -342,14 +489,15 @@ export function useWithdrawFromVault() {
         });
       },
 
-      onError: ({ data }) => {
+      onError: (err: any) => {
+        const { data } = err;
         console.error(`[useWithdraw][error] general error`, {
-          data,
+          err,
         });
 
         toast({
           title: "Error withdrawing token",
-          description: data?.message,
+          description: data?.message || err?.message,
           status: "error",
           position: "top-right",
           isClosable: true,
@@ -365,17 +513,47 @@ export function useWithdrawAllFromVault() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const getVaultContract = useVaultContract();
+  const getVaultZapContract = useVaultZapContract();
   const toast = useToast();
 
   const withdrawMutation = useMutation(
-    async ({ id }: { id: string }) => {
+    async ({ id, tokenAddress }: { id: string; tokenAddress: string }) => {
       if (!account) throw new Error("No connected account");
 
       const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
       const vaultContract = getVaultContract(vault.address);
 
-      const tx = await vaultContract.withdrawAll();
+      const balance = await vaultContract.balanceOf(account);
+      const tx = await vaultContract.withdraw(balance);
       await tx.wait();
+
+      if (vault.zapAddress && tokenAddress !== vault.stakeToken.address) {
+        const zapContract = getVaultZapContract(vault.zapAddress);
+
+        let tx: any;
+        if (tokenAddress === "native") {
+          tx = await zapContract.zapOut(
+            vault.stakeToken.address,
+            balance,
+            RouterAddr,
+            account,
+            [vault.pairs[0].address, WRAPPED_NATIVE_TOKEN_ADDRESS],
+            [vault.pairs[1].address, WRAPPED_NATIVE_TOKEN_ADDRESS]
+          );
+        } else {
+          const token = vault.pairs.find((p) => p.address === tokenAddress);
+          tx = await zapContract.zapOutToken(
+            vault.stakeToken.address,
+            balance,
+            token.address,
+            RouterAddr,
+            [vault.pairs[0].address, tokenAddress],
+            [vault.pairs[1].address, tokenAddress]
+          );
+        }
+
+        return await tx.wait();
+      }
     },
     {
       onSuccess: (_, { id }) => {
@@ -390,14 +568,15 @@ export function useWithdrawAllFromVault() {
         });
       },
 
-      onError: ({ data }) => {
-        console.error(`[useWithdraw][error] general error`, {
-          data,
+      onError: (err: any) => {
+        const { data } = err;
+        console.error(`[useWithdrawAll][error] general error`, {
+          err,
         });
 
         toast({
           title: "Error withdrawing token",
-          description: data?.message,
+          description: data?.message || err?.message,
           status: "error",
           position: "top-right",
           isClosable: true,
