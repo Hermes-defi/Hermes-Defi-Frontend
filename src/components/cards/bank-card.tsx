@@ -49,7 +49,7 @@ export const BankPoolCard: React.FC<{
       color="white"
       w={(() => {
         if (stakePool.isSpecial) return "100%";
-        else return "50%";
+        else return ["100%", "100%", "50%"];
       })()}
     >
       {/* pool name */}

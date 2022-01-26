@@ -79,7 +79,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
       {/* farm name */}
       <Stack
         direction={["column", "column", "row"]}
-        justify="space-between"
+        justify={["space-between"]}
         onClick={onToggle}
       >
         <Stack align="center" mb={5} spacing={2}>
@@ -138,8 +138,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </HStack>
         </Stack>
 
-        <Stack direction={["row", "row", "column"]}>
-          <Box alignItems="center" justifyContent={"center"} mt={"10"} mb={"-1"}>
+        <Stack direction={["column"]} justify={["center", "center", "normal"]}>
+          <Box alignItems="center" justifyContent={"center"} mt={["5", "5", "10"]} mb={"-1"}>
             <Text fontWeight="700" fontSize="lg">
               {balance
                 ? displayTokenCurrencyDecimals(balance, "", true, 8)
@@ -158,8 +158,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
         </Stack>
 
-        <Stack direction={["row", "row", "column"]}>
-          <Box alignItems="center" justifyContent={"center"} mt={"10"} mb={"-1"}>
+        <Stack direction={["column"]} justify={["center", "center", "normal"]}>
+          <Box alignItems="center" justifyContent={"center"} mt={["5", "5", "10"]} mb={"-1"}>
             <Text fontWeight="700" fontSize="lg">
               {vault.userTotalStaked
                 ? displayTokenCurrencyDecimals(
@@ -183,8 +183,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Text>
         </Stack>
 
-        <Stack direction={["row", "row", "column"]}>
-          <Box alignItems="center" justifyContent={"center"} mt={"10"}>
+        <Stack direction={["row", "row", "column"]} justify={["center", "center", "normal"]}>
+          <Box alignItems="center" justifyContent={"center"} mt={["5", "5", "10"]}>
             <Text fontWeight="700" fontSize="lg">
               {vault.apy ? `${displayNumber(vault.apy.yearly, true)}%` : "N/A"}
             </Text>
@@ -192,8 +192,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Box>
         </Stack>
 
-        <Stack direction={["row", "row", "column"]}>
-          <Box alignItems="center" mt={"10"}>
+        <Stack direction={["row", "row", "column"]} justify={["center", "center", "normal"]}>
+          <Box alignItems="center" mt={["5", "5", "10"]}>
             <Text fontWeight="700" fontSize="lg">
               {vault.apy
                 ? `${displayNumber(vault.apy.daily, false, 6)}%`
@@ -202,8 +202,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             <Text>Daily</Text>
           </Box>
         </Stack>
-        <Stack direction={["row", "row", "column"]}>
-          <Box alignItems="center" justifyContent={"center"} mt={"10"}>
+        <Stack direction={["row", "row", "column"]} justify={["center", "center", "normal"]}>
+          <Box alignItems="center" justifyContent={"center"} mt={["5", "5", "10"]}>
             <Text fontWeight="700" fontSize="lg">
               {vault.totalStaked
                 ? displayCurrency(

@@ -303,8 +303,9 @@ export const UserSectionAlt: React.FC<IProps> = (props) => {
           justify="space-between"
           mt="8"
           w={["100%", "100%", "sm"]}
+          mb={[5, 5, 0]}
         >
-          <Stack direction="row">
+          <Stack direction={["column", "row"]}>
             {!props.hasApprovedPool && (
               <Button
                 size="md"
