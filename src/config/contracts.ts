@@ -15,6 +15,7 @@ import PresaleABI from "config/abis/Presale.json";
 import pPlutusTokenABI from "config/abis/pPlutusToken.json";
 import StakeBankABI from "config/abis/StakeBank.json";
 import MiniChefSushiABI from "config/abis/MiniChefSushi.json";
+import ZapABI from "config/abis/Zap.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -44,6 +45,11 @@ export const stakeBank: (address: string) => ContractInfo = (address: string) =>
 
 export const vault: (address: string) => ContractInfo = (address: string) => ({
   abi: VaultABI,
+  address,
+});
+
+export const vaultZap: (address: string) => ContractInfo = (address: string) => ({
+  abi: ZapABI,
   address,
 });
 
@@ -123,14 +129,14 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: UsdcSwapABI,
   },
-  
+
   pPlutus: {
     address: {
       1666600000: "0x6c322c67dcab641549066beb849538de3b1f8600",
       1666700001: "",
     }[DEFAULT_CHAIN_ID],
     abi: pPlutusTokenABI,
-  }
+  },
 };
 
 export default defaultContracts;

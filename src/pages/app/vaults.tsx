@@ -73,7 +73,7 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={10}>
-        <HStack spacing={14} align="center" justify="center">
+        <Stack spacing={[10, 10, 14]} align="center" justify="center" direction={["column", "column", "row"]}>
           <FormControl w="auto" display="flex" alignItems="center">
             <Switch
               isChecked={stakedOnly}
@@ -130,7 +130,7 @@ const Page: React.FC = () => {
               <Heading fontSize="xl">Inactive</Heading>
             </Button>
           </HStack>
-        </HStack>
+        </Stack>
 
         {/* Filter Bar */}
         <Box
@@ -142,9 +142,9 @@ const Page: React.FC = () => {
           rounded="3xl"
           color="white"
         >
-          <Stack direction={"row"} justify={"space-between"} mb={"3"}>
+          <Stack direction={["column", "row", "row"]} justify={"space-between"} mb={"3"}>
             <Stack mb="3" boxShadow="md" rounded={"lg"}>
-              <Button size={"sm"} onClick={() =>{
+              <Button bg={"secondary.400"} size={"sm"} onClick={() =>{
                 setPlatform("all")
                 setVaultType("all")
                 setAsset("all")
@@ -160,6 +160,7 @@ const Page: React.FC = () => {
                 rounded="lg"
                 bg={"gray.400"}
                 color="white"
+                alignSelf={"center"}
               >
                 Lowest fees in harmony
               </Badge>
@@ -171,8 +172,9 @@ const Page: React.FC = () => {
             direction={["column", "row"]}
             spacing={10}
             justify={"space-around"}
+            
           >
-            <Stack w="xs">
+            <Stack w="xs" px={[10, 0]} mt={[3, 0]}>
               <Badge
                 w="fit-content"
                 boxShadow="md"
@@ -191,7 +193,7 @@ const Page: React.FC = () => {
                 <option key="sushiswap" value="sushiswap">Sushiswap</option>
               </Select>
             </Stack>
-            <Stack w="xs">
+            <Stack w="xs" px={[10, 0]}>
               <Badge
                 w="fit-content"
                 boxShadow="md"
@@ -211,7 +213,7 @@ const Page: React.FC = () => {
                 <option key="lp" value="lp">LPs</option>
               </Select>
             </Stack>
-            <Stack w="xs">
+            <Stack w="xs" px={[10, 0]}>
               <Badge
                 w="fit-content"
                 boxShadow="md"
@@ -238,7 +240,7 @@ const Page: React.FC = () => {
                 )}
               </Select>
             </Stack>
-            <Stack w="xs">
+            <Stack w="xs" px={[10, 0]}>
               <Badge
                 w="fit-content"
                 boxShadow="md"
