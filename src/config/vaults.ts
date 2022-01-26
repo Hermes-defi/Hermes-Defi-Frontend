@@ -1,11 +1,11 @@
 import { DEFAULT_CHAIN_ID } from "./constants";
-import defaultContracts from "./contracts";
 
 export type Vault = {
   address: string;
   stratAddress: string;
 
   masterChefAddress?: string;
+  zapAddress?: string;
   farmAddress?: string;
   farmPid?: number;
   tokenPerBlock?: string;
@@ -65,8 +65,10 @@ export type Vault = {
     dailyAll?: number;
   };
 
+  approvedTokens?: string[];
   hasStaked?: boolean;
   hasApprovedPool?: boolean;
+  hasApprovedZap?: boolean;
   userTotalStaked?: string;
   userAvailableToUnstake?: string;
   hasWalletBalance?: boolean;
@@ -79,6 +81,7 @@ export const vaults: Vault[] = {
       address: "0xccb749769511BEa80a3325A57AD1c9dc9BCB61a0",
       stratAddress: "0xCc52f13667FAbc7De18A271197321c18ea6DD9e8",
       masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0xF6d9357d5C0263f12eE94b1f5b81F06fF443EA92",
       farmPid: 5,
       tokenPerBlock: "400000000000000000",
 
@@ -101,12 +104,11 @@ export const vaults: Vault[] = {
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0xc3670b927ef42eed252e483e2446352c238d9905",
-        symbol: "1WBTC/WONE",
+        symbol: "1WBTC-WONE",
         decimals: 18,
         logo: ["/btc-logo.png", "/harmony-one-logo.png"],
       },
@@ -134,6 +136,7 @@ export const vaults: Vault[] = {
       address: "0xdC01AC238a0f841a7750f456BFcf1ede486ce7a1",
       stratAddress: "0xF01E18D4F9c51a2d9bE9b0f379be428644EA12A6",
       masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0x5dD146dae48Ef47D22769833fe788E5405467Fca",
       farmPid: 1,
       tokenPerBlock: "400000000000000000",
 
@@ -150,18 +153,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0xbf255d8c30dbab84ea42110ea7dc870f01c0013a",
-        symbol: "1USDC/WONE",
+        symbol: "1USDC-WONE",
         decimals: 18,
         logo: ["/usdc-logo.png", "/harmony-one-logo.png"],
       },
@@ -189,6 +191,7 @@ export const vaults: Vault[] = {
       address: "0xa9988C46187c0f00D8496EA5069aA5141f77eC05",
       stratAddress: "0xa9f22dF0c0607012A1c6E47bB1a176F6AB08b184",
       masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0x5180c3D3A0EE6E7A303a5caEd220A7d1fA48403b",
       farmPid: 4,
       tokenPerBlock: "400000000000000000",
 
@@ -205,18 +208,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0xda64f9053a971531a75071a729a6432fb65ed60d",
-        symbol: "bscBUSD/BUSD",
+        symbol: "bscBUSD-BUSD",
         decimals: 18,
         logo: ["/busd-logo.png", "/busd-logo.png"],
       },
@@ -244,6 +246,7 @@ export const vaults: Vault[] = {
       address: "0xcD87C158ca469BC01dbC1Eb33a338964873a120C",
       stratAddress: "0x76Bd119778DF430Af675d5B37F3698fB2C097775",
       masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0xC538cB75c7bB87E475fD4d57DDF5605D4B5f14C1",
       farmPid: 3,
       tokenPerBlock: "400000000000000000",
 
@@ -260,18 +263,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0xeb049f1ed546f8efc3ad57f6c7d22f081ccc7375",
-        symbol: "1ETH/WONE",
+        symbol: "1ETH-WONE",
         decimals: 18,
         logo: ["/eth-logo.png", "/harmony-one-logo.png"],
       },
@@ -292,7 +294,6 @@ export const vaults: Vault[] = {
           decimals: 18,
           symbol: "WONE",
         },
-        
       ],
     },
     //UST/ETH
@@ -300,6 +301,7 @@ export const vaults: Vault[] = {
       address: "0xE26c98dE1E148Ea07a7E7af0720cc8Ea0E1260B1",
       stratAddress: "0x96A21c896F497F7B5fd09444F12C3589b3c6E91E",
       masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0x26A0c26479040aE55C1DbD83EFff9405cD6Ad9b6",
       farmPid: 12,
       tokenPerBlock: "400000000000000000",
 
@@ -316,18 +318,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0x9293dfdd719ee2163f2e158e66ef75722ed712b4",
-        symbol: "UST/1ETH",
+        symbol: "UST-1ETH",
         decimals: 18,
         logo: ["/ust-logo.png", "/eth-logo.png"],
       },
@@ -356,6 +357,7 @@ export const vaults: Vault[] = {
       address: "0x148f943E639Fb32fd2899E1fa545B9350ace3d11",
       stratAddress: "0x4B3d4B9742A4cEf4D22FCda11DbD3dD7fb8b047B",
       masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0x0aA9CB11821Dd9E2eD15126a1c5346FE4Aadf9fb",
       farmPid: 6,
       tokenPerBlock: "400000000000000000",
 
@@ -372,18 +374,16 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0x0c51171b913db10ade3fd625548e69c9c63afb96",
-        symbol: "1USDT/1USDC",
+        symbol: "1USDT-1USDC",
         decimals: 18,
         logo: ["/usdt-logo.png", "/usdc-logo.png"],
       },
@@ -411,6 +411,7 @@ export const vaults: Vault[] = {
       address: "0xE78e5eEB4fBC47721fE08CaC423a2eCE6264Bf26",
       stratAddress: "0x560b6C23DA7FE548130e4D9325162936f690F8de",
       masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0xC0a79ef8ff654AC7F896Df9e2d7D18b76545789E",
       farmPid: 7,
       tokenPerBlock: "400000000000000000",
 
@@ -427,18 +428,17 @@ export const vaults: Vault[] = {
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
           symbol: "WONE",
         },
-
       ],
 
       stakeToken: {
         address: "0x468dc50884962d6f81733ac0c23c04611ac219f9",
-        symbol: "1SUSHI/WONE",
+        symbol: "1SUSHI-WONE",
         decimals: 18,
         logo: ["/sushi-logo.jpeg", "/harmony-one-logo.png"],
       },
@@ -448,13 +448,13 @@ export const vaults: Vault[] = {
         decimals: 18,
       },
 
-      pairs: [ 
+      pairs: [
         {
           address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
           symbol: "1SUSHI",
           decimals: 18,
         },
-        
+
         {
           address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
           decimals: 18,
@@ -462,7 +462,6 @@ export const vaults: Vault[] = {
         },
       ],
     },
-
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((vault: Vault) => !vault.isDisabled);
