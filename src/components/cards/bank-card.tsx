@@ -94,14 +94,32 @@ export const BankPoolCard: React.FC<{
         </HStack>
 
         {/* pool badges */}
-        <Stack direction={['column', 'row']} align="end">
+        <Stack direction={["column", "row"]} align="end">
+          {stakePool.isSpecial ? (
+            <>
+              <Box>
+                <Badge
+                  boxShadow="md"
+                  px={2}
+                  rounded="lg"
+                  colorScheme="white"
+                  fontSize={["xx-small", "xs"]}
+                >
+                  #ROADTOHERMESPROTOCOL
+                </Badge>
+              </Box>
+            </>
+          ) : (
+            <></>
+          )}
           <Box>
-            <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white" fontSize={["xx-small", "xs"]}>
-              #ROADTOHERMESPROTOCOL
-            </Badge>
-          </Box>
-          <Box>
-            <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white" fontSize={["xx-small", "xs"]}>
+            <Badge
+              boxShadow="md"
+              px={2}
+              rounded="lg"
+              colorScheme="white"
+              fontSize={["xx-small", "xs"]}
+            >
               Lock {stakePool.stakeToken.symbol}
             </Badge>
           </Box>
@@ -170,7 +188,7 @@ export const BankPoolCard: React.FC<{
             Deposit
           </Heading>
           <Link
-            href={`https://quickswap.exchange/#/swap/${stakePool.stakeToken.address}`}
+            href={`https://viperswap.one/#/swap?outputCurrency=${stakePool.stakeToken.address}`}
             isExternal
             fontWeight="700"
             fontSize="md"

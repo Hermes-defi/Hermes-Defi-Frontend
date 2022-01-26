@@ -42,10 +42,10 @@ export const pools: Pool[] = {
       multiplier: "30",
       depositFees: 0,
       isSpecial: true,
-      isActive: true,
+      isActive: false,
 
       stakeToken: {
-        address: "0xe5dFCd29dFAC218C777389E26F1060E0D0Fe856B",
+        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
         symbol: "PLTS",
         decimals: 18,
         logo: "/plutus-logo.png",
@@ -85,7 +85,7 @@ export const pools: Pool[] = {
       pid: 3,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
 
       stakeToken: {
         address: "0xe064a68994e9380250cfee3e8c0e2ac5c0924548",
@@ -133,8 +133,33 @@ export const pools: Pool[] = {
         decimals: 18,
         logo: "/roy-logo.png"
       }
-    }
+    },
+    {
+      pid: 16,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
 
+      stakeToken: {
+        address: "0xda7fe71960cd1c19e1b86d6929efd36058f60a03",
+        symbol: "LUMEN",
+        decimals: 18,
+        logo: "/lumen-logo.svg"
+      }
+    },
+    // {
+    //   pid: 17,
+    //   multiplier: "6",
+    //   depositFees: 3,
+    //   isActive: true,
+
+    //   stakeToken: {
+    //     address: "0xb4441013ea8aa3a9e35c5aca2b037e577948c59e",
+    //     symbol: "UNITE",
+    //     decimals: 18,
+    //     logo: "unite-logo.svg"
+    //   }
+    // }
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);

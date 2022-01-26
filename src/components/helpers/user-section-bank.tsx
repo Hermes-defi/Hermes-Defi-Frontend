@@ -137,7 +137,7 @@ export const UserSection: React.FC<IProps> = (props) => {
 
   return (
     <Stack spacing={4}>
-      <HStack justify="space-around">
+      <HStack justify="space-evenly">
       <Box align="center">
       <Heading letterSpacing="1px" color="gray.200" fontSize="lg">
           {props.stakeToken.symbol} Locked
@@ -165,7 +165,7 @@ export const UserSection: React.FC<IProps> = (props) => {
         </Box>
       )}
       </HStack>
-      <Stack justify="space-around" direction="row">
+      <Stack justify="space-evenly" direction="row">
             {!props.hasApprovedPool && (
               <Button
                 isFullWidth
@@ -187,7 +187,7 @@ export const UserSection: React.FC<IProps> = (props) => {
                     stakeToken={props.stakeToken}
                     deposit={props.deposit}
                   >
-                    Deposit $PLUTUS
+                    Deposit $PLTS
                   </DepositButton>
               )
             }
@@ -201,7 +201,7 @@ export const UserSection: React.FC<IProps> = (props) => {
                   bg="gray.700"
                   _hover={{ bg: "gray.600" }}
                 >
-                  Harvest 1DAI
+                  Harvest {props.rewardToken.symbol}
                 </Button>
               </Stack>
             )}

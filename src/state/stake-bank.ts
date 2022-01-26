@@ -28,7 +28,7 @@ function useFetchStakingPoolRequest() {
       stakePoolInfo.active = stakePoolInfo.active
         ? endBlock.sub(currentBlock || 0).gt(0)
         : false;
-
+      console.log("Active: ", stakePoolInfo.active)
       const totalStaked = (await poolChef.totalStakeTokenBalance()).toString();
 
       stakePoolInfo.totalStaked = utils.formatUnits(

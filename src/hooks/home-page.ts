@@ -31,7 +31,7 @@ export function usePlutusData() {
   });
 
   const plutusToHarvest = useQuery("plutusToHarvest", async () => {
-    const totalPlutusToHarvest = [...farms, ...pools, ...balancers].reduce(async (_total, pool) => {
+    const totalPlutusToHarvest = [...farms, ...pools].reduce(async (_total, pool) => {
       const total = await _total;
       const plutusEarned = await masterChef.pendingApollo(pool.pid, account); // TODO: shouldn be pendingPlutus instead?
       return total.add(plutusEarned);
@@ -247,7 +247,6 @@ export function useHarvestAll(plutusToHarvest: string) {
           const hasApprovedPool = !allowance.isZero();
 
           if (!hasApprovedPool) return;
-          console.log("klk");
           const tx = await masterChef.deposit(pool.pid, utils.parseEther("0"));
           await tx.wait();
         })

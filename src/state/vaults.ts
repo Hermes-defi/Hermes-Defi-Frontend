@@ -2,7 +2,7 @@ import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useUniPair, useVaultContract, useMiniChefSushi, useVaultZapContract } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
 import { usePlutusPrice } from "hooks/prices";
-import { useToast } from "@chakra-ui/react";
+import { useToast, useToken } from "@chakra-ui/react";
 
 import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
@@ -11,7 +11,8 @@ import { BigNumber, utils } from "ethers";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { approveLpContract, getTokenBalance } from "web3-functions";
 import { getVaultApy } from "web3-functions/utils";
-import { WRAPPED_NATIVE_TOKEN_ADDRESS } from "config/constants";
+import { WRAPPED_NATIVE_TOKEN_ADDRESS, BLOCKS_PER_SECOND } from "config/constants";
+import { useTokenBalance } from "hooks/wallet";
 
 const RouterAddr = "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506";
 
@@ -116,6 +117,12 @@ function useFetchVaultsRequest() {
           })
         );
         vault.approvedTokens = approvedTokens.filter((token) => !!token);
+
+        const balance = await getTokenBalance(lpContract, account, vault.stakeToken.decimals);
+        vault.hasWalletBalance = balance === "0.0" ? false : true;
+
+        const allowance: BigNumber = await lpContract.allowance(account, vault.address);
+        vault.hasApprovedPool = !allowance.isZero();
       }
 
       return vault;

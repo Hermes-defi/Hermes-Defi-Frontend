@@ -19,7 +19,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         const currentTime = dayjs().toISOString();
         const { tvl, ...otherStats } = await getPlutusStats();
 
-        console.log({tvl});
+        
         tvlCache.push({ time: currentTime, value: tvl });
         if (tvlCache.length > 12) {
           tvlCache.shift();

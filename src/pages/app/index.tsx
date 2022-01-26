@@ -88,12 +88,12 @@ const Page: React.FC = () => {
       <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
-              Community Brainstorming Event #1
+              Community Brainstorming Event #2
             </Heading>
             <AspectRatio maxH="lg" ratio={16/9}>
             <iframe
-              title="Community Brainstorming Event #1"
-              src="https://www.youtube.com/embed/U73k2DdV52g"
+              title="Community Brainstorming Event #2"
+              src="https://www.youtube.com/embed/I9jJfySAXEM"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />

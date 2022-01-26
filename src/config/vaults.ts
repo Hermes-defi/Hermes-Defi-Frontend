@@ -42,6 +42,7 @@ export type Vault = {
     logo: string | string[];
     price?: string;
   };
+  vaultType?: string,
 
   rewardToken: {
     symbol: string;
@@ -70,6 +71,7 @@ export type Vault = {
   hasApprovedZap?: boolean;
   userTotalStaked?: string;
   userAvailableToUnstake?: string;
+  hasWalletBalance?: boolean;
 };
 
 export const vaults: Vault[] = {
@@ -84,6 +86,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "400000000000000000",
 
       isActive: true,
+      vaultType: "lp",
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -138,6 +141,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "400000000000000000",
 
       isActive: true,
+      vaultType: "lp",
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -192,6 +196,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "400000000000000000",
 
       isActive: true,
+      vaultType: "stable",
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -246,6 +251,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "400000000000000000",
 
       isActive: true,
+      vaultType: "lp",
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -300,6 +306,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "400000000000000000",
 
       isActive: true,
+      vaultType: "lp",
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -355,6 +362,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "400000000000000000",
 
       isActive: true,
+      vaultType: "stable",
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
@@ -408,6 +416,7 @@ export const vaults: Vault[] = {
       tokenPerBlock: "400000000000000000",
 
       isActive: true,
+      vaultType: "lp",
       amm: "sushiswap",
       depositFees: 0,
       withdrawFees: 0,
