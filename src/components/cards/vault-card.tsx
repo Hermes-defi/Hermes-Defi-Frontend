@@ -360,7 +360,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
 
               <Stack spacing={3} pt={10} align="center" justify="center">
                 {account && (
-                  <Text fontWeight="thin" fontSize="sm" align="center" w={["100%", "100%", "md"]} ml={[null, null, "-8", "-8", null, "-8"]}>
+                  <Text fontWeight="thin" fontSize="sm" align="center" w={["100%", "100%", "md"]}>
                     You will receive {vault.rewardToken.symbol} token as a receipt for your deposited {vault.stakeToken.symbol} assets. This
                     token is needed to withdraw your {vault.stakeToken.symbol}!
                   </Text>
@@ -532,15 +532,15 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                 )}
               </Stack>
 
-              <Stack spacing={3} pt={10} align="center">
+              <Stack spacing={8} pt={10} align="center">
                 {account && (
-                  <Text fontWeight="thin" fontSize="sm" align="center" w={["100%", "100%", "md"]} ml={[null, null, "-8", "-8", null, "-8"]}>
+                  <Text fontWeight="thin" fontSize="sm" align="center" w={["100%", "100%", "md"]}>
                     Withdrawal will result in:
                     <br />
                     Redeem {vault.rewardToken.symbol} token for {vault.stakeToken.symbol}
                   </Text>
                 )}
-
+                
                 <Link
                   href={`https://explorer.harmony.one/address/${vault.address}`}
                   textDecoration="underline"
