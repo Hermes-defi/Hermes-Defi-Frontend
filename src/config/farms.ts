@@ -79,7 +79,7 @@ export const farms: Farm[] = {
       multiplier: "8",
       depositFees: 3,
 
-      isActive: true,
+      isActive: false,
       isSpecial: false,
       farmDx: "viperswap",
 
