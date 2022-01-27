@@ -102,12 +102,12 @@ const Page: React.FC = () => {
           </Box>
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
-              Crypto Royale AMA
+              Tranquility City AMA
             </Heading>
             <AspectRatio maxH="lg" ratio={16/9}>
             <iframe
-              title="Crypto Royale AMA"
-              src="https://www.youtube.com/embed/WxA0eeWT6rQ"
+              title="Tranquility City x Hermes DeFi - AMA"
+              src="https://www.youtube.com/embed/688x_Ritbjk"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
