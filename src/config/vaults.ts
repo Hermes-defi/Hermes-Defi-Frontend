@@ -42,11 +42,12 @@ export type Vault = {
     logo: string | string[];
     price?: string;
   };
-  vaultType?: string,
+  vaultType?: string;
 
   rewardToken: {
     symbol: string;
     decimals: number;
+    poolId?: number;
   };
 
   pairs: {
@@ -171,6 +172,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiUSDC-WONE",
         decimals: 18,
+        poolId: 17,
       },
 
       pairs: [

@@ -11,7 +11,7 @@ import { BigNumber, utils } from "ethers";
 import { approveLpContract } from "web3-functions";
 import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
-import { BLOCKS_PER_SECOND, SECONDS_PER_WEEK } from '../config/constants';
+import { BLOCKS_PER_SECOND, SECONDS_PER_WEEK } from "../config/constants";
 
 function useFetchStakingPoolRequest() {
   const getLpContract = useERC20();
@@ -33,11 +33,8 @@ function useFetchStakingPoolRequest() {
       let stakeTokenContract = getLpContract(stakePoolInfo.stakeToken.address);
 
       // TOKEN PRICE
-      if(stakePoolInfo.stakeToken.isLp){
-        const totalSupply = utils.formatUnits(
-          await stakeTokenContract.totalSupply(),
-          stakePoolInfo.stakeToken.decimals
-        );
+      if (stakePoolInfo.stakeToken.isLp) {
+        const totalSupply = utils.formatUnits(await stakeTokenContract.totalSupply(), stakePoolInfo.stakeToken.decimals);
         stakePoolInfo.stakeToken.price = await fetchPairPrice(
           stakePoolInfo.stakeToken.pairs[0],
           stakePoolInfo.stakeToken.pairs[1],
@@ -45,25 +42,19 @@ function useFetchStakingPoolRequest() {
           library,
           stakePoolInfo.stakeToken.farmDx
         );
-      }else{
-        stakePoolInfo.stakeToken.price =  await fetchPrice(stakePoolInfo.stakeToken, library);
+      } else {
+        stakePoolInfo.stakeToken.price = await fetchPrice(stakePoolInfo.stakeToken, library);
       }
       stakePoolInfo.rewardToken.price = await fetchPrice(stakePoolInfo.rewardToken, library);
 
       // calculate APR
       if (stakePoolInfo.active) {
-        const rewardPerBlock = utils.formatUnits(
-          await poolChef.rewardPerBlock(),
-          stakePoolInfo.rewardToken.decimals
-        );
+        const rewardPerBlock = utils.formatUnits(await poolChef.rewardPerBlock(), stakePoolInfo.rewardToken.decimals);
         const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
         const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(SECONDS_PER_WEEK / BLOCKS_PER_SECOND).toNumber();
         const multiplier = 1000; // todo: move to config
 
-        const poolRewardsPerWeek = new BigNumberJS(multiplier)
-          .div(totalAllocPoints)
-          .times(rewardsPerWeek)
-          .toNumber();
+        const poolRewardsPerWeek = new BigNumberJS(multiplier).div(totalAllocPoints).times(rewardsPerWeek).toNumber();
 
         stakePoolInfo.apr = getPoolApr(
           parseFloat(stakePoolInfo.rewardToken.price || "0"),
@@ -80,25 +71,15 @@ function useFetchStakingPoolRequest() {
       }
 
       if (account) {
-
-        stakePoolInfo.rewardsEarned = utils.formatUnits(
-          await poolChef.pendingReward(account),
-          stakePoolInfo.rewardToken.decimals
-        );
+        stakePoolInfo.rewardsEarned = utils.formatUnits(await poolChef.pendingReward(account), stakePoolInfo.rewardToken.decimals);
 
         const userInfo = await poolChef.userInfo(account);
 
-        stakePoolInfo.userTotalStaked = utils.formatUnits(
-          userInfo.amount,
-          stakePoolInfo.stakeToken.decimals
-        );
+        stakePoolInfo.userTotalStaked = utils.formatUnits(userInfo.amount, stakePoolInfo.stakeToken.decimals);
 
         stakePoolInfo.hasStaked = !(userInfo.amount as BigNumber).isZero();
 
-        const allowance: BigNumber = await stakeTokenContract.allowance(
-          account,
-          stakePoolInfo.address
-        );
+        const allowance: BigNumber = await stakeTokenContract.allowance(account, stakePoolInfo.address);
 
         stakePoolInfo.hasApprovedPool = !allowance.isZero();
       }
