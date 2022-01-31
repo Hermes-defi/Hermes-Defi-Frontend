@@ -82,8 +82,9 @@ export const ApolloAppLayout: React.FC = ({ children }) => {
                 <Text lineHeight="1.5">Partnerships:</Text>
 
                 <Stack spacing={5} direction="row">
-                  <Image w={20} src="/iron-logo.png" alt="Iron Finance Logo" />
-                  <Image w={20} src="/dfyn-logo.svg" alt="Dfyn Logo" />
+                  <Image w={10} src="/roy-logo.png" alt="CryptoRoyale Logo" />
+                  <Image w={9} src="/ape-logo.svg" alt="Harmonape Logo" />
+                  <Image w={9} src="/lumen-logo.svg" alt="Lumen Logo" />
                 </Stack>
               </Stack>
             </Stack>
