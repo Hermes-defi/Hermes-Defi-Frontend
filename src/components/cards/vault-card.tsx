@@ -198,7 +198,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             <Text fontWeight="700" fontSize="lg">
               {vault.apy ? `${displayNumber(vault.apy.daily, false, 6)}%` : "N/A"}
             </Text>
-            <Text>Daily</Text>
+            <Text>Daily APY</Text>
           </Stack>
 
           {vault.rewardToken.poolId && (
@@ -215,7 +215,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                 <Text fontWeight="700" fontSize="lg">
                   {pStakeInfo.data?.apr && `${displayNumber(pStakeInfo.data?.apr?.yearlyAPR, true)}%`}
                 </Text>
-                <Text>Extra APR*</Text>
+                <Text>Extra APR</Text>
               </Stack>
             </Tooltip>
           )}
