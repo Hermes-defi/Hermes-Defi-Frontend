@@ -117,6 +117,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiWBTC-ONE",
         decimals: 18,
+        poolId: 18,
       },
 
       pairs: [
@@ -228,6 +229,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushibscBUSD-BUSD",
         decimals: 18,
+        poolId: 20,
       },
 
       pairs: [
@@ -338,6 +340,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiUST-ETH",
         decimals: 18,
+        poolId: 19,
       },
 
       pairs: [
@@ -393,6 +396,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiUSDT-USDC",
         decimals: 18,
+        poolId: 21,
       },
 
       pairs: [
@@ -448,6 +452,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiSUSHI-ONE",
         decimals: 18,
+        poolId: 22,
       },
 
       pairs: [
