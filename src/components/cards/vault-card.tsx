@@ -652,7 +652,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                   isExternal
                 >
                   <Text fontWeight="700" fontSize="sm">
-                    When you stake you pSushi your vault balance will appear as $0
+                    When you stake your pSushi your vault balance will appear as $0
                   </Text>
                 </Link>
               </Stack>
