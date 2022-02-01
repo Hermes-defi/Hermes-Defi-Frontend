@@ -194,6 +194,13 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             <Text>APY</Text>
           </Stack>
 
+          <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center">
+            <Text fontWeight="700" fontSize="lg">
+              {vault.apy ? `${displayNumber(vault.apy.daily, false, 6)}%` : "N/A"}
+            </Text>
+            <Text>Daily</Text>
+          </Stack>
+
           {vault.rewardToken.poolId && (
             <Tooltip
               placement="bottom"
@@ -206,19 +213,12 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             >
               <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
                 <Text fontWeight="700" fontSize="lg">
-                  {pStakeInfo.data?.apr && <Text fontSize="sm">{pStakeInfo.data?.apr?.yearlyAPR}</Text>}
+                  {pStakeInfo.data?.apr && `${displayNumber(pStakeInfo.data?.apr?.yearlyAPR, true)}%`}
                 </Text>
                 <Text>Extra APR*</Text>
               </Stack>
             </Tooltip>
           )}
-
-          <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center">
-            <Text fontWeight="700" fontSize="lg">
-              {vault.apy ? `${displayNumber(vault.apy.daily, false, 6)}%` : "N/A"}
-            </Text>
-            <Text>Daily</Text>
-          </Stack>
 
           <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontWeight="700" fontSize="lg">
@@ -593,47 +593,68 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
 
           {/*  stake receipt token */}
           {vault.rewardToken.poolId && (
-            <Stack alignSelf="center" w={["100%", "100%", "md"]} spacing="4" direction="column" align="center" justify="center">
+            <Stack alignSelf="center" spacing="4" direction="column" textAlign="initial" alignItems="center" justify="center">
               <Text fontWeight="bold" fontSize="lg" as="h5">
-                Stake your receipt token for extra rewards
+                Deposit your pSushi tokens for PLTS rewards
               </Text>
 
-              <Stack spacing={1} align="center" justify="center">
-                <Text fontWeight="400" fontSize="sm" align="center">
-                  Currnent APR:{" "}
+              <Stack w="full" spacing={5} alignItems="center" justify="center">
+                <Text fontSize="md" align="center" borderBottom="1px solid white">
+                  Current APR:{" "}
                   <Text as="span" fontWeight="600">
-                    {pStakeInfo.data?.apr && pStakeInfo.data?.apr?.yearlyAPR}
+                    {pStakeInfo.data?.apr && `${displayNumber(pStakeInfo.data?.apr?.yearlyAPR, true)}%`}
                   </Text>
                 </Text>
 
-                <Text fontWeight="400" fontSize="sm" align="center">
-                  Balance:{" "}
-                  <Text as="span" fontWeight="600">
-                    {vaultBalance ? displayTokenCurrencyDecimals(vaultBalance, vault.rewardToken.symbol, true, 8) : "N/A"}
+                <Stack pt={3} spacing={2} w="full" direction="row">
+                  <Text flex="1" fontWeight="400" fontSize="sm">
+                    Balance:{" "}
+                    <Text as="span" fontWeight="600">
+                      {vaultBalance ? displayTokenCurrencyDecimals(vaultBalance, vault.rewardToken.symbol, true, 8) : "N/A"}
+                    </Text>
                   </Text>
-                </Text>
 
-                <Text fontWeight="400" fontSize="sm" align="center">
-                  Total staked:{" "}
-                  <Text as="span" fontWeight="600">
-                    {pStakeInfo.data?.userTotalStaked
-                      ? displayTokenCurrencyDecimals(pStakeInfo.data?.userTotalStaked, vault.rewardToken.symbol, true, 8)
-                      : "N/A"}
+                  <Text flex="1" fontWeight="400" fontSize="sm">
+                    Total staked:{" "}
+                    <Text as="span" fontWeight="600">
+                      {pStakeInfo.data?.userTotalStaked
+                        ? displayTokenCurrencyDecimals(pStakeInfo.data?.totalStaked, vault.rewardToken.symbol, true, 8)
+                        : "N/A"}
+                    </Text>
                   </Text>
-                </Text>
+                </Stack>
 
-                <Text fontWeight="400" fontSize="sm" align="center">
-                  Total PLTS earned:{" "}
-                  <Text as="span" fontWeight="600">
-                    {pStakeInfo.data?.rewardsEarned ? displayTokenCurrencyDecimals(pStakeInfo.data?.rewardsEarned, "PLTS", true, 8) : "N/A"}
+                <Stack spacing={2} w="full" direction="row">
+                  <Text flex="1" fontWeight="400" fontSize="sm">
+                    Your staked:{" "}
+                    <Text as="span" fontWeight="600">
+                      {pStakeInfo.data?.userTotalStaked
+                        ? displayTokenCurrencyDecimals(pStakeInfo.data?.userTotalStaked, vault.rewardToken.symbol, true, 8)
+                        : "N/A"}
+                    </Text>
                   </Text>
-                </Text>
+
+                  <Text flex="1" fontWeight="400" fontSize="sm">
+                    PLTS earned:{" "}
+                    <Text as="span" fontWeight="600">
+                      {pStakeInfo.data?.rewardsEarned
+                        ? displayTokenCurrencyDecimals(pStakeInfo.data?.rewardsEarned, "PLTS", true, 8)
+                        : "N/A"}
+                    </Text>
+                  </Text>
+                </Stack>
               </Stack>
 
               <Stack>
-                <Text fontSize="sm">
-                  * Your vault balance will be 0 after staking. But your LP will continue autocompounding and you get extra PLTS as rewards
-                </Text>
+                <Link
+                  _hover={{ color: "rgba(255 255 255 / 0.85)", textDecoration: "underline" }}
+                  href="https://hermes-defi.gitbook.io/plutus/products/vaults"
+                  isExternal
+                >
+                  <Text fontWeight="700" fontSize="sm">
+                    When you stake you pSushi your vault balance will appear as $0
+                  </Text>
+                </Link>
               </Stack>
 
               <Stack w="100%" spacing={8} direction={["column", "row"]} align="center" justify="center">
@@ -704,7 +725,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                       minW={["36", "48"]}
                       _hover={{ bg: "gray.600" }}
                     >
-                      Harvest & Withdraw All
+                      Withdraw All
                     </Button>
                   </>
                 )}

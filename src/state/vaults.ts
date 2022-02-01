@@ -211,9 +211,6 @@ export function useFetchVaultStaking(vaultAddress: string, pid: number) {
           poolData.hasApprovedPool = !allowance.isZero();
         }
 
-        // newPool.stakeToken.price = await fetchPrice(newPool.stakeToken, library);
-
-        console.log({ poolData });
         return poolData;
       } catch (err) {
         console.error(err);
