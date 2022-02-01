@@ -57,6 +57,7 @@ export type Vault = {
   }[];
 
   totalStaked?: string;
+  totalStakedInUSD?: string;
 
   apy?: {
     yearly: number;

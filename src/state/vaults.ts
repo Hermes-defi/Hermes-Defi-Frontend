@@ -16,6 +16,7 @@ import { WRAPPED_NATIVE_TOKEN_ADDRESS, BLOCKS_PER_SECOND, SECONDS_PER_WEEK, BLOC
 const RouterAddr = "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506";
 
 function useFetchVaultsRequest() {
+  const masterChef = useMasterChef();
   const getMasterChef = useMiniChefSushi();
   const getVaultContract = useVaultContract();
   const getPairContract = useUniPair();
@@ -63,7 +64,7 @@ function useFetchVaultsRequest() {
           stakeToken: vault.stakeToken,
           totalStakedInFarm,
         });
-        console.log(apy.vaultApr);
+
         vault.apy = {
           yearly: apy.vaultApy * 100,
           daily: (apy.vaultApr / 365) * 100,
@@ -73,6 +74,18 @@ function useFetchVaultsRequest() {
           yearly: 0,
           daily: 0,
         };
+      }
+
+      vault.totalStakedInUSD = new BigNumberJS(vault.totalStaked).times(vault.stakeToken.price || 0).toString();
+      if (vault.rewardToken.poolId) {
+        const pricePerShare = utils.formatUnits(await vaultContract.getPricePerFullShare(), 18);
+        const extraDepositedInPool = utils.formatUnits(await vaultContract.balanceOf(masterChef.address), 18);
+
+        const depositTokenPrice = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, library, vault.amm);
+        const depositTokenStaked = new BigNumberJS(extraDepositedInPool);
+        const depositTokenStakedInUsd = depositTokenStaked.times(depositTokenPrice).times(pricePerShare);
+
+        vault.totalStakedInUSD = new BigNumberJS(vault.totalStakedInUSD).plus(depositTokenStakedInUsd).toString();
       }
 
       // USER data

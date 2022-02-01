@@ -222,7 +222,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
 
           <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontWeight="700" fontSize="lg">
-              {vault.totalStaked ? displayCurrency(new BigNumber(vault.totalStaked).times(vault.stakeToken.price || 0).toNumber()) : "N/A"}
+              {vault.totalStakedInUSD ? displayCurrency(vault.totalStakedInUSD) : "N/A"}
             </Text>
             <Text>Total Liquidity</Text>
           </Stack>
@@ -617,7 +617,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                   <Text flex="1" fontWeight="400" fontSize="sm">
                     Total staked:{" "}
                     <Text as="span" fontWeight="600">
-                      {pStakeInfo.data?.userTotalStaked
+                      {pStakeInfo.data?.totalStaked
                         ? displayTokenCurrencyDecimals(pStakeInfo.data?.totalStaked, vault.rewardToken.symbol, true, 8)
                         : "N/A"}
                     </Text>

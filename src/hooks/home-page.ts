@@ -48,7 +48,7 @@ export function usePlutusStats() {
   const plutusPrice = usePlutusPrice();
   const masterChefContract = useMasterChef();
   const bankContract = useTotalInBank();
-  
+
   //TODO: substract plutus
   const plutusStats = useQuery({
     enabled: !!plutusPrice.data,
@@ -61,7 +61,6 @@ export function usePlutusStats() {
       const totalBurned = new BigNumberJS(utils.formatEther(await plutusContract.balanceOf(BURN_ADDRESS)));
       const circulatingSupply = totalMinted.minus(totalBurned);
       const plutusPerBlock = (await masterChefContract.tokenPerBlock()) as BigNumber;
-      
 
       let marketCap = "N/A";
       if (plutusPrice) {
@@ -90,7 +89,7 @@ export function useFarmAPRStats() {
   const isLoading = farmsResp.every((f) => f.status === "loading");
 
   const aprs = farmsResp.map((f) => (f.data as Farm)?.apr.yearlyAPR);
-  const maxApr = aprs.reduce( (accum, apr) => ( apr > accum ? apr : accum ), 0 );
+  const maxApr = aprs.reduce((accum, apr) => (apr > accum ? apr : accum), 0);
 
   return [isLoading, maxApr];
 }
@@ -100,20 +99,20 @@ export function usePoolsAPRStats() {
   const isLoading = poolsResp.every((p) => p.status === "loading");
 
   const aprs = poolsResp.map((p) => (p.data as Pool)?.apr.yearlyAPR);
-  const maxApr = aprs.reduce( (accum, apr) => ( apr > accum ? apr : accum ), 0 );
+  const maxApr = aprs.reduce((accum, apr) => (apr > accum ? apr : accum), 0);
 
   return [isLoading, maxApr];
 }
 
 export function useTotalInVaults() {
   const vaultsResp = useFetchVaults();
-  const isLoading = vaultsResp.every((f) => f.status === "loading");
+  const isLoading = vaultsResp.some((f) => f.status === "loading");
 
   const data = vaultsResp.reduce((total, vaultResp) => {
     const vault = vaultResp.data as Vault;
     if (!vault) return new BigNumberJS(0);
 
-    const totalLockedInVaults = new BigNumberJS(vault?.totalStaked).multipliedBy(vault?.stakeToken.price);
+    const totalLockedInVaults = vault.totalStakedInUSD;
 
     return total.plus(totalLockedInVaults);
   }, new BigNumberJS(0));
@@ -164,7 +163,7 @@ export function useTotalInPools() {
 
 export function useTotalInBank() {
   const mainBankResp = useMainBankStake();
-  const isLoading = mainBankResp.status === "loading"
+  const isLoading = mainBankResp.status === "loading";
 
   const data = new BigNumberJS(mainBankResp.data?.totalStaked).multipliedBy(mainBankResp.data?.stakeToken.price) ?? new BigNumberJS(0);
 
@@ -205,15 +204,15 @@ export function useTotalInBalancers() {
 export function useTvlChart() {
   return useQuery("tvl-chart-data", async () => {
     const resp = await fetch("/api/tvl-chart-plutus");
-    const data = await resp.json() || [];
+    const data = (await resp.json()) || [];
 
     // format data
-    return data.map( ( tvlData: { value: string; time: string } ) => {
-      const time = dayjs( tvlData.time ).format( "HH:mm" );
-      const value = parseInt( tvlData.value );
+    return data.map((tvlData: { value: string; time: string }) => {
+      const time = dayjs(tvlData.time).format("HH:mm");
+      const value = parseInt(tvlData.value);
 
       return { time, value };
-    } );
+    });
   });
 }
 
