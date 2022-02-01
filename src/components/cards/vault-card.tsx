@@ -9,6 +9,10 @@ import {
   useDepositAllIntoVault,
   useWithdrawFromVault,
   useWithdrawAllFromVault,
+  useFetchVaultStaking,
+  useApprovePStake,
+  useDepositPStakeToken,
+  useWithdrawPStakeToken,
 } from "state/vaults";
 
 import {
@@ -52,20 +56,29 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   const { account } = useActiveWeb3React();
   const { isOpen, onToggle } = useDisclosure();
 
+  // get pStakeInfo
+  const pStakeInfo = useFetchVaultStaking(vault.address, vault.rewardToken.poolId);
+
+  // handle input states
   const [depositTokenAddress, setDepositTokenAddress] = useState(vault.stakeToken.address);
   const [depositValue, setDepositValue] = useState("");
 
   const [withdrawTokenAddress, setWithdrawTokenAddress] = useState(vault.stakeToken.address);
   const [withdrawValue, setWithdrawValue] = useState("");
 
+  // mutations
+  const approvePStakeMutation = useApprovePStake();
   const approveMutation = useApproveVault();
   const approveZapMutation = useApproveVaultZap();
 
   const depositMutation = useDepositIntoVault();
   const depositAllMutation = useDepositAllIntoVault();
+  const depostitPStakeMutation = useDepositPStakeToken();
+  const harvestPStakeMutation = useDepositPStakeToken();
 
   const withdrawMutation = useWithdrawFromVault();
   const withdrawAllMutation = useWithdrawAllFromVault();
+  const withdrawPStakeMutation = useWithdrawPStakeToken();
 
   // get tokens for zap
   let tokens = [vault.stakeToken, ...vault.pairs];
@@ -79,6 +92,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
 
   // get balances
   const mainBalance = useTokenBalance(vault.stakeToken.address);
+  const vaultBalance = useTokenBalance(vault.address);
   let balance = useTokenBalance(depositToken.address, depositToken.decimals);
 
   const depositPercentage =
@@ -104,7 +118,9 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
       rounded="3xl"
       color="white"
     >
+      {/* card header */}
       <Stack px={{ base: 6, md: 12 }} direction={{ base: "column", md: "row" }} my={4} align="center" onClick={onToggle}>
+        {/* vault image */}
         <Stack align="center" spacing={2}>
           <Box w={12} h={12} pos="relative">
             <Image pos="absolute" top="5px" left="0" rounded="12px" src={vault.stakeToken.logo[0]} boxSize={6} />
@@ -139,6 +155,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </HStack>
         </Stack>
 
+        {/* vault details */}
         <Stack
           flex={1}
           spacing={{ base: 4, md: 1 }}
@@ -181,8 +198,27 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
             <Text fontWeight="700" fontSize="lg">
               {vault.apy ? `${displayNumber(vault.apy.daily, false, 6)}%` : "N/A"}
             </Text>
-            <Text>Daily</Text>
+            <Text>Daily APY</Text>
           </Stack>
+
+          {vault.rewardToken.poolId && (
+            <Tooltip
+              placement="bottom"
+              label={`Extra rewards you get when you also stake your receipt tokens for PLTS`}
+              fontSize="xs"
+              textAlign="center"
+              width="32"
+              rounded="lg"
+              px={2}
+            >
+              <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
+                <Text fontWeight="700" fontSize="lg">
+                  {pStakeInfo.data?.apr && `${displayNumber(pStakeInfo.data?.apr?.yearlyAPR, true)}%`}
+                </Text>
+                <Text>Extra APR</Text>
+              </Stack>
+            </Tooltip>
+          )}
 
           <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontWeight="700" fontSize="lg">
@@ -192,15 +228,17 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           </Stack>
         </Stack>
       </Stack>
+
       <Stack>
         <Box visibility={isOpen ? "hidden" : "visible"}>
           <Icon boxSize="1rem" as={FaRegArrowAltCircleDown} />
         </Box>
       </Stack>
+
       <Collapse in={isOpen} animateOpacity>
         <Divider borderColor="gray.200" my={7} />
 
-        <Stack mb={10} px={{ base: 3, md: 14 }}>
+        <Stack spacing="2rem" mb={10} px={{ base: 3, md: 14 }}>
           <Stack spacing={{ base: 10, md: "7rem" }} direction={{ base: "column", md: "row" }} justify="space-between">
             {/* deposit section */}
             <Stack spacing="2" flex={1}>
@@ -540,7 +578,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                     Redeem {vault.rewardToken.symbol} token for {vault.stakeToken.symbol}
                   </Text>
                 )}
-                
+
                 <Link
                   href={`https://explorer.harmony.one/address/${vault.address}`}
                   textDecoration="underline"
@@ -552,6 +590,148 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
               </Stack>
             </Stack>
           </Stack>
+
+          {/*  stake receipt token */}
+          {vault.rewardToken.poolId && (
+            <Stack alignSelf="center" spacing="4" direction="column" textAlign="initial" alignItems="center" justify="center">
+              <Text fontWeight="bold" fontSize="lg" as="h5">
+                Deposit your pSushi tokens for PLTS rewards
+              </Text>
+
+              <Stack w="full" spacing={5} alignItems="center" justify="center">
+                <Text fontSize="md" align="center" borderBottom="1px solid white">
+                  Current APR:{" "}
+                  <Text as="span" fontWeight="600">
+                    {pStakeInfo.data?.apr && `${displayNumber(pStakeInfo.data?.apr?.yearlyAPR, true)}%`}
+                  </Text>
+                </Text>
+
+                <Stack pt={3} spacing={2} w="full" direction="row">
+                  <Text flex="1" fontWeight="400" fontSize="sm">
+                    Balance:{" "}
+                    <Text as="span" fontWeight="600">
+                      {vaultBalance ? displayTokenCurrencyDecimals(vaultBalance, vault.rewardToken.symbol, true, 8) : "N/A"}
+                    </Text>
+                  </Text>
+
+                  <Text flex="1" fontWeight="400" fontSize="sm">
+                    Total staked:{" "}
+                    <Text as="span" fontWeight="600">
+                      {pStakeInfo.data?.userTotalStaked
+                        ? displayTokenCurrencyDecimals(pStakeInfo.data?.totalStaked, vault.rewardToken.symbol, true, 8)
+                        : "N/A"}
+                    </Text>
+                  </Text>
+                </Stack>
+
+                <Stack spacing={2} w="full" direction="row">
+                  <Text flex="1" fontWeight="400" fontSize="sm">
+                    Your staked:{" "}
+                    <Text as="span" fontWeight="600">
+                      {pStakeInfo.data?.userTotalStaked
+                        ? displayTokenCurrencyDecimals(pStakeInfo.data?.userTotalStaked, vault.rewardToken.symbol, true, 8)
+                        : "N/A"}
+                    </Text>
+                  </Text>
+
+                  <Text flex="1" fontWeight="400" fontSize="sm">
+                    PLTS earned:{" "}
+                    <Text as="span" fontWeight="600">
+                      {pStakeInfo.data?.rewardsEarned
+                        ? displayTokenCurrencyDecimals(pStakeInfo.data?.rewardsEarned, "PLTS", true, 8)
+                        : "N/A"}
+                    </Text>
+                  </Text>
+                </Stack>
+              </Stack>
+
+              <Stack>
+                <Link
+                  _hover={{ color: "rgba(255 255 255 / 0.85)", textDecoration: "underline" }}
+                  href="https://hermes-defi.gitbook.io/plutus/products/vaults"
+                  isExternal
+                >
+                  <Text fontWeight="700" fontSize="sm">
+                    When you stake you pSushi your vault balance will appear as $0
+                  </Text>
+                </Link>
+              </Stack>
+
+              <Stack w="100%" spacing={8} direction={["column", "row"]} align="center" justify="center">
+                {!pStakeInfo.data?.hasApprovedPool && (
+                  <Button
+                    size="md"
+                    isLoading={approvePStakeMutation.isLoading}
+                    onClick={() => approvePStakeMutation.mutate(vault.address)}
+                    bg="gray.700"
+                    boxShadow="lg"
+                    _hover={{ bg: "gray.600" }}
+                    w={["36", "48"]}
+                  >
+                    Approve
+                  </Button>
+                )}
+
+                {pStakeInfo.data?.hasApprovedPool && (
+                  <>
+                    <Button
+                      isDisabled={vaultBalance === undefined || new BigNumber(vaultBalance).isZero()}
+                      isLoading={depostitPStakeMutation.isLoading}
+                      onClick={() => {
+                        depostitPStakeMutation.mutate({
+                          pid: vault.rewardToken.poolId,
+                          vaultAddress: vault.address,
+                        });
+                      }}
+                      size="md"
+                      bg={"gray.700"}
+                      minW={["36", "48"]}
+                      _hover={{ bg: "gray.600" }}
+                    >
+                      Stake All
+                    </Button>
+
+                    <Button
+                      isDisabled={pStakeInfo.data?.rewardsEarned === undefined || new BigNumber(pStakeInfo.data?.rewardsEarned).isZero()}
+                      isLoading={harvestPStakeMutation.isLoading}
+                      onClick={() => {
+                        harvestPStakeMutation.mutate({
+                          pid: vault.rewardToken.poolId,
+                          vaultAddress: vault.address,
+                          harvesting: true,
+                        });
+                      }}
+                      size="md"
+                      bg={"gray.700"}
+                      minW={["36", "48"]}
+                      _hover={{ bg: "gray.600" }}
+                    >
+                      Harvest rewards
+                    </Button>
+
+                    <Button
+                      isDisabled={
+                        pStakeInfo.data?.userTotalStaked === undefined || new BigNumber(pStakeInfo.data?.userTotalStaked).isZero()
+                      }
+                      isLoading={withdrawPStakeMutation.isLoading}
+                      onClick={() => {
+                        withdrawPStakeMutation.mutate({
+                          pid: vault.rewardToken.poolId,
+                          vaultAddress: vault.address,
+                        });
+                      }}
+                      size="md"
+                      bg={"gray.700"}
+                      minW={["36", "48"]}
+                      _hover={{ bg: "gray.600" }}
+                    >
+                      Withdraw All
+                    </Button>
+                  </>
+                )}
+              </Stack>
+            </Stack>
+          )}
         </Stack>
       </Collapse>
     </Box>

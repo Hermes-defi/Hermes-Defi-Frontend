@@ -42,11 +42,12 @@ export type Vault = {
     logo: string | string[];
     price?: string;
   };
-  vaultType?: string,
+  vaultType?: string;
 
   rewardToken: {
     symbol: string;
     decimals: number;
+    poolId?: number;
   };
 
   pairs: {
@@ -116,6 +117,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiWBTC-ONE",
         decimals: 18,
+        poolId: 18,
       },
 
       pairs: [
@@ -171,6 +173,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiUSDC-WONE",
         decimals: 18,
+        poolId: 17,
       },
 
       pairs: [
@@ -226,6 +229,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushibscBUSD-BUSD",
         decimals: 18,
+        poolId: 20,
       },
 
       pairs: [
@@ -250,7 +254,7 @@ export const vaults: Vault[] = {
       farmPid: 3,
       tokenPerBlock: "400000000000000000",
 
-      isActive: true,
+      isActive: false,
       vaultType: "lp",
       amm: "sushiswap",
       depositFees: 0,
@@ -336,6 +340,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiUST-ETH",
         decimals: 18,
+        poolId: 19,
       },
 
       pairs: [
@@ -391,6 +396,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiUSDT-USDC",
         decimals: 18,
+        poolId: 21,
       },
 
       pairs: [
@@ -446,6 +452,7 @@ export const vaults: Vault[] = {
       rewardToken: {
         symbol: "pSushiSUSHI-ONE",
         decimals: 18,
+        poolId: 22,
       },
 
       pairs: [
