@@ -119,7 +119,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
       color="white"
     >
       {/* card header */}
-      <Stack px={{ base: 6, md: 12 }} direction={{ base: "column", md: "row" }} my={4} align="center" onClick={onToggle}>
+      <Stack px={{ base: 3, md: 12 }} direction={{ base: "column", md: "row" }} my={4} align="center" onClick={onToggle}>
         {/* vault image */}
         <Stack align="center" spacing={2}>
           <Box w={12} h={12} pos="relative">
@@ -165,7 +165,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
           direction={{ base: "row", md: "row" }}
           flexWrap="wrap"
           flexBasis="50%"
-          justify="space-between"
+          justify={{ base: "space-evenly", md: "space-between" }}
         >
           <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontSize="sm">{displayCurrency(new BigNumber(mainBalance).times(vault.stakeToken.price || 0).toNumber())}</Text>
