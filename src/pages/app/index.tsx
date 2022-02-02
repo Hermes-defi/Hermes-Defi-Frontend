@@ -39,15 +39,7 @@ import {
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
 import { RiWaterFlashFill } from "react-icons/ri";
-import {
-  ResponsiveContainer,
-  CartesianGrid,
-  Line,
-  LineChart,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { ResponsiveContainer, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { useCurrentBlockNumber } from "hooks/wallet";
 
 const Page: React.FC = () => {
@@ -70,7 +62,7 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-      {/* <Stack direction={["column", "row"]} justify="center" spacing={10}>
+        {/* <Stack direction={["column", "row"]} justify="center" spacing={10}>
         <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Badge colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
             <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
@@ -85,43 +77,35 @@ const Page: React.FC = () => {
         </Box>
         
       </Stack> */}
-      <HStack spacing="10">
+        <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
               Community Brainstorming Event #2
             </Heading>
-            <AspectRatio maxH="lg" ratio={16/9}>
-            <iframe
-              title="Community Brainstorming Event #2"
-              src="https://www.youtube.com/embed/I9jJfySAXEM"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <AspectRatio maxH="lg" ratio={16 / 9}>
+              <iframe
+                title="Community Brainstorming Event #2"
+                src="https://www.youtube.com/embed/I9jJfySAXEM"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </AspectRatio>
-        
           </Box>
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
               Tranquility City AMA
             </Heading>
-            <AspectRatio maxH="lg" ratio={16/9}>
-            <iframe
-              title="Tranquility City x Hermes DeFi - AMA"
-              src="https://www.youtube.com/embed/688x_Ritbjk"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <AspectRatio maxH="lg" ratio={16 / 9}>
+              <iframe
+                title="Tranquility City x Hermes DeFi - AMA"
+                src="https://www.youtube.com/embed/688x_Ritbjk"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </AspectRatio>
-        
           </Box>
-          </HStack>
-        <Box
-          bg={useColorModeValue("white", "gray.700")}
-          rounded="2xl"
-          boxShadow="2xl"
-          px={[5, 10]}
-          py={6}
-        >
+        </HStack>
+        <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="2xl" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
             Farms and Pools
           </Heading>
@@ -130,11 +114,7 @@ const Page: React.FC = () => {
             <Stack mt={10} align="stretch" spacing={10}>
               <Stack spacing={4} justify={["center", ""]} align="center" direction="row">
                 <Image src="/plutus-logo.png" boxSize={12} />
-                <Button
-                  onClick={() => addTokenToWallet(defaultContracts.plutusToken.address, "PLUTUS")}
-                  colorScheme="secondary"
-                  size="sm"
-                >
+                <Button onClick={() => addTokenToWallet(defaultContracts.plutusToken.address, "PLUTUS")} colorScheme="secondary" size="sm">
                   + Add PLUTUS to Wallet
                 </Button>
               </Stack>
@@ -208,7 +188,7 @@ const Page: React.FC = () => {
                   </Text>
                   <Skeleton isLoaded={!isFarmAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {farmApr ? `${ displayNumber(farmApr as number, true) }%` : "N/A"}
+                      {farmApr ? `${displayNumber(farmApr as number, true)}%` : "N/A"}
                     </Text>{" "}
                   </Skeleton>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
@@ -247,7 +227,7 @@ const Page: React.FC = () => {
                   </Text>
                   <Skeleton isLoaded={!isPoolAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {poolApr ? `${ displayNumber(poolApr as number, true) }%` : "N/A"}
+                      {poolApr ? `${displayNumber(poolApr as number, true)}%` : "N/A"}
                     </Text>{" "}
                   </Skeleton>
 
@@ -260,13 +240,7 @@ const Page: React.FC = () => {
           </SimpleGrid>
         </Box>
 
-        <Box
-          bg={useColorModeValue("white", "gray.700")}
-          rounded="2xl"
-          boxShadow="2xl"
-          px={[5, 10]}
-          py={6}
-        >
+        <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="2xl" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
             PLUTUS stats
           </Heading>
@@ -371,17 +345,9 @@ const Page: React.FC = () => {
                   >
                     Total Value Locked
                   </Heading>
-                  <Skeleton
-                    isLoaded={!farmStats.isLoading && !poolStats.isLoading}
-                  >
+                  <Skeleton isLoaded={!farmStats.isLoading && !poolStats.isLoading}>
                     <Text fontSize="3xl" fontWeight="700">
-                      {displayCurrency(
-                        farmStats.data
-                          .plus(poolStats.data)
-                          .plus(vaultStats.data)
-                          .plus(bankStats.data)
-                          .toNumber()
-                      )}
+                      {displayCurrency(farmStats.data.plus(poolStats.data).plus(vaultStats.data).plus(bankStats.data).toNumber(), false, 0)}
                     </Text>
                   </Skeleton>
                 </div>
@@ -399,7 +365,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!farmStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(vaultStats.data.toNumber())}
+                        {displayCurrency(vaultStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -416,7 +382,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!farmStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(farmStats.data.toNumber())}
+                        {displayCurrency(farmStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -433,7 +399,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!poolStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(poolStats.data.toNumber())}
+                        {displayCurrency(poolStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -449,7 +415,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!poolStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(bankStats.data.toNumber())}
+                        {displayCurrency(bankStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -460,10 +426,7 @@ const Page: React.FC = () => {
                 width={useBreakpointValue({ base: "100%", md: 800 })}
                 height={useBreakpointValue({ base: 340, md: "80%" })}
               >
-                <LineChart
-                  style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
-                  data={chartData.data}
-                >
+                <LineChart style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }} data={chartData.data}>
                   <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={3} />
                   <CartesianGrid stroke={useColorModeValue("#ccc", "#555")} strokeDasharray="5 5" />
                   <XAxis style={{ fontSize: "12px" }} dataKey="time" />

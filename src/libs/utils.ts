@@ -4,10 +4,7 @@ import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
 export function truncateAddress(address: string, length: number): string {
-  return `${address.substring(0, length + 2)}...${address.substring(
-    address.length - length,
-    address.length
-  )}`;
+  return `${address.substring(0, length + 2)}...${address.substring(address.length - length, address.length)}`;
 }
 
 export function displayNumber(number: number | string, compact?: boolean, fractionDigits?: number) {
@@ -15,7 +12,6 @@ export function displayNumber(number: number | string, compact?: boolean, fracti
     maximumFractionDigits: fractionDigits ? fractionDigits : 0,
     ...(compact ? { notation: "compact", compactDisplay: "short" } : {}),
   }).format(number as number);
-
 
   return value;
 }
@@ -38,10 +34,12 @@ export function displayTokenCurrencyDecimals(number: number | string, token: str
   return `${value} ${token}`;
 }
 
-export function displayCurrency(number: number | string, compact?: boolean) {
+export function displayCurrency(number: number | string, compact?: boolean, decimals?: number) {
   const value = new Intl.NumberFormat(undefined, {
     style: "currency",
     currency: "USD",
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
     // currencyDisplay: "narrowSymbol",
     ...(compact ? { notation: "compact", compactDisplay: "short" } : {}),
   }).format(number as number);
@@ -92,4 +90,3 @@ export const getUtcSecondsFromDayRange = (daysAgo0: number, daysAgo1: number) =>
 };
 
 export const getUTCSeconds = (date: Date) => Math.floor(Number(date) / 1000);
-
