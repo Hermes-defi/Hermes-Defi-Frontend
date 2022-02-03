@@ -118,7 +118,8 @@ export const APRModal: React.FC<{
           </Stack>
 
           <Stack spacing={2} direction="row" justify="center" align="center">
-            <Button
+            {props.stakeToken.symbol !== "pSushi" ? 
+              <Button
               as={Link}
               href={props.stakeToken.link}
               isExternal
@@ -130,6 +131,9 @@ export const APRModal: React.FC<{
                 Get {props.stakeToken.symbol}
               </Text>
             </Button>
+            :
+            <></>
+            }
           </Stack>
         </ModalBody>
       </ModalContent>
