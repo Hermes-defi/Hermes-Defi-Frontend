@@ -59,7 +59,7 @@ export function usePlutusStats() {
       const totalMinted = new BigNumberJS(utils.formatEther(await plutusContract.totalSupply()));
       const plutusLocked = new BigNumberJS(await bankContract.data);
       const totalBurned = new BigNumberJS(utils.formatEther(await plutusContract.balanceOf(BURN_ADDRESS)));
-      const circulatingSupply = totalMinted.minus(totalBurned);
+      let circulatingSupply = totalMinted.minus(totalBurned);
       const plutusPerBlock = (await masterChefContract.tokenPerBlock()) as BigNumber;
 
       let marketCap = "N/A";
@@ -68,7 +68,7 @@ export function usePlutusStats() {
         // const circulatingSupplyInPlutus = utils.formatEther(circulatingSupply);
         marketCap = new BigNumberJS(circulatingSupply).multipliedBy(plutusPrice.data).toString();
       }
-
+      circulatingSupply = circulatingSupply.minus(bankContract.data)
       return {
         maximumSupply,
         marketCap,
@@ -163,19 +163,19 @@ export function useTotalInPools() {
 
 export function useTotalInBank() {
   const mainBankResp = useMainBankStake();
+  const partnerBankResp = useFetchStakePools();
   const isLoading = mainBankResp.status === "loading";
 
-  const data = new BigNumberJS(mainBankResp.data?.totalStaked).multipliedBy(mainBankResp.data?.stakeToken.price) ?? new BigNumberJS(0);
+  const dataMain = new BigNumberJS(mainBankResp.data?.totalStaked).multipliedBy(mainBankResp.data?.stakeToken.price) ?? new BigNumberJS(0);
+  const dataPools = partnerBankResp.reduce((total, poolResp) => {
+    const pool = poolResp.data as Pool;
+    if (!pool) return new BigNumberJS(0);
 
-  // const data = poolsResp.reduce((total, poolResp) => {
-  //   const pool = poolResp.data as Pool;
-  //   if (!pool) return new BigNumberJS(0);
+    const totalLockedInBank = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
 
-  //   const totalLockedInFarm = new BigNumberJS(pool?.totalStaked).multipliedBy(pool?.stakeToken.price);
-
-  //   return total.plus(totalLockedInFarm);
-  // }, new BigNumberJS(0));
-
+    return total.plus(totalLockedInBank);
+  }, new BigNumberJS(0));
+  const data = dataMain.plus(dataPools);
   return {
     data,
     isLoading,

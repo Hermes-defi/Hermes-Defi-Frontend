@@ -10,6 +10,9 @@ import { UnlockButton } from "components/wallet/unlock-wallet";
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
 
+import BigNumber from "bignumber.js";
+import { usePlutusPrice } from "hooks/prices";
+
 type IDepositProps = {
   primary?: boolean;
 
@@ -103,6 +106,7 @@ type IProps = {
     symbol: string;
     address: string;
     decimals: number;
+    price?: string;
   };
 
   unstakeToken?: {
@@ -125,6 +129,7 @@ type IProps = {
 };
 export const UserSection: React.FC<IProps> = (props) => {
   const { account } = useActiveWeb3React();
+  const plutusPrice  = usePlutusPrice();
 
   if (!account) {
     return <UnlockButton boxShadow="2xl" />;
@@ -186,6 +191,12 @@ export const UserSection: React.FC<IProps> = (props) => {
               ))}
           </Stack>
         </Stack>
+        <Stack align="center" direction="row" justify="space-between">
+          <Text fontWeight="600" fontSize="xs">
+                {props.userTotalStaked != '0.0' ? "(" + displayTokenCurrency(
+                  new BigNumber(props.userTotalStaked).times(props.stakeToken.price).toNumber(), "") + "$)" : "" } 
+          </Text>
+        </Stack>
       </Box>
 
       {!props.disableRewards && (
@@ -227,6 +238,12 @@ export const UserSection: React.FC<IProps> = (props) => {
               </Stack>
             )}
           </Stack>
+          <Stack align="center" direction="row" justify="space-between">
+          <Text fontWeight="600" fontSize="xs">
+                {props.rewardsEarned != '0.0'? "(" + displayTokenCurrency(
+                  new BigNumber(props.rewardsEarned).times(plutusPrice.data).toNumber(), "") + "$)" : "" } 
+          </Text>
+        </Stack>
         </Box>
       )}
     </Stack>
