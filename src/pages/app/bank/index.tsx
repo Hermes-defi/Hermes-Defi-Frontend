@@ -133,7 +133,6 @@ const Page: React.FC = () => {
           )}
         </Container>
       </HStack>
-      <HStack align="center" spacing={10} py={10}>
         {pools ? (
         <Container align="center" maxWidth="container.lg">
           {isLoading ? (
@@ -142,9 +141,9 @@ const Page: React.FC = () => {
             </Flex>
           ) : (
             
-            <Wrap justify="center" spacing="40px" w="100%">
+            <Wrap justify="center" spacing="20px" w={"100%"}>
               {pools.map(({ data }: any) => (
-                <WrapItem key={data.address} w="100%">
+                <WrapItem key={data.address}>
                   <BankPoolCard stakePool={data} />
                 </WrapItem>
               ))}
@@ -152,7 +151,6 @@ const Page: React.FC = () => {
           )}
         </Container>
         ) : <></>}
-      </HStack>
       <Container maxWidth="container.lg" my={8}>
       
             <BurnStats /> 

@@ -134,7 +134,7 @@ export const UserSection: React.FC<IProps> = (props) => {
   if (!account) {
     return <UnlockButton boxShadow="2xl" colorScheme={( () =>{
       if(props.rewardToken.symbol === "1DAI") return "secondary"
-      else "primary"
+      else return "primary"
     }
     )()}/>;
   }
@@ -191,7 +191,8 @@ export const UserSection: React.FC<IProps> = (props) => {
                 bg="gray.700"
                 boxShadow="lg"
                 _hover={{ bg: "gray.600" }}
-                mx="40"
+                mx={"58"}
+                size="sm"
               >
                 Approve
               </Button>
