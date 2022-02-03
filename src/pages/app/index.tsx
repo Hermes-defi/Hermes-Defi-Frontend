@@ -251,7 +251,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency(plutusStats.data?.marketCap)}
+                      {displayCurrency(plutusStats.data?.marketCap, false, 0)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="md">
@@ -347,7 +347,13 @@ const Page: React.FC = () => {
                   </Heading>
                   <Skeleton isLoaded={!farmStats.isLoading && !poolStats.isLoading}>
                     <Text fontSize="3xl" fontWeight="700">
-                      {displayCurrency(farmStats.data.plus(poolStats.data).plus(vaultStats.data).plus(bankStats.data).toNumber(), false, 0)}
+                      {displayCurrency(
+                        farmStats.data
+                          .plus(poolStats.data)
+                          .plus(vaultStats.data)
+                          .plus(bankStats.data)
+                          .toNumber()
+                      , false, 0)}
                     </Text>
                   </Skeleton>
                 </div>

@@ -94,6 +94,27 @@ export const stakingBankPools: StakeBankInfo[] = {
       },
     },
 
+    {
+      address: "0x3636421e71dcf0bfcbb08feeb62e0275ea5acd61",
+      poolSite: "https://hermesdefi.io/",
+      active: true,
+      isSpecial: false,
+
+      stakeToken: {
+        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+        symbol: "PLTS",
+        decimals: 18,
+        logo: "/plutus-logo.png",
+      },
+
+      rewardToken: {
+        address: "0x90d81749da8867962c760414c1c25ec926e889b6",
+        symbol: "1UNI",
+        decimals: 18,
+        logo: "/uniswap-logo.png",
+      },
+    },
+
     // {
     //   address: "0x3074cf20ecd1cfe96b3ee43968d0c426f775171a",
     //   poolSite: "https://hermesdefi.io/",
