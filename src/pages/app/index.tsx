@@ -381,7 +381,7 @@ const Page: React.FC = () => {
                           .plus(vaultStats.data)
                           .plus(bankStats.data)
                           .toNumber()
-                      )}
+                      , false, 0)}
                     </Text>
                   </Skeleton>
                 </div>
@@ -399,7 +399,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!farmStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(vaultStats.data.toNumber())}
+                        {displayCurrency(vaultStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -416,7 +416,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!farmStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(farmStats.data.toNumber())}
+                        {displayCurrency(farmStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -433,7 +433,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!poolStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(poolStats.data.toNumber())}
+                        {displayCurrency(poolStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -449,7 +449,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!poolStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(bankStats.data.toNumber())}
+                        {displayCurrency(bankStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
