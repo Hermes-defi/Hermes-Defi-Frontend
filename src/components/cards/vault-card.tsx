@@ -13,6 +13,7 @@ import {
   useApprovePStake,
   useDepositPStakeToken,
   useWithdrawPStakeToken,
+  useFetchVaultsUserDetails,
 } from "state/vaults";
 
 import {
@@ -58,6 +59,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
 
   // get pStakeInfo
   const pStakeInfo = useFetchVaultStaking(vault.address, vault.rewardToken.poolId);
+  const userInfo = useFetchVaultsUserDetails(vault.address);
 
   // handle input states
   const [depositTokenAddress, setDepositTokenAddress] = useState(vault.stakeToken.address);
@@ -88,7 +90,6 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   }
 
   const depositToken = tokens.find((token) => token.address === depositTokenAddress);
-  const withdrawToken = tokens.find((token) => token.address === withdrawTokenAddress);
 
   // get balances
   const mainBalance = useTokenBalance(vault.stakeToken.address);
@@ -177,11 +178,11 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
 
           <Stack py={{ base: 5, md: 0 }} spacing={0} direction={"column"} alignItems="center" justifyContent="center">
             <Text fontSize="sm">
-              {displayCurrency(new BigNumber(vault.userTotalStaked || 0).times(vault.stakeToken.price || 0).toNumber())}
+              {displayCurrency(new BigNumber(userInfo?.data?.userTotalStaked || 0).times(vault.stakeToken.price || 0).toNumber())}
             </Text>
 
             <Text fontWeight="700" fontSize="lg">
-              {vault.userTotalStaked ? displayTokenCurrencyDecimals(vault.userTotalStaked, "", true, 8) : "N/A"}
+              {userInfo?.data?.userTotalStaked ? displayTokenCurrencyDecimals(userInfo?.data?.userTotalStaked, "", true, 8) : "N/A"}
             </Text>
 
             <Text>Staked</Text>
@@ -338,7 +339,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
               </Stack>
 
               <Stack w="100%" spacing={8} pt={7} direction={["column", "row"]} align="center" justify="center">
-                {!vault.approvedTokens?.includes(depositTokenAddress) && (
+                {!userInfo?.data?.approvedTokens?.includes(depositTokenAddress) && (
                   <Button
                     size="md"
                     isLoading={approveMutation.isLoading}
@@ -352,7 +353,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                   </Button>
                 )}
 
-                {vault.approvedTokens?.includes(depositTokenAddress) && (
+                {userInfo?.data?.approvedTokens?.includes(depositTokenAddress) && (
                   <>
                     <Button
                       isDisabled={balance === "0" || balance === undefined}
@@ -418,12 +419,14 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                 </Text>
 
                 <Button
-                  onClick={() => setWithdrawValue(parseFloat(vault.userTotalStaked).toFixed(18) || "")}
+                  onClick={() => setWithdrawValue(parseFloat(userInfo?.data?.userTotalStaked).toFixed(18) || "")}
                   colorScheme="white"
                   variant="link"
                 >
                   <Text fontWeight="600" fontSize={["xs", "sm"]}>
-                    {vault.userTotalStaked ? displayTokenCurrencyDecimals(vault.userTotalStaked, vault.stakeToken.symbol, false, 8) : "N/A"}
+                    {userInfo?.data?.userTotalStaked
+                      ? displayTokenCurrencyDecimals(userInfo?.data?.userTotalStaked, vault.stakeToken.symbol, false, 8)
+                      : "N/A"}
                   </Text>
                 </Button>
               </HStack>
@@ -448,7 +451,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                     focusBorderColor="secondary.500"
                     placeholder="0.00"
                     min="0"
-                    max={vault.userTotalStaked}
+                    max={userInfo?.data?.userTotalStaked}
                     type="number"
                     onChange={(e) => setWithdrawValue(e.target.value)}
                     value={withdrawValue}
@@ -482,7 +485,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                   focusThumbOnChange={false}
                   value={withdrawPercentage || 0}
                   onChange={(withdrawPercentage) => {
-                    setWithdrawValue(new BigNumber(vault.userTotalStaked).times(withdrawPercentage).div(100).toString());
+                    setWithdrawValue(new BigNumber(userInfo?.data?.userTotalStaked).times(withdrawPercentage).div(100).toString());
                   }}
                 >
                   <SliderMark value={0} mt="9" fontSize="xx-small">
@@ -512,7 +515,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
               </Stack>
 
               <Stack w="100%" spacing={8} pt={7} direction={["column", "row"]} align="center" justify="center">
-                {withdrawTokenAddress !== vault.stakeToken.address && !vault.hasApprovedZap && (
+                {withdrawTokenAddress !== vault.stakeToken.address && !userInfo?.data?.hasApprovedZap && (
                   <Button
                     size="md"
                     isLoading={approveZapMutation.isLoading}
@@ -526,7 +529,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                   </Button>
                 )}
 
-                {(vault.stakeToken.address === withdrawTokenAddress || vault.hasApprovedZap) && (
+                {(vault.stakeToken.address === withdrawTokenAddress || userInfo?.data?.hasApprovedZap) && (
                   <>
                     <Button
                       isDisabled={balance === "0" || balance === undefined}
