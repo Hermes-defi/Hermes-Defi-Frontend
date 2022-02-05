@@ -344,7 +344,7 @@ export function useDepositIntoVault() {
       if (!account) throw new Error("No connected account");
 
       // convert amount to number
-      const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+      const vault = queryClient.getQueryData<Vault>(["vault", id]);
 
       if (vault.zapAddress && tokenAddress !== vault.stakeToken.address) {
         const zapContract = getVaultZapContract(vault.zapAddress);
@@ -429,7 +429,7 @@ export function useDepositAllIntoVault() {
     async ({ id, tokenAddress }: { id: string; tokenAddress?: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+      const vault = queryClient.getQueryData<Vault>(["vault", id]);
 
       let balance: any;
       if (tokenAddress === "native") {
@@ -524,7 +524,7 @@ export function useDepositPStakeToken() {
     },
     {
       onSuccess: (_, { vaultAddress }) => {
-        const vault = queryClient.getQueryData<Vault>(["vault", vaultAddress, account]);
+        const vault = queryClient.getQueryData<Vault>(["vault", vaultAddress]);
         queryClient.invalidateQueries(["vault-reciept-staking", vaultAddress, vault.rewardToken.poolId, account]);
         queryClient.invalidateQueries(["tokenBalance", account, vaultAddress]);
 
@@ -563,7 +563,7 @@ export function useWithdrawFromVault() {
     async ({ id, amount, tokenAddress }: { id: string; amount: string; tokenAddress?: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+      const vault = queryClient.getQueryData<Vault>(["vault", id]);
 
       // withdraw LP
 
@@ -650,7 +650,7 @@ export function useWithdrawAllFromVault() {
     async ({ id, tokenAddress }: { id: string; tokenAddress: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const vault = queryClient.getQueryData<Vault>(["vault", id, account]);
+      const vault = queryClient.getQueryData<Vault>(["vault", id]);
       const vaultContract = getVaultContract(vault.address);
 
       const balance = await vaultContract.balanceOf(account);
@@ -735,9 +735,9 @@ export function useWithdrawPStakeToken() {
     },
     {
       onSuccess: (_, { vaultAddress }) => {
-        const vault = queryClient.getQueryData<Vault>(["vault", vaultAddress, account]);
+        const vault = queryClient.getQueryData<Vault>(["vault", vaultAddress]);
 
-        queryClient.invalidateQueries(["vault", vaultAddress, account]);
+        queryClient.invalidateQueries(["vault", vaultAddress]);
         queryClient.invalidateQueries(["vault-reciept-staking", vaultAddress, vault.rewardToken.poolId, account]);
         queryClient.invalidateQueries(["tokenBalance", account, vaultAddress]);
 
