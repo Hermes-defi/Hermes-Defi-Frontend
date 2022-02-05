@@ -14,7 +14,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useTokenBalance } from "hooks/wallet";
-import { displayTokenCurrency } from "libs/utils";
+import { displayTokenCurrency, displayTokenCurrencyDecimals } from "libs/utils";
 
 type Props = {
   isOpen: boolean;
@@ -53,7 +53,7 @@ export const DepositModal: React.FC<Props> = (props) => {
               <Box flex="1">
                 {balance && (
                   <Text mb={2} fontSize="xs">
-                    Balance: {displayTokenCurrency(balance, props.token)}
+                    Balance: {displayTokenCurrencyDecimals(balance, props.token, false, 6)}
                   </Text>
                 )}
 

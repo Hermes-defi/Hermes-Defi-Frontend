@@ -85,7 +85,12 @@ const Page: React.FC = () => {
             </Flex>
           ) : (
             <Wrap justify="center" spacing="40px">
-              {pools.map(({ data }: any) => (
+              {pools.filter(({ data }: any) => data.isSpecial === true).map(({ data }: any) => (
+                <WrapItem key={data.pid}>
+                  <PoolCard key={data.pid} pool={data} />
+                </WrapItem>
+              ))}
+              {pools.filter(({ data }: any) => data.isSpecial === false).map(({ data }: any) => (
                 <WrapItem key={data.pid}>
                   <PoolCard key={data.pid} pool={data} />
                 </WrapItem>

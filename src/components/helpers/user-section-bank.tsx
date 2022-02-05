@@ -10,6 +10,8 @@ import { UnlockButton } from "components/wallet/unlock-wallet";
 import { DepositModal } from "components/modals/deposit-modal";
 import { WithdrawModal } from "components/modals/withdraw-modal";
 import { useStakeWithdraw } from "state/stake-bank";
+import { usePlutusPrice } from "hooks/prices";
+import BigNumber from "bignumber.js";
 
 type IDepositProps = {
   primary?: boolean;
@@ -98,6 +100,7 @@ type IProps = {
 
   rewardToken: {
     symbol: string;
+    price?: string
   };
 
   stakeToken: {
@@ -127,10 +130,11 @@ type IProps = {
 export const UserSection: React.FC<IProps> = (props) => {
   const { account } = useActiveWeb3React();
   const harvestMutation = useStakeWithdraw();
+  const plutusPrice = usePlutusPrice();
   if (!account) {
     return <UnlockButton boxShadow="2xl" colorScheme={( () =>{
       if(props.rewardToken.symbol === "1DAI") return "secondary"
-      else "primary"
+      else return "primary"
     }
     )()}/>;
   }
@@ -149,6 +153,13 @@ export const UserSection: React.FC<IProps> = (props) => {
           </Text>
 
         </Stack>
+        <Stack direction="column">
+          <Text fontWeight="600" fontSize="sm" align="center">
+            {props.userTotalStaked ? '(' +  displayTokenCurrency(
+              new BigNumber(props.userTotalStaked).times(plutusPrice.data).toNumber(), "") + '$)' : "N/A"}
+          </Text>
+
+        </Stack>
       </Box>
 
       {!props.disableRewards && (
@@ -160,6 +171,12 @@ export const UserSection: React.FC<IProps> = (props) => {
           <Stack align="center" direction="column">
             <Text fontWeight="bold" fontSize="2xl">
               {props.rewardsEarned ? displayTokenCurrency(props.rewardsEarned, "") : "N/A"}
+            </Text>
+          </Stack>
+          <Stack align="center" direction="column">
+            <Text fontWeight="bold" fontSize="sm">
+              {props.rewardsEarned ? '(' + displayTokenCurrency(
+                new BigNumber(props.rewardsEarned).times(props.rewardToken.price).toNumber(), "") + '$)' : "N/A"}
             </Text>
           </Stack>
         </Box>
@@ -174,7 +191,8 @@ export const UserSection: React.FC<IProps> = (props) => {
                 bg="gray.700"
                 boxShadow="lg"
                 _hover={{ bg: "gray.600" }}
-                mx="40"
+                mx={"58"}
+                size="sm"
               >
                 Approve
               </Button>

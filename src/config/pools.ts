@@ -72,6 +72,7 @@ export const pools: Pool[] = {
       multiplier: "6",
       depositFees: 3,
       isActive: true,
+      isSpecial: false,
 
       stakeToken: {
         address: "0xbb948620fa9cd554ef9a331b13edea9b181f9d45",
@@ -86,6 +87,7 @@ export const pools: Pool[] = {
       multiplier: "6",
       depositFees: 3,
       isActive: false,
+      isSpecial: false,
 
       stakeToken: {
         address: "0xe064a68994e9380250cfee3e8c0e2ac5c0924548",
@@ -100,6 +102,7 @@ export const pools: Pool[] = {
       multiplier: "6",
       depositFees: 3,
       isActive: true,
+      isSpecial: false,
 
       stakeToken: {
         address: "0xd3a50c0dce15c12fe64941ffd2b864e887c9b9e1",
@@ -113,6 +116,7 @@ export const pools: Pool[] = {
       multiplier: "6",
       depositFees: 3,
       isActive: false,
+      isSpecial: false,
 
       stakeToken: {
         address: "0x72cb10c6bfa5624dd07ef608027e366bd690048f",
@@ -126,6 +130,7 @@ export const pools: Pool[] = {
       multiplier: "6",
       depositFees: 3,
       isActive: true,
+      isSpecial: false,
 
       stakeToken: {
         address: "0xfe1b516A7297eb03229A8B5AfAD80703911E81cB",
@@ -139,6 +144,7 @@ export const pools: Pool[] = {
       multiplier: "6",
       depositFees: 3,
       isActive: true,
+      isSpecial: false,
 
       stakeToken: {
         address: "0xda7fe71960cd1c19e1b86d6929efd36058f60a03",
@@ -147,19 +153,21 @@ export const pools: Pool[] = {
         logo: "/lumen-logo.svg"
       }
     },
-    // {
-    //   pid: 17,
-    //   multiplier: "6",
-    //   depositFees: 3,
-    //   isActive: true,
 
-    //   stakeToken: {
-    //     address: "0xb4441013ea8aa3a9e35c5aca2b037e577948c59e",
-    //     symbol: "UNITE",
-    //     decimals: 18,
-    //     logo: "unite-logo.svg"
-    //   }
-    // }
+    {
+      pid: 23,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
+      isSpecial: true,
+
+      stakeToken: {
+        address: "0x90d81749da8867962c760414c1c25ec926e889b6",
+        symbol: "1UNI",
+        decimals: 18,
+        logo: "/uniswap-logo.png"
+      }
+    },
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);

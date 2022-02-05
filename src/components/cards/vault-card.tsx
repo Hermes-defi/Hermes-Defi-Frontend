@@ -46,6 +46,7 @@ import { displayCurrency, displayNumber, displayTokenCurrencyDecimals } from "li
 import { useActiveWeb3React } from "wallet";
 import { useTokenBalance } from "hooks/wallet";
 import { FaRegArrowAltCircleDown } from "react-icons/fa";
+import { PlutusAPRCalculator } from "components/helpers/apr-calculator";
 
 export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
   const lpLink = {
@@ -343,7 +344,12 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                   <Button
                     size="md"
                     isLoading={approveMutation.isLoading}
-                    onClick={() => approveMutation.mutate({ address: vault.address, tokenAddress: depositTokenAddress })}
+                    onClick={() =>
+                      approveMutation.mutate({
+                        address: vault.address,
+                        tokenAddress: depositTokenAddress,
+                      })
+                    }
                     bg="gray.700"
                     boxShadow="lg"
                     _hover={{ bg: "gray.600" }}
@@ -602,13 +608,32 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
               </Text>
 
               <Stack w="full" spacing={5} alignItems="center" justify="center">
-                <Text fontSize="md" align="center" borderBottom="1px solid white">
-                  Current APR:{" "}
-                  <Text as="span" fontWeight="600">
-                    {pStakeInfo.data?.apr && `${displayNumber(pStakeInfo.data?.apr?.yearlyAPR, true)}%`}
+                <Stack direction={"row"}>
+                  <Text fontSize="md" align="center" borderBottom="1px solid white">
+                    Current APR:{" "}
+                    <Text as="span" fontWeight="600">
+                      {pStakeInfo.data?.apr && `${displayNumber(pStakeInfo.data?.apr?.yearlyAPR, true)}%`}
+                    </Text>
                   </Text>
-                </Text>
-
+                  <Box display="flex" alignItems="center">
+                    {pStakeInfo.data?.apr && (
+                      <PlutusAPRCalculator apr={pStakeInfo.data?.apr} tokenSymbol={"pSushi"} tokenLink={`https://viperswap.one/`} />
+                    )}
+                  </Box>
+                </Stack>
+                <Tooltip
+                  placement="bottom"
+                  label={`Deposit fee 0%\n\nWithdrawal fee 0%\n\nPerfomance fee 0%`}
+                  fontSize="xs"
+                  textAlign="center"
+                  width="32"
+                  rounded="lg"
+                  px={2}
+                >
+                  <Badge boxShadow="md" px={2} rounded="lg" bg={"gray.700"} _hover={{ bg: "gray.600" }} color="white" w="auto">
+                    No Fees
+                  </Badge>
+                </Tooltip>
                 <Stack pt={3} spacing={2} w="full" direction="row">
                   <Text flex="1" fontWeight="400" fontSize="sm">
                     Balance:{" "}
@@ -650,7 +675,10 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
 
               <Stack>
                 <Link
-                  _hover={{ color: "rgba(255 255 255 / 0.85)", textDecoration: "underline" }}
+                  _hover={{
+                    color: "rgba(255 255 255 / 0.85)",
+                    textDecoration: "underline",
+                  }}
                   href="https://hermes-defi.gitbook.io/plutus/products/vaults"
                   isExternal
                 >

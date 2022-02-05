@@ -88,12 +88,12 @@ const Page: React.FC = () => {
       <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
-              Community Brainstorming Event #2
+              The Hermes Protocol In Two Minutes
             </Heading>
             <AspectRatio maxH="lg" ratio={16/9}>
             <iframe
-              title="Community Brainstorming Event #2"
-              src="https://www.youtube.com/embed/I9jJfySAXEM"
+              title="The Hermes Protocol In Two Minutes"
+              src="https://www.youtube.com/embed/jbbtoci9cdg"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
@@ -277,7 +277,7 @@ const Page: React.FC = () => {
                 <Box pl={3} borderLeftWidth="3px" borderColor="primary.500">
                   <Skeleton isLoaded={!!plutusStats.data}>
                     <Text fontSize="lg" fontWeight="700">
-                      {displayCurrency(plutusStats.data?.marketCap)}
+                      {displayCurrency(plutusStats.data?.marketCap, false, 0)}
                     </Text>
                   </Skeleton>
                   <Heading mt={1} color={useColorModeValue("gray.600", "gray.200")} fontSize="md">
@@ -381,7 +381,7 @@ const Page: React.FC = () => {
                           .plus(vaultStats.data)
                           .plus(bankStats.data)
                           .toNumber()
-                      )}
+                      , false, 0)}
                     </Text>
                   </Skeleton>
                 </div>
@@ -399,7 +399,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!farmStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(vaultStats.data.toNumber())}
+                        {displayCurrency(vaultStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -416,7 +416,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!farmStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(farmStats.data.toNumber())}
+                        {displayCurrency(farmStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -433,7 +433,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!poolStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(poolStats.data.toNumber())}
+                        {displayCurrency(poolStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
@@ -449,7 +449,7 @@ const Page: React.FC = () => {
                     </Heading>
                     <Skeleton isLoaded={!poolStats.isLoading}>
                       <Text fontSize="xl" fontWeight="700">
-                        {displayCurrency(bankStats.data.toNumber())}
+                        {displayCurrency(bankStats.data.toNumber(), false, 0)}
                       </Text>
                     </Skeleton>
                   </Box>
