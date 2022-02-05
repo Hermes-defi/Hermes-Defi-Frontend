@@ -1,5 +1,5 @@
 import { useMutation, useQueries, useQuery, useQueryClient } from "react-query";
-import { useUniPair, useVaultContract, useMiniChefSushi, useVaultZapContract, useMasterChef, useERC20 } from "hooks/contracts";
+import { useUniPair, useVaultContract, useVaultZapContract, useMasterChef, useERC20 } from "hooks/contracts";
 import { useActiveWeb3React } from "wallet";
 import { usePlutusPrice } from "hooks/prices";
 import { useToast } from "@chakra-ui/react";
@@ -8,142 +8,11 @@ import ReactGA from "react-ga";
 import BigNumberJS from "bignumber.js";
 import { Vault, vaults } from "config/vaults";
 import { BigNumber, utils } from "ethers";
-import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
+import { fetchPairPrice } from "web3-functions/prices";
 import { approveLpContract, getTokenBalance } from "web3-functions";
-import { getVaultApy } from "web3-functions/utils";
 import { WRAPPED_NATIVE_TOKEN_ADDRESS, SECONDS_PER_WEEK, BLOCK_TIME } from "config/constants";
 
 const RouterAddr = "0x1b02da8cb0d097eb8d57a175b88c7d8b47997506";
-
-function useFetchVaultsRequest() {
-  const masterChef = useMasterChef();
-  const getMasterChef = useMiniChefSushi();
-  const getVaultContract = useVaultContract();
-  const getPairContract = useUniPair();
-  const { account, library } = useActiveWeb3React();
-
-  return async (vault: Vault) => {
-    try {
-      const vaultContract = getVaultContract(vault.address);
-
-      vault.totalStaked = utils.formatUnits(await vaultContract.balance(), vault.stakeToken.decimals);
-
-      // get prices
-      const lpContract = getPairContract(vault.stakeToken.address);
-      const totalSupply = utils.formatUnits(await lpContract.totalSupply(), vault.stakeToken.decimals);
-
-      vault.stakeToken.price = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, library, vault.amm);
-
-      if (vault.isActive) {
-        const masterChef = getMasterChef(vault.masterChefAddress);
-        vault.sushiRewardTokens[0].price = await fetchPrice(vault.sushiRewardTokens[0], library);
-        vault.sushiRewardTokens[1].price = await fetchPrice(vault.sushiRewardTokens[1], library);
-
-        // caculate apy
-        const totalAllocPoints = (await masterChef.totalAllocPoint()).toNumber();
-        const farmInfo = await masterChef.poolInfo(vault.farmPid);
-
-        const multiplier = farmInfo.allocPoint.toNumber();
-        //* NO DEPOSIT FEES
-        // const depositFees = BigNumber.from(farmInfo.depositFeeBP).div(100).toNumber();
-        const farmLpContract = getPairContract(vault.stakeToken.address);
-
-        const totalStakedInFarm = utils.formatUnits(await farmLpContract.balanceOf(masterChef.address), await farmLpContract.decimals());
-
-        //* ESPECIFIC 4 SUSHI VAULTS
-        const sushiPerSecond = (await masterChef.sushiPerSecond()).toString();
-
-        const apy = await getVaultApy({
-          address: farmLpContract.address,
-          multiplier,
-          tokenPerBlock: sushiPerSecond,
-          totalAllocPoints,
-          depositFees: 0,
-          performanceFee: vault.performanceFee,
-          rewardToken: vault.sushiRewardTokens,
-          stakeToken: vault.stakeToken,
-          totalStakedInFarm,
-        });
-
-        vault.apy = {
-          yearly: apy.vaultApy * 100,
-          daily: (apy.vaultApr / 365) * 100,
-        };
-      } else {
-        vault.apy = {
-          yearly: 0,
-          daily: 0,
-        };
-      }
-
-      vault.totalStakedInUSD = new BigNumberJS(vault.totalStaked).times(vault.stakeToken.price || 0).toString();
-      if (vault.rewardToken.poolId) {
-        const pricePerShare = utils.formatUnits(await vaultContract.getPricePerFullShare(), 18);
-        const extraDepositedInPool = utils.formatUnits(await vaultContract.balanceOf(masterChef.address), 18);
-
-        const depositTokenPrice = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, library, vault.amm);
-        const depositTokenStaked = new BigNumberJS(extraDepositedInPool);
-        const depositTokenStakedInUsd = depositTokenStaked.times(depositTokenPrice).times(pricePerShare);
-
-        vault.totalStakedInUSD = new BigNumberJS(vault.totalStakedInUSD).plus(depositTokenStakedInUsd).toString();
-      }
-
-      // USER data
-      if (account) {
-        let userShares = await vaultContract.balanceOf(account);
-        let pricePerShare = await vaultContract.getPricePerFullShare();
-
-        userShares = utils.formatUnits(userShares, vault.stakeToken.decimals);
-        pricePerShare = utils.formatEther(pricePerShare);
-
-        vault.userTotalStaked = new BigNumberJS(userShares).times(pricePerShare).toString();
-        vault.userAvailableToUnstake = new BigNumberJS(userShares).toFixed(5).toString();
-
-        vault.hasStaked = !new BigNumberJS(vault.userTotalStaked).isZero();
-
-        // get allowances
-        let tokens = [vault.stakeToken, ...vault.pairs];
-        const hasNativeHrc20 = tokens.find((token) => token.address === WRAPPED_NATIVE_TOKEN_ADDRESS);
-        if (hasNativeHrc20) tokens.push({ address: "native", decimals: 18, symbol: "ONE" });
-
-        if (vault.zapAddress) {
-          const contract = getPairContract(vault.stakeToken.address);
-          const zapAllowance: BigNumber = await contract.allowance(account, vault.zapAddress);
-          vault.hasApprovedZap = !zapAllowance.isZero();
-        }
-
-        const approvedTokens = await Promise.all(
-          tokens.map(async (token) => {
-            // get allowance
-            if (token.address === "native") return token.address;
-
-            if (vault.zapAddress && token.address !== vault.stakeToken.address) {
-              const contract = getPairContract(token.address);
-              const allowance: BigNumber = await contract.allowance(account, vault.zapAddress);
-              return !allowance.isZero() ? token.address : null;
-            }
-
-            const contract = getPairContract(token.address);
-            const allowance: BigNumber = await contract.allowance(account, vault.address);
-            return !allowance.isZero() ? token.address : null;
-          })
-        );
-        vault.approvedTokens = approvedTokens.filter((token) => !!token);
-
-        const balance = await getTokenBalance(lpContract, account, vault.stakeToken.decimals);
-        vault.hasWalletBalance = balance === "0.0" ? false : true;
-
-        const allowance: BigNumber = await lpContract.allowance(account, vault.address);
-        vault.hasApprovedPool = !allowance.isZero();
-      }
-
-      return vault;
-    } catch (err) {
-      console.error(err);
-      return vault;
-    }
-  };
-}
 
 export function useFetchVaults({ initialVaults }) {
   const plutusPrice = usePlutusPrice();
@@ -313,7 +182,7 @@ export function useApproveVault() {
     async ({ address, tokenAddress }: { address: string; tokenAddress?: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const vault = queryClient.getQueryData<Vault>(["vault", address, account]);
+      const vault = queryClient.getQueryData<Vault>(["vault", address]);
 
       if (vault.zapAddress && vault.stakeToken.address !== tokenAddress) {
         const lpContract = getPairContract(tokenAddress);
@@ -370,7 +239,7 @@ export function useApproveVaultZap() {
     async ({ address }: { address: string }) => {
       if (!account) throw new Error("No connected account");
 
-      const vault = queryClient.getQueryData<Vault>(["vault", address, account]);
+      const vault = queryClient.getQueryData<Vault>(["vault", address]);
       const lpContract = getPairContract(vault.stakeToken.address);
 
       await approveLpContract(lpContract, vault.zapAddress);
