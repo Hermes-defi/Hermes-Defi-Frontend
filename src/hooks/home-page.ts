@@ -68,7 +68,7 @@ export function usePlutusStats() {
         // const circulatingSupplyInPlutus = utils.formatEther(circulatingSupply);
         marketCap = new BigNumberJS(circulatingSupply).multipliedBy(plutusPrice.data).toString();
       }
-      circulatingSupply = circulatingSupply.minus(bankContract.data)
+      circulatingSupply = circulatingSupply.minus(bankContract.data);
       return {
         maximumSupply,
         marketCap,
@@ -105,7 +105,7 @@ export function usePoolsAPRStats() {
 }
 
 export function useTotalInVaults() {
-  const vaultsResp = useFetchVaults();
+  const vaultsResp = useFetchVaults({ initialVaults: null });
   const isLoading = vaultsResp.some((f) => f.status === "loading");
 
   const data = vaultsResp.reduce((total, vaultResp) => {

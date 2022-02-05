@@ -158,7 +158,7 @@ export function useFetchVaults({ initialVaults }) {
           const payload = await resp.json();
           return payload;
         },
-        initialData: initialVaults.find((v) => vault.address === v.address),
+        initialData: initialVaults?.find((v) => vault.address === v.address),
       };
     })
   );
