@@ -82,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           vault.totalStakedInUSD = new BigNumberJS(vault.totalStakedInUSD).plus(depositTokenStakedInUsd).toString();
         }
 
-        res.status(200).send(vault);
+        return res.status(200).send(vault);
       }
       default: {
         throw new Error("Method not allowed");
