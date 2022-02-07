@@ -105,7 +105,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
 
   const withdrawPercentage =
     new BigNumber(withdrawValue || "0")
-      .div(vault.userTotalStaked || "0")
+      .div(userInfo?.data?.userTotalStaked || "0")
       .times(100)
       .toNumber() || 0;
 
@@ -279,7 +279,8 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                     max={balance}
                     type="number"
                     onChange={(e) => setDepositValue(e.target.value)}
-                    value={depositValue}
+                    value={Number(depositValue) > 0 ? Number(depositValue).toFixed(18).toString() : "0"}
+                    
                   />
 
                   {!!vault.zapAddress && (
@@ -460,7 +461,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                     max={userInfo?.data?.userTotalStaked}
                     type="number"
                     onChange={(e) => setWithdrawValue(e.target.value)}
-                    value={withdrawValue}
+                    value={Number(withdrawValue) > 0 ? Number(withdrawValue).toFixed(18).toString() : '0' }
                   />
 
                   {!!vault.zapAddress && (
@@ -494,6 +495,7 @@ export const VaultCard: React.FC<{ vault: Vault }> = ({ vault }) => {
                     setWithdrawValue(new BigNumber(userInfo?.data?.userTotalStaked).times(withdrawPercentage).div(100).toString());
                   }}
                 >
+                  {console.log(withdrawPercentage)}
                   <SliderMark value={0} mt="9" fontSize="xx-small">
                     0%
                   </SliderMark>
