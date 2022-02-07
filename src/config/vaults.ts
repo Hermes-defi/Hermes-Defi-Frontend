@@ -470,6 +470,180 @@ export const vaults: Vault[] = {
         },
       ],
     },
+
+    //WBTC-ETH
+    {
+      address: "0xB2223291cF0aFb0bD135fe09960A3dd1c0CAf841",
+      stratAddress: "0x6e8bA4e545bae00447a7E282CAb3A68bF7452d04",
+      masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0x735c7eC2Afa17280C23cb441D16f20f763AA1f4A",
+      farmPid: 10,
+      tokenPerBlock: "400000000000000000",
+
+      isActive: true,
+      vaultType: "lp",
+      amm: "sushiswap",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.025,
+
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+      ],
+
+      stakeToken: {
+        address: "0x39be7c95276954a6f7070f9baa38db2123691ed0",
+        symbol: "1WBTC-1ETH",
+        decimals: 18,
+        logo: ["/btc-logo.png", "/eth-logo.png"],
+      },
+
+      rewardToken: {
+        symbol: "pSushiWBTC-ETH",
+        decimals: 18,
+        poolId: 24,
+      },
+
+      pairs: [
+        {
+          address: "0x3095c7557bcb296ccc6e363de01b760ba031f2d9",
+          symbol: "1WBTC",
+          decimals: 8,
+        },
+
+        {
+          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
+          decimals: 18,
+          symbol: "1ETH",
+        },
+      ],
+    },
+
+     //1ETH-WONE
+     {
+      address: "0xC0e333196e156B3C910e1AD30dD39530942E9f28",
+      stratAddress: "0xfd933004e33Ab6569d7774DcCD6Eb8D80287e4Cf",
+      masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0x1f7cC1a866a637943D1939dd77a35bb33Fc11480",
+      farmPid: 3,
+      tokenPerBlock: "400000000000000000",
+
+      isActive: true,
+      vaultType: "lp",
+      amm: "sushiswap",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.025,
+
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+      ],
+
+      stakeToken: {
+        address: "0xeb049f1ed546f8efc3ad57f6c7d22f081ccc7375",
+        symbol: "1ETH-WONE",
+        decimals: 18,
+        logo: ["/eth-logo.png", "/harmony-one-logo.png"],
+      },
+
+      rewardToken: {
+        symbol: "pSushiETH-ONE",
+        decimals: 18,
+        poolId: 25,
+      },
+
+      pairs: [
+        {
+          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
+          symbol: "1ETH",
+          decimals: 18,
+        },
+
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+      ],
+    },
+
+     //1ETH-1FRAX
+     {
+      address: "0x5F9B115EC050807F5880bE1f68dB5caA559d8456",
+      stratAddress: "0x85B80075DbEe7bAB092dd820F567F4A9fCAa91A2",
+      masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
+      zapAddress: "0x0b7321C9A165D7cA24636193126BfA86Eaaff429",
+      farmPid: 13,
+      tokenPerBlock: "400000000000000000",
+
+      isActive: true,
+      vaultType: "lp",
+      amm: "sushiswap",
+      depositFees: 0,
+      withdrawFees: 0,
+      performanceFee: 0.025,
+
+      sushiRewardTokens: [
+        {
+          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
+          symbol: "1SUSHI",
+          decimals: 18,
+        },
+
+        {
+          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+      ],
+
+      stakeToken: {
+        address: "0xa46bba980512e328e344ce12bb969563f3429f05",
+        symbol: "1ETH-1FRAX",
+        decimals: 18,
+        logo: ["/eth-logo.png", "/1frax-logo.png"],
+      },
+
+      rewardToken: {
+        symbol: "pSushiETH-FRAX",
+        decimals: 18,
+        poolId: 26,
+      },
+
+      pairs: [
+        {
+          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
+          symbol: "1ETH",
+          decimals: 18,
+        },
+
+        {
+          address: "0xeb6c08ccb4421b6088e581ce04fcfbed15893ac3",
+          decimals: 18,
+          symbol: "1FRAX",
+        },
+      ],
+    },
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((vault: Vault) => !vault.isDisabled);
