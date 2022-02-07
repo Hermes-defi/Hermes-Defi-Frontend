@@ -194,7 +194,7 @@ export const UserSection: React.FC<IProps> = (props) => {
         <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="xs">
                 {props.userTotalStaked != '0.0' ? "(" + displayTokenCurrency(
-                  new BigNumber(props.userTotalStaked).times(props.stakeToken.price).toNumber(), "") + "$)" : "" } 
+                  new BigNumber(props.userTotalStaked).times(props.stakeToken.price).toNumber(), "") + "$)" : "(0$)" } 
           </Text>
         </Stack>
       </Box>
@@ -241,7 +241,7 @@ export const UserSection: React.FC<IProps> = (props) => {
           <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="xs">
                 {props.rewardsEarned != '0.0'? "(" + displayTokenCurrency(
-                  new BigNumber(props.rewardsEarned).times(plutusPrice.data).toNumber(), "") + "$)" : "" } 
+                  new BigNumber(props.rewardsEarned).times(plutusPrice.data).toNumber(), "") + "$)" : "(0$)" } 
           </Text>
         </Stack>
         </Box>

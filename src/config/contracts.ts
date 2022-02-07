@@ -16,6 +16,7 @@ import pPlutusTokenABI from "config/abis/pPlutusToken.json";
 import StakeBankABI from "config/abis/StakeBank.json";
 import MiniChefSushiABI from "config/abis/MiniChefSushi.json";
 import ZapABI from "config/abis/Zap.json";
+import oracleDFKABI from "config/abis/OracleDFK.json"
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -137,6 +138,13 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: pPlutusTokenABI,
   },
+  dfkOracle: {
+    address: {
+      1666600000: "0x9bA42cbB93Ff32A877cd9a62eb167Bf92e425668",
+      1666700001: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: oracleDFKABI
+  }
 };
 
 export default defaultContracts;

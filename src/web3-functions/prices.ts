@@ -1,11 +1,13 @@
 import fetch from "isomorphic-fetch";
 import defaultTokens from "config/tokens";
-import BigNumberJS from "bignumber.js";
+import BigNumberJS, { BigNumber } from "bignumber.js";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 import { Fetcher, Route, Token, WETH as WMATIC } from "quickswap-sdk";
 import * as Dfyn from "@dfyn/sdk";
 import * as Sushi from "@sushiswap/sdk";
 import * as Viper from "@venomswap/sdk";
+import defaultContracts from "config/contracts";
+import { Contract, ethers, utils } from "ethers";
 
 const amms = {
   "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3": "viper", //PLTS
@@ -34,6 +36,8 @@ const amms = {
   "0xda7fe71960cd1c19e1b86d6929efd36058f60a03": "coingecko", //LUMEN
   "0x90d81749da8867962c760414c1c25ec926e889b6": "coingecko", //1UNI
 
+  "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f": "dfk", //JEWEL/ONE
+  "0x90a48cb3a724ef6f8e6240f4788559f6370b6925": "dfk", //TEST
 };
 
 async function fetchCoinGeckoPrice(address: string) {
@@ -512,6 +516,33 @@ async function fetchViperSwapPrice2(
   }
 }
 
+
+async function fetchDFKPrice(
+  address: string,
+  decimals: number,
+  library: any,
+) {
+  try {
+    console.log(address)
+    const contractAddress = defaultContracts.dfkOracle.address;
+    const abi = defaultContracts.dfkOracle.abi;
+
+    // const oracleContract = useDFKOracleContract();
+    const oracle = new Contract(contractAddress, abi, library);
+    const tokenPriceWei = await oracle.getLatestTokenPrice(address, 1);
+    console.log("🚀 ~ file: prices.ts ~ line 532 ~ tokenPriceWei", (tokenPriceWei /1e18).toString())
+    const onePrice = await oracle.getLatestONEPrice() / 1e8;
+    const tokenPrice = (onePrice / (tokenPriceWei / 1e18)).toFixed(5)
+    console.log("🚀 ~ file: prices.ts ~ line 533 ~ onePriceWei", onePrice.toString())
+    console.log("🚀 ~ file: prices.ts ~ line 534 ~ tokenPrice", tokenPrice)
+    return tokenPrice;
+  } catch (e) {
+    console.error("dfk - error getting price for DFKLP", e);
+
+    return "0";
+  }
+}
+
 export async function fetchPrice(
   token: { address: string; decimals: number; symbol: string },
   library: any
@@ -529,7 +560,10 @@ export async function fetchPrice(
       fetchSushiswapPrice(t.address),
     viper: (t: { address: string; decimals: number; symbol: string }) =>
       fetchViperSwapPrice2(t, library),
+    dfk: (t: { address: string; decimals: number; symbol: string }) =>
+      fetchDFKPrice(t.address, t.decimals, library),
   };
+
 
   try {
     const tokenAddress = token.address.toLowerCase();

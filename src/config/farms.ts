@@ -134,34 +134,35 @@ export const farms: Farm[] = {
       ],
     },
 
-    // {
-    //   pid: 7,
-    //   multiplier: "10",
-    //   depositFees: 3,
+    {
+      pid: 7,
+      multiplier: "10",
+      depositFees: 3,
 
-    //   isActive: true,
-    //   farmDx: "kingdom",
+      isActive: true,
+      isSpecial: false,
+      farmDx: "dfk",
 
-    //   stakeToken: {
-    //     address: "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f",
-    //     symbol: "JEWEL/ONE",
-    //     decimals: 18,
-    //     logo: ["/jewel-logo.png", "/harmony-one-logo.png"],
-    //   },
+      stakeToken: {
+        address: "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f",
+        symbol: "JEWEL/ONE",
+        decimals: 18,
+        logo: ["/harmony-one-logo.png", "/jewel-logo.png"],
+      },
 
-    //   pairs: [
-    //     {
-    //       address: "0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79",
-    //       decimals: 18,
-    //       symbol: "JEWEL",
-    //     },
-    //     {
-    //       address: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
-    //       decimals: 18,
-    //       symbol: "WONE",
-    //     },
-    //   ],
-    // },
+      pairs: [
+        {
+          address: "0xea589e93ff18b1a1f1e9bac7ef3e86ab62addc79",
+          decimals: 18,
+          symbol: "JEWEL",
+        },
+        {
+          address: "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a",
+          decimals: 18,
+          symbol: "WONE",
+        },
+      ],
+    },
 
     {
       pid: 8,

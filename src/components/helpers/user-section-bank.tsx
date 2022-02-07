@@ -170,13 +170,13 @@ export const UserSection: React.FC<IProps> = (props) => {
 
           <Stack align="center" direction="column">
             <Text fontWeight="bold" fontSize="2xl">
-              {props.rewardsEarned ? displayTokenCurrency(props.rewardsEarned, "") : "N/A"}
+              {props.rewardsEarned ? displayTokenCurrency(props.rewardsEarned, "") : "(0$)"}
             </Text>
           </Stack>
           <Stack align="center" direction="column">
             <Text fontWeight="bold" fontSize="sm">
               {props.rewardsEarned ? '(' + displayTokenCurrency(
-                new BigNumber(props.rewardsEarned).times(props.rewardToken.price).toNumber(), "") + '$)' : "N/A"}
+                new BigNumber(props.rewardsEarned).times(props.rewardToken.price).toNumber(), "") + '$)' : "(0$)"}
             </Text>
           </Stack>
         </Box>

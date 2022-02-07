@@ -9,7 +9,7 @@ import BigNumberJS from "bignumber.js";
 import { Farm, farms } from "config/farms";
 import { BigNumber, constants, utils } from "ethers";
 import { BLOCKS_PER_SECOND, BLOCK_TIME, SECONDS_PER_WEEK } from 'config/constants';
-import { fetchPairPrice } from "web3-functions/prices";
+import { fetchPairPrice, fetchPrice } from "web3-functions/prices";
 import { getPoolApr } from "web3-functions/utils";
 import { approveLpContract, depositIntoPool, withdrawFromPool } from "web3-functions";
 
@@ -43,13 +43,21 @@ function useFetchFarmRequest() {
       newFarm.stakeToken.decimals
     );
 
-    newFarm.stakeToken.price = await fetchPairPrice(
-      newFarm.pairs[0],
-      newFarm.pairs[1],
-      totalSupply,
-      library,
-      farm.farmDx
-    );
+    if(newFarm.farmDx !== "dfk"){
+      newFarm.stakeToken.price = await fetchPairPrice(
+        newFarm.pairs[0],
+        newFarm.pairs[1],
+        totalSupply,
+        library,
+        farm.farmDx
+      );
+      }else{
+        console.log(newFarm.stakeToken.address)
+        newFarm.stakeToken.price = await fetchPrice(
+          newFarm.stakeToken,
+          library
+        )
+      }
 
     // APR data
     const plutusPerBlockWEI = (await masterChef.tokenPerBlock());
@@ -87,7 +95,6 @@ function useFetchFarmRequest() {
       const allowance: BigNumber = await lpContract.allowance(account, masterChef.address);
       newFarm.hasApprovedPool = !allowance.isZero();
     }
-
     return newFarm;
   };
 }
