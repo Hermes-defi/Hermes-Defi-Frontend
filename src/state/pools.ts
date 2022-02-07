@@ -29,10 +29,7 @@ function useFetchPoolsRequest() {
 
     newPool.multiplier = masterChefInfo.allocPoint.toString();
     
-    if (masterChefInfo.depositFeeBP == 150)
-      newPool.depositFees = 1.5
-    else
-      newPool.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
+    newPool.depositFees = new BigNumberJS(masterChefInfo.depositFeeBP).div(100).toNumber();
 
     // newPool.isActive = masterChefInfo.allocPoint.toString() !== "0";
 

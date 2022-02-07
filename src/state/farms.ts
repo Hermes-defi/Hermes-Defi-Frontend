@@ -26,10 +26,7 @@ function useFetchFarmRequest() {
     let masterChefInfo = await masterChef.poolInfo(farm.pid);
 
     newFarm.multiplier = masterChefInfo.allocPoint.toString();
-    if(masterChefInfo.depositFeeBP == 150)
-      newFarm.depositFees = 1.5
-    else
-      newFarm.depositFees = BigNumber.from(masterChefInfo.depositFeeBP).div(100).toNumber();
+    newFarm.depositFees = new BigNumberJS(masterChefInfo.depositFeeBP).div(100).toNumber();
     console.log("🚀 ~ file: farms.ts ~ line 30 ~ return ~ masterChefInfo.depositFeeBP", masterChefInfo.depositFeeBP)
     console.log("🚀 ~ file: farms.ts ~ line 30 ~ return ~ newFarm.depositFees", newFarm.depositFees)
     
