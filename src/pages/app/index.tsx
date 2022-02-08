@@ -42,6 +42,48 @@ import { RiWaterFlashFill } from "react-icons/ri";
 import { ResponsiveContainer, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { useCurrentBlockNumber } from "hooks/wallet";
 
+const calculateFarmingTimeLeft = () => {
+  let difference = +new Date("02-21-2022 23:00") - +new Date();
+  let timeLeft = {};
+
+  if (difference > 0) {
+    timeLeft = {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+    };
+  }
+
+  return timeLeft;
+};
+
+function useFarmingTimeLeft() {
+  const [timeLeft, setTimeLeft] = React.useState(calculateFarmingTimeLeft());
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateFarmingTimeLeft());
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  });
+
+  let timerComponents: any = [];
+  Object.keys(timeLeft).forEach((interval) => {
+    if (!timeLeft[interval]) {
+      return;
+    }
+
+    timerComponents.push(
+      <span>
+        {timeLeft[interval]} {interval}{" "}
+      </span>
+    );
+  });
+
+  return timerComponents;
+}
+
 const Page: React.FC = () => {
   const plutusStats = usePlutusStats();
   const farmStats = useTotalInFarms();
@@ -50,6 +92,7 @@ const Page: React.FC = () => {
   const vaultStats = useTotalInVaults();
   const bankStats = useTotalInBank();
   const currentBlock = useCurrentBlockNumber();
+  const timerComponents = useFarmingTimeLeft();
 
   const [isFarmAprLoading, farmApr] = useFarmAPRStats();
   const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
@@ -62,33 +105,32 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        {/* <Stack direction={["column", "row"]} justify="center" spacing={10}>
-        <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-            <Badge colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
+        <Stack direction={["column", "row"]} justify="center" spacing={10}>
+          <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              BANK UNLOCKS
+              Farming Ends in approximately
             </Heading>
-            <Skeleton isLoaded={!!currentBlock}>
+
+            <Badge colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
               <Text align="center" letterSpacing="1px" fontWeight="700">
-                {generateTimeDuration(blockDiff(24896039 - currentBlock))}
+                {timerComponents.length ? timerComponents : <span>Now</span>}
               </Text>
-            </Skeleton>
             </Badge>
-        </Box>
-        
-      </Stack> */}
+          </Box>
+        </Stack>
+
         <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
               The Hermes Protocol In Two Minutes
             </Heading>
-            <AspectRatio maxH="lg" ratio={16/9}>
-            <iframe
-              title="The Hermes Protocol In Two Minutes"
-              src="https://www.youtube.com/embed/jbbtoci9cdg"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <AspectRatio maxH="lg" ratio={16 / 9}>
+              <iframe
+                title="The Hermes Protocol In Two Minutes"
+                src="https://www.youtube.com/embed/jbbtoci9cdg"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </AspectRatio>
           </Box>
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
@@ -347,13 +389,7 @@ const Page: React.FC = () => {
                   </Heading>
                   <Skeleton isLoaded={!farmStats.isLoading && !poolStats.isLoading}>
                     <Text fontSize="3xl" fontWeight="700">
-                      {displayCurrency(
-                        farmStats.data
-                          .plus(poolStats.data)
-                          .plus(vaultStats.data)
-                          .plus(bankStats.data)
-                          .toNumber()
-                      , false, 0)}
+                      {displayCurrency(farmStats.data.plus(poolStats.data).plus(vaultStats.data).plus(bankStats.data).toNumber(), false, 0)}
                     </Text>
                   </Skeleton>
                 </div>
