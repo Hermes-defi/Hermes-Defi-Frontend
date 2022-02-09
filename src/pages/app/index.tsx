@@ -108,14 +108,17 @@ const Page: React.FC = () => {
         <Stack direction={["column", "row"]} justify="center" spacing={10}>
           <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
             <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              Farming Ends in approximately
+              Layer 2 Farming ends
             </Heading>
 
-            <Badge colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
+            <Badge mt={"3"} colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
               <Text align="center" letterSpacing="1px" fontWeight="700">
                 {timerComponents.length ? timerComponents : <span>Now</span>}
               </Text>
             </Badge>
+            <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
+              Get ready for Hermes Protocol (L3)
+            </Heading>
           </Box>
         </Stack>
 
