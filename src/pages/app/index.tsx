@@ -106,19 +106,22 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        {timerComponents.length && (
-          <Stack direction={["column", "row"]} justify="center" spacing={10}>
-            <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} px={[5, 10]} py={6}>
-              <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-                Farming Ends in approximately
-              </Heading>
+        <Stack direction={["column", "row"]} justify="center" spacing={10}>
+          <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+            <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
+              Layer 2 Farming ends
+            </Heading>
 
+            <Badge mt={"3"} colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
               <Text align="center" letterSpacing="1px" fontWeight="700">
                 {timerComponents}
               </Text>
-            </Box>
-          </Stack>
-        )}
+            </Badge>
+            <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
+              Get ready for Hermes Protocol (L3)
+            </Heading>
+          </Box>
+        </Stack>
 
         <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
