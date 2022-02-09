@@ -118,7 +118,7 @@ const Page: React.FC = () => {
               </Text>
             </Badge>
             <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              Get ready for Hermes Protocol (L3)
+              Get ready for Hermes Protocol
             </Heading>
           </Box>
         </Stack>
