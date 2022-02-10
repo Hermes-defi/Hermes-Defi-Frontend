@@ -27,8 +27,8 @@ function useFetchFarmRequest() {
 
     newFarm.multiplier = masterChefInfo.allocPoint.toString();
     newFarm.depositFees = new BigNumberJS(masterChefInfo.depositFeeBP).div(100).toNumber();
-    console.log("🚀 ~ file: farms.ts ~ line 30 ~ return ~ masterChefInfo.depositFeeBP", masterChefInfo.depositFeeBP)
-    console.log("🚀 ~ file: farms.ts ~ line 30 ~ return ~ newFarm.depositFees", newFarm.depositFees)
+    // console.log("🚀 ~ file: farms.ts ~ line 30 ~ return ~ masterChefInfo.depositFeeBP", masterChefInfo.depositFeeBP)
+    // console.log("🚀 ~ file: farms.ts ~ line 30 ~ return ~ newFarm.depositFees", newFarm.depositFees)
     
     // newFarm.isActive = masterChefInfo.allocPoint.toString() !== "0";
 
