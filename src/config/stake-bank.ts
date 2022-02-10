@@ -129,10 +129,10 @@ export const stakingBankPools: StakeBankInfo[] = {
       },
 
       rewardToken: {
-        address: "0x6008c8769bfacd92251ba838382e7e5637c7e74d",
-        symbol: "COSMIC",
-        decimals: 9,
-        logo: "/cosmic-logo.png",
+        address: "0x6afcc4d422e8d69bbaee3c61080bc1b710c5f0d5",
+        symbol: "MAGIC",
+        decimals: 18,
+        logo: "/magic-logo.png",
       },
     },
 
