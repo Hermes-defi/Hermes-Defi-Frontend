@@ -129,7 +129,7 @@ export const stakingBankPools: StakeBankInfo[] = {
       },
 
       rewardToken: {
-        address: "0x6afcc4d422e8d69bbaee3c61080bc1b710c5f0d5",
+        address: "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7",
         symbol: "MAGIC",
         decimals: 18,
         logo: "/magic-logo.png",
