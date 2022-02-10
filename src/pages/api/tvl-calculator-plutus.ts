@@ -14,12 +14,11 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
       try {
         let tvlCache: any = await redis.get("tvl-chart-plutus");
         tvlCache = JSON.parse(tvlCache) || [];
-        console.log({tvlCache});
+
         // push the new tvl to the array
         const currentTime = dayjs().toISOString();
         const { tvl, ...otherStats } = await getPlutusStats();
 
-        
         tvlCache.push({ time: currentTime, value: tvl });
         if (tvlCache.length > 12) {
           tvlCache.shift();
@@ -31,10 +30,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         return res.json({
           success: true,
           tvl,
-          otherStats
+          otherStats,
         });
       } catch (e) {
-        return res.json({success: false, error: e.message});
+        return res.json({ success: false, error: e.message });
       }
     }
     default: {

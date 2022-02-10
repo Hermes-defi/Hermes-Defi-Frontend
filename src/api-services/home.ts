@@ -86,7 +86,7 @@ export async function getHermesStats() {
       const depositTokenStaked = new BigNumberJS(extraDepositedInPool);
       const depositTokenStakedInUsd = depositTokenStaked.times(tokenPrice).times(pricePerShare);
 
-      totalStakedInUSD = new BigNumberJS(vault.totalStakedInUSD).plus(depositTokenStakedInUsd).toString();
+      totalStakedInUSD = new BigNumberJS(totalStakedInUSD).plus(depositTokenStakedInUsd).toString();
     }
 
     return total.plus(totalStakedInUSD);
@@ -159,8 +159,6 @@ export async function getPlutusStats() {
 
     const tokenPrice = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, provider, vault.amm);
 
-    const total = await _total;
-
     let totalStakedInUSD = new BigNumberJS(utils.formatUnits(totalLpStaked, vault.stakeToken.decimals)).times(tokenPrice).toString();
     if (vault.rewardToken.poolId) {
       const pricePerShare = utils.formatUnits(await vaultContract.getPricePerFullShare(), 18);
@@ -169,9 +167,10 @@ export async function getPlutusStats() {
       const depositTokenStaked = new BigNumberJS(extraDepositedInPool);
       const depositTokenStakedInUsd = depositTokenStaked.times(tokenPrice).times(pricePerShare);
 
-      totalStakedInUSD = new BigNumberJS(vault.totalStakedInUSD).plus(depositTokenStakedInUsd).toString();
+      totalStakedInUSD = new BigNumberJS(totalStakedInUSD).plus(depositTokenStakedInUsd).toString();
     }
 
+    const total = await _total;
     return total.plus(totalStakedInUSD);
   }, Promise.resolve(new BigNumberJS(0)));
 
