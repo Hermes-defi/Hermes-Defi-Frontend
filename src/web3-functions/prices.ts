@@ -35,7 +35,7 @@ const amms = {
   "0xda7fe71960cd1c19e1b86d6929efd36058f60a03": "coingecko", //LUMEN
   "0x90d81749da8867962c760414c1c25ec926e889b6": "coingecko", //1UNI
   "0x6008c8769bfacd92251ba838382e7e5637c7e74d": "coingecko", //COSMIC
-  "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7": "coingecko", //MAGIC
+  "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7": "viper", //MAGIC
 
 };
 
