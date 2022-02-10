@@ -115,26 +115,26 @@ export const stakingBankPools: StakeBankInfo[] = {
       },
     },
 
-    {
-      address: "0x6afcc4d422e8d69bbaee3c61080bc1b710c5f0d5",
-      poolSite: "https://cosmicuniverse.one/",
-      active: true,
-      isSpecial: false,
+    // {
+    //   address: "0x6afcc4d422e8d69bbaee3c61080bc1b710c5f0d5",
+    //   poolSite: "https://cosmicuniverse.one/",
+    //   active: true,
+    //   isSpecial: false,
 
-      stakeToken: {
-        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
-        symbol: "PLTS",
-        decimals: 18,
-        logo: "/plutus-logo.png",
-      },
+    //   stakeToken: {
+    //     address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+    //     symbol: "PLTS",
+    //     decimals: 18,
+    //     logo: "/plutus-logo.png",
+    //   },
 
-      rewardToken: {
-        address: "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7",
-        symbol: "MAGIC",
-        decimals: 18,
-        logo: "/magic-logo.png",
-      },
-    },
+    //   rewardToken: {
+    //     address: "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7",
+    //     symbol: "MAGIC",
+    //     decimals: 18,
+    //     logo: "/magic-logo.png",
+    //   },
+    // },
 
     // {
     //   address: "0x3074cf20ecd1cfe96b3ee43968d0c426f775171a",
