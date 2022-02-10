@@ -169,20 +169,20 @@ export const pools: Pool[] = {
       }
     },
 
-    // {
-    //   pid: 27,
-    //   multiplier: "6",
-    //   depositFees: 3,
-    //   isActive: true,
-    //   isSpecial: false,
+    {
+      pid: 27,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
+      isSpecial: false,
 
-    //   stakeToken: {
-    //     address: "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7",
-    //     symbol: "MAGIC",
-    //     decimals: 18,
-    //     logo: "/magic-logo.png"
-    //   }
-    // },
+      stakeToken: {
+        address: "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7",
+        symbol: "MAGIC",
+        decimals: 18,
+        logo: "/magic-logo.png"
+      }
+    },
 
     {
       pid: 28,
