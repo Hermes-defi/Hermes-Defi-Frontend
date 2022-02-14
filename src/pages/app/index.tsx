@@ -2,6 +2,7 @@ import React from "react";
 
 import defaultContracts from "config/contracts";
 
+import dayjs from "dayjs";
 import { addTokenToWallet } from "wallet/utils";
 import { blockDiff, displayCurrency, displayNumber, displayTokenCurrency, generateTimeDuration } from "libs/utils";
 import {
@@ -43,7 +44,7 @@ import { ResponsiveContainer, CartesianGrid, Line, LineChart, Tooltip, XAxis, YA
 import { useCurrentBlockNumber } from "hooks/wallet";
 
 const calculateFarmingTimeLeft = () => {
-  let difference = +new Date("02-21-2022 23:00") - +new Date();
+  let difference = +dayjs("2022-02-21 23:00", "YYYY-MM-DD HH:mm").toDate() - +new Date();
   let timeLeft = {};
 
   if (difference > 0) {
@@ -106,17 +107,16 @@ const Page: React.FC = () => {
     <AppLayout>
       <Stack spacing={10} py={10}>
         <Stack direction={["column", "row"]} justify="center" spacing={10}>
-          <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
+          <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} px={[5, 10]} py={6}>
             <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              Layer 2 Farming ends
+              Layer 2 Farming ends in
             </Heading>
 
-            <Badge mt={"3"} colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
-              <Text align="center" letterSpacing="1px" fontWeight="700">
-                {timerComponents.length ? timerComponents : <span>Now</span>}
-              </Text>
-            </Badge>
-            <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
+            <Text align="center" letterSpacing="1px" fontWeight="700">
+              {timerComponents.length ? timerComponents : "Farming ended"}
+            </Text>
+
+            <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="xl">
               Get ready for Hermes Protocol
             </Heading>
           </Box>

@@ -52,6 +52,7 @@ function useFetchStakingPoolRequest() {
         const totalAllocPoints = (
           await poolChef.poolInfo()
         ).allocPoint.toNumber();
+        
         const rewardsPerWeek = rewardPerBlock / 1e18 * SECONDS_PER_WEEK / BLOCK_TIME;
         const multiplier = 1000; // todo: move to config
 
