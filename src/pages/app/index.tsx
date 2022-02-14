@@ -106,22 +106,6 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-        <Stack direction={["column", "row"]} justify="center" spacing={10}>
-          <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} px={[5, 10]} py={6}>
-            <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              Layer 2 Farming ends in
-            </Heading>
-
-            <Text align="center" letterSpacing="1px" fontWeight="700">
-              {timerComponents.length ? timerComponents : "Farming ended"}
-            </Text>
-
-            <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="xl">
-              Get ready for Hermes Protocol
-            </Heading>
-          </Box>
-        </Stack>
-
         <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
