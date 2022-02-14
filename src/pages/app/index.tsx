@@ -17,6 +17,7 @@ import {
   useTvlChart,
   useTotalInVaults,
   useTotalInBank,
+  useBankAPRStats,
 } from "hooks/home-page";
 
 import { AppLayout } from "components/layout";
@@ -39,7 +40,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
-import { RiWaterFlashFill } from "react-icons/ri";
+import { RiBankFill, RiBankLine, RiWaterFlashFill } from "react-icons/ri";
 import { ResponsiveContainer, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { useCurrentBlockNumber } from "hooks/wallet";
 
@@ -97,6 +98,7 @@ const Page: React.FC = () => {
 
   const [isFarmAprLoading, farmApr] = useFarmAPRStats();
   const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
+  const [isBankAprLoading, bankApr] = useBankAPRStats();
 
   const { plutusInWallet, plutusToHarvest } = usePlutusData();
   const chartData = useTvlChart();
@@ -107,6 +109,19 @@ const Page: React.FC = () => {
     <AppLayout>
       <Stack spacing={10} py={10}>
         <HStack spacing="10">
+          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
+            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
+              Hermes DeFi x Cosmic Universe AMA
+            </Heading>
+            <AspectRatio maxH="lg" ratio={16 / 9}>
+              <iframe
+                title="Hermes DeFi x Cosmic Universe AMA"
+                src="https://www.youtube.com/embed/rMOgqhds9Ak"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </AspectRatio>
+          </Box>
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
               The Hermes Protocol In Two Minutes
@@ -120,31 +135,18 @@ const Page: React.FC = () => {
               />
             </AspectRatio>
           </Box>
-          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
-            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
-              Tranquility City AMA
-            </Heading>
-            <AspectRatio maxH="lg" ratio={16 / 9}>
-              <iframe
-                title="Tranquility City x Hermes DeFi - AMA"
-                src="https://www.youtube.com/embed/688x_Ritbjk"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </AspectRatio>
-          </Box>
         </HStack>
         <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="2xl" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
-            Farms and Pools
+            Farms, Pools and Bank
           </Heading>
 
-          <SimpleGrid templateColumns={{ base: "1fr", md: "1fr 1fr 2fr" }} spacing={[5, 10]}>
-            <Stack mt={10} align="stretch" spacing={10}>
+          <SimpleGrid templateColumns={{ base: "1fr", md: "1fr 1fr 2fr" }} spacing={[5, 8]}>
+            <Stack mt={10} align="stretch" spacing={8}>
               <Stack spacing={4} justify={["center", ""]} align="center" direction="row">
                 <Image src="/plutus-logo.png" boxSize={12} />
                 <Button onClick={() => addTokenToWallet(defaultContracts.plutusToken.address, "PLUTUS")} colorScheme="secondary" size="sm">
-                  + Add PLUTUS to Wallet
+                  Add to Metamask
                 </Button>
               </Stack>
 
@@ -186,7 +188,7 @@ const Page: React.FC = () => {
 
             <Box />
 
-            <Stack spacing={[5, 14]} direction={{ base: "column", md: "row" }}>
+            <Stack spacing={[5, 14]} direction={{ base: "column",  lg: "row" }}>
               <Stack
                 boxShadow="rgb(251 182 206 / 30%) 0px 25px 25px -12px"
                 rounded="3xl"
@@ -257,6 +259,46 @@ const Page: React.FC = () => {
                   <Skeleton isLoaded={!isPoolAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
                       {poolApr ? `${displayNumber(poolApr as number, true)}%` : "N/A"}
+                    </Text>{" "}
+                  </Skeleton>
+
+                  <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
+                    APR
+                  </Text>
+                </Box>
+              </Stack>
+
+              <Stack
+                boxShadow="rgb(251 182 206 / 30%) 0px 25px 25px -12px"
+                rounded="3xl"
+                bg="accent.500"
+                bgGradient="linear(to-t, accent.500, primary.200)"
+                color="white"
+                justify="space-between"
+                px={8}
+                py={7}
+                pr={[14, 28]}
+                as={Link}
+                href="/app/bank"
+                textDecoration="none!important"
+              >
+                <div>
+                  <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
+                    <Icon color="secondary.300" boxSize={8} as={RiBankFill} />
+                  </Center>
+
+                  <Text fontSize={["lg", "sm"]} fontWeight={["500", "700"]}>
+                    In Bank
+                  </Text>
+                </div>
+
+                <Box>
+                  <Text fontSize={["xl", "sm"]} fontWeight="700">
+                    Earn Upto
+                  </Text>
+                  <Skeleton isLoaded={!isBankAprLoading}>
+                    <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
+                      {bankApr ? `${displayNumber(bankApr as number, true)}%` : "N/A"}
                     </Text>{" "}
                   </Skeleton>
 

@@ -105,13 +105,11 @@ function BurnStats() {
 
 const Page: React.FC = () => {
   const [active, toggleActive] = useToggle(true);
-
   const stakeResp = useFetchStakePools();
   const mainPool = useMainBankStake();
   
   const isLoading = (stakeResp && stakeResp.every((s) => s.status === "loading")) ? true : false;
   const mainIsLoading = mainPool.status !== ("success")  ? true : false;
-  console.log(mainIsLoading, mainPool.status);
   let pools = stakeResp ? stakeResp
     .filter((pool: any) => pool.data?.active === active) : null ; 
 

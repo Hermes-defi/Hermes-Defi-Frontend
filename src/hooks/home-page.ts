@@ -20,6 +20,7 @@ import { useFetchBalancers } from "state/balancers";
 import { Balancer, balancers } from "config/balancers";
 import { StakeBankInfo, stakingBankPools } from "config/stake-bank";
 import { useMainBankStake, useFetchStakePools } from "state/stake-bank";
+import { useFetchMainPool } from "state/bank";
 
 export function usePlutusData() {
   const { account } = useActiveWeb3React();
@@ -99,6 +100,21 @@ export function usePoolsAPRStats() {
   const isLoading = poolsResp.every((p) => p.status === "loading");
 
   const aprs = poolsResp.map((p) => (p.data as Pool)?.apr.yearlyAPR);
+  const maxApr = aprs.reduce((accum, apr) => (apr > accum ? apr : accum), 0);
+
+  return [isLoading, maxApr];
+}
+
+export function useBankAPRStats() {
+  const mainPoolResp = useMainBankStake();
+  const poolsResp = useFetchStakePools();
+  const isLoadingPools = poolsResp.every((p) => p.status === "loading");
+  const isLoadingMain = mainPoolResp.status !== ("success")  ? true : false;  
+  const isLoading = isLoadingMain && isLoadingPools ?  true : false;
+  console.log("🚀 ~ file: home-page.ts ~ line 114 ~ useBankAPRStats ~ isLoading", isLoading)
+
+  const aprs = poolsResp.map((p) => (p.data as StakeBankInfo)?.apr.yearlyAPR).concat(mainPoolResp.data?.apr.yearlyAPR);
+  console.log("🚀 ~ file: home-page.ts ~ line 116 ~ useBankAPRStats ~ aprs", aprs)
   const maxApr = aprs.reduce((accum, apr) => (apr > accum ? apr : accum), 0);
 
   return [isLoading, maxApr];
