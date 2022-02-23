@@ -158,7 +158,7 @@ export const pools: Pool[] = {
       pid: 23,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: true,
 
       stakeToken: {
@@ -170,7 +170,37 @@ export const pools: Pool[] = {
     },
 
     {
-      pid: 24,
+      pid: 27,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
+      isSpecial: false,
+
+      stakeToken: {
+        address: "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7",
+        symbol: "MAGIC",
+        decimals: 18,
+        logo: "/magic-logo.png"
+      }
+    },
+
+    {
+      pid: 28,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
+      isSpecial: false,
+
+      stakeToken: {
+        address: "0x6008c8769bfacd92251ba838382e7e5637c7e74d",
+        symbol: "COSMIC",
+        decimals: 9,
+        logo: "/cosmic-logo.png"
+      }
+    },
+
+    {
+      pid: 29,
       multiplier: "6",
       depositFees: 3,
       isActive: true,

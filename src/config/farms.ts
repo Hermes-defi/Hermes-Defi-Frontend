@@ -169,7 +169,7 @@ export const farms: Farm[] = {
       multiplier: "10",
       depositFees: 3,
 
-      isActive: true,
+      isActive: false,
       isSpecial: false,
       farmDx: "sushiswap",
 
@@ -199,7 +199,7 @@ export const farms: Farm[] = {
       multiplier: "10",
       depositFees: 3,
 
-      isActive: true,
+      isActive: false,
       isSpecial: false,
       farmDx: "sushiswap",
 
@@ -257,7 +257,7 @@ export const farms: Farm[] = {
       multiplier: "10",
       depositFees: 3,
       isSpecial: false,
-      isActive: true,
+      isActive: false,
       farmDx: "sushiswap",
 
       stakeToken: {

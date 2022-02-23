@@ -33,8 +33,11 @@ const amms = {
   "0x0ab43550a6915f9f67d0c454c2e90385e6497eaa": "sushiswap", //bscBUSD
   "0xe176ebe47d621b984a73036b9da5d834411ef734": "sushiswap", //BUSD
   "0x224e64ec1bdce3870a6a6c777edd450454068fec": "sushiswap", //UST
+
   "0xda7fe71960cd1c19e1b86d6929efd36058f60a03": "coingecko", //LUMEN
   "0x90d81749da8867962c760414c1c25ec926e889b6": "coingecko", //1UNI
+  "0x6008c8769bfacd92251ba838382e7e5637c7e74d": "coingecko", //COSMIC
+  "0x892d81221484f690c0a97d3dd18b9144a3ecdfb7": "viper", //MAGIC
 
   "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f": "dfk", //JEWEL/ONE
   "0x8D760497554eecC3B9036fb0364156ef2F0D02BC": "dfk", //HLY

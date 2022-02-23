@@ -14,3 +14,11 @@ export function usePlutusPrice() {
     refetchInterval: 0.5 * 60 * 1000,
   });
 }
+
+export function useFetchTokenPrice() {
+  const { library } = useActiveWeb3React();
+
+  return useQuery({
+    queryKey: "token-price",
+  });
+}

@@ -28,7 +28,7 @@ function useFetchStakingPoolRequest() {
       stakePoolInfo.active = stakePoolInfo.active
         ? endBlock.sub(currentBlock || 0).gt(0)
         : false;
-      console.log("Active: ", stakePoolInfo.active)
+      // console.log("Active: ", stakePoolInfo.active)
       const totalStaked = (await poolChef.totalStakeTokenBalance()).toString();
 
       stakePoolInfo.totalStaked = utils.formatUnits(
@@ -52,6 +52,7 @@ function useFetchStakingPoolRequest() {
         const totalAllocPoints = (
           await poolChef.poolInfo()
         ).allocPoint.toNumber();
+        
         const rewardsPerWeek = rewardPerBlock / 1e18 * SECONDS_PER_WEEK / BLOCK_TIME;
         const multiplier = 1000; // todo: move to config
 

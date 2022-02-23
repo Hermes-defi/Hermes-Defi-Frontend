@@ -104,14 +104,12 @@ function BurnStats() {
 }
 
 const Page: React.FC = () => {
-  const [active] = useToggle(true);
-
+  const [active, toggleActive] = useToggle(true);
   const stakeResp = useFetchStakePools();
   const mainPool = useMainBankStake();
   
   const isLoading = (stakeResp && stakeResp.every((s) => s.status === "loading")) ? true : false;
   const mainIsLoading = mainPool.status !== ("success")  ? true : false;
-  console.log(mainIsLoading, mainPool.status);
   let pools = stakeResp ? stakeResp
     .filter((pool: any) => pool.data?.active === active) : null ; 
 
@@ -119,6 +117,31 @@ const Page: React.FC = () => {
     <AppLayout>
       <Stack spacing={8}>
           <BankNavigation />
+          <HStack pl={"3.5"} justify="center" divider={<StackDivider borderColor="gray.200" />}>
+            <Button
+              onClick={() => toggleActive()}
+              color={
+                active
+                  ? useColorModeValue("gray.800", "gray.300")
+                  : useColorModeValue("gray.500", "gray.500")
+              }
+              variant="link"
+            >
+              <Heading fontSize="xl">Active</Heading>
+            </Button>
+
+            <Button
+              onClick={() => toggleActive()}
+              color={
+                !active
+                  ? useColorModeValue("gray.800", "gray.300")
+                  : useColorModeValue("gray.500", "gray.500")
+              }
+              variant="link"
+            >
+              <Heading fontSize="xl">Inactive</Heading>
+            </Button>
+          </HStack>
       </Stack>
       <HStack align="center" spacing={10} py={10}>
         <Container align="center" maxWidth="container.lg">
@@ -128,8 +151,9 @@ const Page: React.FC = () => {
               <Spinner size="xl" />
             </Flex>
           ) : (
-            <BankPoolCard stakePool={mainPool.data}/>
-            
+            active ? <BankPoolCard stakePool={mainPool.data}/>
+            :
+            <></>
           )}
         </Container>
       </HStack>

@@ -20,7 +20,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      staleTime: 20 * 1000,
+      staleTime: 240 * 1000,
+      retry: 1,
     },
   },
 });
@@ -43,10 +44,7 @@ function GlobalHead() {
       <Head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap"
-          rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet" />
       </Head>
 
       {/* google fonts */}

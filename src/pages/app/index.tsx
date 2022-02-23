@@ -2,6 +2,7 @@ import React from "react";
 
 import defaultContracts from "config/contracts";
 
+import dayjs from "dayjs";
 import { addTokenToWallet } from "wallet/utils";
 import { blockDiff, displayCurrency, displayNumber, displayTokenCurrency, generateTimeDuration } from "libs/utils";
 import {
@@ -16,6 +17,7 @@ import {
   useTvlChart,
   useTotalInVaults,
   useTotalInBank,
+  useBankAPRStats,
 } from "hooks/home-page";
 
 import { AppLayout } from "components/layout";
@@ -38,17 +40,51 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { GiFarmTractor } from "react-icons/gi";
-import { RiWaterFlashFill } from "react-icons/ri";
-import {
-  ResponsiveContainer,
-  CartesianGrid,
-  Line,
-  LineChart,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
+import { RiBankFill, RiBankLine, RiWaterFlashFill } from "react-icons/ri";
+import { ResponsiveContainer, CartesianGrid, Line, LineChart, Tooltip, XAxis, YAxis } from "recharts";
 import { useCurrentBlockNumber } from "hooks/wallet";
+
+const calculateFarmingTimeLeft = () => {
+  let difference = +dayjs("2022-02-21 23:00", "YYYY-MM-DD HH:mm").toDate() - +new Date();
+  let timeLeft = {};
+
+  if (difference > 0) {
+    timeLeft = {
+      days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+      hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+      minutes: Math.floor((difference / 1000 / 60) % 60),
+    };
+  }
+
+  return timeLeft;
+};
+
+function useFarmingTimeLeft() {
+  const [timeLeft, setTimeLeft] = React.useState(calculateFarmingTimeLeft());
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateFarmingTimeLeft());
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  });
+
+  let timerComponents: any = [];
+  Object.keys(timeLeft).forEach((interval) => {
+    if (!timeLeft[interval]) {
+      return;
+    }
+
+    timerComponents.push(
+      <span>
+        {timeLeft[interval]} {interval}{" "}
+      </span>
+    );
+  });
+
+  return timerComponents;
+}
 
 const Page: React.FC = () => {
   const plutusStats = usePlutusStats();
@@ -58,9 +94,11 @@ const Page: React.FC = () => {
   const vaultStats = useTotalInVaults();
   const bankStats = useTotalInBank();
   const currentBlock = useCurrentBlockNumber();
+  const timerComponents = useFarmingTimeLeft();
 
   const [isFarmAprLoading, farmApr] = useFarmAPRStats();
   const [isPoolAprLoading, poolApr] = usePoolsAPRStats();
+  const [isBankAprLoading, bankApr] = useBankAPRStats();
 
   const { plutusInWallet, plutusToHarvest } = usePlutusData();
   const chartData = useTvlChart();
@@ -70,72 +108,45 @@ const Page: React.FC = () => {
   return (
     <AppLayout>
       <Stack spacing={10} py={10}>
-      {/* <Stack direction={["column", "row"]} justify="center" spacing={10}>
-        <Box align="center" w="100%" bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6}>
-            <Badge colorScheme="secondary" fontSize="2xl" size="2xl" py={2} px={10} rounded="xl">
-            <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-              BANK UNLOCKS
+        <HStack spacing="10">
+          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
+            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
+              Hermes DeFi x Cosmic Universe AMA
             </Heading>
-            <Skeleton isLoaded={!!currentBlock}>
-              <Text align="center" letterSpacing="1px" fontWeight="700">
-                {generateTimeDuration(blockDiff(24896039 - currentBlock))}
-              </Text>
-            </Skeleton>
-            </Badge>
-        </Box>
-        
-      </Stack> */}
-      <HStack spacing="10">
+            <AspectRatio maxH="lg" ratio={16 / 9}>
+              <iframe
+                title="Hermes DeFi x Cosmic Universe AMA"
+                src="https://www.youtube.com/embed/rMOgqhds9Ak"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </AspectRatio>
+          </Box>
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
             <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
               The Hermes Protocol In Two Minutes
             </Heading>
-            <AspectRatio maxH="lg" ratio={16/9}>
-            <iframe
-              title="The Hermes Protocol In Two Minutes"
-              src="https://www.youtube.com/embed/jbbtoci9cdg"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
+            <AspectRatio maxH="lg" ratio={16 / 9}>
+              <iframe
+                title="The Hermes Protocol In Two Minutes"
+                src="https://www.youtube.com/embed/jbbtoci9cdg"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
             </AspectRatio>
-        
           </Box>
-          <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
-            <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl" w="100%">
-              Tranquility City AMA
-            </Heading>
-            <AspectRatio maxH="lg" ratio={16/9}>
-            <iframe
-              title="Tranquility City x Hermes DeFi - AMA"
-              src="https://www.youtube.com/embed/688x_Ritbjk"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-            </AspectRatio>
-        
-          </Box>
-          </HStack>
-        <Box
-          bg={useColorModeValue("white", "gray.700")}
-          rounded="2xl"
-          boxShadow="2xl"
-          px={[5, 10]}
-          py={6}
-        >
+        </HStack>
+        <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="2xl" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
-            Farms and Pools
+            Farms, Pools and Bank
           </Heading>
 
-          <SimpleGrid templateColumns={{ base: "1fr", md: "1fr 1fr 2fr" }} spacing={[5, 10]}>
-            <Stack mt={10} align="stretch" spacing={10}>
+          <SimpleGrid templateColumns={{ base: "1fr", md: "1fr 1fr 2fr" }} spacing={[5, 8]}>
+            <Stack mt={10} align="stretch" spacing={8}>
               <Stack spacing={4} justify={["center", ""]} align="center" direction="row">
                 <Image src="/plutus-logo.png" boxSize={12} />
-                <Button
-                  onClick={() => addTokenToWallet(defaultContracts.plutusToken.address, "PLUTUS")}
-                  colorScheme="secondary"
-                  size="sm"
-                >
-                  + Add PLUTUS to Wallet
+                <Button onClick={() => addTokenToWallet(defaultContracts.plutusToken.address, "PLUTUS")} colorScheme="secondary" size="sm">
+                  Add to Metamask
                 </Button>
               </Stack>
 
@@ -177,7 +188,7 @@ const Page: React.FC = () => {
 
             <Box />
 
-            <Stack spacing={[5, 14]} direction={{ base: "column", md: "row" }}>
+            <Stack spacing={[5, 14]} direction={{ base: "column",  lg: "row" }}>
               <Stack
                 boxShadow="rgb(251 182 206 / 30%) 0px 25px 25px -12px"
                 rounded="3xl"
@@ -208,7 +219,7 @@ const Page: React.FC = () => {
                   </Text>
                   <Skeleton isLoaded={!isFarmAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {farmApr ? `${ displayNumber(farmApr as number, true) }%` : "N/A"}
+                      {farmApr ? `${displayNumber(farmApr as number, true)}%` : "N/A"}
                     </Text>{" "}
                   </Skeleton>
                   <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
@@ -247,7 +258,47 @@ const Page: React.FC = () => {
                   </Text>
                   <Skeleton isLoaded={!isPoolAprLoading}>
                     <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
-                      {poolApr ? `${ displayNumber(poolApr as number, true) }%` : "N/A"}
+                      {poolApr ? `${displayNumber(poolApr as number, true)}%` : "N/A"}
+                    </Text>{" "}
+                  </Skeleton>
+
+                  <Text display={["inline", "block"]} fontSize="2xl" fontFamily="heading">
+                    APR
+                  </Text>
+                </Box>
+              </Stack>
+
+              <Stack
+                boxShadow="rgb(251 182 206 / 30%) 0px 25px 25px -12px"
+                rounded="3xl"
+                bg="accent.500"
+                bgGradient="linear(to-t, accent.500, primary.200)"
+                color="white"
+                justify="space-between"
+                px={8}
+                py={7}
+                pr={[14, 28]}
+                as={Link}
+                href="/app/bank"
+                textDecoration="none!important"
+              >
+                <div>
+                  <Center display={["none", "flex"]} mb={3} rounded="2xl" bg="white" p={3}>
+                    <Icon color="secondary.300" boxSize={8} as={RiBankFill} />
+                  </Center>
+
+                  <Text fontSize={["lg", "sm"]} fontWeight={["500", "700"]}>
+                    In Bank
+                  </Text>
+                </div>
+
+                <Box>
+                  <Text fontSize={["xl", "sm"]} fontWeight="700">
+                    Earn Upto
+                  </Text>
+                  <Skeleton isLoaded={!isBankAprLoading}>
+                    <Text display={["inline", "block"]} fontWeight="900" fontSize={["3xl", "2xl"]}>
+                      {bankApr ? `${displayNumber(bankApr as number, true)}%` : "N/A"}
                     </Text>{" "}
                   </Skeleton>
 
@@ -260,13 +311,7 @@ const Page: React.FC = () => {
           </SimpleGrid>
         </Box>
 
-        <Box
-          bg={useColorModeValue("white", "gray.700")}
-          rounded="2xl"
-          boxShadow="2xl"
-          px={[5, 10]}
-          py={6}
-        >
+        <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="2xl" px={[5, 10]} py={6}>
           <Heading color={useColorModeValue("gray.600", "gray.200")} fontSize="xl">
             PLUTUS stats
           </Heading>
@@ -371,17 +416,9 @@ const Page: React.FC = () => {
                   >
                     Total Value Locked
                   </Heading>
-                  <Skeleton
-                    isLoaded={!farmStats.isLoading && !poolStats.isLoading}
-                  >
+                  <Skeleton isLoaded={!farmStats.isLoading && !poolStats.isLoading}>
                     <Text fontSize="3xl" fontWeight="700">
-                      {displayCurrency(
-                        farmStats.data
-                          .plus(poolStats.data)
-                          .plus(vaultStats.data)
-                          .plus(bankStats.data)
-                          .toNumber()
-                      , false, 0)}
+                      {displayCurrency(farmStats.data.plus(poolStats.data).plus(vaultStats.data).plus(bankStats.data).toNumber(), false, 0)}
                     </Text>
                   </Skeleton>
                 </div>
@@ -460,10 +497,7 @@ const Page: React.FC = () => {
                 width={useBreakpointValue({ base: "100%", md: 800 })}
                 height={useBreakpointValue({ base: 340, md: "80%" })}
               >
-                <LineChart
-                  style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }}
-                  data={chartData.data}
-                >
+                <LineChart style={{ marginLeft: useBreakpointValue({ base: "-30px", md: 0 }) }} data={chartData.data}>
                   <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={3} />
                   <CartesianGrid stroke={useColorModeValue("#ccc", "#555")} strokeDasharray="5 5" />
                   <XAxis style={{ fontSize: "12px" }} dataKey="time" />
