@@ -158,7 +158,7 @@ export const pools: Pool[] = {
       pid: 23,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: true,
 
       stakeToken: {
