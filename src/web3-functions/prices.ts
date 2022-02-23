@@ -18,7 +18,7 @@ const amms = {
   "0xbb948620fa9cd554ef9a331b13edea9b181f9d45": "viper", //wsWAGMI
   "0xe064a68994e9380250cfee3e8c0e2ac5c0924548": "viper", //xVIPER
   "0xd3a50c0dce15c12fe64941ffd2b864e887c9b9e1": "viper", //HARMONAPE
-  "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "viper", //JEWEL
+  "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "dfk", //JEWEL
   "0xfe1b516A7297eb03229A8B5AfAD80703911E81cB": "viper", //ROY
 
   "0x6983d1e6def3690c4d616b13597a09e6193ea013": "sushiswap", //1ETH
@@ -37,7 +37,7 @@ const amms = {
   "0x90d81749da8867962c760414c1c25ec926e889b6": "coingecko", //1UNI
 
   "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f": "dfk", //JEWEL/ONE
-  "0x90a48cb3a724ef6f8e6240f4788559f6370b6925": "dfk", //TEST
+  "0x8D760497554eecC3B9036fb0364156ef2F0D02BC": "dfk", //HLY
 };
 
 async function fetchCoinGeckoPrice(address: string) {
@@ -524,12 +524,17 @@ async function fetchDFKPrice(
 ) {
   try {
     console.log(address)
+    const lp = {
+      "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f",
+      "0x8D760497554eecC3B9036fb0364156ef2F0D02BC": "0x3e478ED607F79A50f286A5A6ce52A049897291B2"
+    };
     const contractAddress = defaultContracts.dfkOracle.address;
+    console.log("🚀 ~ file: prices.ts ~ line 532 ~ contractAddress", contractAddress)
     const abi = defaultContracts.dfkOracle.abi;
 
     // const oracleContract = useDFKOracleContract();
     const oracle = new Contract(contractAddress, abi, library);
-    const tokenPriceWei = await oracle.getLatestTokenPrice(address, 1);
+    const tokenPriceWei = await oracle.getLatestTokenPrice(lp[address], 1);
     console.log("🚀 ~ file: prices.ts ~ line 532 ~ tokenPriceWei", (tokenPriceWei /1e18).toString())
     const onePrice = await oracle.getLatestONEPrice() / 1e8;
     const tokenPrice = (onePrice / (tokenPriceWei / 1e18)).toFixed(5)

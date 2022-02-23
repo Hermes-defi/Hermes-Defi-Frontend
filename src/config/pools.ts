@@ -168,6 +168,21 @@ export const pools: Pool[] = {
         logo: "/uniswap-logo.png"
       }
     },
+
+    {
+      pid: 24,
+      multiplier: "6",
+      depositFees: 3,
+      isActive: true,
+      isSpecial: true,
+
+      stakeToken: {
+        address: "0x8D760497554eecC3B9036fb0364156ef2F0D02BC",
+        symbol: "HLY",
+        decimals: 18,
+        logo: "/holy-logo.png"
+      }
+    },
   ],
   1666700001: [],
 }[DEFAULT_CHAIN_ID].filter((p: Pool) => !p.isDisabled);
