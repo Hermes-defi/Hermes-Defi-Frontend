@@ -17,6 +17,7 @@ import StakeBankABI from "config/abis/StakeBank.json";
 import MiniChefSushiABI from "config/abis/MiniChefSushi.json";
 import ZapABI from "config/abis/Zap.json";
 import oracleDFKABI from "config/abis/OracleDFK.json"
+import DelegatorABI from "config/abis/Delegator.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -61,6 +62,11 @@ export const dfynFarm: (address: string) => ContractInfo = (address: string) => 
 
 export const miniChefSushi: (address: string) => ContractInfo = (address: string) => ({
   abi: MiniChefSushiABI,
+  address,
+});
+
+export const delegatorStake: (address: string) => ContractInfo = (address: string) => ({
+  abi: DelegatorABI,
   address,
 });
 
