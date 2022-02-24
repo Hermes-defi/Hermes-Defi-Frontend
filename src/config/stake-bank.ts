@@ -157,6 +157,27 @@ export const stakingBankPools: StakeBankInfo[] = {
       },
     },
 
+    {
+      address: "0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED",
+      poolSite: "https://holygrail.one/",
+      active: true,
+      isSpecial: false,
+
+      stakeToken: {
+        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+        symbol: "PLTS",
+        decimals: 18,
+        logo: "/plutus-logo.png",
+      },
+
+      rewardToken: {
+        address: "0x8D760497554eecC3B9036fb0364156ef2F0D02BC",
+        symbol: "HLY",
+        decimals: 18,
+        logo: "/holy-logo.png",
+      },
+    },
+
     // {
     //   address: "0x3074cf20ecd1cfe96b3ee43968d0c426f775171a",
     //   poolSite: "https://hermesdefi.io/",

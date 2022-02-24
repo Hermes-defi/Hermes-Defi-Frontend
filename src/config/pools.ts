@@ -204,7 +204,7 @@ export const pools: Pool[] = {
       multiplier: "6",
       depositFees: 3,
       isActive: true,
-      isSpecial: true,
+      isSpecial: false,
 
       stakeToken: {
         address: "0x8D760497554eecC3B9036fb0364156ef2F0D02BC",
