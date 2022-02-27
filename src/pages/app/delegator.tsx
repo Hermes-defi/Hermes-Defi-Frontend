@@ -55,7 +55,7 @@ const DepositCard = () => {
   const queryResp = useFetchDelegatorPools();
   const isLoading = queryResp.every((f) => f.status === "loading");
   const [depositValue, setDepositValue] = useState("");
-
+  const pool = queryResp[0].data as DelegatorInfo;
   const depositMutation = useDepositIntoDelegator();
 
   let balance = useTokenBalance(tokens.wone.address, tokens.wone.decimals);
@@ -133,7 +133,7 @@ const DepositCard = () => {
               isFullWidth
               onClick={() =>
                   depositMutation.mutate({
-                    address: queryResp[0].data?.address,
+                    address: pool?.address,
                     amount: depositValue,
                   })
               }
@@ -186,6 +186,7 @@ const UnstakeCard = () => {
 
   const [unstakeValue, setUnstakeValue] = useState("");
   const unstakeMutation = useUnstakeFromDelegator();
+  const pool = queryResp[0].data as DelegatorInfo;
 
   let balance = useTokenBalance(tokens.wone.address, tokens.wone.decimals);
   return (
@@ -222,7 +223,7 @@ const UnstakeCard = () => {
                   variant="outline"
                   placeholder="0"
                   min="0"
-                  max={queryResp[0].data?.stakedOne}
+                  max={pool?.stakedOne}
                   type="number"
                   _focus={{ outline: "none" }}
                   pattern="^[0-9]*[.,]?[0-9]*$"
@@ -261,7 +262,7 @@ const UnstakeCard = () => {
               isFullWidth
               onClick={() =>
                   unstakeMutation.mutate({
-                    address: queryResp[0].data.address,
+                    address: pool?.address,
                     amount: unstakeValue,
                   })
               }
@@ -287,6 +288,7 @@ const WithdrawCard = () => {
   // const timerComponents = useEpochTimeLeft(isLoading ? 0 : queryResp[0].data?.unstakeInfo)
   const withdrawMutation = useWithdrawFromDelegator();
   const [withdrawValue, setWithdrawValue] = useState("");
+  const pool = queryResp[0].data as DelegatorInfo;
 
   return (
     <Stack
@@ -315,9 +317,9 @@ const WithdrawCard = () => {
 
             <Skeleton isLoaded={!isLoading}>
               <Box display="flex" alignItems="center">
-                {queryResp[0].data?.apr && (
+                {pool?.apr && (
                   <PlutusAPRCalculator
-                    apr={queryResp[0].data?.apr}
+                    apr={pool?.apr}
                     tokenSymbol={"ONE"}
                     tokenLink={
                       "https://staking.harmony.one/validators/mainnet/one1ac8yehqexdnam9yza4q4y3zwrkyhrf4hqcpqy5"
@@ -325,9 +327,9 @@ const WithdrawCard = () => {
                   />
                 )}
                 <Text fontWeight="700" fontSize="sm">
-                  {queryResp[0].data?.apr
+                  {pool?.apr
                     ? `${displayNumber(
-                        Math.round(queryResp[0].data?.apr.yearlyAPR)
+                        Math.round(pool?.apr.yearlyAPR)
                       )}%`
                     : "N/A"}
                 </Text>
@@ -341,12 +343,11 @@ const WithdrawCard = () => {
             </Text>
 
             <Skeleton isLoaded={!isLoading}>
-              {queryResp[0].data?.unstakeInfo !== undefined ? (
+              {pool?.unstakeInfo !== undefined ? (
                 <Text fontWeight="700" fontSize="sm">
-                  {queryResp[0].data?.canWithdraw === false
-                    ? queryResp[0].data?.unstakeInfo
+                  {pool?.canWithdraw === false
+                    ? pool?.unstakeInfo
                     : "Withdraw avaliable"}
-                  {console.log("can: ", queryResp[0].data?.unstakeInfo)}
                 </Text>
               ) : (
                 <Text fontWeight="700" fontSize="sm">
@@ -371,7 +372,7 @@ const WithdrawCard = () => {
             variant="outline"
             placeholder="0"
             min="0"
-            max={queryResp[0].data?.stakedOne}
+            max={pool?.stakedOne}
             type="number"
             _focus={{ outline: "none" }}
             pattern="^[0-9]*[.,]?[0-9]*$"
@@ -393,11 +394,11 @@ const WithdrawCard = () => {
           />
         ) : (
           <>
-            {queryResp[0].data?.canWithdraw == true ? (
+            {pool?.canWithdraw == true ? (
               <Button
                 isLoading={withdrawMutation.isLoading}
                 onClick={() => withdrawMutation.mutate({
-                  address: queryResp[0].data?.address,
+                  address: pool?.address,
                   amount: withdrawValue
                 })}
                 bg="gray.700"

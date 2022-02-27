@@ -8,6 +8,7 @@ import { fetchPrice } from "web3-functions/prices";
 import BigNumber from "bignumber.js";
 import { useToast } from "@chakra-ui/react";
 import ReactGA from "react-ga";
+import { QueryResult } from "aws-sdk/clients/kendra";
 
 export const formatTimeLeft = (difference: number) => {
     let timeLeft = {}
