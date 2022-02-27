@@ -41,6 +41,7 @@ export const AppLayout: React.FC = ({ children }) => {
                 <Stack spacing={5} direction="row" alignItems="center">
                   <Image boxSize={9} src="/cosmos.png" alt="Cosmos Logo" />
                   <Image boxSize={9} src="/magic-logo.png" alt="Magic Logo" />
+                  <Image boxSize={9} src="/holy-logo.png" alt="Holygrail Logo" />
                 </Stack>
               </Stack>
             </Stack>

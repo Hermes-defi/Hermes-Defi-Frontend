@@ -5,24 +5,27 @@ import { useCurrentBlockNumber } from "hooks/wallet";
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet"
 import { fetchPrice } from "web3-functions/prices";
-import BigNumberJS from "bignumber.js";
+import BigNumber from "bignumber.js";
 import { useToast } from "@chakra-ui/react";
 import ReactGA from "react-ga";
 
-const formatTimeLeft = (difference: number) => {
+export const formatTimeLeft = (difference: number) => {
     let timeLeft = {}
-  
+    const sec_num = parseInt(difference.toString(), 10);
     if (difference > 0) {
+        const hours = Math.floor(sec_num / 3600);
+        const minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+        const seconds = Math.floor(sec_num - (hours * 3600) - (minutes * 60));
       timeLeft = {
-        days: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        minutes: Math.floor((difference / 1000 / 60) % 60),
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
       };
     }else{
         timeLeft = {
-            days: 0,
             hours: 0,
-            minutes: 0
+            minutes: 0,
+            seconds: 0
         }
     }
   
@@ -39,35 +42,36 @@ function useFetchDelegatorStakingPoolRequest(){
             const delegatorContract = getDelegatorStakeContract(delegatorStakeInfo.address);
             
             //Token Price
-            delegatorStakeInfo.rewardToken.price = await fetchPrice(
-                delegatorStakeInfo.rewardToken,
-                library
-            );
+            // delegatorStakeInfo.rewardToken.price = await fetchPrice(
+            //     delegatorStakeInfo.rewardToken,
+            //     library
+            // );
             //TODO: Ask if there is APR
             delegatorStakeInfo.apr = {
-                yearlyAPR = 0,
-                weeklyAPR = 0,
-                dailyAPR = 0
+                yearlyAPR: 0,
+                weeklyAPR: 0,
+                dailyAPR: 0
             };
+            delegatorStakeInfo.canWithdraw = false;
 
             if(account) {
                 //*Balanceof sONE
                 const rewardBalanceWei = await delegatorContract.balanceOf(account);
-                delegatorStakeInfo.userInfo.rewardBalance = utils.formatUnits(rewardBalanceWei, 18);
+                delegatorStakeInfo.rewardBalance = utils.formatUnits(rewardBalanceWei, 18);
                 //*User ONE staked
                 const stakedOneWei = await delegatorContract._staked(account);
-                delegatorStakeInfo.userInfo.stakedOne = utils.formatUnits(stakedOneWei, 18);
-                delegatorStakeInfo.userInfo.stakedIn = parseInt(await delegatorContract._stakedIn(account));
-                delegatorStakeInfo.userInfo.canWithdraw = false;
+                delegatorStakeInfo.stakedOne = utils.formatUnits(stakedOneWei, 18);
+                delegatorStakeInfo.stakedIn = parseInt(await delegatorContract._stakedIn(account));
+                
 
-                if (delegatorStakeInfo.userInfo.stakedIn > 0){
+                if (delegatorStakeInfo.stakedIn > 0){
                     const withdrawTimestamp = new Number(await delegatorContract.withdrawTimestamp());
                     const now = Date.now();
-                    const ttl = +delegatorStakeInfo.userInfo.stakedIn + +withdrawTimestamp - now;
-                    delegatorStakeInfo.userInfo.unstakeInfo = ttl > 0 ? formatTimeLeft(ttl) : {days: 0, minutes: 0, hours: 0};
-                    const canWithdraw = await delegatorContract.canWithdraw(account, delegatorStakeInfo.userInfo.stakedOne);
-                    delegatorStakeInfo.userInfo.canWithdraw = canWithdraw.allowedToWithdraw;
-                    delegatorStakeInfo.userInfo.reason = canWithdraw.Reason
+                    const ttl = +delegatorStakeInfo.stakedIn + +withdrawTimestamp - now;
+                    delegatorStakeInfo.unstakeInfo = ttl > 0 ? formatTimeLeft(ttl) : {hours: 1, minutes: 10, seconds: 30};
+                    const canWithdraw = await delegatorContract.canWithdraw(account, delegatorStakeInfo.stakedOne);
+                    delegatorStakeInfo.canWithdraw = canWithdraw.allowedToWithdraw;
+                    delegatorStakeInfo.reason = canWithdraw.Reason
                 }
             }
             
@@ -112,7 +116,13 @@ export function useDepositIntoDelegator(){
                 account,
             ]);
             const delegator = delegatorContract(pool.address);
-            const tx = await delegator.deposit(account, utils.parseUnits(amount, 18));
+            const overrides = {
+                from: account,
+                value: utils.parseUnits(amount),
+            }
+            console.log(overrides);
+            console.log(amount)
+            const tx = await delegator.deposit(overrides);
             await tx.wait();
         },
         {
@@ -165,7 +175,7 @@ export function useUnstakeFromDelegator(){
                 account,
             ]);
             const delegator = delegatorContract(pool.address);
-            const tx = await delegator.deposit(account, utils.parseUnits(amount, 18));
+            const tx = await delegator.unstake(utils.parseUnits(amount, 18));
             await tx.wait();
         },
         {
@@ -178,19 +188,19 @@ export function useUnstakeFromDelegator(){
                 queryClient.invalidateQueries(["delegator", address, account]);
 
                 ReactGA.event({
-                    category: "Deposits",
-                    action: "Depositing ONE",
+                    category: "Unstake",
+                    action: "Unstaking ONE",
                     value: parseInt(amount, 10),
                     label: "ONE"
                 });
             },
             onError: ({ data }) => {
-                console.error(`[useDepositIntoDelegator][error] general error`, {
+                console.error(`[useUnstakeFromDelegator][error] general error`, {
                     data,
                 });
 
                 toast({
-                    title: "Error depositing token",
+                    title: "Error unstaking token",
                     description: data?.message,
                     status: "error",
                     position: "top-right",
@@ -200,6 +210,60 @@ export function useUnstakeFromDelegator(){
         }
     );
 
-    return depositMutation;
+    return unstakeMutation;
 }
 
+export function useWithdrawFromDelegator(){
+    const { account } = useActiveWeb3React();
+    const queryClient = useQueryClient();
+    const delegatorContract = useDelegatorContract();
+    const toast = useToast();
+
+    const withdrawMutation = useMutation(
+        async ({ address, amount }: { address: string; amount: string }) => {
+            if(!account) throw new Error("No connected account");
+            const pool = queryClient.getQueryData<DelegatorInfo>([
+                "delegator",
+                address,
+                account,
+            ]);
+            const delegator = delegatorContract(pool.address);
+            const overrides = {
+                from: account,            }
+            const tx = await delegator.withdraw(utils.parseUnits(amount, 18), overrides);
+            await tx.wait();
+        },
+        {
+            onSuccess: (_, { address, amount }) => {
+                const pool = queryClient.getQueryData<DelegatorInfo>([
+                    "delegator",
+                    address,
+                    account,
+                ]);
+                queryClient.invalidateQueries(["delegator", address, account]);
+
+                ReactGA.event({
+                    category: "Withdrawals",
+                    action: `Withdrawing ONE`,
+                    value: parseInt(amount, 10),
+                    label: "ONE"
+                });
+            },
+            onError: ({ data }) => {
+                console.error(`[useWithdrawFromDelegator][error] general error`, {
+                    data,
+                });
+
+                toast({
+                    title: "Error withdrawing token",
+                    description: data?.message,
+                    status: "error",
+                    position: "top-right",
+                    isClosable: true,
+                })
+            }
+        }
+    );
+
+    return withdrawMutation;
+}

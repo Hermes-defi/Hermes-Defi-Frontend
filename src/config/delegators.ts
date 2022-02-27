@@ -7,14 +7,6 @@ export type DelegatorInfo = {
 
   active?: boolean;
 
-  rewardToken: {
-    address: string;
-    symbol: string;
-    decimals: number;
-    logo?: string;
-    price?: string;
-  };
-
   totalStaked?: string;
 
   apr?: {
@@ -22,18 +14,13 @@ export type DelegatorInfo = {
     weeklyAPR: number;
     dailyAPR: number;
   };
-  userInfo?:{
-      rewardBalance: string;
-      stakedOne: string;
-      stakedIn: number;
-      unstakeInfo: {
-      };
-      canWithdraw: boolean;
-      reason?: string;
-  }
-
-  hasStaked?: boolean;
-  hasApprovedPool?: boolean;
+  
+  rewardBalance?: string;
+  stakedOne?: string;
+  stakedIn?: number;
+  unstakeInfo?: {};
+  canWithdraw?: boolean;
+  reason?: string;
   rewardsEarned?: string;
   userTotalStaked?: string;
 };
@@ -47,13 +34,6 @@ export const delegatorStakingPools: DelegatorInfo[] = {
         "https://staking.harmony.one/validators/mainnet/one1ac8yehqexdnam9yza4q4y3zwrkyhrf4hqcpqy5",
 
       active: true,
-
-      rewardToken: {
-        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
-        symbol: "PLTS",
-        decimals: 18,
-        logo: "/plutus-logo.png",
-      },
     },
   ],
 }[DEFAULT_CHAIN_ID];
