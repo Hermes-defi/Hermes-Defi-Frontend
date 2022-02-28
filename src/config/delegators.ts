@@ -14,11 +14,15 @@ export type DelegatorInfo = {
     weeklyAPR: number;
     dailyAPR: number;
   };
-  
+
   rewardBalance?: string;
   stakedOne?: string;
   stakedIn?: number;
-  unstakeInfo?: {};
+  unstakeInfo?: {
+    hours: number;
+    minutes: number;
+    seconds: number;
+  };
   canWithdraw?: boolean;
   reason?: string;
   rewardsEarned?: string;

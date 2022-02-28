@@ -5,13 +5,20 @@ import { useCurrentBlockNumber } from "hooks/wallet";
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet"
 import { fetchPrice } from "web3-functions/prices";
-import BigNumber from "bignumber.js";
 import { useToast } from "@chakra-ui/react";
 import ReactGA from "react-ga";
-import { QueryResult } from "aws-sdk/clients/kendra";
 
 export const formatTimeLeft = (difference: number) => {
-    let timeLeft = {}
+    type time_object = {
+        hours: number,
+        minutes: number,
+        seconds: number
+    };
+    let timeLeft : time_object = {
+        hours: 0,
+        minutes: 0,
+        seconds: 0
+    }
     const sec_num = parseInt(difference.toString(), 10);
     if (difference > 0) {
         const hours = Math.floor(sec_num / 3600);

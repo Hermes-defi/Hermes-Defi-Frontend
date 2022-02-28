@@ -1,29 +1,17 @@
 import React, { useState } from "react";
 
 import {
-  displayCurrency,
   displayNumber,
-  displayTokenCurrency,
 } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
-import {
-  useApprovePPlutus,
-  useBuyPPlutus,
-  usePresaleApproveToken,
-  usePresaleInfo,
-  useSwapInfo,
-  useSwapPPlutus,
-} from "state/pre-sale";
 
 import { AppLayout } from "components/layout";
 import { UnlockButton } from "components/wallet/unlock-wallet";
-import { BuyPlutusModal } from "components/modals/buy-plutus";
 
 import {
   Box,
   Button,
   Container,
-  Flex,
   Heading,
   HStack,
   Input,
@@ -31,14 +19,10 @@ import {
   InputLeftAddon,
   Link,
   Skeleton,
-  Spinner,
   Stack,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react";
-import { BuypPlutusModal } from "components/modals/buy-pPlutus";
 import {
-  formatTimeLeft,
   useDepositIntoDelegator,
   useFetchDelegatorPools,
   useUnstakeFromDelegator,
@@ -443,8 +427,6 @@ const WithdrawCard = () => {
 };
 
 const Page = () => {
-  const queryResp = usePresaleInfo();
-  const isLoaded = !!queryResp.data;
   return (
     <AppLayout>
       <Stack align="center" py={5}>
