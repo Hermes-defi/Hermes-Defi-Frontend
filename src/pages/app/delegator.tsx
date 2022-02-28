@@ -277,7 +277,7 @@ const WithdrawCard = () => {
         <Stack mb={3} spacing={{ base: 3, md: 2 }}>
           <Stack direction={["column", "row"]} justify="space-between">
             <Text fontWeight="600" fontSize="sm">
-              APR
+              APY
             </Text>
 
             <Skeleton isLoaded={!isLoading}>

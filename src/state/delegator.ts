@@ -56,9 +56,9 @@ function useFetchDelegatorStakingPoolRequest(){
             // );
             //TODO: Ask if there is APR
             delegatorStakeInfo.apr = {
-                yearlyAPR: 0,
-                weeklyAPR: 0,
-                dailyAPR: 0
+                yearlyAPR: 9,
+                weeklyAPR: 9/52,
+                dailyAPR: 9/365
             };
             delegatorStakeInfo.canWithdraw = false;
 
