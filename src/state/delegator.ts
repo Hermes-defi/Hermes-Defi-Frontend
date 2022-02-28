@@ -67,10 +67,10 @@ function useFetchDelegatorStakingPoolRequest(){
 
                 if (delegatorStakeInfo.stakedIn > 0){
                     const withdrawTimestamp = new Number(await delegatorContract.withdrawTimestamp());
-                    const now = Date.now();
+                    const now = parseInt((Date.now()/1000).toString());
                     const ttl = +delegatorStakeInfo.stakedIn + +withdrawTimestamp - now;
                     delegatorStakeInfo.unstakeInfo = ttl > 0 ? formatTimeLeft(ttl) : {hours: 1, minutes: 10, seconds: 30};
-                    const canWithdraw = await delegatorContract.canWithdraw(account, delegatorStakeInfo.stakedOne);
+                    const canWithdraw = await delegatorContract.canWithdraw(account, utils.parseUnits(delegatorStakeInfo.stakedOne));
                     delegatorStakeInfo.canWithdraw = canWithdraw.allowedToWithdraw;
                     delegatorStakeInfo.reason = canWithdraw.Reason
                 }
@@ -141,6 +141,12 @@ export function useDepositIntoDelegator(){
                     value: parseInt(amount, 10),
                     label: "ONE"
                 });
+                toast({
+                    title: "Token successfully deposited",
+                    status: "success",
+                    position: "top-right",
+                    isClosable: true,
+                });
             },
             onError: ({ data }) => {
                 console.error(`[useDepositIntoDelegator][error] general error`, {
@@ -193,6 +199,12 @@ export function useUnstakeFromDelegator(){
                     action: "Unstaking ONE",
                     value: parseInt(amount, 10),
                     label: "ONE"
+                });
+                toast({
+                    title: "Token successfully unstaked",
+                    status: "success",
+                    position: "top-right",
+                    isClosable: true,
                 });
             },
             onError: ({ data }) => {
@@ -248,6 +260,12 @@ export function useWithdrawFromDelegator(){
                     action: `Withdrawing ONE`,
                     value: parseInt(amount, 10),
                     label: "ONE"
+                });
+                toast({
+                    title: "Token successfully withdrawed",
+                    status: "success",
+                    position: "top-right",
+                    isClosable: true,
                 });
             },
             onError: ({ data }) => {

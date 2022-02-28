@@ -51,7 +51,6 @@ import { PlutusAPRCalculator } from "components/helpers/apr-calculator";
 
 const DepositCard = () => {
   const { account } = useActiveWeb3React();
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const queryResp = useFetchDelegatorPools();
   const isLoading = queryResp.every((f) => f.status === "loading");
   const [depositValue, setDepositValue] = useState("");
@@ -92,43 +91,36 @@ const DepositCard = () => {
                 />
                 <Input
                   variant="outline"
-                  placeholder="0"
-                  min="0"
+                  placeholder={"100"}
+                  min={100}
                   max={balance}
                   type="number"
                   _focus={{ outline: "none" }}
-                  pattern="^[0-9]*[.,]?[0-9]*$"
+                  pattern="^[0-9]*[.,]?[0-9]*"
                   focusBorderColor="secondary.500"
                   onChange={(e) => setDepositValue(e.target.value)}
-                  value={
-                    Number(depositValue) > 0
-                      ? Number(depositValue).toString()
-                      : "0"
-                  }
+                  // value={
+                  //   Number(depositValue) >= 100
+                  //     ? Number(depositValue).toString()
+                  //     : "100"
+                  // }
                 />
               </InputGroup>
             </Stack>
           </Stack>
         </Box>
-        {console.log("deposit: ", depositValue)}
         {/* actions */}
         <Stack>
-          {!account && (
+          {!account ? (
             <UnlockButton
               isFullWidth
-              onClick={onOpen}
               bg="gray.700"
               size="lg"
               fontSize="md"
               _hover={{ bg: "gray.600" }}
+              color={"white"}
             />
-          )}
-
-          {isLoading ? (
-            <Flex mt={16} align="center" justify="center">
-              <Spinner size="lg" />
-            </Flex>
-          ) : (
+          ): ( 
             <Button
               isFullWidth
               onClick={() =>
@@ -141,6 +133,7 @@ const DepositCard = () => {
               size="md"
               fontSize="md"
               _hover={{ bg: "gray.600" }}
+              disabled={new Number(depositValue) < 100 ? true : false}
             >
               Deposit
             </Button>
@@ -180,7 +173,6 @@ function useEpochTimeLeft(timeout: any) {
 
 const UnstakeCard = () => {
   const { account } = useActiveWeb3React();
-  const { isOpen, onClose, onOpen } = useDisclosure();
   const queryResp = useFetchDelegatorPools();
   const isLoading = queryResp.every((f) => f.status === "loading");
 
@@ -221,7 +213,7 @@ const UnstakeCard = () => {
                 />
                 <Input
                   variant="outline"
-                  placeholder="0"
+                  placeholder="100"
                   min="0"
                   max={pool?.stakedOne}
                   type="number"
@@ -229,11 +221,6 @@ const UnstakeCard = () => {
                   pattern="^[0-9]*[.,]?[0-9]*$"
                   focusBorderColor="secondary.500"
                   onChange={(e) => setUnstakeValue(e.target.value)}
-                  value={
-                    Number(unstakeValue) > 0
-                      ? Number(unstakeValue).toString()
-                      : "0"
-                  }
                 />
               </InputGroup>
             </Stack>
@@ -242,21 +229,15 @@ const UnstakeCard = () => {
 
         {/* actions */}
         <Stack>
-          {!account && (
+        {!account ? (
             <UnlockButton
               isFullWidth
-              onClick={onOpen}
               bg="gray.700"
               size="lg"
               fontSize="md"
               _hover={{ bg: "gray.600" }}
+              color={"white"}
             />
-          )}
-
-          {isLoading ? (
-            <Flex mt={16} align="center" justify="center">
-              <Spinner size="lg" />
-            </Flex>
           ) : (
             <Button
               isFullWidth
@@ -270,6 +251,7 @@ const UnstakeCard = () => {
               size="md"
               fontSize="md"
               _hover={{ bg: "gray.600" }}
+              disabled={new Number(unstakeValue) < 100 ? true : false}
             >
               Unstake
             </Button>
@@ -282,7 +264,6 @@ const UnstakeCard = () => {
 
 const WithdrawCard = () => {
   const { account } = useActiveWeb3React();
-  const { onOpen } = useDisclosure();
   const queryResp = useFetchDelegatorPools();
   const isLoading = queryResp.every((f) => f.status === "loading");
   // const timerComponents = useEpochTimeLeft(isLoading ? 0 : queryResp[0].data?.unstakeInfo)
@@ -336,7 +317,40 @@ const WithdrawCard = () => {
               </Box>
             </Skeleton>
           </Stack>
+          <Stack direction={["column", "row"]} justify="space-between">
+            <Text fontWeight="600" fontSize="sm">
+              Balance of sONE
+            </Text>
 
+            <Skeleton isLoaded={!isLoading}>
+              {pool?.rewardBalance !== "0.0" ? (
+                <Text fontWeight="700" fontSize="sm">
+                  {pool?.rewardBalance}
+                </Text>
+              ) : (
+                <Text fontWeight="700" fontSize="sm">
+                  0.0
+                </Text>
+              )}
+            </Skeleton>
+          </Stack>
+          <Stack direction={["column", "row"]} justify="space-between">
+            <Text fontWeight="600" fontSize="sm">
+              Queued ONE
+            </Text>
+
+            <Skeleton isLoaded={!isLoading}>
+              {pool?.stakedOne !== "0.0" ? (
+                <Text fontWeight="700" fontSize="sm">
+                  {pool?.stakedOne}
+                </Text>
+              ) : (
+                <Text fontWeight="700" fontSize="sm">
+                  0.0
+                </Text>
+              )}
+            </Skeleton>
+          </Stack>
           <Stack direction={["column", "row"]} justify="space-between">
             <Text fontWeight="600" fontSize="sm">
               EPOCH remaining
@@ -346,7 +360,9 @@ const WithdrawCard = () => {
               {pool?.unstakeInfo !== undefined ? (
                 <Text fontWeight="700" fontSize="sm">
                   {pool?.canWithdraw === false
-                    ? pool?.unstakeInfo
+                    ? (pool?.unstakeInfo?.hours + "h " +
+                      pool?.unstakeInfo?.minutes + "min " +
+                      pool?.unstakeInfo?.seconds + "s")
                     : "Withdraw avaliable"}
                 </Text>
               ) : (
@@ -386,11 +402,11 @@ const WithdrawCard = () => {
         {!account ? (
           <UnlockButton
             isFullWidth
-            onClick={onOpen}
             bg="gray.700"
             size="md"
             fontSize="md"
             _hover={{ bg: "gray.600" }}
+            color={"white"}
           />
         ) : (
           <>
@@ -451,14 +467,14 @@ const Page = () => {
               </Stack>
               <WithdrawCard />
             </Stack>
-            <Stack flex={1} mb={3} spacing={9}>
+            <Stack flex={1} mb={3} spacing={12}>
               <Stack>
                 <Heading fontSize="3xl">How it works</Heading>
               </Stack>
               <Stack>
                 <Text fontSize="sm">
                   1. Delegate to Hermes DeFi Node staking your ONE in the first
-                  card.
+                  card. (Minimum deposit = 100 ONEs)
                 </Text>
 
                 <Text fontSize="sm">
