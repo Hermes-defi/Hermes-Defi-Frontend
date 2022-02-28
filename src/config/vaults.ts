@@ -246,61 +246,6 @@ export const vaults: Vault[] = {
         },
       ],
     },
-    //ETH/ONE
-    {
-      address: "0xcD87C158ca469BC01dbC1Eb33a338964873a120C",
-      stratAddress: "0x76Bd119778DF430Af675d5B37F3698fB2C097775",
-      masterChefAddress: "0x67dA5f2FfaDDfF067AB9d5F025F8810634d84287",
-      zapAddress: "0xC538cB75c7bB87E475fD4d57DDF5605D4B5f14C1",
-      farmPid: 3,
-      tokenPerBlock: "400000000000000000",
-
-      isActive: false,
-      vaultType: "lp",
-      amm: "sushiswap",
-      depositFees: 0,
-      withdrawFees: 0,
-      performanceFee: 0.025,
-
-      sushiRewardTokens: [
-        {
-          address: "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a",
-          symbol: "1SUSHI",
-          decimals: 18,
-        },
-
-        {
-          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
-          decimals: 18,
-          symbol: "WONE",
-        },
-      ],
-
-      stakeToken: {
-        address: "0xeb049f1ed546f8efc3ad57f6c7d22f081ccc7375",
-        symbol: "1ETH-WONE",
-        decimals: 18,
-        logo: ["/eth-logo.png", "/harmony-one-logo.png"],
-      },
-
-      rewardToken: {
-        symbol: "pSushiETH-ONE",
-        decimals: 18,
-      },
-
-      pairs: [
-        {
-          address: "0x6983d1e6def3690c4d616b13597a09e6193ea013",
-          decimals: 18,
-          symbol: "1ETH",
-        },
-        {
-          address: "0xcf664087a5bb0237a0bad6742852ec6c8d69a27a",
-          decimals: 18,
-          symbol: "WONE",
-        },
-      ],
-    },
     //UST/ETH
     {
       address: "0xE26c98dE1E148Ea07a7E7af0720cc8Ea0E1260B1",
