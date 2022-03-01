@@ -42,9 +42,9 @@ const DepositButton: React.FC<IDepositProps> = (props) => {
       <DepositModal
         isOpen={isOpen}
         onClose={onClose}
-        token={props.stakeToken.symbol}
-        tokenAddress={props.stakeToken.address}
-        tokenDecimals={props.stakeToken.decimals}
+        token={props.stakeToken?.symbol}
+        tokenAddress={props.stakeToken?.address}
+        tokenDecimals={props.stakeToken?.decimals}
         isLoading={props.deposit.isLoading}
         onDeposit={(amount: string) =>
           props.deposit.mutateAsync({ amount, id: props.id }).then(() => onClose())
@@ -80,7 +80,7 @@ const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
         isOpen={isOpen}
         onClose={onClose}
         hasWithdrawAll={props.hasWithdrawAll}
-        token={props.stakeToken.symbol}
+        token={props.stakeToken?.symbol}
         tokenBalance={props.userTotalStaked}
         isLoading={props.withdraw.isLoading}
         onWithdrawAll={() => props.withdrawAll.mutateAsync({ id: props.id }).then(() => onClose())}
@@ -139,7 +139,7 @@ export const UserSection: React.FC<IProps> = (props) => {
     <Stack spacing={4}>
       <Box align="left">
         <Text mb={1} fontWeight="600" fontSize="sm">
-          {props.stakeToken.symbol} Staked
+          {props.stakeToken?.symbol} Staked
         </Text>
 
         <Stack align="center" direction="row" justify="space-between">
@@ -194,7 +194,7 @@ export const UserSection: React.FC<IProps> = (props) => {
         <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="xs">
                 {props.userTotalStaked != '0.0' ? "(" + displayTokenCurrency(
-                  new BigNumber(props.userTotalStaked).times(props.stakeToken.price).toNumber(), "") + "$)" : "(0$)" } 
+                  new BigNumber(props.userTotalStaked).times(props.stakeToken?.price).toNumber(), "") + "$)" : "(0$)" } 
           </Text>
         </Stack>
       </Box>

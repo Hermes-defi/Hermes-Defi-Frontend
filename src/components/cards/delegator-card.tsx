@@ -34,10 +34,10 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
   return (
     <Box
       px={8}
-      py={4}
-      w={"19rem"}
+      py={8}
+      w={"lg"}
       bg="accent.500"
-      boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
+      // boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={
         pool?.isSpecial
           ? `linear(to-b, primary.300, accent.500)`
@@ -47,8 +47,8 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
       color="white"
     >
       {/* pool name */}
-      <HStack>
-        <HStack align="center" mb={5} spacing={2}>
+      <HStack justify={"space-between"} mb={5}>
+        <HStack align="center" >
           <Image
             border="2px"
             borderColor="white"
@@ -60,6 +60,19 @@ export const PoolCard: React.FC<{ pool: Pool }> = ({ pool }) => {
 
           <Heading fontSize="3xl">{pool?.stakeToken?.symbol}</Heading>
         </HStack>
+        <Heading
+            px={"4"}
+            py={1}
+            color={"secondary.300"}
+            boxSize={12}
+            rounded={"full"}
+            bgColor={"white"}
+            fontWeight="700"
+            fontSize="4xl"
+            
+          >
+            2
+          </Heading>
       </HStack>
 
       {/* pool? badges */}
