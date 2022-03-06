@@ -5,7 +5,7 @@ import { useCurrentBlockNumber } from "hooks/wallet";
 import { useMutation, useQueries, useQueryClient } from "react-query";
 import { useActiveWeb3React } from "wallet"
 import { fetchPrice } from "web3-functions/prices";
-import { getPoolApr } from "web3-functions/utils";
+import { getDelegatorAPR, getPoolApr } from "web3-functions/utils";
 import { useToast } from "@chakra-ui/react";
 import ReactGA from "react-ga";
 import { usePlutusPrice } from "hooks/prices";
@@ -62,11 +62,19 @@ function useFetchDelegatorStakingPoolRequest(){
             //     library
             // );
             //TODO: Ask if there is APR
-            delegatorStakeInfo.apr = {
-                yearlyAPR: 9,
-                weeklyAPR: 9/52,
-                dailyAPR: 9/365
-            };
+            
+            let balance = await delegatorContract.balance();
+            console.log("🚀 ~ file: delegator.ts ~ line 69 ~ return ~ balance", balance)
+            let reward = await delegatorContract.rewardStatsLastReward();
+            balance = utils.formatUnits(balance);
+            reward = utils.formatUnits(reward);
+            console.log("🚀 ~ file: delegator.ts ~ line 71 ~ return ~ reward", reward)
+
+            delegatorStakeInfo.apr = getDelegatorAPR(
+                balance,
+                reward
+            )
+            console.log("🚀 ~ file: delegator.ts ~ line 75 ~ return ~ delegatorStakeInfo.apr", delegatorStakeInfo.apr)
             delegatorStakeInfo.canWithdraw = false;
 
             if(account) {
@@ -78,7 +86,7 @@ function useFetchDelegatorStakingPoolRequest(){
                 delegatorStakeInfo.stakedOne = utils.formatUnits(stakedOneWei, 18);
                 delegatorStakeInfo.stakedIn = parseInt(await delegatorContract._stakedIn(account));
                 
-
+                
                 if (delegatorStakeInfo.stakedIn > 0){
                     const withdrawTimestamp = new Number(await delegatorContract.withdrawTimestamp());
                     const now = parseInt((Date.now()/1000).toString());
