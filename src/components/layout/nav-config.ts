@@ -90,6 +90,11 @@ export const L1_NAV_ITEMS: Array<NavItem> = [
         isExternal: true,
       },
       {
+        label: "Wiki",
+        href: "https://hermes-defi.gitbook.io/the-hermes-protocol/",
+        isExternal: true
+      },
+      {
         label: "Github",
         href: "https://github.com/Hermes-defi",
         isExternal: true,
