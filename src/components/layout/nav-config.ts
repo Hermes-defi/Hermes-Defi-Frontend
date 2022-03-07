@@ -124,7 +124,7 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
       {
         label: "Wiki",
-        href: "https://hermes-defi.gitbook.io/the-hermes-protocol/",
+        href: "https://wiki.hermesdefi.io/",
         isExternal: true
       },
       {
