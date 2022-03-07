@@ -56,12 +56,12 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     children: [
       {
         label: "Swap PLUTUS (Viper)",
-        href: "https://viperswap.one/#/swap?outputCurrency=0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+        href: "https://viper.exchange/#/swap?inputCurrency=0xEf977d2f931C1978Db5F6747666fa1eACB0d0339&outputCurrency=0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
         isExternal: true,
       },
       {
         label: "Swap IRIS (Viper)",
-        href: "https://viperswap.one/#/swap?outputCurrency=0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc",
+        href: "https://viper.exchange/#/swap?inputCurrency=one&outputCurrency=0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc",
         isExternal: true,
       },
       {
