@@ -67,6 +67,7 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       {
         label: "Add Liquidity PLUTUS / DAI",
         href: "https://viper.exchange/#/add/0xd32858211FCEFd0bE0dD3FD6D069c3E821e0AEf3/0xEf977d2f931C1978Db5F6747666fa1eACB0d0339",
+        isExternal: true,
       },
       {
         label: "Add Liquidity IRIS / WONE",
@@ -112,8 +113,13 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     label: "Community",
     children: [
       {
-        label: "Docs",
+        label: "PLTS docs",
         href: "https://hermes-defi.gitbook.io/plutus/",
+        isExternal: true,
+      },
+      {
+        label: "HRMS docs",
+        href: "https://hermes-defi.gitbook.io/the-hermes-protocol/",
         isExternal: true,
       },
       {
