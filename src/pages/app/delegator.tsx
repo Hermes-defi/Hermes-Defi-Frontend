@@ -116,7 +116,7 @@ const DepositCard = () => {
 
             <Skeleton isLoaded={!isLoading}>
               <Box display="flex" alignItems="center">
-                {pool?.apr && (
+                {/* {pool?.apr && (
                   <PlutusAPRCalculator
                     apr={pool?.apr}
                     tokenSymbol={"ONE"}
@@ -124,7 +124,7 @@ const DepositCard = () => {
                       "https://staking.harmony.one/validators/mainnet/one1ac8yehqexdnam9yza4q4y3zwrkyhrf4hqcpqy5"
                     }
                   />
-                )}
+                )} */}
                 <Text fontWeight="700" fontSize="sm">
                   {pool?.apr
                     ? `${displayNumber(Math.round(pool?.apr.yearlyAPR))}%`

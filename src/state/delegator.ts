@@ -61,20 +61,18 @@ function useFetchDelegatorStakingPoolRequest(){
             //     delegatorStakeInfo.rewardToken,
             //     library
             // );
-            //TODO: Ask if there is APR
             
-            let balance = await delegatorContract.balance();
-            console.log("🚀 ~ file: delegator.ts ~ line 69 ~ return ~ balance", balance)
+            let balance = await delegatorContract.rewardStatsBalance();
             let reward = await delegatorContract.rewardStatsLastReward();
+            let rewardTimeInterval = parseFloat(await delegatorContract.rewardStatsTimeInterval());
             balance = utils.formatUnits(balance);
             reward = utils.formatUnits(reward);
-            console.log("🚀 ~ file: delegator.ts ~ line 71 ~ return ~ reward", reward)
 
             delegatorStakeInfo.apr = getDelegatorAPR(
                 balance,
-                reward
+                reward,
+                rewardTimeInterval
             )
-            console.log("🚀 ~ file: delegator.ts ~ line 75 ~ return ~ delegatorStakeInfo.apr", delegatorStakeInfo.apr)
             delegatorStakeInfo.canWithdraw = false;
 
             if(account) {

@@ -86,14 +86,14 @@ export function getPoolApr(
   };
 }
 
-export function getDelegatorAPR(balance: number, reward: number) {
+export function getDelegatorAPR(balance: number, reward: number, rewardTimeInterval: number) {
   let dailyAPR = 0;
   let weeklyAPR = 0;
   let yearlyAPR = 0;
   
   if (reward > 0 && balance > 0) {
-    const aprPerSec = (reward / balance) * 100;
-    dailyAPR = aprPerSec * 86400;
+    const aprPerSec = (reward / rewardTimeInterval);
+    dailyAPR = aprPerSec * 86400 / balance * 100;
     weeklyAPR = dailyAPR * 7;
     yearlyAPR = dailyAPR * 365;
   }
