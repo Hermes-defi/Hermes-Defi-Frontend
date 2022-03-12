@@ -173,6 +173,7 @@ const Home = () => {
                 px={6}
                 py={1.5}
                 rounded={16}
+                color="white"
                 _selected={{ bg: "whiteAlpha.400" }}
                 _disabled={{ opacity: 0.7, cursor: "not-allowed" }}
               >
@@ -183,6 +184,7 @@ const Home = () => {
                 px={6}
                 py={1.5}
                 rounded={16}
+                color="white"
                 _selected={{ bg: "whiteAlpha.400" }}
                 _disabled={{ opacity: 0.7, cursor: "not-allowed" }}
               >
