@@ -151,7 +151,7 @@ const Home = () => {
                     bg="gray.700"
                     boxShadow="lg"
                     rounded="16px"
-                    isDisabled={Number(userInfo.data?.pendingReward) <= 0}
+                    isDisabled={userInfo.isLoading || Number(userInfo.data?.pendingReward) <= 0}
                     isLoading={harvestWone.isLoading}
                     onClick={() => harvestWone.mutate({ amount: "0" })}
                     _hover={{ bg: "gray.600" }}
