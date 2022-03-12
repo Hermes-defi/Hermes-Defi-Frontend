@@ -190,3 +190,8 @@ export function useDelegatorContract() {
     return contract(delegatorInfo);
   };
 }
+
+export function useWoneBank() {
+  const contract = useContract();
+  return contract(defaultContracts.woneBank);
+}

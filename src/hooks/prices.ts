@@ -11,6 +11,7 @@ export function usePlutusPrice() {
     queryFn: async () => {
       return await fetchPrice({ address: defaultContracts.plutusToken.address, decimals: 18, symbol: "PLTS" }, library);
     },
+    retry: 1,
     refetchInterval: 0.5 * 60 * 1000,
   });
 }
