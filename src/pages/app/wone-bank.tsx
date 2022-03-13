@@ -58,7 +58,7 @@ const Home = () => {
           <Heading bgGradient="linear(to-l, #f6c770, #8400FF)" bgClip="text">
             Hermes WONE Bank
           </Heading>
-          <Text>Lock WONE to purchase HRMS/ONE LPs and earn PLTS</Text>
+          <Text>Use your WONE to purchase HRMS/ONE LPs and earn PLTS</Text>
         </chakra.div>
 
         <chakra.div
@@ -115,7 +115,9 @@ const Home = () => {
                 <Tooltip
                   label={displayCurrency(new BigNumber(generalInfo.data?.totalStaked).times(generalInfo.data?.wonePrice || 0).toNumber())}
                 >
-                  <Heading fontSize="2xl">{generalInfo.data?.totalStaked ? generalInfo.data?.totalStaked : "N/A"}</Heading>
+                  <Heading fontSize="2xl">
+                    {generalInfo.data?.totalStaked ? displayNumber(generalInfo.data?.totalStaked, true, 2) : "N/A"}
+                  </Heading>
                 </Tooltip>
               </Skeleton>
             </Stack>
