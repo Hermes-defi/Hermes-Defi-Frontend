@@ -224,6 +224,7 @@ const Page = ({ vaults: initialVaults }) => {
 };
 
 export async function getStaticProps() {
+  await simpleRpcProvider.ready;
   const vaults = await fetchVaultsInfo(simpleRpcProvider);
 
   return {

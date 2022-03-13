@@ -56,40 +56,19 @@ async function fetchCoinGeckoPrice(address: string) {
   }
 }
 
-async function fetchQuickSwapPrice(
-  _token: { address: string; decimals: number; symbol: string },
-  library: any
-) {
-  const usdc = new Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.usdc.address,
-    defaultTokens.usdc.decimals,
-    "USDC"
-  );
+async function fetchQuickSwapPrice(_token: { address: string; decimals: number; symbol: string }, library: any) {
+  const usdc = new Token(DEFAULT_CHAIN_ID, defaultTokens.usdc.address, defaultTokens.usdc.decimals, "USDC");
 
-  const token = new Token(
-    DEFAULT_CHAIN_ID,
-    _token.address,
-    _token.decimals,
-    _token.symbol
-  );
+  const token = new Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
 
   try {
     let route;
     if (token.symbol !== "WMATIC") {
       // fetch matic to usdc pair
-      const MaticToUSDCPair = await Fetcher.fetchPairData(
-        WMATIC[DEFAULT_CHAIN_ID],
-        usdc,
-        library
-      );
+      const MaticToUSDCPair = await Fetcher.fetchPairData(WMATIC[DEFAULT_CHAIN_ID], usdc, library);
 
       // fetch the token to matic pair info
-      const tokenToMatic = await Fetcher.fetchPairData(
-        token,
-        WMATIC[DEFAULT_CHAIN_ID],
-        library
-      );
+      const tokenToMatic = await Fetcher.fetchPairData(token, WMATIC[DEFAULT_CHAIN_ID], library);
 
       // find a route
       route = new Route([MaticToUSDCPair, tokenToMatic], usdc);
@@ -115,29 +94,11 @@ async function fetchQuickSwapPrice(
   }
 }
 
-async function fetchDfynPrice(
-  _token: { address: string; decimals: number; symbol: string },
-  library: any
-) {
-  const token = new Dfyn.Token(
-    DEFAULT_CHAIN_ID,
-    _token.address,
-    _token.decimals,
-    _token.symbol
-  );
+async function fetchDfynPrice(_token: { address: string; decimals: number; symbol: string }, library: any) {
+  const token = new Dfyn.Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
 
-  const usdc = new Dfyn.Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.usdc.address,
-    defaultTokens.usdc.decimals,
-    "USDC"
-  );
-  const iron = new Dfyn.Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.iron.address,
-    defaultTokens.iron.decimals,
-    "IRON"
-  );
+  const usdc = new Dfyn.Token(DEFAULT_CHAIN_ID, defaultTokens.usdc.address, defaultTokens.usdc.decimals, "USDC");
+  const iron = new Dfyn.Token(DEFAULT_CHAIN_ID, defaultTokens.iron.address, defaultTokens.iron.decimals, "IRON");
 
   try {
     let route;
@@ -150,11 +111,7 @@ async function fetchDfynPrice(
       );
 
       // fetch the token to matic pair info
-      const tokenToMatic = await Dfyn.Fetcher.fetchPairData(
-        token,
-        Dfyn.WETH[DEFAULT_CHAIN_ID],
-        library
-      );
+      const tokenToMatic = await Dfyn.Fetcher.fetchPairData(token, Dfyn.WETH[DEFAULT_CHAIN_ID], library);
 
       // find a route
       route = new Dfyn.Route([MaticToUSDCPair, tokenToMatic], usdc);
@@ -166,11 +123,7 @@ async function fetchDfynPrice(
 
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
-    console.log(
-      `dfyn - error getting price for ${token.symbol}`,
-      e.message,
-      token
-    );
+    console.log(`dfyn - error getting price for ${token.symbol}`, e.message, token);
 
     // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
     // please refactor
@@ -186,15 +139,13 @@ async function fetchDfynPrice(
 
 async function fetchPolycatPrice(address: string) {
   try {
-    const resp = await fetch(
-      "https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: `{
+    const resp = await fetch("https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
             tokenDayDatas ( 
               orderBy: date,
               orderDirection: desc,
@@ -207,14 +158,11 @@ async function fetchPolycatPrice(address: string) {
               priceUSD
             }
           }`,
-        }),
-      }
-    );
+      }),
+    });
 
     const { data } = await resp.json();
-    return new BigNumberJS(data.tokenDayDatas[0].priceUSD)
-      .toPrecision(6)
-      .toString();
+    return new BigNumberJS(data.tokenDayDatas[0].priceUSD).toPrecision(6).toString();
   } catch (err) {
     console.log(err);
     return "0";
@@ -223,15 +171,13 @@ async function fetchPolycatPrice(address: string) {
 
 async function fetchSushiswapPrice(address: string) {
   try {
-    const resp = await fetch(
-      "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: `{
+    const resp = await fetch("https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
             tokenDayDatas ( 
               orderBy: date
               orderDirection: desc
@@ -244,14 +190,11 @@ async function fetchSushiswapPrice(address: string) {
               priceUSD
             }
           }`,
-        }),
-      }
-    );
+      }),
+    });
 
     const { data } = await resp.json();
-    return new BigNumberJS(data.tokenDayDatas[0]?.priceUSD)
-      .toPrecision(6)
-      .toString();
+    return new BigNumberJS(data.tokenDayDatas[0]?.priceUSD).toPrecision(6).toString();
   } catch (err) {
     console.log(err);
     return "0";
@@ -259,15 +202,13 @@ async function fetchSushiswapPrice(address: string) {
 }
 
 async function fetchSushiPairData(token: string) {
-  return fetch(
-    "https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange",
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        query: `{
+  return fetch("https://sushi.graph.t.hmny.io/subgraphs/name/sushiswap/harmony-exchange", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: `{
         pair(id: "${token}"){
           token0{
             id
@@ -283,9 +224,8 @@ async function fetchSushiPairData(token: string) {
           reserve1
         }
         }`,
-      }),
-    }
-  )
+    }),
+  })
     .then(function (response) {
       if (response.status >= 400) {
         throw new Error("Bad response from server");
@@ -297,34 +237,15 @@ async function fetchSushiPairData(token: string) {
     });
 }
 
-async function fetchSushiSwapPrice2(
-  address: string,
-  decimals: number,
-  symbol: string
-) {
+async function fetchSushiSwapPrice2(address: string, decimals: number, symbol: string) {
   const woneAddress = "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a";
   const usdcAddress = "0x985458E523dB3d53125813eD68c274899e9DfAb4";
 
-  const tokenWONE = new Sushi.Token(
-    DEFAULT_CHAIN_ID,
-    woneAddress.toLowerCase(),
-    18,
-    "WONE"
-  );
+  const tokenWONE = new Sushi.Token(DEFAULT_CHAIN_ID, woneAddress.toLowerCase(), 18, "WONE");
 
-  const tokenUSDC = new Sushi.Token(
-    DEFAULT_CHAIN_ID,
-    usdcAddress.toLowerCase(),
-    6,
-    "USDC"
-  );
+  const tokenUSDC = new Sushi.Token(DEFAULT_CHAIN_ID, usdcAddress.toLowerCase(), 6, "USDC");
 
-  const token = new Sushi.Token(
-    DEFAULT_CHAIN_ID,
-    address.toLowerCase(),
-    decimals,
-    symbol
-  );
+  const token = new Sushi.Token(DEFAULT_CHAIN_ID, address.toLowerCase(), decimals, symbol);
 
   // console.debug({
   //   woneUsdcPairAddress,
@@ -336,44 +257,22 @@ async function fetchSushiSwapPrice2(
   try {
     let route;
     // fetch one to usdc pair
-    const woneUsdcPairAddress = Sushi.Pair.getAddress(
-      tokenWONE,
-      tokenUSDC
-    ).toLowerCase();
+    const woneUsdcPairAddress = Sushi.Pair.getAddress(tokenWONE, tokenUSDC).toLowerCase();
     const woneUsdcPairData = await fetchSushiPairData(woneUsdcPairAddress);
 
     const WoneToUsdcPair = new Sushi.Pair(
-      Sushi.CurrencyAmount.fromRawAmount(
-        tokenWONE,
-        Math.round(Number(woneUsdcPairData.pair.reserve1)).toString()
-      ),
-      Sushi.CurrencyAmount.fromRawAmount(
-        tokenUSDC,
-        Math.round(Number(woneUsdcPairData.pair.reserve0)).toString()
-      )
+      Sushi.CurrencyAmount.fromRawAmount(tokenWONE, Math.round(Number(woneUsdcPairData.pair.reserve1)).toString()),
+      Sushi.CurrencyAmount.fromRawAmount(tokenUSDC, Math.round(Number(woneUsdcPairData.pair.reserve0)).toString())
     );
     if (token.symbol !== "WONE") {
-      const woneTokenPairAddress = Sushi.Pair.getAddress(
-        tokenWONE,
-        token
-      ).toLowerCase();
+      const woneTokenPairAddress = Sushi.Pair.getAddress(tokenWONE, token).toLowerCase();
       const woneTokenPairData = await fetchSushiPairData(woneTokenPairAddress);
       const TokenToWonePair = new Sushi.Pair(
-        Sushi.CurrencyAmount.fromRawAmount(
-          token,
-          Math.round(Number(woneTokenPairData.pair.reserve1)).toString()
-        ),
-        Sushi.CurrencyAmount.fromRawAmount(
-          tokenWONE,
-          Math.round(Number(woneTokenPairData.pair.reserve0)).toString()
-        )
+        Sushi.CurrencyAmount.fromRawAmount(token, Math.round(Number(woneTokenPairData.pair.reserve1)).toString()),
+        Sushi.CurrencyAmount.fromRawAmount(tokenWONE, Math.round(Number(woneTokenPairData.pair.reserve0)).toString())
       );
 
-      route = new Sushi.Route(
-        [TokenToWonePair, WoneToUsdcPair],
-        token,
-        tokenWONE
-      );
+      route = new Sushi.Route([TokenToWonePair, WoneToUsdcPair], token, tokenWONE);
       return route.midPrice.toSignificant(6);
     } else {
       route = new Sushi.Route([WoneToUsdcPair], token, tokenUSDC);
@@ -386,20 +285,15 @@ async function fetchSushiSwapPrice2(
   }
 }
 
-async function fetchViperSwapPrice(
-  _token: { address: string; decimals: number; symbol: string },
-  library: any
-) {
+async function fetchViperSwapPrice(_token: { address: string; decimals: number; symbol: string }, library: any) {
   try {
-    const resp = await fetch(
-        "https://graph.viper.exchange/subgraphs/name/venomprotocol/venomswap-v2",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            query: `{
+    const resp = await fetch("https://graph.viper.exchange/subgraphs/name/venomprotocol/venomswap-v2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{
             tokenDayDatas ( 
               where: { 
                 token: "${_token.address.toLowerCase()}" 
@@ -410,91 +304,49 @@ async function fetchViperSwapPrice(
               priceUSD
             }
           }`,
-          }),
-        }
-    );
+      }),
+    });
 
     const { data } = await resp.json();
-    return new BigNumberJS( data.tokenDayDatas[0]?.priceUSD ).toPrecision(6).toString();
+    return new BigNumberJS(data.tokenDayDatas[0]?.priceUSD).toPrecision(6).toString();
   } catch (err) {
     console.log(err);
     return "0";
   }
 }
 
-async function fetchViperSwapPrice2(
-  _token: { address: string; decimals: number; symbol: string },
-  library: any
-) {
-  const usdc = new Viper.Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.usdc.address,
-    defaultTokens.usdc.decimals,
-    "1USDC"
-  );
+async function fetchViperSwapPrice2(_token: { address: string; decimals: number; symbol: string }, library: any) {
+  const usdc = new Viper.Token(DEFAULT_CHAIN_ID, defaultTokens.usdc.address, defaultTokens.usdc.decimals, "1USDC");
 
-  const wone = new Viper.Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.wone.address,
-    defaultTokens.wone.decimals,
-    "WONE"
-  )
+  const wone = new Viper.Token(DEFAULT_CHAIN_ID, defaultTokens.wone.address, defaultTokens.wone.decimals, "WONE");
 
-  const dai = new Viper.Token(
-    DEFAULT_CHAIN_ID,
-    defaultTokens.dai.address,
-    defaultTokens.dai.decimals,
-    "1DAI"
-  )
+  const dai = new Viper.Token(DEFAULT_CHAIN_ID, defaultTokens.dai.address, defaultTokens.dai.decimals, "1DAI");
 
-  const token = new Viper.Token(
-    DEFAULT_CHAIN_ID,
-    _token.address,
-    _token.decimals,
-    _token.symbol
-  );
+  const token = new Viper.Token(DEFAULT_CHAIN_ID, _token.address, _token.decimals, _token.symbol);
 
   try {
     let route;
-    if(token.symbol === "PLTS"){
-      // TODO: delete this return 
+    if (token.symbol === "PLTS") {
+      // TODO: delete this return
       // ! ONLY 4 PRESALE
       // return new BigNumberJS(0.1515);
       // fetch dai to usdc pair
-      const DAIToUSDCPair = await Viper.Fetcher.fetchPairData(
-        dai,
-        usdc,
-        library
-      );
+      const DAIToUSDCPair = await Viper.Fetcher.fetchPairData(dai, usdc, library);
 
       // fetch plutus to dai pair info
-      const tokenToDAI = await Viper.Fetcher.fetchPairData(
-        token,
-        dai,
-        library
-      );
+      const tokenToDAI = await Viper.Fetcher.fetchPairData(token, dai, library);
 
       // find a route
       route = new Viper.Route([DAIToUSDCPair, tokenToDAI], usdc);
-    }
-    else if (token.symbol !== "WONE") {
+    } else if (token.symbol !== "WONE") {
       // fetch wone to usdc pair
-      const WONEToUSDCPair = await Viper.Fetcher.fetchPairData(
-        wone,
-        usdc,
-        library
-      );
+      const WONEToUSDCPair = await Viper.Fetcher.fetchPairData(wone, usdc, library);
 
       // fetch the token to wone pair info
-      const tokenToWONE = await Viper.Fetcher.fetchPairData(
-        token,
-        wone,
-        library
-      );
-      
+      const tokenToWONE = await Viper.Fetcher.fetchPairData(token, wone, library);
+
       // find a route
       route = new Viper.Route([WONEToUSDCPair, tokenToWONE], usdc, token);
-      
     } else {
       // use only the WONE-USDC pair to get the price
       const pair = await Viper.Fetcher.fetchPairData(token, usdc, library);
@@ -504,7 +356,7 @@ async function fetchViperSwapPrice2(
     // console.log("TOKEN: ", token.symbol, " PRICE: ", route.midPrice.invert().toSignificant(10));
     return route.midPrice.invert().toSignificant(6);
   } catch (e) {
-    console.log("Error for token", token);
+    console.log("Error for token", token, e);
     // console.log(`error getting price for ${token.symbol}`, e.message, token);
 
     // TODO:: on production the error throw is only the prefix, if we start getting faulty prices,
@@ -519,30 +371,25 @@ async function fetchViperSwapPrice2(
   }
 }
 
-
-async function fetchDFKPrice(
-  address: string,
-  decimals: number,
-  library: any,
-) {
+async function fetchDFKPrice(address: string, decimals: number, library: any) {
   try {
-    console.log(address)
+    console.log(address);
     const lp = {
       "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "0xeb579ddcd49a7beb3f205c9ff6006bb6390f138f",
-      "0x8D760497554eecC3B9036fb0364156ef2F0D02BC": "0x3e478ED607F79A50f286A5A6ce52A049897291B2"
+      "0x8D760497554eecC3B9036fb0364156ef2F0D02BC": "0x3e478ED607F79A50f286A5A6ce52A049897291B2",
     };
     const contractAddress = defaultContracts.dfkOracle.address;
-    console.log("🚀 ~ file: prices.ts ~ line 532 ~ contractAddress", contractAddress)
+    console.log("🚀 ~ file: prices.ts ~ line 532 ~ contractAddress", contractAddress);
     const abi = defaultContracts.dfkOracle.abi;
 
     // const oracleContract = useDFKOracleContract();
     const oracle = new Contract(contractAddress, abi, library);
     const tokenPriceWei = await oracle.getLatestTokenPrice(lp[address], 1);
-    console.log("🚀 ~ file: prices.ts ~ line 532 ~ tokenPriceWei", (tokenPriceWei /1e18).toString())
-    const onePrice = await oracle.getLatestONEPrice() / 1e8;
-    const tokenPrice = (onePrice / (tokenPriceWei / 1e18)).toFixed(5)
-    console.log("🚀 ~ file: prices.ts ~ line 533 ~ onePriceWei", onePrice.toString())
-    console.log("🚀 ~ file: prices.ts ~ line 534 ~ tokenPrice", tokenPrice)
+    console.log("🚀 ~ file: prices.ts ~ line 532 ~ tokenPriceWei", (tokenPriceWei / 1e18).toString());
+    const onePrice = (await oracle.getLatestONEPrice()) / 1e8;
+    const tokenPrice = (onePrice / (tokenPriceWei / 1e18)).toFixed(5);
+    console.log("🚀 ~ file: prices.ts ~ line 533 ~ onePriceWei", onePrice.toString());
+    console.log("🚀 ~ file: prices.ts ~ line 534 ~ tokenPrice", tokenPrice);
     return tokenPrice;
   } catch (e) {
     console.error("dfk - error getting price for DFKLP", e);
@@ -551,37 +398,24 @@ async function fetchDFKPrice(
   }
 }
 
-export async function fetchPrice(
-  token: { address: string; decimals: number; symbol: string },
-  library: any
-) {
+export async function fetchPrice(token: { address: string; decimals: number; symbol: string }, library: any) {
   const ammsFetcher = {
-    coingecko: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchCoinGeckoPrice(t.address),
-    quickswap: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchQuickSwapPrice(t, library),
-    dfyn: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchDfynPrice(t, library),
-    polycat: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchPolycatPrice(t.address),
-    sushiswap: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchSushiswapPrice(t.address),
-    viper: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchViperSwapPrice2(t, library),
-    dfk: (t: { address: string; decimals: number; symbol: string }) =>
-      fetchDFKPrice(t.address, t.decimals, library),
+    coingecko: (t: { address: string; decimals: number; symbol: string }) => fetchCoinGeckoPrice(t.address),
+    quickswap: (t: { address: string; decimals: number; symbol: string }) => fetchQuickSwapPrice(t, library),
+    dfyn: (t: { address: string; decimals: number; symbol: string }) => fetchDfynPrice(t, library),
+    polycat: (t: { address: string; decimals: number; symbol: string }) => fetchPolycatPrice(t.address),
+    sushiswap: (t: { address: string; decimals: number; symbol: string }) => fetchSushiswapPrice(t.address),
+    viper: (t: { address: string; decimals: number; symbol: string }) => fetchViperSwapPrice2(t, library),
+    dfk: (t: { address: string; decimals: number; symbol: string }) => fetchDFKPrice(t.address, t.decimals, library),
   };
-
 
   try {
     const tokenAddress = token.address.toLowerCase();
 
-    const ammEntry = Object.entries(amms).find(
-      ([k]) => k.toLowerCase() === tokenAddress
-    );
+    const ammEntry = Object.entries(amms).find(([k]) => k.toLowerCase() === tokenAddress);
     if (!ammEntry) {
       console.warn("Could not find AMM for token", tokenAddress);
-      return 0;
+      return "0";
     }
 
     const amm = ammEntry[1];
@@ -605,30 +439,16 @@ export async function fetchPairPrice(
 
   const getPrice = {
     quickswap: async () => {
-      const t0 = new Token(
-        DEFAULT_CHAIN_ID,
-        token0.address,
-        token0.decimals,
-        token0.symbol
-      );
-      const t1 = new Token(
-        DEFAULT_CHAIN_ID,
-        token1.address,
-        token1.decimals,
-        token1.symbol
-      );
+      const t0 = new Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
+      const t1 = new Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
 
       const pair = await Fetcher.fetchPairData(t0, t1, library);
 
       const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
       const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
 
-      const token0Total = new BigNumberJS(reserve0).times(
-        new BigNumberJS(token0Price)
-      );
-      const token1Total = new BigNumberJS(reserve1).times(
-        new BigNumberJS(token1Price)
-      );
+      const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
+      const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
 
       const tvl = token0Total.plus(token1Total);
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
@@ -637,30 +457,16 @@ export async function fetchPairPrice(
     },
 
     dfyn: async () => {
-      const t0 = new Dfyn.Token(
-        DEFAULT_CHAIN_ID,
-        token0.address,
-        token0.decimals,
-        token0.symbol
-      );
-      const t1 = new Dfyn.Token(
-        DEFAULT_CHAIN_ID,
-        token1.address,
-        token1.decimals,
-        token1.symbol
-      );
+      const t0 = new Dfyn.Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
+      const t1 = new Dfyn.Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
 
       const pair = await Dfyn.Fetcher.fetchPairData(t0, t1, library);
 
       const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
       const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
 
-      const token0Total = new BigNumberJS(reserve0).times(
-        new BigNumberJS(token0Price)
-      );
-      const token1Total = new BigNumberJS(reserve1).times(
-        new BigNumberJS(token1Price)
-      );
+      const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
+      const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
 
       const tvl = token0Total.plus(token1Total);
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
@@ -670,34 +476,27 @@ export async function fetchPairPrice(
 
     polycat: async () => {
       try {
-        const resp = await fetch(
-          "https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              query: `{
+        const resp = await fetch("https://api.thegraph.com/subgraphs/name/polycatfi/polycat-finance-amm", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: `{
                 pairs (where: { token0: "${token0.address.toLowerCase()}", token1: "${token1.address.toLowerCase()}"}) {
                   id
                   reserve0
                   reserve1
                 }
               }`,
-            }),
-          }
-        );
+          }),
+        });
 
         const { data } = await resp.json();
 
-        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(
-          new BigNumberJS(token0Price)
-        );
+        const token0Total = new BigNumberJS(data.pairs[0].reserve0).times(new BigNumberJS(token0Price));
 
-        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(
-          new BigNumberJS(token1Price)
-        );
+        const token1Total = new BigNumberJS(data.pairs[0].reserve1).times(new BigNumberJS(token1Price));
 
         const tvl = token0Total.plus(token1Total);
         const price = tvl.dividedBy(new BigNumberJS(totalSupply));
@@ -710,37 +509,19 @@ export async function fetchPairPrice(
     },
 
     sushiswap: async () => {
-      const t0 = new Sushi.Token(
-        DEFAULT_CHAIN_ID,
-        token0.address,
-        token0.decimals,
-        token0.symbol
-      );
-      const t1 = new Sushi.Token(
-        DEFAULT_CHAIN_ID,
-        token1.address,
-        token1.decimals,
-        token1.symbol
-      );
-      const pairAddress = Sushi.Pair.getAddress(
-        t0,
-        t1
-      ).toLowerCase()
+      const t0 = new Sushi.Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
+      const t1 = new Sushi.Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
+      const pairAddress = Sushi.Pair.getAddress(t0, t1).toLowerCase();
       const pair = await fetchSushiPairData(pairAddress);
 
       const reserve0 = Math.round(Number(pair.pair.reserve0)); // no need for decimals formatting
       const reserve1 = Math.round(Number(pair.pair.reserve1)); // no need for decimals formatting
 
-      const token0Total = new BigNumberJS(reserve0).times(
-        new BigNumberJS(token0Price)
-      );
-      const token1Total = new BigNumberJS(reserve1).times(
-        new BigNumberJS(token1Price)
-      );
-      
+      const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
+      const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
 
       const tvl = token0Total.plus(token1Total);
-      
+
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
 
       // console.log("------------LP: ", t0.symbol, "/", t1.symbol, "------------------")
@@ -755,37 +536,21 @@ export async function fetchPairPrice(
       // console.log("🚀 ~ file: prices.ts ~ line 761 ~ viperswap: ~ price", price.toString())
 
       return price.toString();
-
     },
     viperswap: async () => {
-      const t0 = new Viper.Token(
-        DEFAULT_CHAIN_ID,
-        token0.address,
-        token0.decimals,
-        token0.symbol
-      );
-      const t1 = new Viper.Token(
-        DEFAULT_CHAIN_ID,
-        token1.address,
-        token1.decimals,
-        token1.symbol
-      );
+      const t0 = new Viper.Token(DEFAULT_CHAIN_ID, token0.address, token0.decimals, token0.symbol);
+      const t1 = new Viper.Token(DEFAULT_CHAIN_ID, token1.address, token1.decimals, token1.symbol);
 
       const pair = await Viper.Fetcher.fetchPairData(t0, t1, library);
 
       const reserve0 = pair.reserve0.toExact(); // no need for decimals formatting
       const reserve1 = pair.reserve1.toExact(); // no need for decimals formatting
 
-      const token0Total = new BigNumberJS(reserve0).times(
-        new BigNumberJS(token0Price)
-      );
-      const token1Total = new BigNumberJS(reserve1).times(
-        new BigNumberJS(token1Price)
-      );
-      
+      const token0Total = new BigNumberJS(reserve0).times(new BigNumberJS(token0Price));
+      const token1Total = new BigNumberJS(reserve1).times(new BigNumberJS(token1Price));
 
       const tvl = token0Total.plus(token1Total);
-      
+
       const price = tvl.dividedBy(new BigNumberJS(totalSupply));
 
       // console.log("------------LP: ", t0.symbol, "/", t1.symbol, "------------------")
@@ -808,24 +573,21 @@ export async function fetchPairPrice(
 
 export async function fetchBalancerPrice(balancerId: string) {
   try {
-    const resp = await fetch(
-      "https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: `{    
+    const resp = await fetch("https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: `{    
               pool(id: "${balancerId}" ) {
                 id
                 totalLiquidity
                 totalShares
               }
           }`,
-        }),
-      }
-    );
+      }),
+    });
 
     const { data } = await resp.json();
 

@@ -8,6 +8,7 @@ import defaultContracts, {
   stakeBank,
   miniChefSushi,
   vaultZap,
+  delegatorStake,
 } from "config/contracts";
 import { utils, providers, constants, Contract } from "ethers";
 import { useCallback } from "react";
@@ -179,4 +180,18 @@ export function useVaultZapContract() {
     const vaultZapInfo = vaultZap(address);
     return contract(vaultZapInfo);
   };
+}
+
+export function useDelegatorContract() {
+  const contract = useContract();
+
+  return (address: string) => {
+    const delegatorInfo = delegatorStake(address);
+    return contract(delegatorInfo);
+  };
+}
+
+export function useWoneBank() {
+  const contract = useContract();
+  return contract(defaultContracts.woneBank);
 }

@@ -15,15 +15,14 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
   {
     label: "Products",
     children: [
-      
       {
         label: "Pools",
-        href: "/app/pools"
+        href: "/app/pools",
       },
 
       {
         label: "Farms",
-        href: "/app/farms"
+        href: "/app/farms",
       },
 
       {
@@ -32,16 +31,21 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
 
       {
+        label: "Wone Bank",
+        href: "/app/wone-bank",
+      },
+
+      {
         label: "Vaults",
-        href: "/app/vaults"
-      }
+        href: "/app/vaults",
+      },
     ],
-  },  
+  },
 
   {
     label: "Delegation",
     href: "https://staking.harmony.one/validators/mainnet/one1ac8yehqexdnam9yza4q4y3zwrkyhrf4hqcpqy5",
-    isExternal: true
+    isExternal: true,
   },
 
   {
@@ -49,7 +53,6 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
     href: "https://snapshot.org/#/hermesdefi.eth",
     isExternal: true,
   },
-
 
   {
     label: "Trade",
@@ -83,14 +86,14 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       {
         label: "DEX Screener (PLUTUS)",
         href: "https://dexscreener.com/harmony/0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
-        isExternal: true
+        isExternal: true,
       },
 
       {
         label: "DEX Screener (IRIS)",
         href: "https://dexscreener.com/harmony/0x85fd5f8dbd0c9ef1806e6c7d4b787d438621c1dc",
-        isExternal: true
-      }
+        isExternal: true,
+      },
     ],
   },
   {
@@ -99,7 +102,7 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       {
         label: "Iris",
         href: "https://www.hermesdefi.io/app",
-        isExternal: true
+        isExternal: true,
       },
       {
         label: "Plutus",
@@ -107,7 +110,6 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
     ],
   },
-
 
   {
     label: "Community",
@@ -125,7 +127,7 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       {
         label: "Wiki",
         href: "https://wiki.hermesdefi.io/",
-        isExternal: true
+        isExternal: true,
       },
       {
         label: "Github",
@@ -155,8 +157,8 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       {
         label: "Reddit",
         href: "https://www.reddit.com/r/HermesDefi/",
-        isExternal: true
-      }
+        isExternal: true,
+      },
     ],
   },
 ];

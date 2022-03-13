@@ -63,7 +63,7 @@ export const APRModal: React.FC<{
                 1d
               </Text>
               <Text flex="1" fontSize="sm">
-                {displayNumber(props.aprs?.dailyAPR)}%
+                {displayNumber(props.aprs?.dailyAPR, false, 2)}%
               </Text>
               <Text flex="1" fontSize="sm">
                 {displayTokenCurrency(
@@ -78,7 +78,7 @@ export const APRModal: React.FC<{
                 7d
               </Text>
               <Text flex="1" fontSize="sm">
-                {displayNumber(props.aprs?.weeklyAPR)}%
+                {displayNumber(props.aprs?.weeklyAPR, false, 2)}%
               </Text>
               <Text flex="1" fontSize="sm">
                 {displayTokenCurrency(
