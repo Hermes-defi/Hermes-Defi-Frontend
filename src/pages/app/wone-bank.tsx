@@ -34,7 +34,7 @@ import { displayCurrency, displayNumber, displayTokenCurrency } from "libs/utils
 import { useTokenBalance } from "hooks/wallet";
 import { useActiveWeb3React } from "wallet";
 
-const Home = () => {
+const WoneBank = () => {
   const { account } = useActiveWeb3React();
   const generalInfo = useFetchGeneralInfo();
 
@@ -367,4 +367,10 @@ const Home = () => {
   );
 };
 
-export default Home;
+export const getStaticProps = () => {
+  return {
+    notFound: true,
+    props: {},
+  };
+};
+export default WoneBank;
