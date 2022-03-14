@@ -70,7 +70,7 @@ export function usePlutusStats() {
         // const circulatingSupplyInPlutus = utils.formatEther(circulatingSupply);
         marketCap = new BigNumberJS(circulatingSupply).multipliedBy(plutusPrice.data).toString();
       }
-      circulatingSupply = circulatingSupply.minus(bankContract.data);
+      // circulatingSupply = circulatingSupply.minus(bankContract.data);
       return {
         maximumSupply,
         marketCap,
