@@ -20,6 +20,8 @@ import {
   TabList,
   TabPanel,
   TabPanels,
+  Link,
+  color,
 } from "@chakra-ui/react";
 import { AppLayout } from "components/layout";
 import {
@@ -58,7 +60,16 @@ const Home = () => {
           <Heading bgGradient="linear(to-l, #f6c770, #8400FF)" bgClip="text">
             Hermes WONE Bank
           </Heading>
-          <Text>Use your WONE to purchase HRMS/ONE LPs and earn PLTS</Text>
+          <Text>Lock your WONE to purchase HRMS/ONE LPs and earn PLTS</Text>
+          <Link
+              href={`https://hermes-defi.gitbook.io/the-hermes-protocol/hermes-products/wone-bank`}
+              isExternal
+              fontWeight="700"
+              fontSize="sm"
+              textDecoration={"underline"}
+            >
+              More info in our docs
+            </Link>
         </chakra.div>
 
         <chakra.div
