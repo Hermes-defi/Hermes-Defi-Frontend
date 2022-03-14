@@ -30,10 +30,10 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
         href: "/app/bank",
       },
 
-      // {
-      //   label: "Wone Bank",
-      //   href: "/app/wone-bank",
-      // },
+      {
+        label: "Wone Bank",
+        href: "/app/wone-bank",
+      },
 
       {
         label: "Vaults",

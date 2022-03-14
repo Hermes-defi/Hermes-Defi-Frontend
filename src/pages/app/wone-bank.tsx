@@ -367,10 +367,4 @@ const WoneBank = () => {
   );
 };
 
-export const getStaticProps = () => {
-  return {
-    notFound: true,
-    props: {},
-  };
-};
 export default WoneBank;

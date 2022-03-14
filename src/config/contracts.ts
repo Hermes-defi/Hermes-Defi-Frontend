@@ -154,8 +154,8 @@ const defaultContracts = {
   },
   woneBank: {
     address: {
-      1666600000: "0xc2c57ea78582c65529C3445eF542985Abde90cd0",
-      1666700000: "0x4E4A491B028b90Fb8870429c40d6172bBA9145B1",
+      1666600000: "0xa19765e275669c1162b099c7c8553c23b779cd83",
+      1666700000: "",
     }[DEFAULT_CHAIN_ID],
     abi: WoneBankABI,
   },
