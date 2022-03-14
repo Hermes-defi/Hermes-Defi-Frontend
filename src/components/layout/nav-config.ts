@@ -31,7 +31,7 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
 
       {
-        label: "Wone Bank",
+        label: "WONE Bank",
         href: "/app/wone-bank",
       },
 
