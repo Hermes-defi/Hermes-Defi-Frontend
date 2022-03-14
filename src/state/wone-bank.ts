@@ -22,6 +22,7 @@ export function useFetchGeneralInfo() {
   const query = useQuery({
     queryKey: ["wone-bank-info"],
     enabled: !!plutusPrice.data,
+    refetchInterval: 0.5 * 60 * 1000, // 1 and a half minutes
     queryFn: async () => {
       const result: any = {};
 
@@ -75,7 +76,7 @@ export function useUserInfo() {
   return useQuery({
     queryKey: ["wone-bank-user-info", account],
     enabled: !!account,
-    refetchInterval: 1.5 * 60 * 1000, // 1 and a half minutes
+    refetchInterval: 0.5 * 60 * 1000, // 1 and a half minutes
     queryFn: async () => {
       const pendingReward = utils.formatEther(await woneBankContract.pendingReward(account));
       const stakedShares = utils.formatEther(await woneBankContract.balanceOf(account));
