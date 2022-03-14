@@ -4,7 +4,7 @@ import ReactGA from "react-ga";
 import { fetchPrice } from "web3-functions/prices";
 import { BLOCK_TIME, SECONDS_PER_WEEK } from "config/constants";
 import { getPoolApr } from "web3-functions/utils";
-import { utils } from "ethers";
+import { constants, utils } from "ethers";
 
 import { usePlutusPrice } from "hooks/prices";
 import { useERC20, useWoneBank } from "hooks/contracts";
@@ -44,15 +44,18 @@ export function useFetchGeneralInfo() {
 
         result.apr = apr;
 
-        const rewardLpAddress = await woneBankContract.lp();
-        const rewardLpContract = getTokenContract(rewardLpAddress);
-
-        result.rewardToken = {
-          address: rewardLpAddress,
-          symbol: await rewardLpContract.symbol(),
-          decimals: await rewardLpContract.decimals(),
-        };
         result.withdrawLocked = await woneBankContract.withdrawLocked();
+
+        const rewardLpAddress = await woneBankContract.lp();
+
+        if (rewardLpAddress !== constants.AddressZero) {
+          const rewardLpContract = getTokenContract(rewardLpAddress);
+          result.rewardToken = {
+            address: rewardLpAddress,
+            symbol: await rewardLpContract.symbol(),
+            decimals: await rewardLpContract.decimals(),
+          };
+        }
 
         return result;
       } catch (e) {

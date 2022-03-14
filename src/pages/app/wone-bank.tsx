@@ -112,11 +112,9 @@ const WoneBank = () => {
               <Heading fontSize="xl">Total WONE Staked</Heading>
 
               <Skeleton isLoaded={!generalInfo.isLoading}>
-                <Tooltip
-                  label={displayCurrency(new BigNumber(generalInfo.data?.totalStaked).times(generalInfo.data?.wonePrice || 0).toNumber())}
-                >
+                <Tooltip label={generalInfo.data?.totalStaked ? displayNumber(generalInfo.data?.totalStaked, true, 2) : "N/A"}>
                   <Heading fontSize="2xl">
-                    {generalInfo.data?.totalStaked ? displayNumber(generalInfo.data?.totalStaked, true, 2) : "N/A"}
+                    {displayCurrency(new BigNumber(generalInfo.data?.totalStaked).times(generalInfo.data?.wonePrice || 0).toNumber())}
                   </Heading>
                 </Tooltip>
               </Skeleton>

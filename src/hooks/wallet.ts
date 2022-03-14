@@ -11,6 +11,7 @@ export function useTokenBalance(tokenAddress: string, tokenDecimals = 18) {
 
   const balance = useQuery(["tokenBalance", account, tokenAddress], async () => {
     if (!account) return null;
+    if (!tokenAddress) return null;
 
     if (tokenAddress === "native" || tokenAddress.toLowerCase() === "one") {
       const bal = await library.getBalance(account);
