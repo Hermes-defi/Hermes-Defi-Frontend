@@ -109,7 +109,9 @@ const Page: React.FC = () => {
     <AppLayout>
       <Stack spacing={10} py={10}>
       <Stack direction={["column", "row"]} justify="center" spacing={10}>
-        <Button href={"/app/wone-bank"} align="center" w="100%" bg={useColorModeValue("white", "gray.700")} px={[5, 10]} py={6} rounded={"2xl"} boxShadow="base" h={"max-content"}>
+        <Link href="/app/wone-bank" style={{ textDecoration: 'none' }}>
+        <Button align="center" w="100%" bg={useColorModeValue("white", "gray.700")} px={[5, 10]} py={6} rounded={"2xl"} boxShadow="base" h={"max-content"}
+        >
           <Stack>
             <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
               Farming has ended, the WONE bank opens in
@@ -120,10 +122,11 @@ const Page: React.FC = () => {
             </Text>
 
             <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="xl">
-              Get ready for Hermes Protocol
+              Get ready for The Hermes Protocol
             </Heading>
             </Stack>
           </Button>
+          </Link>
         </Stack>
         <HStack spacing="10">
           <Box bg={useColorModeValue("white", "gray.700")} rounded="2xl" boxShadow="base" px={[5, 10]} py={6} w="50%">
