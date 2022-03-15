@@ -6,7 +6,7 @@ import BigNumberJS from "bignumber.js";
 import { ethers, utils } from "ethers";
 import { fetchBalancerPrice, fetchPairPrice, fetchPrice } from "web3-functions/prices";
 
-import simpleRpcProvider from "libs/providers";
+import defaultTokens from "config/tokens";
 import { Pool, pools } from "config/pools";
 import { Farm, farms } from "config/farms";
 import { Balancer, balancers } from "config/balancers";
@@ -134,9 +134,16 @@ export async function getPlutusStats() {
     return total.plus(poolPrice);
   }, Promise.resolve(new BigNumberJS(0)));
 
-  const totalValueInBank = await stakingBankPools.reduce(async (_total: Promise<BigNumberJS>, bank: StakeBankInfo) => {
+  // get total value in wone bank
+  const woneBankContract = new ethers.Contract(defaultContracts.woneBank.address, defaultContracts.woneBank.abi, provider);
+  const wonePrice = await fetchPrice({ ...defaultTokens.wone, symbol: "WONE" }, provider);
+  const woneBankTotalStaked = utils.formatUnits(await woneBankContract.totalStaked(), defaultTokens.wone.decimals);
+  const woneBankTotalValue = new BigNumberJS(woneBankTotalStaked).multipliedBy(wonePrice) ?? new BigNumberJS(0);
+
+  const totalValueInBankPools = await stakingBankPools.reduce(async (_total: Promise<BigNumberJS>, bank: StakeBankInfo) => {
     const lpContract = new ethers.Contract(bank.stakeToken.address, ERC20_ABI, provider);
     const bankContract = new ethers.Contract(bank.address, BANK_ABI, provider);
+
     const totalLpStaked = await bankContract.totalStaked();
 
     const tokenPrice = await fetchPrice(
@@ -149,6 +156,7 @@ export async function getPlutusStats() {
 
     return total.plus(poolPrice);
   }, Promise.resolve(new BigNumberJS(0)));
+  const totalValueInBank = totalValueInBankPools.plus(woneBankTotalValue);
 
   const totalValueInVaults = await vaults.reduce(async (_total: Promise<BigNumberJS>, vault: Vault) => {
     const vaultContract = new ethers.Contract(vault.address, VAULT_ABI, provider);
