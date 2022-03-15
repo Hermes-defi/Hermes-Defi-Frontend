@@ -118,7 +118,7 @@ const Page: React.FC = () => {
             </Heading>
 
             <Text align="center" letterSpacing="1px" fontWeight="700" mt={"1"}>
-              {timerComponents.length ? timerComponents : "Farming ended"}
+              {generateTimeDuration(blockDiff(24095140 - currentBlock))}
             </Text>
 
             <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="xl">
