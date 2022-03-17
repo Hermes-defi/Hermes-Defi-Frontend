@@ -56,7 +56,7 @@ export const pools: Pool[] = {
       pid: 1,
       multiplier: "25",
       depositFees: 0,
-      isActive: true,
+      isActive: false,
       isSpecial: true,
 
       stakeToken: {
@@ -71,7 +71,7 @@ export const pools: Pool[] = {
       pid: 2,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: false,
 
       stakeToken: {
@@ -101,7 +101,7 @@ export const pools: Pool[] = {
       pid: 10,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: false,
 
       stakeToken: {
@@ -129,7 +129,7 @@ export const pools: Pool[] = {
       pid: 14,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: false,
 
       stakeToken: {
@@ -143,7 +143,7 @@ export const pools: Pool[] = {
       pid: 16,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: false,
 
       stakeToken: {
@@ -173,7 +173,7 @@ export const pools: Pool[] = {
       pid: 27,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: false,
 
       stakeToken: {
@@ -188,7 +188,7 @@ export const pools: Pool[] = {
       pid: 28,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: false,
 
       stakeToken: {
@@ -203,7 +203,7 @@ export const pools: Pool[] = {
       pid: 29,
       multiplier: "6",
       depositFees: 3,
-      isActive: true,
+      isActive: false,
       isSpecial: false,
 
       stakeToken: {
