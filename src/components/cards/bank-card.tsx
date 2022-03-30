@@ -42,7 +42,7 @@ export const BankPoolCard: React.FC<{
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={(() => {
-        if (stakePool.isSpecial) return "linear(to-b, pink.300, primary.300)";
+        if (stakePool.isSpecial) return "linear(to-b, gray.800, primary.300)";
         if (isVaultToken) return "linear(to-b, primary.500, pink.300)";
 
         return "linear(to-t, accent.300, accent.500)";
@@ -99,6 +99,19 @@ export const BankPoolCard: React.FC<{
         <Stack direction={["column", "row"]} align="end">
           {stakePool.isSpecial ? (
             <>
+            <Box>
+                <Badge
+                  boxShadow="md"
+                  px={2}
+                  rounded="lg"
+                  colorScheme="white"
+                  fontSize={["xs", "sm"]}
+                  backgroundColor={"purple"}
+                  
+                >
+                  INACTIVE
+                </Badge>
+              </Box>
               <Box>
                 <Badge
                   boxShadow="md"
