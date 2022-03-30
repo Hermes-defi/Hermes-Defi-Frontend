@@ -46,6 +46,7 @@ function useFetchStakingPoolRequest() {
         stakePoolInfo.stakeToken.price = await fetchPrice(stakePoolInfo.stakeToken, library);
       }
       stakePoolInfo.rewardToken.price = await fetchPrice(stakePoolInfo.rewardToken, library);
+      console.log("🚀 ~ file: stake.ts ~ line 49 ~ return ~ stakePoolInfo.rewardToken.price", stakePoolInfo.rewardToken.price)
 
       // calculate APR
       if (stakePoolInfo.active) {
