@@ -166,6 +166,7 @@ export const BankPoolCard: React.FC<{
         </HStack>
       </Stack>
 
+
       {/* pool user */}
       <Stack mb={8}>
         <UserSection
