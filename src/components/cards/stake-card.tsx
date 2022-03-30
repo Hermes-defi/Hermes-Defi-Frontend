@@ -146,7 +146,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
               Deposit
             </Text>
             <Link
-              href={`https://quickswap.exchange/#/swap/${stakePool.stakeToken.address}`}
+              href={`https://viperswap.one/#/swap?outputCurrency=${stakePool?.stakeToken?.address}`}
               isExternal
               fontWeight="700"
               fontSize="sm"
@@ -182,12 +182,12 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
 
         <Stack direction="row" justify="space-between">
           <Link
-            href={`https://polygonscan.com/address/${stakePool.address}`}
+            href={`https://explorer.harmony.one/address/${stakePool.address}`}
             textDecoration="underline"
             fontWeight="700"
             fontSize="sm"
           >
-            View on Matic
+            View on Harmony
           </Link>
 
           <Link href={stakePool.poolSite} textDecoration="underline" fontWeight="700" fontSize="sm">

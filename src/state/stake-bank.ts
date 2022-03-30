@@ -370,3 +370,61 @@ export function useStakeWithdraw() {
 
   return withdrawMutation;
 }
+
+export function useStakeWithdrawAll() {
+  const { account } = useActiveWeb3React();
+  const queryClient = useQueryClient();
+  const getStakePoolContract = useStakeBankContract();
+  const toast = useToast();
+
+  const withdrawAllMutation = useMutation(
+    async (address: string) => {
+      if (!account) throw new Error("No connected account");
+
+      const pool = queryClient.getQueryData<StakeBankInfo>([
+        "bank-pool",
+        address,
+        account,
+      ]);
+      const poolChef = getStakePoolContract(pool.address);
+      const userInfo = await poolChef.userInfo(account);
+      const balance = userInfo.amount;
+
+      const tx = await poolChef.withdraw(balance);
+      await tx.wait();
+    },
+    {
+      onSuccess: (_,  address ) => {
+        const pool = queryClient.getQueryData<StakeBankInfo>([
+          "bank-pool",
+          address,
+          account,
+        ]);
+        queryClient.invalidateQueries(["bank-pool", address, account]);
+        queryClient.invalidateQueries(["bank-global-stats"]);
+
+        ReactGA.event({
+          category: "Withdrawals",
+          action: `Withdrawing ${pool.stakeToken.symbol}`,
+          label: pool.stakeToken.symbol,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[useStakeWithdraw][error] general error`, {
+          data,
+        });
+
+        toast({
+          title: "Error withdrawing stake token",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return withdrawAllMutation;
+}

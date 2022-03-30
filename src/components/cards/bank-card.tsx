@@ -7,6 +7,7 @@ import {
   useApproveStakePool,
   useDepositIntoStakePool,
   useStakeWithdraw,
+  useStakeWithdrawAll,
 } from "state/stake-bank";
 
 import {
@@ -32,6 +33,7 @@ export const BankPoolCard: React.FC<{
   const harvestMutation = useDepositIntoStakePool();
   const depositMutation = useDepositIntoStakePool();
   const withdrawMutation = useStakeWithdraw();
+  const withdrawAllMutation = useStakeWithdrawAll();
 
   return (
     <Box
@@ -177,6 +179,7 @@ export const BankPoolCard: React.FC<{
           approve={approveMutation}
           deposit={depositMutation}
           withdraw={withdrawMutation}
+          withdrawAll={withdrawAllMutation}
           harvest={harvestMutation}
         />
       </Stack>

@@ -158,10 +158,34 @@ export const UserSection: React.FC<IProps> = (props) => {
             {props.userTotalStaked ? '(' +  displayTokenCurrency(
               new BigNumber(props.userTotalStaked).times(plutusPrice.data).toNumber(), "") + '$)' : "N/A"}
           </Text>
-
+        </Stack>
+        <Stack>
+        <HStack mt={"3"}>
+            {props.hasApprovedPool && (
+                  <DepositButton
+                    address={props.address}
+                    stakeToken={props.stakeToken}
+                    deposit={props.deposit}
+                  >
+                    Deposit $PLTS
+                  </DepositButton>
+              )
+            }
+            {props.hasApprovedPool && props.rewardToken.symbol === '1DAI' && (
+              <Button
+              onClick={() => props.withdrawAll.mutateAsync( props.address )}
+              size={"sm"}
+              bg={"gray.700"}
+              _hover={{ bg: "gray.600" }}
+            >
+              Withdraw All
+            </Button>
+            )
+            }
+            </HStack>
         </Stack>
       </Box>
-
+      <Box>
       {!props.disableRewards && (
         <Box align="center">
           <Heading letterSpacing="1px" color="gray.200" fontSize="lg">
@@ -180,9 +204,26 @@ export const UserSection: React.FC<IProps> = (props) => {
             </Text>
           </Stack>
         </Box>
+        
       )}
+      {props.hasApprovedPool && (
+              <Stack direction="row" mt={"3"}>
+                <Button
+                  isDisabled={!props.userTotalStaked}
+                  isLoading={harvestMutation.isLoading}
+                  onClick={() => harvestMutation.mutate(props.address)}
+                  size="sm"
+                  bg="gray.700"
+                  _hover={{ bg: "gray.600" }}
+                >
+                  Harvest {props.rewardToken.symbol}
+                </Button>
+              </Stack>
+            )}
+      </Box>
+      
       </HStack>
-      <Stack justify="space-evenly" direction="row">
+      <Stack direction="row" justify={"space-evenly"}>
             {!props.hasApprovedPool && (
               <Button
                 isFullWidth
@@ -196,32 +237,6 @@ export const UserSection: React.FC<IProps> = (props) => {
               >
                 Approve
               </Button>
-            )}
-
-            {props.hasApprovedPool && (
-              
-                  <DepositButton
-                    address={props.address}
-                    stakeToken={props.stakeToken}
-                    deposit={props.deposit}
-                  >
-                    Deposit $PLTS
-                  </DepositButton>
-              )
-            }
-              {props.hasApprovedPool && (
-              <Stack direction="row">
-                <Button
-                  isDisabled={!props.userTotalStaked}
-                  isLoading={harvestMutation.isLoading}
-                  onClick={() => harvestMutation.mutate(props.address)}
-                  size="sm"
-                  bg="gray.700"
-                  _hover={{ bg: "gray.600" }}
-                >
-                  Harvest {props.rewardToken.symbol}
-                </Button>
-              </Stack>
             )}
           </Stack>
 

@@ -36,6 +36,11 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       },
 
       {
+        label: "PLTS Stake",
+        href: "/app/stake"
+      },
+
+      {
         label: "Vaults",
         href: "/app/vaults",
       },
