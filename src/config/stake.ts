@@ -50,25 +50,25 @@ export type StakeInfo = {
 export const stakingPools: StakeInfo[] = {
   1666600000: [
     //Simple stack token example
-    // {
-    //   address: "0xFE3583513Ba38B228C7A62B200F71a0ecF337Eb9",
-    //   poolSite: "https://kavian.finance/",
-    //   active: true,
+    {
+      address: "0x43fc28371ece9f32d3f8470e142dc973476a1bb5",
+      poolSite: "https://plutus.hermesdefi.io/app/",
+      active: true,
 
-    //   stakeToken: {
-    //     address: "0xdab35042e63e93cc8556c9bae482e5415b5ac4b1",
-    //     symbol: "IRIS",
-    //     decimals: 18,
-    //     logo: "/hermes-logo-1.png",
-    //   },
+      stakeToken: {
+        address: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+        symbol: "PLTS",
+        decimals: 18,
+        logo: "/plutus-logo.png",
+      },
 
-    //   rewardToken: {
-    //     address: "0xC4Df0E37e4ad3e5C6D1dF12d3Ca7Feb9d2B67104",
-    //     symbol: "KAVIAN",
-    //     decimals: 18,
-    //     logo: "/kavian-logo.png",
-    //   },
-    // },
+      rewardToken: {
+        address: "0xef977d2f931c1978db5f6747666fa1eacb0d0339",
+        symbol: "1DAI",
+        decimals: 18,
+        logo: "/1dai-logo.png",
+      },
+    },
     
     //Lp stack token example
     // {

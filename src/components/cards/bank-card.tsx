@@ -7,6 +7,7 @@ import {
   useApproveStakePool,
   useDepositIntoStakePool,
   useStakeWithdraw,
+  useStakeWithdrawAll,
 } from "state/stake-bank";
 
 import {
@@ -32,6 +33,7 @@ export const BankPoolCard: React.FC<{
   const harvestMutation = useDepositIntoStakePool();
   const depositMutation = useDepositIntoStakePool();
   const withdrawMutation = useStakeWithdraw();
+  const withdrawAllMutation = useStakeWithdrawAll();
 
   return (
     <Box
@@ -40,7 +42,7 @@ export const BankPoolCard: React.FC<{
       bg="accent.500"
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={(() => {
-        if (stakePool.isSpecial) return "linear(to-b, pink.300, primary.300)";
+        if (stakePool.isSpecial) return "linear(to-b, gray.800, primary.300)";
         if (isVaultToken) return "linear(to-b, primary.500, pink.300)";
 
         return "linear(to-t, accent.300, accent.500)";
@@ -97,6 +99,19 @@ export const BankPoolCard: React.FC<{
         <Stack direction={["column", "row"]} align="end">
           {stakePool.isSpecial ? (
             <>
+            <Box>
+                <Badge
+                  boxShadow="md"
+                  px={2}
+                  rounded="lg"
+                  colorScheme="white"
+                  fontSize={["xs", "sm"]}
+                  backgroundColor={"purple"}
+                  
+                >
+                  INACTIVE
+                </Badge>
+              </Box>
               <Box>
                 <Badge
                   boxShadow="md"
@@ -164,6 +179,7 @@ export const BankPoolCard: React.FC<{
         </HStack>
       </Stack>
 
+
       {/* pool user */}
       <Stack mb={8}>
         <UserSection
@@ -177,6 +193,7 @@ export const BankPoolCard: React.FC<{
           approve={approveMutation}
           deposit={depositMutation}
           withdraw={withdrawMutation}
+          withdrawAll={withdrawAllMutation}
           harvest={harvestMutation}
         />
       </Stack>
