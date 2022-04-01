@@ -52,9 +52,8 @@ function useFetchStakingPoolRequest() {
       if (stakePoolInfo.active) {
         const rewardPerBlock = utils.formatUnits(await poolChef.rewardPerBlock(), stakePoolInfo.rewardToken.decimals);
         const totalAllocPoints = (await poolChef.poolInfo()).allocPoint.toNumber();
-        const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(SECONDS_PER_WEEK / BLOCKS_PER_SECOND).toNumber();
+        const rewardsPerWeek = new BigNumberJS(rewardPerBlock).times(SECONDS_PER_WEEK * BLOCKS_PER_SECOND).toNumber();
         const multiplier = 1000; // todo: move to config
-
         const poolRewardsPerWeek = new BigNumberJS(multiplier).div(totalAllocPoints).times(rewardsPerWeek).toNumber();
 
         stakePoolInfo.apr = getPoolApr(
