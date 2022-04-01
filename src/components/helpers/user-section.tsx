@@ -196,7 +196,7 @@ export const UserSection: React.FC<IProps> = (props) => {
         <Stack align="center" direction="row" justify="space-between">
           <Text fontWeight="600" fontSize="xs">
                 {props.userTotalStaked != '0.0' ? "(" + displayTokenCurrency(
-                  new BigNumber(props.userTotalStaked).times(rewardToken).toNumber(), "") + "$)" : "(0$)" } 
+                  new BigNumber(props.userTotalStaked).times(props.stakeToken.price).toNumber(), "") + "$)" : "(0$)" } 
           </Text>
         </Stack>
       </Box>
