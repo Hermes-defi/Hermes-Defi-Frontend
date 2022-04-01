@@ -91,7 +91,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {stakePool.apr ? `${displayNumber(stakePool.apr.yearlyAPR, true, 3)}%` : "N/A"}
+              {stakePool.apr ? `${displayNumber(stakePool.apr.yearlyAPR, true, 2)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
@@ -102,7 +102,7 @@ export const StakePoolCard: React.FC<{ stakePool: StakeInfo; isVaultToken?: bool
           </Text>
           <Box display="flex" alignItems="center">
             <Text fontWeight="700" fontSize="sm">
-              {stakePool.apr ? `${displayNumber(stakePool.apr.dailyAPR, true, 3)}%` : "N/A"}
+              {stakePool.apr ? `${displayNumber(stakePool.apr.dailyAPR, true, 2)}%` : "N/A"}
             </Text>
           </Box>
         </Stack>
