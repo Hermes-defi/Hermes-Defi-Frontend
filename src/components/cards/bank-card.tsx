@@ -34,7 +34,21 @@ export const BankPoolCard: React.FC<{
   const depositMutation = useDepositIntoStakePool();
   const withdrawMutation = useStakeWithdraw();
   const withdrawAllMutation = useStakeWithdrawAll();
-
+  let finishDate;
+  switch (stakePool.rewardToken.symbol) {
+    case "LUMEN":
+      finishDate = "Unlocks Apr 25"
+      break;
+    case "1UNI":
+      finishDate = "Unlocks May 04"
+      break;
+    case "MAGIC":
+      finishDate = "Airdrop only"
+      break;
+    case "HLY":
+      finishDate = "Airdrop only"
+      break;
+  }
   return (
     <Box
       px={8}
@@ -125,7 +139,20 @@ export const BankPoolCard: React.FC<{
               </Box>
             </>
           ) : (
-            <></>
+            <>
+            <Box>
+                <Badge
+                  boxShadow="md"
+                  px={2}
+                  rounded="lg"
+                  colorScheme="white"
+                  fontSize={["xs", "sm"]}
+                  backgroundColor={"blueviolet"}  
+                >
+                {finishDate}
+                </Badge>
+              </Box>
+              </>
           )}
           <Box>
             <Badge
