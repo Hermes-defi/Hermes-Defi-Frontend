@@ -184,7 +184,7 @@ const WoneBank = () => {
                 <Stack spacing={1}>
                   <chakra.div textAlign="right">
                     <Button
-                      onClick={() => setWithdrawAmount(lpBalance || "")}
+                      onClick={() => setWithdrawAmount(userInfo.data?.stakedShares || "")}
                       color="white"
                       mb={2}
                       variant="link"
@@ -218,8 +218,8 @@ const WoneBank = () => {
                       placeholder="0.00"
                       type="number"
                       min="0"
-                      isDisabled={userInfo.isLoading}
                       max={userInfo.data?.stakedShares}
+                      isDisabled={userInfo.isLoading}
                       onChange={(e) => setWithdrawAmount(e.target.value)}
                       value={withdrawAmount}
                     />

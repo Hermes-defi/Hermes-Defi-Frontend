@@ -62,14 +62,14 @@ const WoneBank = () => {
           </Heading>
           <Text>Lock your WONE to purchase HRMS/ONE LPs and earn PLTS</Text>
           <Link
-              href={`https://hermes-defi.gitbook.io/the-hermes-protocol/hermes-products/wone-bank`}
-              isExternal
-              fontWeight="700"
-              fontSize="sm"
-              textDecoration={"underline"}
-            >
-              More info in our docs
-            </Link>
+            href={`https://hermes-defi.gitbook.io/the-hermes-protocol/hermes-products/wone-bank`}
+            isExternal
+            fontWeight="700"
+            fontSize="sm"
+            textDecoration={"underline"}
+          >
+            More info in our docs
+          </Link>
         </chakra.div>
 
         <chakra.div
@@ -149,6 +149,12 @@ const WoneBank = () => {
                 </Stack>
 
                 <Stack direction="row" alignItems="center" justify="space-between">
+                  <Heading fontSize="xl">My WONE/HRMS LP</Heading>
+
+                  <Heading fontSize="2xl">{displayNumber(lpBalance || 0, true, 2)}</Heading>
+                </Stack>
+
+                <Stack direction="row" alignItems="center" justify="space-between">
                   <Heading fontSize="xl">My PLTS Rewards</Heading>
 
                   <Skeleton isLoaded={!userInfo.isLoading}>
@@ -156,23 +162,25 @@ const WoneBank = () => {
                   </Skeleton>
                 </Stack>
 
-                <Stack direction="row" alignItems="center" textAlign="center" spacing={4} pt={2}>
-                  <Button
-                    isFullWidth
-                    variant="solid"
-                    size="md"
-                    bg="gray.700"
-                    boxShadow="lg"
-                    rounded="16px"
-                    isDisabled={userInfo.isLoading || Number(userInfo.data?.pendingReward) <= 0}
-                    isLoading={harvestWone.isLoading}
-                    onClick={() => harvestWone.mutate({ amount: "0" })}
-                    _hover={{ bg: "gray.600" }}
-                    _focus={{ bg: "gray.500" }}
-                  >
-                    Claim rewards
-                  </Button>
-                </Stack>
+                {generalInfo.data?.withdrawLocked && (
+                  <Stack direction="row" alignItems="center" textAlign="center" spacing={4} pt={2}>
+                    <Button
+                      isFullWidth
+                      variant="solid"
+                      size="md"
+                      bg="gray.700"
+                      boxShadow="lg"
+                      rounded="16px"
+                      isDisabled={userInfo.isLoading || Number(userInfo.data?.pendingReward) <= 0}
+                      isLoading={harvestWone.isLoading}
+                      onClick={() => harvestWone.mutate({ amount: "0" })}
+                      _hover={{ bg: "gray.600" }}
+                      _focus={{ bg: "gray.500" }}
+                    >
+                      Claim rewards
+                    </Button>
+                  </Stack>
+                )}
               </Stack>
             </>
           )}
@@ -310,14 +318,14 @@ const WoneBank = () => {
                 <Stack spacing={1}>
                   <chakra.div textAlign="right">
                     <Button
-                      onClick={() => setWithdrawAmount(lpBalance || "")}
+                      onClick={() => setWithdrawAmount(userInfo.data?.stakedShares || "")}
                       color="white"
                       mb={2}
                       variant="link"
                       fontWeight="medium"
                       fontSize="sm"
                     >
-                      LP Balance: {lpBalance || "0"} WONE/HRMS
+                      Staked Shares: {displayNumber(userInfo.data?.stakedShares || 0, true, 2)}
                     </Button>
                   </chakra.div>
 
@@ -344,7 +352,8 @@ const WoneBank = () => {
                       placeholder="0.00"
                       type="number"
                       min="0"
-                      max={lpBalance}
+                      max={userInfo.data?.stakedShares}
+                      isDisabled={userInfo.isLoading}
                       onChange={(e) => setWithdrawAmount(e.target.value)}
                       value={withdrawAmount}
                     />
