@@ -159,6 +159,13 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: WoneBankABI,
   },
+  woneTestBank: {
+    address: {
+      1666600000: "0xc2c57ea78582c65529C3445eF542985Abde90cd0",
+      1666700000: "",
+    }[DEFAULT_CHAIN_ID],
+    abi: WoneBankABI,
+  },
 };
 
 export default defaultContracts;

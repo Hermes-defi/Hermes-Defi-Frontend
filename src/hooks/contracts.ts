@@ -195,3 +195,7 @@ export function useWoneBank() {
   const contract = useContract();
   return contract(defaultContracts.woneBank);
 }
+export function useWoneTestBank() {
+  const contract = useContract();
+  return contract(defaultContracts.woneTestBank);
+}
