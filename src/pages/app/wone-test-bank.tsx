@@ -63,14 +63,14 @@ const WoneBank = () => {
           <Text>Withdraw your funds from here</Text>
           <Text>Then break the LP in ViperSwap</Text>
           <Link
-              href={`https://hermes-defi.gitbook.io/the-hermes-protocol/hermes-products/wone-bank`}
-              isExternal
-              fontWeight="700"
-              fontSize="sm"
-              textDecoration={"underline"}
-            >
-              More info in our docs
-            </Link>
+            href={`https://hermes-defi.gitbook.io/the-hermes-protocol/hermes-products/wone-bank`}
+            isExternal
+            fontWeight="700"
+            fontSize="sm"
+            textDecoration={"underline"}
+          >
+            More info in our docs
+          </Link>
         </chakra.div>
 
         <chakra.div
@@ -90,17 +90,9 @@ const WoneBank = () => {
               <Image alt="won" border="2px" borderColor="white" bg="white" rounded="full" src="/harmony-one-logo.png" boxSize={12} />
               <Heading fontSize="3xl">WONE</Heading>
             </Stack>
-            <Badge
-                  boxShadow="md"
-                  px={2}
-                  rounded="lg"
-                  colorScheme="white"
-                  fontSize={["xs", "sm"]}
-                  backgroundColor={"purple"}
-                  
-                >
-                  Don't trade this token
-                </Badge>
+            <Badge boxShadow="md" px={2} rounded="lg" colorScheme="white" fontSize={["xs", "sm"]} backgroundColor={"purple"}>
+              Don't trade this token
+            </Badge>
           </Stack>
 
           {/* bank details */}
@@ -153,11 +145,9 @@ const WoneBank = () => {
 
               <Stack spacing={1} my={5}>
                 <Stack direction="row" alignItems="center" justify="space-between">
-                  <Heading fontSize="xl">My Staked Shares</Heading>
+                  <Heading fontSize="xl">My WONE/HRMS LP</Heading>
 
-                  <Skeleton isLoaded={!userInfo.isLoading}>
-                    <Heading fontSize="2xl">{displayNumber(userInfo.data?.stakedShares || 0, true, 2)}</Heading>
-                  </Skeleton>
+                  <Heading fontSize="2xl">{displayNumber(lpBalance || 0, true, 2)}</Heading>
                 </Stack>
 
                 <Stack direction="row" alignItems="center" justify="space-between">
@@ -167,24 +157,6 @@ const WoneBank = () => {
                     <Heading fontSize="2xl">{displayTokenCurrency(userInfo.data?.pendingReward || 0, "PLTS")}</Heading>
                   </Skeleton>
                 </Stack>
-
-                <Stack direction="row" alignItems="center" textAlign="center" spacing={4} pt={2}>
-                  <Button
-                    isFullWidth
-                    variant="solid"
-                    size="md"
-                    bg="gray.700"
-                    boxShadow="lg"
-                    rounded="16px"
-                    isDisabled={userInfo.isLoading || Number(userInfo.data?.pendingReward) <= 0}
-                    isLoading={harvestWone.isLoading}
-                    onClick={() => harvestWone.mutate({ amount: "0" })}
-                    _hover={{ bg: "gray.600" }}
-                    _focus={{ bg: "gray.500" }}
-                  >
-                    Claim rewards
-                  </Button>
-                </Stack>
               </Stack>
             </>
           )}
@@ -193,17 +165,6 @@ const WoneBank = () => {
           <Divider />
           <Tabs my={5} variant="solid-rounded">
             <TabList>
-              {/* <Tab
-                isDisabled={generalInfo.data?.withdrawLocked === false}
-                px={6}
-                py={1.5}
-                rounded={16}
-                color="white"
-                _selected={{ bg: "whiteAlpha.400" }}
-                _disabled={{ opacity: 0.7, cursor: "not-allowed" }}
-              >
-                Deposit
-              </Tab> */}
               <Tab
                 isDisabled={generalInfo.data?.withdrawLocked}
                 px={6}
@@ -218,105 +179,6 @@ const WoneBank = () => {
             </TabList>
 
             <TabPanels>
-              {/* deposit panel */}
-              {/* <TabPanel px={0}>
-                <Stack spacing={1}>
-                  <chakra.div textAlign="right">
-                    <Button
-                      onClick={() => setDepositAmount(woneBalance || "")}
-                      color="white"
-                      mb={2}
-                      variant="link"
-                      fontWeight="medium"
-                      fontSize="sm"
-                    >
-                      Balance: {woneBalance || "0"} WONE
-                    </Button>
-                  </chakra.div>
-
-                  <Stack
-                    spacing={0}
-                    borderWidth="1px"
-                    borderColor="rgb(255 255 255 / 35%)"
-                    p={1}
-                    py={2}
-                    rounded="xl"
-                    direction="row"
-                    align="center"
-                    divider={<StackDivider alignSelf="center" h="70%" borderColor="rgb(255 255 255 / 15%)" />}
-                  >
-                    <Input
-                      flex={1.5}
-                      w="full"
-                      border="0px"
-                      fontWeight="600"
-                      fontSize="lg"
-                      _focus={{ outline: "none" }}
-                      _placeholder={{ color: "rgb(255 255 255 / 65%)" }}
-                      pattern="^[0-9]*[.,]?[0-9]*$"
-                      focusBorderColor="secondary.500"
-                      placeholder="0.00"
-                      type="number"
-                      min="0"
-                      max={woneBalance}
-                      onChange={(e) => setDepositAmount(e.target.value)}
-                      value={depositAmount}
-                    />
-
-                    {/* <Select
-                  fontSize="xs"
-                  size="sm"
-                  flex={1}
-                  border="0px"
-                  _focus={{ outline: "none" }}
-                  // value={depositTokenAddress}
-                  // onChange={(e) => setDepositTokenAddress(e.target.value)}
-                >
-                  {["WONE", "ONE"].map((token) => (
-                    <option key={token} value={token}>
-                      {token}
-                    </option>
-                  ))}
-                </Select>}
-                  </Stack>
-
-                  <Stack direction="row" alignItems="center" textAlign="center" spacing={4} pt={5}>
-                    <Button
-                      isFullWidth
-                      variant="solid"
-                      size="lg"
-                      fontSize="md"
-                      bg="gray.700"
-                      boxShadow="lg"
-                      rounded="16px"
-                      isDisabled={hasApprovedWone.isLoading || hasApprovedWone.data}
-                      isLoading={approveWone.isLoading}
-                      onClick={() => approveWone.mutate()}
-                      _hover={{ bg: "gray.600" }}
-                      _focus={{ bg: "gray.500" }}
-                    >
-                      Approve
-                    </Button>
-
-                    <Button
-                      isFullWidth
-                      variant="solid"
-                      size="lg"
-                      bg="gray.700"
-                      boxShadow="lg"
-                      rounded="16px"
-                      isDisabled={!hasApprovedWone.data}
-                      isLoading={depositWone.isLoading}
-                      onClick={() => depositWone.mutate({ amount: depositAmount })}
-                      _hover={{ bg: "gray.600" }}
-                      _focus={{ bg: "gray.500" }}
-                    >
-                      Deposit
-                    </Button>
-                  </Stack>
-                </Stack>
-              </TabPanel> */}
-
               {/* withdraw panel */}
               <TabPanel px={0}>
                 <Stack spacing={1}>
@@ -329,7 +191,7 @@ const WoneBank = () => {
                       fontWeight="medium"
                       fontSize="sm"
                     >
-                      LP Balance: {lpBalance || "0"} WONE/HRMS
+                      Staked Shares: {displayNumber(userInfo.data?.stakedShares || 0, true, 2)}
                     </Button>
                   </chakra.div>
 
@@ -356,7 +218,8 @@ const WoneBank = () => {
                       placeholder="0.00"
                       type="number"
                       min="0"
-                      max={lpBalance}
+                      isDisabled={userInfo.isLoading}
+                      max={userInfo.data?.stakedShares}
                       onChange={(e) => setWithdrawAmount(e.target.value)}
                       value={withdrawAmount}
                     />
