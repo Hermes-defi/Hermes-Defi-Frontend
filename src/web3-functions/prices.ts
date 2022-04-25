@@ -21,18 +21,18 @@ const amms = {
   "0x72Cb10C6bfA5624dD07Ef608027E366bd690048F": "dfk", //JEWEL
   "0xfe1b516A7297eb03229A8B5AfAD80703911E81cB": "viper", //ROY
 
-  "0x6983d1e6def3690c4d616b13597a09e6193ea013": "sushiswap", //1ETH
-  "0x3095c7557bcb296ccc6e363de01b760ba031f2d9": "sushiswap", //1WBTC
+  "0x6983d1e6def3690c4d616b13597a09e6193ea013": "viper", //1ETH
+  "0x3095c7557bcb296ccc6e363de01b760ba031f2d9": "viper", //1WBTC
   "0xdc54046c0451f9269fee1840aec808d36015697d": "sushiswap", //1BTC
   "0xfa7191d292d5633f702b0bd7e3e3bccc0e633200": "sushiswap", //FRAX
-  "0xeb6c08ccb4421b6088e581ce04fcfbed15893ac3": "sushiswap", //1FRAX
-  "0x985458e523db3d53125813ed68c274899e9dfab4": "sushiswap", //1USDC
-  "0x3c2b8be99c50593081eaa2a724f0b8285f5aba8f": "sushiswap", //1USDT
+  "0xeb6c08ccb4421b6088e581ce04fcfbed15893ac3": "coingecko", //1FRAX
+  "0x985458e523db3d53125813ed68c274899e9dfab4": "viper", //1USDC
+  "0x3c2b8be99c50593081eaa2a724f0b8285f5aba8f": "viper", //1USDT
   "0x22d62b19b7039333ad773b7185bb61294f3adc19": "sushiswap", //stONE
-  "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a": "sushiswap", //1SUSHI
-  "0x0ab43550a6915f9f67d0c454c2e90385e6497eaa": "sushiswap", //bscBUSD
-  "0xe176ebe47d621b984a73036b9da5d834411ef734": "sushiswap", //BUSD
-  "0x224e64ec1bdce3870a6a6c777edd450454068fec": "sushiswap", //UST
+  "0xbec775cb42abfa4288de81f387a9b1a3c4bc552a": "viper", //1SUSHI
+  "0x0ab43550a6915f9f67d0c454c2e90385e6497eaa": "viper", //bscBUSD
+  "0xe176ebe47d621b984a73036b9da5d834411ef734": "viper", //BUSD
+  "0x224e64ec1bdce3870a6a6c777edd450454068fec": "viper", //UST
 
   "0xda7fe71960cd1c19e1b86d6929efd36058f60a03": "coingecko", //LUMEN
   "0x90d81749da8867962c760414c1c25ec926e889b6": "coingecko", //1UNI
