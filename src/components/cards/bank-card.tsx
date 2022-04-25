@@ -61,7 +61,6 @@ export const BankPoolCard: React.FC<{
       bgGradient={(() => {
         if (stakePool.isSpecial) return "linear(to-b, gray.800, primary.300)";
         if (isVaultToken) return "linear(to-b, primary.500, pink.300)";
-        if(stakePool.rewardToken.symbol === "LUMEN") return "linear(to-b, gray.800, accent.300)"
         return "linear(to-t, accent.300, accent.500)";
       })()}
       rounded="3xl"
