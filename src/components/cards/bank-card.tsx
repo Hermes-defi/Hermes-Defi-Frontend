@@ -37,7 +37,7 @@ export const BankPoolCard: React.FC<{
   let finishDate;
   switch (stakePool.rewardToken.symbol) {
     case "LUMEN":
-      finishDate = "Unlocks Apr 25"
+      finishDate = "Unlocked"
       break;
     case "1UNI":
       finishDate = "Unlocks May 04"
@@ -53,12 +53,15 @@ export const BankPoolCard: React.FC<{
     <Box
       px={8}
       py={4}
-      bg="accent.500"
+      bg= {(() => {
+        if(stakePool.rewardToken.symbol === "LUMEN") return "gray.800";
+        else return "accent.500";
+      })()}
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={(() => {
         if (stakePool.isSpecial) return "linear(to-b, gray.800, primary.300)";
         if (isVaultToken) return "linear(to-b, primary.500, pink.300)";
-
+        if(stakePool.rewardToken.symbol === "LUMEN") return "linear(to-b, gray.800, accent.300)"
         return "linear(to-t, accent.300, accent.500)";
       })()}
       rounded="3xl"

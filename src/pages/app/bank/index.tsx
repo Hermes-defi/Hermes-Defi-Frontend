@@ -143,7 +143,7 @@ const Page: React.FC = () => {
             </Button>
           </HStack>
       </Stack>
-      <HStack align="center" spacing={10} py={10}>
+      <HStack align="center" py={10}>
         <Container align="center" maxWidth="container.lg">
           
           {mainIsLoading ? (
@@ -165,7 +165,7 @@ const Page: React.FC = () => {
             </Flex>
           ) : (
             
-            <Wrap justify="center" spacing="20px" w={"100%"}>
+            <Wrap justify="center" spacing="20px">
               {pools.map(({ data }: any) => (
                 <WrapItem key={data.address}>
                   <BankPoolCard stakePool={data} />
