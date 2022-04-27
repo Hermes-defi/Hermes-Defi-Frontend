@@ -43,7 +43,7 @@ export const BankPoolCard: React.FC<{
       finishDate = "Unlocks May 04"
       break;
     case "MAGIC":
-      finishDate = "Airdrop only"
+      finishDate = "Unlocks May 11"
       break;
     case "HLY":
       finishDate = "Airdrop only"
