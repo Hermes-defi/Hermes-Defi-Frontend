@@ -45,10 +45,10 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
         href: "/app/stake"
       },
 
-      // {
-      //   label: "Vaults",
-      //   href: "/app/vaults",
-      // },
+      {
+        label: "Vaults",
+        href: "/app/vaults",
+      },
     ],
   },
 

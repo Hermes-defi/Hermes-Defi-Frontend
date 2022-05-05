@@ -104,7 +104,7 @@ const WoneBank = () => {
 
               <Skeleton isLoaded={!generalInfo.isLoading}>
                 <Heading fontSize="2xl">
-                  {generalInfo.data?.apr?.yearlyAPR ? `${displayNumber(generalInfo.data?.apr?.yearlyAPR, true, 2)}%` : "N/A"}
+                  {generalInfo.data?.apr?.yearlyAPR ? `${displayNumber(generalInfo.data?.apr?.yearlyAPR, true, 2)}%` : "0%"}
                 </Heading>
               </Skeleton>
             </Stack>
@@ -114,7 +114,7 @@ const WoneBank = () => {
 
               <Skeleton isLoaded={!generalInfo.isLoading}>
                 <Heading fontSize="2xl">
-                  {generalInfo.data?.apr?.dailyAPR ? `${displayNumber(generalInfo.data?.apr?.dailyAPR, true, 2)}%` : "N/A"}
+                  {generalInfo.data?.apr?.dailyAPR ? `${displayNumber(generalInfo.data?.apr?.dailyAPR, true, 2)}%` : "0%"}
                 </Heading>
               </Skeleton>
             </Stack>
@@ -189,7 +189,7 @@ const WoneBank = () => {
           <Divider />
           <Tabs my={5} variant="solid-rounded">
             <TabList>
-              <Tab
+              {/* <Tab
                 isDisabled={generalInfo.data?.withdrawLocked === false}
                 px={6}
                 py={1.5}
@@ -199,7 +199,7 @@ const WoneBank = () => {
                 _disabled={{ opacity: 0.7, cursor: "not-allowed" }}
               >
                 Deposit
-              </Tab>
+              </Tab> */}
               <Tab
                 isDisabled={generalInfo.data?.withdrawLocked}
                 px={6}
@@ -215,7 +215,7 @@ const WoneBank = () => {
 
             <TabPanels>
               {/* deposit panel */}
-              <TabPanel px={0}>
+              {/* <TabPanel px={0}>
                 <Stack spacing={1}>
                   <chakra.div textAlign="right">
                     <Button
@@ -257,7 +257,7 @@ const WoneBank = () => {
                       max={woneBalance}
                       onChange={(e) => setDepositAmount(e.target.value)}
                       value={depositAmount}
-                    />
+                    /> */}
 
                     {/* <Select
                   fontSize="xs"
@@ -274,7 +274,7 @@ const WoneBank = () => {
                     </option>
                   ))}
                 </Select> */}
-                  </Stack>
+                  {/* </Stack>
 
                   <Stack direction="row" alignItems="center" textAlign="center" spacing={4} pt={5}>
                     <Button
@@ -311,7 +311,7 @@ const WoneBank = () => {
                     </Button>
                   </Stack>
                 </Stack>
-              </TabPanel>
+              </TabPanel> */}
 
               {/* withdraw panel */}
               <TabPanel px={0}>

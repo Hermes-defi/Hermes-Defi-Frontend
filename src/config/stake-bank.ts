@@ -97,7 +97,7 @@ export const stakingBankPools: StakeBankInfo[] = {
     {
       address: "0x3636421e71dcf0bfcbb08feeb62e0275ea5acd61",
       poolSite: "https://uniswap.org/",
-      active: true,
+      active: false,
       isSpecial: false,
 
       stakeToken: {
