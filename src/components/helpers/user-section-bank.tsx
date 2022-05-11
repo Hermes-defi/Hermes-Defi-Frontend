@@ -167,7 +167,16 @@ export const UserSection: React.FC<IProps> = (props) => {
 
   return (
     <Stack spacing={4}>
-      <HStack justify="space-evenly" ml={props.rewardToken.symbol === "LUMEN" || props.rewardToken.symbol === "1UNI" ? "-6" : "0"}>
+      <HStack
+        justify="space-evenly"
+        ml={
+          props.rewardToken.symbol === "LUMEN" ||
+          props.rewardToken.symbol === "1UNI" ||
+          props.rewardToken.symbol === "MAGIC"
+            ? "-6"
+            : "0"
+        }
+      >
         <Box align="center">
           <Heading letterSpacing="1px" color="gray.200" fontSize="lg">
             {props.stakeToken.symbol} Locked
@@ -194,7 +203,7 @@ export const UserSection: React.FC<IProps> = (props) => {
                 : "N/A"}
             </Text>
           </Stack>
-          <Stack >
+          <Stack>
             <HStack mt={"3"}>
               {props.hasApprovedPool && (
                 <DepositButton
@@ -208,7 +217,8 @@ export const UserSection: React.FC<IProps> = (props) => {
               {props.hasApprovedPool &&
                 (props.rewardToken.symbol === "1DAI" ||
                   props.rewardToken.symbol === "LUMEN" ||
-                  props.rewardToken.symbol === "1UNI") && (
+                  props.rewardToken.symbol === "1UNI" ||
+                  props.rewardToken.symbol === "MAGIC") && (
                   <Button
                     onClick={() => props.withdrawAll.mutateAsync(props.address)}
                     size={"sm"}

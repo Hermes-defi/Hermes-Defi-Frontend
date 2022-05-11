@@ -43,7 +43,7 @@ export const BankPoolCard: React.FC<{
       finishDate = "Unlocked"
       break;
     case "MAGIC":
-      finishDate = "Unlocks May 11"
+      finishDate = "Unlocked"
       break;
     case "HLY":
       finishDate = "Airdrop only"
@@ -58,7 +58,7 @@ export const BankPoolCard: React.FC<{
       bgGradient={(() => {
         if (stakePool.isSpecial) return "linear(to-b, gray.800, primary.300)";
         if (isVaultToken) return "linear(to-b, primary.500, pink.300)";
-        if (stakePool.rewardToken.symbol === "1UNI" || !stakePool.active) return "linear(to-b, gray.800, accent.300)"
+        if (stakePool.rewardToken.symbol === "MAGIC" || !stakePool.active) return "linear(to-b, gray.800, accent.300)"
         return "linear(to-t, accent.300, accent.500)";
       })()}
       rounded="3xl"

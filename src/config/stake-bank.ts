@@ -139,7 +139,7 @@ export const stakingBankPools: StakeBankInfo[] = {
     {
       address: "0xb684CAB219dE861a49b396Ae3BbB1fc8702286E3",
       poolSite: "https://cosmicuniverse.one/",
-      active: true,
+      active: false,
       isSpecial: false,
 
       stakeToken: {
