@@ -19,6 +19,11 @@ import ZapABI from "config/abis/Zap.json";
 import oracleDFKABI from "config/abis/OracleDFK.json";
 import DelegatorABI from "config/abis/Delegator.json";
 import WoneBankABI from "config/abis/WoneBank.json";
+import SwapHermesBankABI from "config/abis/SwapHermesBank.json";
+import SwapHermesABI from "config/abis/SwapHermes.json";
+import pHermesABI from "config/abis/pHermesToken.json";
+import HermesABI from "config/abis/HermesToken.json";
+import HermesRedeemABI from "config/abis/HermesRedeem.json";
 import { DEFAULT_CHAIN_ID } from "config/constants";
 
 export type ContractInfo = {
@@ -166,6 +171,41 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: WoneBankABI,
   },
+  swapHermesBank: {
+    address: {
+      1666600000: "",
+      1666700000: "0x715a4f2cf7ddceda3bb7fbc81fb7c32f93129084",
+    }[DEFAULT_CHAIN_ID],
+    abi: SwapHermesBankABI,
+  },
+  swapHermes: {
+    address: {
+      1666600000: "",
+      1666700000: "0xb4fae9e130ad60d6d8144de1e8ac1dc46ededc03",
+    }[DEFAULT_CHAIN_ID],
+    abi: SwapHermesABI,
+  },
+  pHermesToken: {
+    address: {
+      1666600000: "",
+      1666700000: "0x8ab57b26c4988e65bd8f7ea2c01a2d34c3a6af35",
+    }[DEFAULT_CHAIN_ID],
+    abi: pHermesABI,
+  },
+  hermesToken: {
+    address: {
+      1666600000: "",
+      1666700000: "0xa87436768a157e936e30124e6e942913b9d46e93",
+    }[DEFAULT_CHAIN_ID],
+    abi: HermesABI,
+  },
+  hermesRedeem: {
+    address: {
+      1666600000: "",
+      1666700000: "0x38cc050e23a0afbaa62bcffc3d593367bc48cb97",
+    }[DEFAULT_CHAIN_ID],
+    abi: HermesRedeemABI,
+  }
 };
 
 export default defaultContracts;
