@@ -10,7 +10,7 @@ export const RPC_URLS: { [chainId: number]: string } = {
   // 1666600000: "https://rpc.hermesdefi.io/", //wonderful hermes RPC by "el papá" Austin
   // 1666600000: "https://api.fuzz.fi/",
   1666600000: "https://harmony-0-rpc.gateway.pokt.network/",
-  1666700001: "https://api.s0.b.hmny.io",
+  1666700000: "https://api.s0.b.hmny.io",
 };
 
 // CONNECTORS

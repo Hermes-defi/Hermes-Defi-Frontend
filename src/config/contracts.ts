@@ -94,7 +94,7 @@ const defaultContracts = {
   plutusToken: {
     address: {
       1666600000: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
-      1666700000: "",
+      1666700000: "0x540c84a79F64ebC81636dB7FB0adf31D26a9b2FD",
     }[DEFAULT_CHAIN_ID],
     abi: PlutusTokenABI,
   },

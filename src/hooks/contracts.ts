@@ -207,6 +207,10 @@ export function useSwapHermes() {
   const contract = useContract();
   return contract(defaultContracts.swapHermes);
 }
+export function useRedeemHermes() {
+  const contract = useContract();
+  return contract(defaultContracts.hermesRedeem);
+}
 export function usepHermesToken() {
   const contract = useContract();
   return contract(defaultContracts.pHermesToken);

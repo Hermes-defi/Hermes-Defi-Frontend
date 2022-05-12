@@ -3,17 +3,18 @@ import React from "react";
 import { displayCurrency, displayTokenCurrency } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 import {
-  useApprovePPlutus,
-  useBuyPPlutus,
+  useApprovePHermes,
+  useSwapPHermes,
   usePresaleApproveToken,
   usePresaleInfo,
   useSwapInfo,
-  useSwapPPlutus,
-} from "state/pre-sale";
+  useSwapPlutus,
+  useSwapBankPlutus,
+} from "state/swap-hermes";
 
 import { AppLayout } from "components/layout";
 import { UnlockButton } from "components/wallet/unlock-wallet";
-import { BuyPlutusModal } from "components/modals/buy-plutus";
+import { BuypHermesModal } from "components/modals/buy-pHermes";
 
 import {
   Box,
@@ -28,15 +29,16 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { BuypPlutusModal } from "components/modals/buy-pPlutus";
+import { usepHermesToken } from "hooks/contracts";
+import { useTokenBalance } from "hooks/wallet";
 
 const PresaleCard = () => {
   const { account } = useActiveWeb3React();
   const { isOpen, onClose, onOpen } = useDisclosure();
   const queryResp = usePresaleInfo();
   const isLoaded = !!queryResp.data;
-
-  const approveDaiMutation = usePresaleApproveToken();
-  const buyPlutus = useBuyPPlutus();
+  const approvePLTSMutation = usePresaleApproveToken();
+  const swapPlutus = useSwapPlutus();
 
   return (
     <>
@@ -80,7 +82,7 @@ const PresaleCard = () => {
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
                   {displayTokenCurrency(
-                    queryResp.data?.pPlutusRemaining,
+                    queryResp.data?.generalPHermesRemaining,
                     "pHRMS",
                     true
                   )}
@@ -94,7 +96,7 @@ const PresaleCard = () => {
               </Text>
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {`Block ${queryResp.data?.startBlock}`}
+                  {`Block ${queryResp.data?.generalStartBlock}`}
                 </Text>
               </Skeleton>
             </Stack>
@@ -105,7 +107,7 @@ const PresaleCard = () => {
               </Text>
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {`Block ${queryResp.data?.endBlock}`}
+                  {`Block ${queryResp.data?.generalEndBlock}`}
                 </Text>
               </Skeleton>
             </Stack>
@@ -125,11 +127,11 @@ const PresaleCard = () => {
             />
           )}
 
-          {!queryResp.data?.daiApproved && (
+          {!queryResp.data?.pltsApproved && (
             <Button
               isFullWidth
-              onClick={() => approveDaiMutation.mutate("dai")}
-              isLoading={approveDaiMutation.isLoading}
+              onClick={() => approvePLTSMutation.mutate("plts")}
+              isLoading={approvePLTSMutation.isLoading}
               bg="gray.700"
               size="lg"
               fontSize="md"
@@ -139,7 +141,7 @@ const PresaleCard = () => {
             </Button>
           )}
 
-          {queryResp.data?.daiApproved && (
+          {queryResp.data?.pltsApproved && (
             <Button
               isFullWidth
               onClick={onOpen}
@@ -153,11 +155,11 @@ const PresaleCard = () => {
           )}
         </Stack>
       </Stack>
-      <BuypPlutusModal
+      <BuypHermesModal
         isOpen={isOpen}
         onClose={onClose}
-        isLoading={buyPlutus.isLoading}
-        onPurchase={buyPlutus.mutateAsync}
+        isLoading={swapPlutus.isLoading}
+        onPurchase={swapPlutus.mutateAsync}
       />
     </>
   );
@@ -168,8 +170,8 @@ const PresaleBankCard = () => {
   const queryResp = usePresaleInfo();
   const isLoaded = !!queryResp.data;
 
-  const approveDaiMutation = usePresaleApproveToken();
-  const buyPlutus = useBuyPPlutus();
+  const approvePltsMutation = usePresaleApproveToken();
+  const swapBankPlutus = useSwapBankPlutus();
 
   return (
     <>
@@ -213,7 +215,7 @@ const PresaleBankCard = () => {
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
                   {displayTokenCurrency(
-                    queryResp.data?.pPlutusRemaining,
+                    queryResp.data?.bankPHermesRemaining,
                     "pHRMS",
                     true
                   )}
@@ -227,7 +229,7 @@ const PresaleBankCard = () => {
               </Text>
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {`Block ${queryResp.data?.startBlock}`}
+                  {`Block ${queryResp.data?.bankStartBlock}`}
                 </Text>
               </Skeleton>
             </Stack>
@@ -238,7 +240,7 @@ const PresaleBankCard = () => {
               </Text>
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {`Block ${queryResp.data?.endBlock}`}
+                  {`Block ${queryResp.data?.bankEndBlock}`}
                 </Text>
               </Skeleton>
             </Stack>
@@ -258,11 +260,11 @@ const PresaleBankCard = () => {
             />
           )}
 
-          {!queryResp.data?.daiApproved && (
+          {!queryResp.data?.pltsApproved && (
             <Button
               isFullWidth
-              onClick={() => approveDaiMutation.mutate("dai")}
-              isLoading={approveDaiMutation.isLoading}
+              onClick={() => approvePltsMutation.mutate("plts")}
+              isLoading={approvePltsMutation.isLoading}
               bg="gray.700"
               size="lg"
               fontSize="md"
@@ -272,7 +274,7 @@ const PresaleBankCard = () => {
             </Button>
           )}
 
-          {queryResp.data?.daiApproved && (
+          {queryResp.data?.pltsApproved && (
             <Button
               isFullWidth
               onClick={onOpen}
@@ -286,11 +288,11 @@ const PresaleBankCard = () => {
           )}
         </Stack>
       </Stack>
-      <BuypPlutusModal
+      <BuypHermesModal
         isOpen={isOpen}
         onClose={onClose}
-        isLoading={buyPlutus.isLoading}
-        onPurchase={buyPlutus.mutateAsync}
+        isLoading={swapBankPlutus.isLoading}
+        onPurchase={swapBankPlutus.mutateAsync}
       />
     </>
   );
@@ -301,9 +303,11 @@ const SwapCard = () => {
   const { onOpen } = useDisclosure();
 
   const swapInfo = useSwapInfo();
-  const approveMutation = useApprovePPlutus();
+  const approveMutation = useApprovePHermes();
+  const pHermesContract = usepHermesToken();
+  const pHermesBalance =  useTokenBalance(pHermesContract.address, 18)
+  const swapPHermes = useSwapPHermes();
 
-  const swapPPlutus = useSwapPPlutus();
 
   return (
     <Stack
@@ -338,21 +342,21 @@ const SwapCard = () => {
             </Skeleton>
           </Stack>
 
-          <Stack direction={["column", "row"]} justify="space-between">
+          {/* <Stack direction={["column", "row"]} justify="space-between">
             <Text fontWeight="600" fontSize="sm">
-              IDO pHRMS remaining
+              pHRMS remaining
             </Text>
 
             <Skeleton isLoaded={!!swapInfo.data}>
               <Text fontWeight="700" fontSize="sm">
                 {displayTokenCurrency(
-                  swapInfo.data?.pPlutusRemaining,
+                  swapInfo.data?.pHermesRemaining,
                   "pHRMS",
                   true
                 )}
               </Text>
             </Skeleton>
-          </Stack>
+          </Stack> */}
 
           <Stack direction={["column", "row"]} justify="space-between">
             <Text fontWeight="600" fontSize="sm">
@@ -362,7 +366,7 @@ const SwapCard = () => {
             <Skeleton isLoaded={!!swapInfo.data}>
               <Text fontWeight="700" fontSize="sm">
                 {displayTokenCurrency(
-                  swapInfo.data?.plutusRemaining,
+                  swapInfo.data?.hermesRemaining,
                   "HRMS",
                   true
                 )}
@@ -376,8 +380,8 @@ const SwapCard = () => {
             </Text>
             <Skeleton isLoaded={!!swapInfo.data}>
               <Text fontWeight="700" fontSize="sm">
-                {/* {`Block ${swapInfo.data?.swapStarts}`} */}
-                Block 21006024
+                {`Block ${swapInfo.data?.swapStarts}`}
+                {/* Block 21006024 */}
               </Text>
             </Skeleton>
           </Stack>
@@ -390,7 +394,7 @@ const SwapCard = () => {
               <Skeleton isLoaded={!!swapInfo.data}>
                 <Text fontWeight="700" fontSize="sm">
                   {displayTokenCurrency(
-                    swapInfo.data?.pPlutusBalance,
+                    swapInfo.data?.pHermesBalance,
                     "pHRMS",
                     true
                   )}
@@ -414,7 +418,7 @@ const SwapCard = () => {
           />
         ) : (
           <>
-            {!swapInfo.data?.pPlutusApproved ? (
+            {!swapInfo.data?.pHermesApproved ? (
               <Button
                 isLoading={approveMutation.isLoading}
                 onClick={() => approveMutation.mutate()}
@@ -427,8 +431,8 @@ const SwapCard = () => {
               </Button>
             ) : (
               <Button
-                isLoading={swapPPlutus.isLoading}
-                onClick={() => swapPPlutus.mutate()}
+                isLoading={swapPHermes.isLoading}
+                onClick={() => swapPHermes.mutate(pHermesBalance)}
                 bg="gray.700"
                 size="lg"
                 fontSize="md"
@@ -503,8 +507,6 @@ const Timeline = () => {
 };
 
 const Page = () => {
-  const queryResp = usePresaleInfo();
-  const isLoaded = !!queryResp.data;
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={5}>
