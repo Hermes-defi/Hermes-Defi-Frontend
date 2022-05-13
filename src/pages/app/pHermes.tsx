@@ -22,15 +22,15 @@ import {
   Container,
   Heading,
   HStack,
+  Image,
   Link,
   Skeleton,
   Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { BuypPlutusModal } from "components/modals/buy-pPlutus";
 import { usepHermesToken } from "hooks/contracts";
-import { useTokenBalance } from "hooks/wallet";
+import { useCurrentBlockNumber, useTokenBalance } from "hooks/wallet";
 
 const PresaleCard = () => {
   const { account } = useActiveWeb3React();
@@ -39,6 +39,11 @@ const PresaleCard = () => {
   const isLoaded = !!queryResp.data;
   const approvePLTSMutation = usePresaleApproveToken();
   const swapPlutus = useSwapPlutus();
+  const currentBlock = useCurrentBlockNumber();
+  const active = currentBlock < 25330605;
+  const fontButtonColor = active ? "pink.800" : "gray.700";
+  const bgButtonColor = active ? "pink.200" : "gray.400";
+  const textColor = !active ? "gray.600" : "white";
 
   return (
     <>
@@ -50,8 +55,12 @@ const PresaleCard = () => {
         boxShadow="lg"
         rounded="3xl"
         bg="secondary.300"
-        bgGradient="linear(to-b, hermesAccent.400, hermesPrimary.400)"
-        color="white"
+        bgGradient={
+          active
+            ? "linear(to-b, accent.100, accent.700)"
+            : "linear(to-b, gray.200, gray.500)"
+        }
+        color={textColor}
       >
         <Box>
           <HStack mb={6}>
@@ -120,35 +129,39 @@ const PresaleCard = () => {
             <UnlockButton
               isFullWidth
               onClick={onOpen}
-              bg="gray.700"
+              bg={bgButtonColor}
+              color={fontButtonColor}
               size="lg"
               fontSize="md"
-              _hover={{ bg: "gray.600" }}
+              _hover={{ bg: "pink.300", color: "white" }}
+              isDisabled={!active}
             />
           )}
-
-          {!queryResp.data?.pltsApproved && (
+          {account && !queryResp.data?.generalPltsApproved && (
             <Button
               isFullWidth
               onClick={() => approvePLTSMutation.mutate("plts")}
               isLoading={approvePLTSMutation.isLoading}
-              bg="gray.700"
+              bg={bgButtonColor}
               size="lg"
               fontSize="md"
-              _hover={{ bg: "gray.400" }}
+              color={fontButtonColor}
+              _hover={{ bg: "pink.300", color: "white" }}
+              isDisabled={!active}
             >
               Approve PLTS
             </Button>
           )}
-
-          {queryResp.data?.pltsApproved && (
+          {account && queryResp.data?.generalPltsApproved && (
             <Button
               isFullWidth
               onClick={onOpen}
-              bg="gray.700"
+              bg={bgButtonColor}
               size="lg"
               fontSize="md"
-              _hover={{ bg: "gray.600" }}
+              color={fontButtonColor}
+              _hover={{ bg: "pink.300", color: "white" }}
+              isDisabled={!active}
             >
               Swap PLTS for pHRMS
             </Button>
@@ -172,6 +185,11 @@ const PresaleBankCard = () => {
 
   const approvePltsMutation = usePresaleApproveToken();
   const swapBankPlutus = useSwapBankPlutus();
+  const currentBlock = useCurrentBlockNumber();
+  const active = currentBlock < 25330605;
+  const fontButtonColor = active ? "pink.800" : "gray.700";
+  const bgButtonColor = active ? "pink.200" : "gray.400";
+  const textColor = !active ? "gray.600" : "white";
 
   return (
     <>
@@ -183,8 +201,12 @@ const PresaleBankCard = () => {
         boxShadow="lg"
         rounded="3xl"
         bg="secondary.300"
-        bgGradient="linear(to-b, hermesAccent.400, hermesPrimary.400)"
-        color="white"
+        bgGradient={
+          active
+            ? "linear(to-b, accent.100, accent.700)"
+            : "linear(to-b, gray.200, gray.500)"
+        }
+        color={textColor}
       >
         <Box>
           <HStack mb={6}>
@@ -249,39 +271,41 @@ const PresaleBankCard = () => {
 
         {/* actions */}
         <Stack mt="auto" mb={8}>
-          {!account && (
+          {!account ? (
             <UnlockButton
               isFullWidth
               onClick={onOpen}
-              bg="gray.700"
+              bg={bgButtonColor}
+              color={fontButtonColor}
               size="lg"
               fontSize="md"
-              _hover={{ bg: "gray.600" }}
+              _hover={{ bg: "pink.300", color: "white" }}
+              isDisabled={!active}
             />
-          )}
-
-          {!queryResp.data?.pltsApproved && (
+          ) : !queryResp.data?.bankPltsApproved ? (
             <Button
               isFullWidth
               onClick={() => approvePltsMutation.mutate("plts")}
               isLoading={approvePltsMutation.isLoading}
-              bg="gray.700"
+              bg={bgButtonColor}
+              color={fontButtonColor}
               size="lg"
               fontSize="md"
-              _hover={{ bg: "gray.400" }}
+              _hover={{ bg: "pink.300", color: "white" }}
+              isDisabled={!active}
             >
               Approve PLTS
             </Button>
-          )}
-
-          {queryResp.data?.pltsApproved && (
+          ) : (
             <Button
               isFullWidth
               onClick={onOpen}
-              bg="gray.700"
+              bg={bgButtonColor}
+              color={fontButtonColor}
               size="lg"
               fontSize="md"
-              _hover={{ bg: "gray.600" }}
+              _hover={{ bg: "pink.300", color: "white" }}
+              isDisabled={!active}
             >
               Swap PLTS for pHRMS
             </Button>
@@ -305,9 +329,13 @@ const SwapCard = () => {
   const swapInfo = useSwapInfo();
   const approveMutation = useApprovePHermes();
   const pHermesContract = usepHermesToken();
-  const pHermesBalance =  useTokenBalance(pHermesContract.address, 18)
+  const pHermesBalance = useTokenBalance(pHermesContract.address, 18);
   const swapPHermes = useSwapPHermes();
-
+  const currentBlock = useCurrentBlockNumber();
+  const active = currentBlock > 25213250;
+  const fontButtonColor = active ? "pink.800" : "gray.700";
+  const bgButtonColor = active ? "gray.200" : "gray.400";
+  const textColor = !active ? "gray.600" : "white";
 
   return (
     <Stack
@@ -318,8 +346,13 @@ const SwapCard = () => {
       boxShadow="lg"
       rounded="3xl"
       bg="secondary.400"
-      bgGradient="linear(to-b, hermesPrimary.400, hermesAccent.300)"
-      color="white"
+      bgGradient={
+        active
+          ? "linear(to-b, hermesPrimary.200, hermesAccent.300)"
+          : "linear(to-b, gray.200, gray.500)"
+      }
+      color={textColor}
+      w={"full"}
     >
       <Box>
         <HStack mb={6}>
@@ -341,22 +374,6 @@ const SwapCard = () => {
               </Text>
             </Skeleton>
           </Stack>
-
-          {/* <Stack direction={["column", "row"]} justify="space-between">
-            <Text fontWeight="600" fontSize="sm">
-              pHRMS remaining
-            </Text>
-
-            <Skeleton isLoaded={!!swapInfo.data}>
-              <Text fontWeight="700" fontSize="sm">
-                {displayTokenCurrency(
-                  swapInfo.data?.pHermesRemaining,
-                  "pHRMS",
-                  true
-                )}
-              </Text>
-            </Skeleton>
-          </Stack> */}
 
           <Stack direction={["column", "row"]} justify="space-between">
             <Text fontWeight="600" fontSize="sm">
@@ -381,7 +398,6 @@ const SwapCard = () => {
             <Skeleton isLoaded={!!swapInfo.data}>
               <Text fontWeight="700" fontSize="sm">
                 {`Block ${swapInfo.data?.swapStarts}`}
-                {/* Block 21006024 */}
               </Text>
             </Skeleton>
           </Stack>
@@ -411,10 +427,12 @@ const SwapCard = () => {
           <UnlockButton
             isFullWidth
             onClick={onOpen}
-            bg="gray.700"
+            bg={bgButtonColor}
+            color={fontButtonColor}
             size="lg"
             fontSize="md"
-            _hover={{ bg: "gray.600" }}
+            _hover={{ bg: "pink.800", color: "white" }}
+            isDisabled={!active}
           />
         ) : (
           <>
@@ -422,10 +440,12 @@ const SwapCard = () => {
               <Button
                 isLoading={approveMutation.isLoading}
                 onClick={() => approveMutation.mutate()}
-                bg="gray.700"
+                bg={bgButtonColor}
+                color={fontButtonColor}
                 size="lg"
                 fontSize="md"
-                _hover={{ bg: "gray.600" }}
+                isDisabled={!active}
+                _hover={{ bg: "pink.800", color: "white" }}
               >
                 Approve pHRMS for Swap
               </Button>
@@ -433,10 +453,12 @@ const SwapCard = () => {
               <Button
                 isLoading={swapPHermes.isLoading}
                 onClick={() => swapPHermes.mutate(pHermesBalance)}
-                bg="gray.700"
+                bg={bgButtonColor}
+                color={fontButtonColor}
                 size="lg"
                 fontSize="md"
-                _hover={{ bg: "gray.600" }}
+                _hover={{ bg: "pink.800", color: "white" }}
+                isDisabled={!active}
               >
                 Swap all pHRMS for HRMS
               </Button>
@@ -448,26 +470,50 @@ const SwapCard = () => {
   );
 };
 const Timeline = () => {
+  const queryResp = usePresaleInfo();
+  const swapInfo = useSwapInfo();
+
   return (
     <Stack direction={"row"} mt={7} mx={10}>
       <Stack mb={7} spacing={4} flex={1}>
         <Heading fontSize="3xl">HERMES Timeline</Heading>
 
         <Stack>
-          <Text fontSize="sm">1. IDO starts at block 20833224</Text>
-
-          <Text fontSize="sm">2. IDO ends at block 20962824</Text>
-
-          <Text fontSize="sm">3. Waiting room begins at block 20962824</Text>
-
-          <Text fontSize="sm">4. Liquidity added at block 21002424</Text>
-
           <Text fontSize="sm">
-            5. Swap opens (swap pPLUTUS to PLUTUS) at block 21006024
+            1. PLTS to pHRMS Swap Opens at block {queryResp.data?.startBlock}{" "}
+            (~May 15th)
           </Text>
 
           <Text fontSize="sm">
-            6. Waiting room ends and farming starts at block 21048525
+            2. PLTS Project Owned Liquidity (&gt 90% as of 4/14/22) Swapped at
+            block xx,xxx,xxx
+          </Text>
+
+          <Text fontSize="sm">
+            3. PLTS to pHRMS Swap Closes at block {queryResp.data?.endBlock}{" "}
+            (~May 19th)
+          </Text>
+          <Text fontSize="sm">
+            ALL PLTS MUST BE SWAPPED BEFORE PLTS SWAP CLOSES
+          </Text>
+
+          <Text fontSize="sm">
+            4. HRMS Liquidity Added (DEX Launch!) at block xx,xxx,xxx (~May
+            20th)
+          </Text>
+
+          <Text fontSize="sm">
+            5. WONE Bank HRMS Purchase at same block as point 4.
+          </Text>
+
+          <Text fontSize="sm">
+            6. Viper to Hermes Liquidity Migration (Minutes after purchase)
+          </Text>
+          <Text fontSize="sm">
+            7. pHRMS to HRMS Swap Opens (Minutes after migration)
+          </Text>
+          <Text fontSize="sm">
+            8. Farming begins (Minutes after swap opens)
           </Text>
         </Stack>
 
@@ -491,37 +537,63 @@ const Timeline = () => {
         <Heading fontSize="3xl">How To</Heading>
 
         <Text fontSize="sm">
-          1. Swap your PLTS for pHRMS using the IDO Contract
+          1. Check if you are a user accessing the bank's swap
         </Text>
 
         <Text fontSize="sm">
-          2. Wait until reedem is open
+          2. Deposit your PLTS in the corresponding contract
         </Text>
 
-        <Text fontSize="sm">
-          3. Swap your pHRMS for HRMS using the Reedem Contract (Swap Contract)
-        </Text>
+        <Text fontSize="sm">3. Get pHRMS</Text>
+        <Text fontSize="sm">4. Swap your pHRMS to HRMS</Text>
+        <Text fontSize="sm">5. Farm it!</Text>
       </Stack>
     </Stack>
   );
 };
 
 const Page = () => {
+  const currentBlock = useCurrentBlockNumber();
+  const pltsActive = currentBlock < 25330605;
+  const hrmsActive = currentBlock < 25213250;
+  const pltsLogo = pltsActive ? "/plts-logo-on.png" : "/plts-logo-off.png";
+  const hrmsLogo = hrmsActive ? "/hrms-logo-on.png" : "/hrms-logo-off.png";
   return (
     <AppLayout>
-      <Stack align="center" spacing={10} py={5}>
+      <Stack
+        align="center"
+        spacing={10}
+        py={16}
+        justify={"center"}
+      >
         <Container maxWidth="container.lg">
           <Stack
             spacing={10}
-            direction={["column-reverse", "row"]}
-            align="flex-start"
-            justify="space-between"
+            direction={["column", "row"]}
+            align={["center", "flex-start"]}
+            justify={["center", "space-between"]}
             mb={10}
+            ml={[0, -250]}
           >
+            <Image
+              src={pltsLogo}
+              maxW={["0", "48"]}
+            />
             <PresaleCard />
             <PresaleBankCard />
           </Stack>
-          <SwapCard />
+          <Stack
+            spacing={10}
+            direction={["column", "row"]}
+            align="flex-start"
+            justify="flex-end"
+            mb={10}
+            mr={-230}
+            ml={-23}
+          >
+            <SwapCard />
+            <Image src={hrmsLogo} maxW={["0", "48"]}/>
+          </Stack>
           <Timeline />
         </Container>
       </Stack>

@@ -45,8 +45,11 @@ export function usePresaleInfo() {
       *   pHermesBalance
       */
       if (account) {
-        data.pltsApproved = !(
-          await pHermesToken.allowance(account, pltsContract.address)
+        data.generalPltsApproved = !(
+          await pltsContract.allowance(account, presaleContract.address)
+        ).isZero();
+        data.bankPltsApproved = !(
+          await pltsContract.allowance(account, presaleBankContract.address)
         ).isZero();
         data.pHermesBalance = utils.formatEther(await pHermesToken.balanceOf(account));
       }
@@ -118,6 +121,7 @@ export function usePresaleApproveToken() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const pHermesContract = usepHermesToken();
+  const presaleContract = useSwapHermes();
   const pltsContract = usePlutusToken();
   const toast = useToast();
 
@@ -126,8 +130,8 @@ export function usePresaleApproveToken() {
       if (!account) throw new Error("No connected account");
 
       await approveLpContract(
-        pHermesContract,
-        pltsContract.address
+        pltsContract,
+        pHermesContract.address
       );
 
       return token;

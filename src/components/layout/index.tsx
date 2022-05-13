@@ -4,11 +4,12 @@ import { Navigation } from "./navigation";
 import { L3_NAV_ITEMS } from "./nav-config";
 import { usePlutusPrice } from "hooks/prices";
 
-export const AppLayout: React.FC = ({ children }) => {
+export const AppLayout: React.FC = ({ children }, fullScreen: boolean) => {
   const { data: plutusPrice } = usePlutusPrice();
 
   return (
     <Box>
+      
       <Container maxW="container.xl">
         <Navigation tokenPrice={plutusPrice} logo="/plutus-logo.png" navItems={L3_NAV_ITEMS} />
 

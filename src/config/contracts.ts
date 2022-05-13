@@ -174,35 +174,35 @@ const defaultContracts = {
   swapHermesBank: {
     address: {
       1666600000: "",
-      1666700000: "0x715a4f2cf7ddceda3bb7fbc81fb7c32f93129084",
+      1666700000: "0x797394C212Af662C8139081dA09cBa612BF82396",
     }[DEFAULT_CHAIN_ID],
     abi: SwapHermesBankABI,
   },
   swapHermes: {
     address: {
       1666600000: "",
-      1666700000: "0xb4fae9e130ad60d6d8144de1e8ac1dc46ededc03",
+      1666700000: "0x2A9c432a38aD0e92D2d27E394eF74a166ca7311C",
     }[DEFAULT_CHAIN_ID],
     abi: SwapHermesABI,
   },
   pHermesToken: {
     address: {
       1666600000: "",
-      1666700000: "0x8ab57b26c4988e65bd8f7ea2c01a2d34c3a6af35",
+      1666700000: "0x0803F518a587dCB0CE44dd337666159B338C628D",
     }[DEFAULT_CHAIN_ID],
     abi: pHermesABI,
   },
   hermesToken: {
     address: {
       1666600000: "",
-      1666700000: "0xa87436768a157e936e30124e6e942913b9d46e93",
+      1666700000: "0xe490B78C49F18Cf604331487fBBc3d8A90063d4c",
     }[DEFAULT_CHAIN_ID],
     abi: HermesABI,
   },
   hermesRedeem: {
     address: {
       1666600000: "",
-      1666700000: "0x38cc050e23a0afbaa62bcffc3d593367bc48cb97",
+      1666700000: "0x054f9D0e096e40E0Ef78dDE23b1e3e2e0a24b62d",
     }[DEFAULT_CHAIN_ID],
     abi: HermesRedeemABI,
   }
