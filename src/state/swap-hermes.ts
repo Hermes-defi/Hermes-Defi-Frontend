@@ -131,7 +131,7 @@ export function usePresaleApproveToken() {
 
       await approveLpContract(
         pltsContract,
-        pHermesContract.address
+        presaleContract.address
       );
 
       return token;
@@ -143,7 +143,62 @@ export function usePresaleApproveToken() {
 
         queryClient.setQueryData(["hermes-presale-info"], {
           ...data,
-          ...(token === "plts" ? { generalPltsApproved: true, bankPltsApproved: true } : {}),
+          ...(token === "plts" ? { generalPltsApproved: true } : {}),
+        });
+
+        ReactGA.event({
+          category: "pHRMS Pool Approval",
+          action: `Approving ${token}`,
+          label: token,
+        });
+      },
+
+      onError: ({ data }) => {
+        console.error(`[usePresaleApproveToken][error] general error `, {
+          data,
+        });
+
+        toast({
+          title: "Error approving token for pre-sale",
+          description: data?.message,
+          status: "error",
+          position: "top-right",
+          isClosable: true,
+        });
+      },
+    }
+  );
+
+  return approveMutation;
+}
+
+export function usePresaleBankApproveToken() {
+  const { account } = useActiveWeb3React();
+  const queryClient = useQueryClient();
+  const pHermesContract = usepHermesToken();
+  const presaleContract = useSwapHermes();
+  const pltsContract = usePlutusToken();
+  const toast = useToast();
+
+  const approveMutation = useMutation(
+    async (token: "plts") => {
+      if (!account) throw new Error("No connected account");
+
+      await approveLpContract(
+        pltsContract,
+        presaleContract.address
+      );
+
+      return token;
+    },
+
+    {
+      onSuccess: (token:"plts") => {
+        const data: any = queryClient.getQueryData(["hermes-presale-info"]);
+
+        queryClient.setQueryData(["hermes-presale-info"], {
+          ...data,
+          ...(token === "plts" ? { bankPltsApproved: true } : {}),
         });
 
         ReactGA.event({
@@ -218,6 +273,8 @@ export function useSwapPlutus() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const presaleContract = useSwapHermes();
+  const pltsContract = usePlutusToken();
+  const pHermesContract = usepHermesToken();
   const toast = useToast();
   
 
@@ -233,6 +290,8 @@ export function useSwapPlutus() {
     {
       onSuccess: (amount) => {
         queryClient.invalidateQueries(["hermes-presale-info"]);
+        queryClient.invalidateQueries(["tokenBalance", account, pltsContract.address])
+        queryClient.invalidateQueries(["tokenBalance", account, pHermesContract.address])
 
         ReactGA.event({
           category: "PLTS to pHRMS swap",
@@ -263,6 +322,8 @@ export function useSwapBankPlutus() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const presaleContract = useSwapHermesBank();
+  const pltsContract = usePlutusToken();
+  const pHermesContract = usepHermesToken();
   const toast = useToast();
   
 
@@ -278,6 +339,8 @@ export function useSwapBankPlutus() {
     {
       onSuccess: (amount) => {
         queryClient.invalidateQueries(["hermes-presale-info"]);
+        queryClient.invalidateQueries(["tokenBalance", account, pltsContract.address])
+        queryClient.invalidateQueries(["tokenBalance", account, pHermesContract.address])
 
         ReactGA.event({
           category: "PLTS to pHRMS swap BANK",
@@ -309,6 +372,7 @@ export function useSwapPHermes() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const presaleContract = useRedeemHermes();
+  const pHermesContract = usepHermesToken();
   const toast = useToast();
 
   const mutation = useMutation(
@@ -321,6 +385,8 @@ export function useSwapPHermes() {
     {
       onSuccess: async () => {
         await queryClient.invalidateQueries(["hermes-swap-info"]);
+        queryClient.invalidateQueries(["tokenBalance", account, pHermesContract.address])
+        
 
         ReactGA.event({
           category: "Swap pHRMS",

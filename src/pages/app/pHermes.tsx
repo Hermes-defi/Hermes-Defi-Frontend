@@ -10,6 +10,7 @@ import {
   useSwapInfo,
   useSwapPlutus,
   useSwapBankPlutus,
+  usePresaleBankApproveToken,
 } from "state/swap-hermes";
 
 import { AppLayout } from "components/layout";
@@ -128,7 +129,6 @@ const PresaleCard = () => {
           {!account && (
             <UnlockButton
               isFullWidth
-              onClick={onOpen}
               bg={bgButtonColor}
               color={fontButtonColor}
               size="lg"
@@ -183,7 +183,7 @@ const PresaleBankCard = () => {
   const queryResp = usePresaleInfo();
   const isLoaded = !!queryResp.data;
 
-  const approvePltsMutation = usePresaleApproveToken();
+  const approvePltsMutation = usePresaleBankApproveToken();
   const swapBankPlutus = useSwapBankPlutus();
   const currentBlock = useCurrentBlockNumber();
   const active = currentBlock < 25330605;
@@ -274,7 +274,6 @@ const PresaleBankCard = () => {
           {!account ? (
             <UnlockButton
               isFullWidth
-              onClick={onOpen}
               bg={bgButtonColor}
               color={fontButtonColor}
               size="lg"
@@ -324,7 +323,7 @@ const PresaleBankCard = () => {
 
 const SwapCard = () => {
   const { account } = useActiveWeb3React();
-  const { onOpen } = useDisclosure();
+  const { isOpen, onClose, onOpen } = useDisclosure();
 
   const swapInfo = useSwapInfo();
   const approveMutation = useApprovePHermes();
@@ -426,7 +425,6 @@ const SwapCard = () => {
         {!account ? (
           <UnlockButton
             isFullWidth
-            onClick={onOpen}
             bg={bgButtonColor}
             color={fontButtonColor}
             size="lg"
