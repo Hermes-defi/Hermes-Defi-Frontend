@@ -186,7 +186,10 @@ const PresaleBankCard = () => {
   const approvePltsMutation = usePresaleBankApproveToken();
   const swapBankPlutus = useSwapBankPlutus();
   const currentBlock = useCurrentBlockNumber();
-  const active = currentBlock < 25330605;
+  const active =
+    currentBlock < 25330605 &&
+    queryResp.data?.whitelist[0] &&
+    queryResp.data?.swapAllowance;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "pink.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -553,17 +556,12 @@ const Timeline = () => {
 const Page = () => {
   const currentBlock = useCurrentBlockNumber();
   const pltsActive = currentBlock < 25330605;
-  const hrmsActive = currentBlock < 25213250;
+  const hrmsActive = currentBlock > 25213250;
   const pltsLogo = pltsActive ? "/plts-logo-on.png" : "/plts-logo-off.png";
   const hrmsLogo = hrmsActive ? "/hrms-logo-on.png" : "/hrms-logo-off.png";
   return (
     <AppLayout>
-      <Stack
-        align="center"
-        spacing={10}
-        py={16}
-        justify={"center"}
-      >
+      <Stack align="center" spacing={10} py={16} justify={"center"}>
         <Container maxWidth="container.lg">
           <Stack
             spacing={10}
@@ -573,10 +571,7 @@ const Page = () => {
             mb={10}
             ml={[0, -250]}
           >
-            <Image
-              src={pltsLogo}
-              maxW={["0", "48"]}
-            />
+            <Image src={pltsLogo} maxW={["0", "48"]} />
             <PresaleCard />
             <PresaleBankCard />
           </Stack>
@@ -590,7 +585,7 @@ const Page = () => {
             ml={-23}
           >
             <SwapCard />
-            <Image src={hrmsLogo} maxW={["0", "48"]}/>
+            <Image src={hrmsLogo} maxW={["0", "48"]} />
           </Stack>
           <Timeline />
         </Container>

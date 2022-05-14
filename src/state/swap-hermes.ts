@@ -51,6 +51,8 @@ export function usePresaleInfo() {
         data.bankPltsApproved = !(
           await pltsContract.allowance(account, presaleBankContract.address)
         ).isZero();
+        data.whitelist = await presaleBankContract.whitelisted(account);
+        data.swapAllowance = !(await presaleBankContract.swapAllowance(account)).isZero();
         data.pHermesBalance = utils.formatEther(await pHermesToken.balanceOf(account));
       }
 
