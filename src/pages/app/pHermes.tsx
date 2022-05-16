@@ -41,7 +41,8 @@ const PresaleCard = () => {
   const approvePLTSMutation = usePresaleApproveToken();
   const swapPlutus = useSwapPlutus();
   const currentBlock = useCurrentBlockNumber();
-  const active = currentBlock < 25330605;
+  // const active = currentBlock < 25330605;
+  const active = true;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "pink.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -186,10 +187,11 @@ const PresaleBankCard = () => {
   const approvePltsMutation = usePresaleBankApproveToken();
   const swapBankPlutus = useSwapBankPlutus();
   const currentBlock = useCurrentBlockNumber();
-  const active =
-    currentBlock < 25330605 &&
-    queryResp.data?.whitelist[0] &&
-    queryResp.data?.swapAllowance;
+  // const active =
+  //   currentBlock < 25330605 &&
+  //   queryResp.data?.whitelist[0] &&
+  //   queryResp.data?.swapAllowance;
+  const active = true;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "pink.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -377,7 +379,7 @@ const SwapCard = () => {
             </Skeleton>
           </Stack>
 
-          <Stack direction={["column", "row"]} justify="space-between">
+          {/* <Stack direction={["column", "row"]} justify="space-between">
             <Text fontWeight="600" fontSize="sm">
               HRMS remaining
             </Text>
@@ -402,7 +404,7 @@ const SwapCard = () => {
                 {`Block ${swapInfo.data?.swapStarts}`}
               </Text>
             </Skeleton>
-          </Stack>
+          </Stack> */}
 
           {account && (
             <Stack direction={["column", "row"]} justify="space-between">
@@ -555,8 +557,10 @@ const Timeline = () => {
 
 const Page = () => {
   const currentBlock = useCurrentBlockNumber();
-  const pltsActive = currentBlock < 25330605;
-  const hrmsActive = currentBlock > 25213250;
+  // const pltsActive = currentBlock < 25330605;
+  const pltsActive = true;
+  // const hrmsActive = currentBlock > 25213250;
+  const hrmsActive = true;
   const pltsLogo = pltsActive ? "/plts-logo-on.png" : "/plts-logo-off.png";
   const hrmsLogo = hrmsActive ? "/hrms-logo-on.png" : "/hrms-logo-off.png";
   return (

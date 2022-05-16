@@ -1,364 +1,247 @@
 [
   {
-    "inputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": "_startBlock"
-      },
-      {
-        "type": "address",
-        "name": "_plutusAddress",
-        "internalType": "address"
-      },
-      {
-        "type": "address",
-        "name": "_preHermesAddress",
-        "internalType": "address"
-      }
-    ],
-    "type": "constructor",
-    "stateMutability": "nonpayable"
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "_plutus",
+              "type": "address"
+          },
+          {
+              "internalType": "address",
+              "name": "_preHermes",
+              "type": "address"
+          },
+          {
+              "internalType": "address",
+              "name": "_hermes",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
   },
   {
-    "anonymous": false,
-    "name": "OwnershipTransferred",
-    "inputs": [
-      {
-        "type": "address",
-        "indexed": true,
-        "internalType": "address",
-        "name": "previousOwner"
-      },
-      {
-        "name": "newOwner",
-        "indexed": true,
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "type": "event"
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "payment",
+              "type": "uint256"
+          }
+      ],
+      "name": "convertPublicStatus",
+      "type": "event"
   },
   {
-    "inputs": [
-      {
-        "type": "address",
-        "indexed": false,
-        "name": "sender",
-        "internalType": "address"
-      },
-      {
-        "type": "uint256",
-        "indexed": false,
-        "name": "plutusSpent",
-        "internalType": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "type": "uint256",
-        "name": "preHermesReceived",
-        "indexed": false
-      }
-    ],
-    "name": "PrePurchased",
-    "anonymous": false,
-    "type": "event"
+      "anonymous": false,
+      "inputs": [
+          {
+              "indexed": false,
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          },
+          {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "payment",
+              "type": "uint256"
+          }
+      ],
+      "name": "convertWhitelistedStatus",
+      "type": "event"
   },
   {
-    "name": "RetrieveDepreciatedPltsTokens",
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "address",
-        "type": "address",
-        "name": "feeAddress"
-      },
-      {
-        "type": "uint256",
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "tokenAmount"
-      }
-    ],
-    "type": "event"
+      "inputs": [],
+      "name": "admin",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "anonymous": false,
-    "name": "SaleINVPricesE35Changed",
-    "type": "event",
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "newHermesSaleINVPriceE35",
-        "indexed": false,
-        "type": "uint256"
-      }
-    ]
+      "inputs": [],
+      "name": "hermes",
+      "outputs": [
+          {
+              "internalType": "contract IERC20",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "anonymous": false,
-    "name": "StartBlockChanged",
-    "inputs": [
-      {
-        "indexed": false,
-        "name": "newStartBlock",
-        "type": "uint256",
-        "internalType": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "type": "uint256",
-        "indexed": false,
-        "name": "newEndBlock"
-      }
-    ],
-    "type": "event"
+      "inputs": [],
+      "name": "plutus",
+      "outputs": [
+          {
+              "internalType": "contract IERC20",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "type": "function",
-    "inputs": [],
-    "name": "FEE_ADDRESS",
-    "stateMutability": "view",
-    "constant": true,
-    "signature": "0xeb1edd61"
+      "inputs": [],
+      "name": "preHermes",
+      "outputs": [
+          {
+              "internalType": "contract IERC20",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "type": "uint256",
-        "name": ""
-      }
-    ],
-    "inputs": [],
-    "name": "ONE_HOUR_HARMONY",
-    "type": "function",
-    "stateMutability": "view",
-    "constant": true,
-    "signature": "0xc7ae72b3"
+      "inputs": [],
+      "name": "ratePublic",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "name": "PLTS_SWAP_PRESALE_SIZE",
-    "type": "function",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "constant": true,
-    "signature": "0xe7bd21e2"
+      "inputs": [],
+      "name": "rateWhitelisted",
+      "outputs": [
+          {
+              "internalType": "uint256",
+              "name": "",
+              "type": "uint256"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "uint256",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "name": "PRESALE_DURATION",
-    "type": "function",
-    "constant": true,
-    "signature": "0x945e4013"
+      "inputs": [],
+      "name": "treasure",
+      "outputs": [
+          {
+              "internalType": "address",
+              "name": "",
+              "type": "address"
+          }
+      ],
+      "stateMutability": "view",
+      "type": "function"
   },
   {
-    "inputs": [],
-    "name": "endBlock",
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": ""
-      }
-    ],
-    "constant": true,
-    "signature": "0x083c6323"
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          }
+      ],
+      "name": "convertWhitelisted",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "owner",
-    "inputs": [],
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "constant": true,
-    "signature": "0x8da5cb5b"
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          }
+      ],
+      "name": "convertPublic",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
   },
   {
-    "name": "plutusAddress",
-    "outputs": [
-      {
-        "name": "",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "type": "function",
-    "stateMutability": "view",
-    "inputs": [],
-    "constant": true,
-    "signature": "0x5a473560"
+      "inputs": [
+          {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          }
+      ],
+      "name": "claim",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
   },
   {
-    "outputs": [
-      {
-        "name": "",
-        "type": "address",
-        "internalType": "address"
-      }
-    ],
-    "type": "function",
-    "stateMutability": "view",
-    "name": "preHermesAddress",
-    "inputs": [],
-    "constant": true,
-    "signature": "0x142cebe5"
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "newAdmin",
+              "type": "address"
+          }
+      ],
+      "name": "adminChangeAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
   },
   {
-    "stateMutability": "view",
-    "type": "function",
-    "name": "preHermesMaximumAvailable",
-    "inputs": [],
-    "outputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": ""
-      }
-    ],
-    "constant": true,
-    "signature": "0xc16f26de"
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "newTreasure",
+              "type": "address"
+          }
+      ],
+      "name": "adminChangeTreasure",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
   },
   {
-    "type": "function",
-    "stateMutability": "view",
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ],
-    "name": "preHermesRemaining",
-    "inputs": [],
-    "constant": true,
-    "signature": "0x0aefdb94"
-  },
-  {
-    "stateMutability": "view",
-    "inputs": [],
-    "type": "function",
-    "outputs": [
-      {
-        "type": "uint256",
-        "internalType": "uint256",
-        "name": ""
-      }
-    ],
-    "name": "preHermesSaleINVPriceE35",
-    "constant": true,
-    "signature": "0x5907fdcc"
-  },
-  {
-    "name": "renounceOwnership",
-    "stateMutability": "nonpayable",
-    "outputs": [],
-    "type": "function",
-    "inputs": []
-  },
-  {
-    "inputs": [],
-    "outputs": [
-      {
-        "type": "uint256",
-        "name": "",
-        "internalType": "uint256"
-      }
-    ],
-    "name": "startBlock",
-    "stateMutability": "view",
-    "type": "function",
-    "constant": true,
-    "signature": "0x48cd4cb1"
-  },
-  {
-    "name": "transferOwnership",
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "inputs": [
-      {
-        "name": "newOwner",
-        "internalType": "address",
-        "type": "address"
-      }
-    ],
-    "outputs": []
-  },
-  {
-    "name": "swapPltsForPresaleTokensL3",
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "outputs": [],
-    "inputs": [
-      {
-        "name": "plutusToSwap",
-        "type": "uint256",
-        "internalType": "uint256"
-      }
-    ]
-  },
-  {
-    "stateMutability": "nonpayable",
-    "type": "function",
-    "outputs": [],
-    "name": "sendDepreciatedPltsToFeeAddress",
-    "inputs": []
-  },
-  {
-    "type": "function",
-    "stateMutability": "nonpayable",
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_newPreHermesSaleINVPriceE35",
-        "type": "uint256"
-      }
-    ],
-    "outputs": [],
-    "name": "setSaleINVPriceE35"
-  },
-  {
-    "name": "setStartBlock",
-    "outputs": [],
-    "type": "function",
-    "inputs": [
-      {
-        "type": "uint256",
-        "name": "_newStartBlock",
-        "internalType": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable"
+      "inputs": [
+          {
+              "internalType": "address",
+              "name": "user",
+              "type": "address"
+          },
+          {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+          }
+      ],
+      "name": "adminSetWhitelist",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
   }
 ]
