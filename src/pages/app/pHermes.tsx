@@ -10,7 +10,6 @@ import {
   useSwapInfo,
   useSwapPlutus,
   useSwapBankPlutus,
-  usePresaleBankApproveToken,
 } from "state/swap-hermes";
 
 import { AppLayout } from "components/layout";
@@ -29,9 +28,11 @@ import {
   Stack,
   Text,
   useDisclosure,
+  useColorModeValue,
+  Badge,
 } from "@chakra-ui/react";
 import { usepHermesToken } from "hooks/contracts";
-import { useCurrentBlockNumber, useTokenBalance } from "hooks/wallet";
+import { useCurrentBlockNumber, usePlutusBalance, useTokenBalance } from "hooks/wallet";
 
 const PresaleCard = () => {
   const { account } = useActiveWeb3React();
@@ -85,7 +86,7 @@ const PresaleCard = () => {
               </Skeleton>
             </Stack>
 
-            <Stack direction="row" justify="space-between">
+            {/* <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
                 pHRMS Remaining
               </Text>
@@ -93,21 +94,20 @@ const PresaleCard = () => {
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
                   {displayTokenCurrency(
-                    queryResp.data?.generalPHermesRemaining,
+                    queryResp.data?.pHermesRemaining,
                     "pHRMS",
                     true
                   )}
                 </Text>
               </Skeleton>
-            </Stack>
-
+            </Stack> */}
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
                 Swap Starts
               </Text>
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {`Block ${queryResp.data?.generalStartBlock}`}
+                  {`Block ${queryResp.data?.publicStartBlock}`}
                 </Text>
               </Skeleton>
             </Stack>
@@ -118,9 +118,14 @@ const PresaleCard = () => {
               </Text>
               <Skeleton isLoaded={isLoaded}>
                 <Text fontWeight="700" fontSize="sm">
-                  {`Block ${queryResp.data?.generalEndBlock}`}
+                  {`Block ${queryResp.data?.publicEndBlock}`}
                 </Text>
               </Skeleton>
+            </Stack>
+            <Stack direction="row" justify="space-between">
+              <Text fontWeight="600" fontSize="md">
+                #RoadToHermesProtocol
+              </Text>
             </Stack>
           </Stack>
         </Box>
@@ -138,7 +143,7 @@ const PresaleCard = () => {
               isDisabled={!active}
             />
           )}
-          {account && !queryResp.data?.generalPltsApproved && (
+          {account && !queryResp.data?.publicPltsApproved && (
             <Button
               isFullWidth
               onClick={() => approvePLTSMutation.mutate("plts")}
@@ -153,7 +158,7 @@ const PresaleCard = () => {
               Approve PLTS
             </Button>
           )}
-          {account && queryResp.data?.generalPltsApproved && (
+          {account && queryResp.data?.publicPltsApproved && (
             <Button
               isFullWidth
               onClick={onOpen}
@@ -184,13 +189,12 @@ const PresaleBankCard = () => {
   const queryResp = usePresaleInfo();
   const isLoaded = !!queryResp.data;
 
-  const approvePltsMutation = usePresaleBankApproveToken();
+  const approvePltsMutation = usePresaleApproveToken();
   const swapBankPlutus = useSwapBankPlutus();
   const currentBlock = useCurrentBlockNumber();
   // const active =
   //   currentBlock < 25330605 &&
-  //   queryResp.data?.whitelist[0] &&
-  //   queryResp.data?.swapAllowance;
+  //   queryResp.data?.whitelist !== '0';
   const active = true;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "pink.200" : "gray.400";
@@ -236,18 +240,26 @@ const PresaleBankCard = () => {
 
             <Stack direction="row" justify="space-between">
               <Text fontWeight="600" fontSize="sm">
-                pHRMS Remaining
+                PLTS Swappeable with Bonus
               </Text>
 
-              <Skeleton isLoaded={isLoaded}>
-                <Text fontWeight="700" fontSize="sm">
-                  {displayTokenCurrency(
-                    queryResp.data?.bankPHermesRemaining,
-                    "pHRMS",
-                    true
-                  )}
-                </Text>
-              </Skeleton>
+              {active ? (
+                <Skeleton isLoaded={isLoaded}>
+                  <Text fontWeight="700" fontSize="sm">
+                    {displayTokenCurrency(
+                      queryResp.data?.whitelist,
+                      "PLTS",
+                      true
+                    )}
+                  </Text>
+                </Skeleton>
+              ) : (
+                <Skeleton isLoaded={isLoaded}>
+                  <Text fontWeight="700" fontSize="sm">
+                    Not Whitelisted
+                  </Text>
+                </Skeleton>
+              )}
             </Stack>
 
             <Stack direction="row" justify="space-between">
@@ -286,7 +298,7 @@ const PresaleBankCard = () => {
               _hover={{ bg: "pink.300", color: "white" }}
               isDisabled={!active}
             />
-          ) : !queryResp.data?.bankPltsApproved ? (
+          ) : !queryResp.data?.publicPltsApproved ? (
             <Button
               isFullWidth
               onClick={() => approvePltsMutation.mutate("plts")}
@@ -330,7 +342,7 @@ const SwapCard = () => {
   const { account } = useActiveWeb3React();
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const swapInfo = useSwapInfo();
+  const queryResp = usePresaleInfo();
   const approveMutation = useApprovePHermes();
   const pHermesContract = usepHermesToken();
   const pHermesBalance = useTokenBalance(pHermesContract.address, 18);
@@ -372,7 +384,7 @@ const SwapCard = () => {
               pHRMS/HRMS ratio
             </Text>
 
-            <Skeleton isLoaded={!!swapInfo.data}>
+            <Skeleton isLoaded={!!queryResp.data}>
               <Text fontWeight="700" fontSize="sm">
                 1 : 1
               </Text>
@@ -384,37 +396,37 @@ const SwapCard = () => {
               HRMS remaining
             </Text>
 
-            <Skeleton isLoaded={!!swapInfo.data}>
+            <Skeleton isLoaded={!!queryResp.data}>
               <Text fontWeight="700" fontSize="sm">
                 {displayTokenCurrency(
-                  swapInfo.data?.hermesRemaining,
+                  queryResp.data?.hermesRemaining,
                   "HRMS",
                   true
                 )}
               </Text>
             </Skeleton>
-          </Stack>
+          </Stack> */}
 
           <Stack direction={["column", "row"]} justify="space-between">
             <Text fontWeight="600" fontSize="sm">
               Swap starts at
             </Text>
-            <Skeleton isLoaded={!!swapInfo.data}>
+            <Skeleton isLoaded={!!queryResp.data}>
               <Text fontWeight="700" fontSize="sm">
-                {`Block ${swapInfo.data?.swapStarts}`}
+                {`Block ${queryResp.data?.claimStartBlock}`}
               </Text>
             </Skeleton>
-          </Stack> */}
+          </Stack>
 
           {account && (
             <Stack direction={["column", "row"]} justify="space-between">
               <Text fontWeight="600" fontSize="sm">
                 Your pHRMS
               </Text>
-              <Skeleton isLoaded={!!swapInfo.data}>
+              <Skeleton isLoaded={!!queryResp.data}>
                 <Text fontWeight="700" fontSize="sm">
                   {displayTokenCurrency(
-                    swapInfo.data?.pHermesBalance,
+                    queryResp.data?.pHermesBalance,
                     "pHRMS",
                     true
                   )}
@@ -439,7 +451,7 @@ const SwapCard = () => {
           />
         ) : (
           <>
-            {!swapInfo.data?.pHermesApproved ? (
+            {!queryResp.data?.pHermesApproved ? (
               <Button
                 isLoading={approveMutation.isLoading}
                 onClick={() => approveMutation.mutate()}
@@ -474,8 +486,6 @@ const SwapCard = () => {
 };
 const Timeline = () => {
   const queryResp = usePresaleInfo();
-  const swapInfo = useSwapInfo();
-
   return (
     <Stack direction={"row"} mt={7} mx={10}>
       <Stack mb={7} spacing={4} flex={1}>
@@ -563,10 +573,65 @@ const Page = () => {
   const hrmsActive = true;
   const pltsLogo = pltsActive ? "/plts-logo-on.png" : "/plts-logo-off.png";
   const hrmsLogo = hrmsActive ? "/hrms-logo-on.png" : "/hrms-logo-off.png";
+  const queryResp = usePresaleInfo();
+  const pltsWallet = usePlutusBalance();
   return (
     <AppLayout>
       <Stack align="center" spacing={10} py={16} justify={"center"}>
         <Container maxWidth="container.lg">
+          <Stack
+            spacing={10}
+            direction={["column", "row"]}
+            align={["center"]}
+            justify={["space-evenly"]}
+            mb={10}
+            ml={[0]}
+          >
+            <Badge
+              align="center"
+              bg={useColorModeValue("white", "gray.700")}
+              px={[5, 10]}
+              py={6}
+              rounded={"2xl"}
+              boxShadow="base"
+              h={"max-content"}
+            >
+                <Heading
+                  align="center"
+                  color={useColorModeValue("accent.400", "accent.200")}
+                  fontSize="2xl"
+                >
+                  PLTS Balance in Wallet :{" "}
+                  {displayTokenCurrency(
+                    pltsWallet,
+                    "PLTS",
+                    true
+                  )}
+                </Heading>
+            </Badge>
+            <Badge
+              align="center"
+              bg={useColorModeValue("white", "gray.700")}
+              px={[5, 10]}
+              py={6}
+              rounded={"2xl"}
+              boxShadow="base"
+              h={"max-content"}
+            >
+                <Heading
+                  align="center"
+                  color={useColorModeValue("accent.400", "accent.200")}
+                  fontSize="2xl"
+                >
+                  Total pHRMS Remaining:{" "}
+                  {displayTokenCurrency(
+                    queryResp.data?.pHermesRemaining,
+                    "pHRMS",
+                    true
+                  )}
+                </Heading>
+            </Badge>
+          </Stack>
           <Stack
             spacing={10}
             direction={["column", "row"]}

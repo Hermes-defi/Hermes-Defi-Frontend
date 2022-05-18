@@ -1,7 +1,7 @@
 import ReactGA from "react-ga";
 import token from "config/tokens";
 import { utils } from "ethers";
-import { useERC20_v2, useHermesToken, usepHermesToken, usePlutusToken, usepPlutus, usePresaleContract, useRedeemHermes, useSwapHermes, useSwapHermesBank } from "hooks/contracts";
+import { useERC20_v2, useHermesToken, usepHermesToken, usePlutusToken, usepPlutus, usePresaleContract, useSwapHermes } from "hooks/contracts";
 import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useActiveWeb3React } from "wallet";
 import { useToast } from "@chakra-ui/react";
@@ -10,7 +10,6 @@ import { approveLpContract } from "web3-functions";
 //*DONE
 export function usePresaleInfo() {
   const presaleContract = useSwapHermes();
-  const presaleBankContract = useSwapHermesBank();
   const pHermesToken = usepHermesToken();
   const pltsContract = usePlutusToken();
   const { account } = useActiveWeb3React();
@@ -21,48 +20,44 @@ export function usePresaleInfo() {
       const data: any = {};
 
       /*
-      * Info from swap general contract:
+      * Info from swap public contract:
       *   startBlock, endBlock,
-      *   maxpHermes, pHermesRemaining
       */
-      // data.generalStartBlock = (await presaleContract.startBlock()).toString();
-      // data.generalEndBlock = (await presaleContract.endBlock()).toString();
-      // data.generalMaxpHermes = utils.formatEther(await presaleContract.preHermesMaximumAvailable());
-      // data.generalPHermesRemaining = utils.formatEther(await pHermesToken.balanceOf(presaleContract.address));
+       data.publicStartBlock = (await presaleContract.publicStartBlock()).toString();
+       data.publicEndBlock = (await presaleContract.publicEndBlock()).toString();
 
       /*
       * Info from swap bank contract:
-      *   startBlock, endBlock,
-      *   maxpHermes, pHermesRemaining
+      *   startBlock, endBlock
       */
-      // data.bankStartBlock = (await presaleBankContract.startBlock()).toString();
-      // data.bankEndBlock = (await presaleBankContract.endBlock()).toString();
-      // data.bankMaxpHermes = utils.formatEther(await presaleBankContract.preHermesMaximumAvailable());
-      // data.bankPHermesRemaining = utils.formatEther(await pHermesToken.balanceOf(presaleBankContract.address));
-
+      data.bankStartBlock = (await presaleContract.whitelistStartBlock()).toString();
+      data.bankEndBlock = (await presaleContract.whitelistEndBlock()).toString();
 
       /*
+      * Info from swap pHRMS-HRMS:
+      *   startBlock
+      */
+      data.claimStartBlock = (await presaleContract.claimStartBlock()).toString();
+      /*
       * User info: 
-      *   pHermesBalance
+      *   pHermesBalance, whitelisted
       */
       if (account) {
-        data.generalPltsApproved = !(
+        data.publicPltsApproved = !(
           await pltsContract.allowance(account, presaleContract.address)
         ).isZero();
-        // data.bankPltsApproved = !(
-        //   await pltsContract.allowance(account, presaleBankContract.address)
-        // ).isZero();
-        // data.whitelist = await presaleBankContract.whitelisted(account);
-        // data.swapAllowance = !(await presaleBankContract.swapAllowance(account)).isZero();
-        data.pHermesBalance = utils.formatEther(await pHermesToken.balanceOf(account));
+        data.whitelist = utils.formatEther(await presaleContract.checkWhitelistBalance(account));
+        data.pHermesBalance = utils.formatUnits(await pHermesToken.balanceOf(account), 9);
+        data.pHermesApproved = !(await pHermesToken.allowance(account, presaleContract.address)).isZero();
       }
+      data.pHermesRemaining = utils.formatUnits(await pHermesToken.balanceOf(presaleContract.address), 9).toString();
 
       return data;
     },
     refetchInterval: 0.5 * 60 * 1000,
   });
 }
-
+//!NOT USED
 export function usePresaleQuote(amount) {
   const presaleContract = usePresaleContract();
   const { account } = useActiveWeb3React();
@@ -84,7 +79,7 @@ export function usePresaleQuote(amount) {
     refetchInterval: 0.5 * 60 * 1000,
   });
 }
-//*DONE
+//!NOT USED
 export function useSwapInfo() {
   // const presaleContract = useRedeemHermes();
   const presaleContract = useSwapHermes();
@@ -124,7 +119,6 @@ export function useSwapInfo() {
 export function usePresaleApproveToken() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
-  const pHermesContract = usepHermesToken();
   const presaleContract = useSwapHermes();
   const pltsContract = usePlutusToken();
   const toast = useToast();
@@ -147,62 +141,7 @@ export function usePresaleApproveToken() {
 
         queryClient.setQueryData(["hermes-presale-info"], {
           ...data,
-          ...(token === "plts" ? { generalPltsApproved: true } : {}),
-        });
-
-        ReactGA.event({
-          category: "pHRMS Pool Approval",
-          action: `Approving ${token}`,
-          label: token,
-        });
-      },
-
-      onError: ({ data }) => {
-        console.error(`[usePresaleApproveToken][error] general error `, {
-          data,
-        });
-
-        toast({
-          title: "Error approving token for pre-sale",
-          description: data?.message,
-          status: "error",
-          position: "top-right",
-          isClosable: true,
-        });
-      },
-    }
-  );
-
-  return approveMutation;
-}
-
-export function usePresaleBankApproveToken() {
-  const { account } = useActiveWeb3React();
-  const queryClient = useQueryClient();
-  const pHermesContract = usepHermesToken();
-  const presaleContract = useSwapHermes();
-  const pltsContract = usePlutusToken();
-  const toast = useToast();
-
-  const approveMutation = useMutation(
-    async (token: "plts") => {
-      if (!account) throw new Error("No connected account");
-
-      await approveLpContract(
-        pltsContract,
-        presaleContract.address
-      );
-
-      return token;
-    },
-
-    {
-      onSuccess: (token:"plts") => {
-        const data: any = queryClient.getQueryData(["hermes-presale-info"]);
-
-        queryClient.setQueryData(["hermes-presale-info"], {
-          ...data,
-          ...(token === "plts" ? { bankPltsApproved: true } : {}),
+          ...(token === "plts" ? { publicPltsApproved: true } : {}),
         });
 
         ReactGA.event({
@@ -235,7 +174,6 @@ export function useApprovePHermes() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
   const pHermesContract = usepHermesToken();
-  // const presaleContract = useRedeemHermes();
   const presaleContract = useSwapHermes();
   const toast = useToast();
 
@@ -274,6 +212,7 @@ export function useApprovePHermes() {
   return approveMutation;
 }
 
+//*PUBLIC SWAP
 export function useSwapPlutus() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
@@ -323,11 +262,10 @@ export function useSwapPlutus() {
 
   return swapMutation;
 }
-
+//*BANK SWAP
 export function useSwapBankPlutus() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
-  // const presaleContract = useSwapHermesBank();
   const presaleContract = useSwapHermes();
   const pltsContract = usePlutusToken();
   const pHermesContract = usepHermesToken();
@@ -338,7 +276,6 @@ export function useSwapBankPlutus() {
     async (amount: string) => {
       if (!account) throw new Error("No connected account");
       // const realAmount = Number(amount) / 0.116;
-      // const tx = await presaleContract.swapPltsForPresaleTokensL3(utils.parseUnits(amount, 18));
       const tx = await presaleContract.convertWhitelisted(utils.parseUnits(amount, 18));
       await tx.wait();
 
@@ -374,12 +311,10 @@ export function useSwapBankPlutus() {
 
   return swapMutation;
 }
-
-
+//*CLAIM HERMES
 export function useSwapPHermes() {
   const { account } = useActiveWeb3React();
   const queryClient = useQueryClient();
-  // const presaleContract = useRedeemHermes();
   const presaleContract = useSwapHermes();
   const pHermesContract = usepHermesToken();
   const toast = useToast();

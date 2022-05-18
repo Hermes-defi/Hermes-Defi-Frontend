@@ -1,247 +1,424 @@
 [
   {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "_plutus",
-              "type": "address"
-          },
-          {
-              "internalType": "address",
-              "name": "_preHermes",
-              "type": "address"
-          },
-          {
-              "internalType": "address",
-              "name": "_hermes",
-              "type": "address"
-          }
-      ],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_plutus",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_preHermes",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_hermes",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
   },
   {
-      "anonymous": false,
-      "inputs": [
-          {
-              "indexed": false,
-              "internalType": "address",
-              "name": "user",
-              "type": "address"
-          },
-          {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-          },
-          {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "payment",
-              "type": "uint256"
-          }
-      ],
-      "name": "convertPublicStatus",
-      "type": "event"
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "payment",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertPublicStatus",
+    "type": "event"
   },
   {
-      "anonymous": false,
-      "inputs": [
-          {
-              "indexed": false,
-              "internalType": "address",
-              "name": "user",
-              "type": "address"
-          },
-          {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-          },
-          {
-              "indexed": false,
-              "internalType": "uint256",
-              "name": "payment",
-              "type": "uint256"
-          }
-      ],
-      "name": "convertWhitelistedStatus",
-      "type": "event"
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "payment",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertWhitelistedStatus",
+    "type": "event"
   },
   {
-      "inputs": [],
-      "name": "admin",
-      "outputs": [
-          {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+    "inputs": [],
+    "name": "admin",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0xf851a440"
   },
   {
-      "inputs": [],
-      "name": "hermes",
-      "outputs": [
-          {
-              "internalType": "contract IERC20",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+    "inputs": [],
+    "name": "claimEndBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0xfff2ae3c"
   },
   {
-      "inputs": [],
-      "name": "plutus",
-      "outputs": [
-          {
-              "internalType": "contract IERC20",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+    "inputs": [],
+    "name": "claimStartBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0x594f4058"
   },
   {
-      "inputs": [],
-      "name": "preHermes",
-      "outputs": [
-          {
-              "internalType": "contract IERC20",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+    "inputs": [],
+    "name": "hermes",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0xd8092c92"
   },
   {
-      "inputs": [],
-      "name": "ratePublic",
-      "outputs": [
-          {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+    "inputs": [],
+    "name": "plutus",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0xb788e290"
   },
   {
-      "inputs": [],
-      "name": "rateWhitelisted",
-      "outputs": [
-          {
-              "internalType": "uint256",
-              "name": "",
-              "type": "uint256"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+    "inputs": [],
+    "name": "preHermes",
+    "outputs": [
+      {
+        "internalType": "contract IERC20",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0xd03a36b3"
   },
   {
-      "inputs": [],
-      "name": "treasure",
-      "outputs": [
-          {
-              "internalType": "address",
-              "name": "",
-              "type": "address"
-          }
-      ],
-      "stateMutability": "view",
-      "type": "function"
+    "inputs": [],
+    "name": "publicEndBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0x60529884"
   },
   {
-      "inputs": [
-          {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-          }
-      ],
-      "name": "convertWhitelisted",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+    "inputs": [],
+    "name": "publicStartBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0xf41889b6"
   },
   {
-      "inputs": [
-          {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-          }
-      ],
-      "name": "convertPublic",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+    "inputs": [],
+    "name": "ratePublic",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0x51dc79af"
   },
   {
-      "inputs": [
-          {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-          }
-      ],
-      "name": "claim",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+    "inputs": [],
+    "name": "rateWhitelisted",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0x6f09fa03"
   },
   {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "newAdmin",
-              "type": "address"
-          }
-      ],
-      "name": "adminChangeAdmin",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+    "inputs": [],
+    "name": "treasure",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0xe520fc7e"
   },
   {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "newTreasure",
-              "type": "address"
-          }
-      ],
-      "name": "adminChangeTreasure",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+    "inputs": [],
+    "name": "whitelistEndBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0x4c102be6"
   },
   {
-      "inputs": [
-          {
-              "internalType": "address",
-              "name": "user",
-              "type": "address"
-          },
-          {
-              "internalType": "uint256",
-              "name": "amount",
-              "type": "uint256"
-          }
-      ],
-      "name": "adminSetWhitelist",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+    "inputs": [],
+    "name": "whitelistStartBlock",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function",
+    "constant": true,
+    "signature": "0xcc308a54"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertWhitelisted",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "convertPublic",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "claim",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "checkWhitelistBalance",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "whitelistBalance",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "adminChangeAdmin",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newTreasure",
+        "type": "address"
+      }
+    ],
+    "name": "adminChangeTreasure",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "adminSetWhitelist",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "start",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "end",
+        "type": "uint256"
+      }
+    ],
+    "name": "adminSetWhitelistBlocks",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "start",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "end",
+        "type": "uint256"
+      }
+    ],
+    "name": "adminSetPublicBlocks",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "start",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "end",
+        "type": "uint256"
+      }
+    ],
+    "name": "adminSetClaimBlocks",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
   }
 ]
