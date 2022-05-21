@@ -21,7 +21,7 @@ export async function fetchVaultsInfo(provider: ethers.providers.JsonRpcProvider
       // get prices
       const lpContract = new ethers.Contract(vault.stakeToken.address, uniPairAbi, provider);
       const totalSupply = ethers.utils.formatUnits(await lpContract.totalSupply(), vault.stakeToken.decimals);
-
+      console.log(vault.pairs[0], vault.pairs[1], totalSupply, vault.amm)
       vault.stakeToken.price = await fetchPairPrice(vault.pairs[0], vault.pairs[1], totalSupply, provider, vault.amm);
 
       if (vault.isActive) {

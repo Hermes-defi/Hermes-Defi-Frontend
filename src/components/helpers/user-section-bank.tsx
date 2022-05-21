@@ -4,7 +4,16 @@ import { UseMutationResult } from "react-query";
 import { displayTokenCurrency } from "libs/utils";
 import { useActiveWeb3React } from "wallet";
 
-import { useDisclosure, Button, Stack, Box, Text, HStack, useColorModeValue, Heading } from "@chakra-ui/react";
+import {
+  useDisclosure,
+  Button,
+  Stack,
+  Box,
+  Text,
+  HStack,
+  useColorModeValue,
+  Heading,
+} from "@chakra-ui/react";
 import { UnlockButton } from "components/wallet/unlock-wallet";
 
 import { DepositModal } from "components/modals/deposit-modal";
@@ -47,7 +56,9 @@ const DepositButton: React.FC<IDepositProps> = (props) => {
         tokenDecimals={props.stakeToken.decimals}
         isLoading={props.deposit.isLoading}
         onDeposit={(amount: string) =>
-          props.deposit.mutateAsync({ amount, address: props.address }).then(() => onClose())
+          props.deposit
+            .mutateAsync({ amount, address: props.address })
+            .then(() => onClose())
         }
       />
     </>
@@ -72,7 +83,12 @@ const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
 
   return (
     <>
-      <Button size="sm" bg={"gray.700"} _hover={{ bg: "gray.600" }} onClick={onOpen}>
+      <Button
+        size="sm"
+        bg={"gray.700"}
+        _hover={{ bg: "gray.600" }}
+        onClick={onOpen}
+      >
         {props.children}
       </Button>
 
@@ -83,9 +99,15 @@ const UnstakeButton: React.FC<IUnstakeProps> = (props) => {
         token={props.stakeToken.symbol}
         tokenBalance={props.userTotalStaked}
         isLoading={props.withdraw.isLoading}
-        onWithdrawAll={() => props.withdrawAll.mutateAsync({ address: props.address }).then(() => onClose())}
+        onWithdrawAll={() =>
+          props.withdrawAll
+            .mutateAsync({ address: props.address })
+            .then(() => onClose())
+        }
         onWithdraw={(amount: string) =>
-          props.withdraw.mutateAsync({ amount, address: props.address }).then(() => onClose())
+          props.withdraw
+            .mutateAsync({ amount, address: props.address })
+            .then(() => onClose())
         }
       />
     </>
@@ -100,7 +122,7 @@ type IProps = {
 
   rewardToken: {
     symbol: string;
-    price?: string
+    price?: string;
   };
 
   stakeToken: {
@@ -132,114 +154,145 @@ export const UserSection: React.FC<IProps> = (props) => {
   const harvestMutation = useStakeWithdraw();
   const plutusPrice = usePlutusPrice();
   if (!account) {
-    return <UnlockButton boxShadow="2xl" colorScheme={( () =>{
-      if(props.rewardToken.symbol === "1DAI") return "secondary"
-      else return "primary"
-    }
-    )()}/>;
+    return (
+      <UnlockButton
+        boxShadow="2xl"
+        colorScheme={(() => {
+          if (props.rewardToken.symbol === "1DAI") return "secondary";
+          else return "primary";
+        })()}
+      />
+    );
   }
 
   return (
     <Stack spacing={4}>
-      <HStack justify="space-evenly">
-      <Box align="center">
-      <Heading letterSpacing="1px" color="gray.200" fontSize="lg">
-          {props.stakeToken.symbol} Locked
-        </Heading>
-
-        <Stack direction="column">
-          <Text fontWeight="700" fontSize="2xl" align="center">
-            {props.userTotalStaked ? displayTokenCurrency(props.userTotalStaked, "") : "N/A"}
-          </Text>
-
-        </Stack>
-        <Stack direction="column">
-          <Text fontWeight="600" fontSize="sm" align="center">
-            {props.userTotalStaked ? '(' +  displayTokenCurrency(
-              new BigNumber(props.userTotalStaked).times(plutusPrice.data).toNumber(), "") + '$)' : "N/A"}
-          </Text>
-        </Stack>
-        <Stack>
-        <HStack mt={"3"}>
-            {props.hasApprovedPool && (
-                  <DepositButton
-                    address={props.address}
-                    stakeToken={props.stakeToken}
-                    deposit={props.deposit}
-                  >
-                    Deposit $PLTS
-                  </DepositButton>
-              )
-            }
-            {props.hasApprovedPool && props.rewardToken.symbol === '1DAI' && (
-              <Button
-              onClick={() => props.withdrawAll.mutateAsync( props.address )}
-              size={"sm"}
-              bg={"gray.700"}
-              _hover={{ bg: "gray.600" }}
-            >
-              Withdraw All
-            </Button>
-            )
-            }
-            </HStack>
-        </Stack>
-      </Box>
-      <Box>
-      {!props.disableRewards && (
+      <HStack
+        justify="space-evenly"
+        ml={
+          props.rewardToken.symbol === "LUMEN" ||
+          props.rewardToken.symbol === "1UNI" ||
+          props.rewardToken.symbol === "MAGIC"
+            ? "-6"
+            : "0"
+        }
+      >
         <Box align="center">
           <Heading letterSpacing="1px" color="gray.200" fontSize="lg">
-            {props.rewardToken.symbol} Earned
+            {props.stakeToken.symbol} Locked
           </Heading>
 
-          <Stack align="center" direction="column">
-            <Text fontWeight="bold" fontSize="2xl">
-              {props.rewardsEarned ? displayTokenCurrency(props.rewardsEarned, "") : "(0$)"}
+          <Stack direction="column">
+            <Text fontWeight="700" fontSize="2xl" align="center">
+              {props.userTotalStaked
+                ? displayTokenCurrency(props.userTotalStaked, "")
+                : "N/A"}
             </Text>
           </Stack>
-          <Stack align="center" direction="column">
-            <Text fontWeight="bold" fontSize="sm">
-              {props.rewardsEarned ? '(' + displayTokenCurrency(
-                new BigNumber(props.rewardsEarned).times(props.rewardToken.price).toNumber(), "") + '$)' : "(0$)"}
+          <Stack direction="column">
+            <Text fontWeight="600" fontSize="sm" align="center">
+              {props.userTotalStaked
+                ? "(" +
+                  displayTokenCurrency(
+                    new BigNumber(props.userTotalStaked)
+                      .times(plutusPrice.data)
+                      .toNumber(),
+                    ""
+                  ) +
+                  "$)"
+                : "N/A"}
             </Text>
+          </Stack>
+          <Stack>
+            <HStack mt={"3"}>
+              {props.hasApprovedPool && (
+                <DepositButton
+                  address={props.address}
+                  stakeToken={props.stakeToken}
+                  deposit={props.deposit}
+                >
+                  Deposit $PLTS
+                </DepositButton>
+              )}
+              {props.hasApprovedPool &&
+                (props.rewardToken.symbol === "1DAI" ||
+                  props.rewardToken.symbol === "LUMEN" ||
+                  props.rewardToken.symbol === "1UNI" ||
+                  props.rewardToken.symbol === "MAGIC") && (
+                  <Button
+                    onClick={() => props.withdrawAll.mutateAsync(props.address)}
+                    size={"sm"}
+                    bg={"gray.700"}
+                    _hover={{ bg: "gray.600" }}
+                  >
+                    Withdraw All
+                  </Button>
+                )}
+            </HStack>
           </Stack>
         </Box>
-        
-      )}
-      {props.hasApprovedPool && (
-              <Stack direction="row" mt={"3"}>
-                <Button
-                  isDisabled={!props.userTotalStaked}
-                  isLoading={harvestMutation.isLoading}
-                  onClick={() => harvestMutation.mutate(props.address)}
-                  size="sm"
-                  bg="gray.700"
-                  _hover={{ bg: "gray.600" }}
-                >
-                  Harvest {props.rewardToken.symbol}
-                </Button>
+        <Box>
+          {!props.disableRewards && (
+            <Box align="center">
+              <Heading letterSpacing="1px" color="gray.200" fontSize="lg">
+                {props.rewardToken.symbol} Earned
+              </Heading>
+
+              <Stack align="center" direction="column">
+                <Text fontWeight="bold" fontSize="2xl">
+                  {props.rewardsEarned
+                    ? displayTokenCurrency(props.rewardsEarned, "")
+                    : "(0$)"}
+                </Text>
               </Stack>
-            )}
-      </Box>
-      
+              <Stack align="center" direction="column">
+                <Text fontWeight="bold" fontSize="sm">
+                  {props.rewardsEarned
+                    ? "(" +
+                      displayTokenCurrency(
+                        new BigNumber(props.rewardsEarned)
+                          .times(props.rewardToken.price)
+                          .toNumber(),
+                        ""
+                      ) +
+                      "$)"
+                    : "(0$)"}
+                </Text>
+              </Stack>
+            </Box>
+          )}
+          {props.hasApprovedPool && (
+            <Stack direction="row" mt={"3"}>
+              <Button
+                isDisabled={!props.userTotalStaked}
+                isLoading={harvestMutation.isLoading}
+                onClick={() => harvestMutation.mutate(props.address)}
+                size="sm"
+                bg="gray.700"
+                _hover={{ bg: "gray.600" }}
+              >
+                Harvest {props.rewardToken.symbol}
+              </Button>
+            </Stack>
+          )}
+        </Box>
       </HStack>
       <Stack direction="row" justify={"space-evenly"}>
-            {!props.hasApprovedPool && (
-              <Button
-                isFullWidth
-                isLoading={props.approve.isLoading}
-                onClick={() => props.approve.mutate(props.address)}
-                bg="gray.700"
-                boxShadow="lg"
-                _hover={{ bg: "gray.600" }}
-                mx={"58"}
-                size="sm"
-              >
-                Approve
-              </Button>
-            )}
-          </Stack>
-
+        {!props.hasApprovedPool && (
+          <Button
+            isFullWidth
+            isLoading={props.approve.isLoading}
+            onClick={() => props.approve.mutate(props.address)}
+            bg="gray.700"
+            boxShadow="lg"
+            _hover={{ bg: "gray.600" }}
+            mx={"58"}
+            size="sm"
+          >
+            Approve
+          </Button>
+        )}
+      </Stack>
     </Stack>
   );
 };
