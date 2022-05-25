@@ -172,8 +172,10 @@ export const UserSection: React.FC<IProps> = (props) => {
         ml={
           props.rewardToken.symbol === "LUMEN" ||
           props.rewardToken.symbol === "1UNI" ||
-          props.rewardToken.symbol === "MAGIC"
-            ? "-6"
+          props.rewardToken.symbol === "MAGIC" ||
+          props.rewardToken.symbol === "MAGIC (OLD)" ||
+          props.rewardToken.symbol == "HLY"
+            ? "-3"
             : "0"
         }
       >
@@ -218,7 +220,9 @@ export const UserSection: React.FC<IProps> = (props) => {
                 (props.rewardToken.symbol === "1DAI" ||
                   props.rewardToken.symbol === "LUMEN" ||
                   props.rewardToken.symbol === "1UNI" ||
-                  props.rewardToken.symbol === "MAGIC") && (
+                  props.rewardToken.symbol === "MAGIC" ||
+                  props.rewardToken.symbol === "MAGIC (OLD)" ||
+                  props.rewardToken.symbol === "HLY") && (
                   <Button
                     onClick={() => props.withdrawAll.mutateAsync(props.address)}
                     size={"sm"}
