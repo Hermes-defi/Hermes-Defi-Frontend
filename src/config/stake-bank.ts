@@ -160,7 +160,7 @@ export const stakingBankPools: StakeBankInfo[] = {
     {
       address: "0x88Cc1D5E92aE19441583968EEc1cd03BEF47B5ED",
       poolSite: "https://holygrail.one/",
-      active: true,
+      active: false,
       isSpecial: false,
 
       stakeToken: {

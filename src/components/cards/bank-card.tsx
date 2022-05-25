@@ -37,28 +37,32 @@ export const BankPoolCard: React.FC<{
   let finishDate;
   switch (stakePool.rewardToken.symbol) {
     case "LUMEN":
-      finishDate = "Unlocked"
+      finishDate = "Unlocked";
       break;
     case "1UNI":
-      finishDate = "Unlocked"
+      finishDate = "Unlocked";
       break;
     case "MAGIC":
-      finishDate = "Unlocked"
+      finishDate = "Unlocked";
+      break;
+    case "MAGIC (OLD)":
+      finishDate = "Unlocked";
       break;
     case "HLY":
-      finishDate = "Airdrop only"
+      finishDate = "Unlocked";
       break;
   }
   return (
     <Box
       px={8}
       py={4}
-      bg= {stakePool.rewardToken.symbol === "1UNI" ? "gray.800" : "accent.500"}
+      bg={stakePool.rewardToken.symbol === "1UNI" ? "gray.800" : "accent.500"}
       boxShadow="rgb(179 142 89 / 65%) 0px 25px 50px -12px"
       bgGradient={(() => {
         if (stakePool.isSpecial) return "linear(to-b, gray.800, primary.300)";
         if (isVaultToken) return "linear(to-b, primary.500, pink.300)";
-        if (stakePool.rewardToken.symbol === "MAGIC" || !stakePool.active) return "linear(to-b, gray.800, accent.300)"
+        if (stakePool.rewardToken.symbol === "MAGIC" || !stakePool.active)
+          return "linear(to-b, gray.800, accent.300)";
         return "linear(to-t, accent.300, accent.500)";
       })()}
       rounded="3xl"
@@ -113,7 +117,7 @@ export const BankPoolCard: React.FC<{
         <Stack direction={["column", "row"]} align="end">
           {stakePool.isSpecial ? (
             <>
-            <Box>
+              <Box>
                 <Badge
                   boxShadow="md"
                   px={2}
@@ -121,7 +125,6 @@ export const BankPoolCard: React.FC<{
                   colorScheme="white"
                   fontSize={["xs", "sm"]}
                   backgroundColor={"purple"}
-                  
                 >
                   INACTIVE
                 </Badge>
@@ -140,19 +143,19 @@ export const BankPoolCard: React.FC<{
             </>
           ) : (
             <>
-            <Box>
+              <Box>
                 <Badge
                   boxShadow="md"
                   px={2}
                   rounded="lg"
                   colorScheme="white"
                   fontSize={["xs", "sm"]}
-                  backgroundColor={"blueviolet"}  
+                  backgroundColor={"blueviolet"}
                 >
-                {finishDate}
+                  {finishDate}
                 </Badge>
               </Box>
-              </>
+            </>
           )}
           <Box>
             <Badge
@@ -205,7 +208,6 @@ export const BankPoolCard: React.FC<{
           </Heading>
         </HStack>
       </Stack>
-
 
       {/* pool user */}
       <Stack mb={8}>
