@@ -487,32 +487,43 @@ const SwapCard = () => {
 const Timeline = () => {
   const queryResp = usePresaleInfo();
   return (
-    <Stack direction={"row"} mt={7} mx={10}>
+    <Stack direction={"column"} mt={7} mx={10}>
+      <Stack mb={7} spacing={4} flex={1}>
+        <Heading fontSize="3xl">How To</Heading>
+
+        <Text fontSize="sm">
+          1. Check your PLTS balance in wallet and see how much PLTS you are entitled to the BONUS ratio on the bank card!
+        </Text>
+
+        <Text fontSize="sm">
+          2. Use the corresponding card and swap your PLTS for pHRMS.
+        </Text>
+
+        <Text fontSize="sm">3. After the HRMS liquidity is added swap your pHRMS for HRMS.</Text>
+      </Stack>
       <Stack mb={7} spacing={4} flex={1}>
         <Heading fontSize="3xl">HERMES Timeline</Heading>
 
         <Stack>
           <Text fontSize="sm">
             1. PLTS to pHRMS Swap Opens at block {queryResp.data?.startBlock}{" "}
-            (~May 15th)
+            (May 28th)
           </Text>
 
           <Text fontSize="sm">
-            2. PLTS Project Owned Liquidity (&gt 90% as of 4/14/22) Swapped at
-            block xx,xxx,xxx
+            2. PLTS Project Owned Liquidity (90% liquidity as 5/27/22) Swapped 15m before close
           </Text>
 
           <Text fontSize="sm">
             3. PLTS to pHRMS Swap Closes at block {queryResp.data?.endBlock}{" "}
-            (~May 19th)
+            (May 30th)
           </Text>
           <Text fontSize="sm">
             ALL PLTS MUST BE SWAPPED BEFORE PLTS SWAP CLOSES
           </Text>
 
           <Text fontSize="sm">
-            4. HRMS Liquidity Added (DEX Launch!) at block xx,xxx,xxx (~May
-            20th)
+            4. HRMS Liquidity Added at block 27236108 APPROX. (May 31th)
           </Text>
 
           <Text fontSize="sm">
@@ -520,13 +531,13 @@ const Timeline = () => {
           </Text>
 
           <Text fontSize="sm">
-            6. Viper to Hermes Liquidity Migration (Minutes after purchase)
+            6. Viper to Hermes Liquidity Migration APPOX. (5m/10m after liquidity adition)
           </Text>
           <Text fontSize="sm">
-            7. pHRMS to HRMS Swap Opens (Minutes after migration)
+            7. pHRMS to HRMS Swap Opens at block at block 27237008 (30m after liquidity adition)
           </Text>
           <Text fontSize="sm">
-            8. Farming begins (Minutes after swap opens)
+            8. Farming begins APPROX. (30/45m after swap opens)
           </Text>
         </Stack>
 
@@ -535,9 +546,9 @@ const Timeline = () => {
           <Link
             isExternal
             color="blue.600"
-            href="https://hermes-defi.gitbook.io/plutus/launch/time-sequence-and-how-to"
+            href="https://docs.hermesdefi.io/the-hermes-protocol/timeline"
           >
-            https://hermes-defi.gitbook.io/plutus/launch/time-sequence-and-how-to
+            https://docs.hermesdefi.io/the-hermes-protocol/timeline
           </Link>
         </Text>
 
@@ -545,21 +556,6 @@ const Timeline = () => {
           The volatility of the blocks in Harmony is very high. We recommend
           reviewing them to check the times.
         </Text>
-      </Stack>
-      <Stack mb={7} spacing={4} flex={1}>
-        <Heading fontSize="3xl">How To</Heading>
-
-        <Text fontSize="sm">
-          1. Check if you are a user accessing the bank's swap
-        </Text>
-
-        <Text fontSize="sm">
-          2. Deposit your PLTS in the corresponding contract
-        </Text>
-
-        <Text fontSize="sm">3. Get pHRMS</Text>
-        <Text fontSize="sm">4. Swap your pHRMS to HRMS</Text>
-        <Text fontSize="sm">5. Farm it!</Text>
       </Stack>
     </Stack>
   );

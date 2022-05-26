@@ -91,8 +91,8 @@ const defaultContracts = {
   },
   plutusToken: {
     address: {
-      // 1666600000: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
-      1666600000: "0x2e66f4E6da7E50439DC927C21ADf29408c040F53",
+      1666600000: "0xd32858211fcefd0be0dd3fd6d069c3e821e0aef3",
+      // 1666600000: "0x2e66f4E6da7E50439DC927C21ADf29408c040F53",
       1666700000: "0x540c84a79F64ebC81636dB7FB0adf31D26a9b2FD",
     }[DEFAULT_CHAIN_ID],
     abi: PlutusTokenABI,
@@ -170,20 +170,23 @@ const defaultContracts = {
     }[DEFAULT_CHAIN_ID],
     abi: WoneBankABI,
   },
+  //TODO: change address
   swapHermes: {
     address: {
-      1666600000: "0xAF5395f4980C3B32A09eEFf2cC7308e4e3282395",
+      1666600000: "0x37e56b033c43890A8FDd523B58Ec899D3678b341",
       1666700000: "0x2A9c432a38aD0e92D2d27E394eF74a166ca7311C",
     }[DEFAULT_CHAIN_ID],
     abi: SwapHermesABI,
   },
+  //TODO: change address
   pHermesToken: {
     address: {
-      1666600000: "0xd7876479d58Bbb614225c0fEab3EFf310dF75BdA",
+      1666600000: "0xB29EB99a2aCB8319B651c02AD9daDB2C3AC3D504",
       1666700000: "0x0803F518a587dCB0CE44dd337666159B338C628D",
     }[DEFAULT_CHAIN_ID],
     abi: pHermesABI,
   },
+  //TODO: change address
   hermesToken: {
     address: {
       1666600000: "0x80C3B9d4938514819b1Bba484295f915059aDac7",
