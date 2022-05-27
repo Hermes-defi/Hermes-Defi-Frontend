@@ -57,63 +57,6 @@ export function usePresaleInfo() {
     refetchInterval: 0.5 * 60 * 1000,
   });
 }
-//!NOT USED
-export function usePresaleQuote(amount) {
-  const presaleContract = usePresaleContract();
-  const { account } = useActiveWeb3React();
-  // const realAmount = Number(amount) / 0.116;
-
-  return useQuery({
-    queryKey: ["hermes-presale-quote", account, amount],
-    queryFn: async () => {
-      const resp = await presaleContract.quoteAmounts(utils.parseEther(amount), account);
-
-      console.debug(resp);
-      const amountInDAI = utils.formatUnits(resp.inDAI.toString(), 18);
-
-      return {
-        amountInDAI,
-      };
-    },
-    enabled: !!account && !!amount.length,
-    refetchInterval: 0.5 * 60 * 1000,
-  });
-}
-//!NOT USED
-export function useSwapInfo() {
-  // const presaleContract = useRedeemHermes();
-  const presaleContract = useSwapHermes();
-  const pHermesContract = usepHermesToken();
-  const hermesContract = useHermesToken();
-  const { account } = useActiveWeb3React();
-
-  return useQuery({
-    queryKey: ["hermes-swap-info"],
-    queryFn: async () => {
-      // const swapStarts = await presaleContract.startBlock();
-
-      // const pHermesRemaining = utils.formatEther(await pHermesContract.balanceOf(presaleContract.address));
-      // const hermesRemaining = utils.formatEther(await hermesContract.balanceOf(presaleContract.address));
-
-      let pHermesBalance;
-      let pHermesApproved = false;
-
-      if (account) {
-        pHermesBalance = utils.formatEther(await pHermesContract.balanceOf(account));
-        pHermesApproved = !(await pHermesContract.allowance(account, presaleContract.address)).isZero();
-      }
-
-      return {
-        // swapStarts,
-        // pHermesRemaining,
-        // hermesRemaining,
-        pHermesBalance,
-        pHermesApproved,
-      };
-    },
-    refetchInterval: 0.5 * 60 * 1000,
-  });
-}
 
 //*DONE
 export function usePresaleApproveToken() {

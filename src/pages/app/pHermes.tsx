@@ -7,7 +7,6 @@ import {
   useSwapPHermes,
   usePresaleApproveToken,
   usePresaleInfo,
-  useSwapInfo,
   useSwapPlutus,
   useSwapBankPlutus,
 } from "state/swap-hermes";
@@ -32,7 +31,11 @@ import {
   Badge,
 } from "@chakra-ui/react";
 import { usepHermesToken } from "hooks/contracts";
-import { useCurrentBlockNumber, usePlutusBalance, useTokenBalance } from "hooks/wallet";
+import {
+  useCurrentBlockNumber,
+  usePlutusBalance,
+  useTokenBalance,
+} from "hooks/wallet";
 
 const PresaleCard = () => {
   const { account } = useActiveWeb3React();
@@ -42,8 +45,7 @@ const PresaleCard = () => {
   const approvePLTSMutation = usePresaleApproveToken();
   const swapPlutus = useSwapPlutus();
   const currentBlock = useCurrentBlockNumber();
-  // const active = currentBlock < 25330605;
-  const active = true;
+  const active = currentBlock > 27063308 && currentBlock < 27192908;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "pink.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -192,10 +194,11 @@ const PresaleBankCard = () => {
   const approvePltsMutation = usePresaleApproveToken();
   const swapBankPlutus = useSwapBankPlutus();
   const currentBlock = useCurrentBlockNumber();
-  // const active =
-  //   currentBlock < 25330605 &&
-  //   queryResp.data?.whitelist !== '0';
-  const active = true;
+  const active =
+    currentBlock > 27063308 &&
+    currentBlock < 27192908 &&
+    queryResp.data?.whitelist !== "0";
+  // const active = true;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "pink.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -348,7 +351,7 @@ const SwapCard = () => {
   const pHermesBalance = useTokenBalance(pHermesContract.address, 18);
   const swapPHermes = useSwapPHermes();
   const currentBlock = useCurrentBlockNumber();
-  const active = currentBlock > 25213250;
+  const active = currentBlock > 27237008;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "gray.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -492,30 +495,34 @@ const Timeline = () => {
         <Heading fontSize="3xl">How To</Heading>
 
         <Text fontSize="sm">
-          1. Check your PLTS balance in wallet and see how much PLTS you are entitled to the BONUS ratio on the bank card!
+          1. Check your PLTS balance in wallet and see how much PLTS you are
+          entitled to the BONUS ratio on the bank card!
         </Text>
 
         <Text fontSize="sm">
           2. Use the corresponding card and swap your PLTS for pHRMS.
         </Text>
 
-        <Text fontSize="sm">3. After the HRMS liquidity is added swap your pHRMS for HRMS.</Text>
+        <Text fontSize="sm">
+          3. After the HRMS liquidity is added swap your pHRMS for HRMS.
+        </Text>
       </Stack>
       <Stack mb={7} spacing={4} flex={1}>
         <Heading fontSize="3xl">HERMES Timeline</Heading>
 
         <Stack>
           <Text fontSize="sm">
-            1. PLTS to pHRMS Swap Opens at block {queryResp.data?.startBlock}{" "}
+            1. PLTS to pHRMS Swap Opens at block {queryResp.data?.publicStartBlock}{" "}
             (May 28th)
           </Text>
 
           <Text fontSize="sm">
-            2. PLTS Project Owned Liquidity (90% liquidity as 5/27/22) Swapped 15m before close
+            2. PLTS Project Owned Liquidity (90% liquidity as 5/27/22) Swapped
+            15m before close
           </Text>
 
           <Text fontSize="sm">
-            3. PLTS to pHRMS Swap Closes at block {queryResp.data?.endBlock}{" "}
+            3. PLTS to pHRMS Swap Closes at block {queryResp.data?.publicEndBlock}{" "}
             (May 30th)
           </Text>
           <Text fontSize="sm">
@@ -531,10 +538,12 @@ const Timeline = () => {
           </Text>
 
           <Text fontSize="sm">
-            6. Viper to Hermes Liquidity Migration APPOX. (5m/10m after liquidity adition)
+            6. Viper to Hermes Liquidity Migration APPOX. (5m/10m after
+            liquidity adition)
           </Text>
           <Text fontSize="sm">
-            7. pHRMS to HRMS Swap Opens at block at block 27237008 (30m after liquidity adition)
+            7. pHRMS to HRMS Swap Opens at block at block {queryResp.data?.claimStartBlock} (30m after
+            liquidity adition)
           </Text>
           <Text fontSize="sm">
             8. Farming begins APPROX. (30/45m after swap opens)
@@ -564,9 +573,8 @@ const Timeline = () => {
 const Page = () => {
   const currentBlock = useCurrentBlockNumber();
   // const pltsActive = currentBlock < 25330605;
-  const pltsActive = true;
-  // const hrmsActive = currentBlock > 25213250;
-  const hrmsActive = true;
+  const pltsActive = currentBlock > 27063308 && currentBlock < 27192908;
+  const hrmsActive = currentBlock > 27237008;
   const pltsLogo = pltsActive ? "/plts-logo-on.png" : "/plts-logo-off.png";
   const hrmsLogo = hrmsActive ? "/hrms-logo-on.png" : "/hrms-logo-off.png";
   const queryResp = usePresaleInfo();
@@ -592,18 +600,14 @@ const Page = () => {
               boxShadow="base"
               h={"max-content"}
             >
-                <Heading
-                  align="center"
-                  color={useColorModeValue("accent.400", "accent.200")}
-                  fontSize="2xl"
-                >
-                  PLTS Balance in Wallet :{" "}
-                  {displayTokenCurrency(
-                    pltsWallet,
-                    "PLTS",
-                    true
-                  )}
-                </Heading>
+              <Heading
+                align="center"
+                color={useColorModeValue("accent.400", "accent.200")}
+                fontSize="2xl"
+              >
+                PLTS Balance in Wallet :{" "}
+                {displayTokenCurrency(pltsWallet, "PLTS", true)}
+              </Heading>
             </Badge>
             <Badge
               align="center"
@@ -614,18 +618,18 @@ const Page = () => {
               boxShadow="base"
               h={"max-content"}
             >
-                <Heading
-                  align="center"
-                  color={useColorModeValue("accent.400", "accent.200")}
-                  fontSize="2xl"
-                >
-                  Total pHRMS Remaining:{" "}
-                  {displayTokenCurrency(
-                    queryResp.data?.pHermesRemaining,
-                    "pHRMS",
-                    true
-                  )}
-                </Heading>
+              <Heading
+                align="center"
+                color={useColorModeValue("accent.400", "accent.200")}
+                fontSize="2xl"
+              >
+                Total pHRMS Remaining:{" "}
+                {displayTokenCurrency(
+                  queryResp.data?.pHermesRemaining,
+                  "pHRMS",
+                  true
+                )}
+              </Heading>
             </Badge>
           </Stack>
           <Stack

@@ -173,7 +173,7 @@ const defaultContracts = {
   //TODO: change address
   swapHermes: {
     address: {
-      1666600000: "0x37e56b033c43890A8FDd523B58Ec899D3678b341",
+      1666600000: "0xd56834c0F54C5Eb8F6f78618629C13444106Bdb5",
       1666700000: "0x2A9c432a38aD0e92D2d27E394eF74a166ca7311C",
     }[DEFAULT_CHAIN_ID],
     abi: SwapHermesABI,
@@ -181,7 +181,7 @@ const defaultContracts = {
   //TODO: change address
   pHermesToken: {
     address: {
-      1666600000: "0xB29EB99a2aCB8319B651c02AD9daDB2C3AC3D504",
+      1666600000: "0xbeb05b19b08dfd003ec01ffd84391d4fc42f5224",
       1666700000: "0x0803F518a587dCB0CE44dd337666159B338C628D",
     }[DEFAULT_CHAIN_ID],
     abi: pHermesABI,
