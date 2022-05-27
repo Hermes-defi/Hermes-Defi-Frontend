@@ -199,3 +199,15 @@ export function useWoneTestBank() {
   const contract = useContract();
   return contract(defaultContracts.woneTestBank);
 }
+export function useSwapHermes() {
+  const contract = useContract();
+  return contract(defaultContracts.swapHermes);
+}
+export function usepHermesToken() {
+  const contract = useContract();
+  return contract(defaultContracts.pHermesToken);
+}
+export function useHermesToken() {
+  const contract = useContract();
+  return contract(defaultContracts.hermesToken);
+}

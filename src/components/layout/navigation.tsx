@@ -1,5 +1,10 @@
 import React from "react";
-import { ChevronDownIcon, ChevronRightIcon, CloseIcon, HamburgerIcon } from "@chakra-ui/icons";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  CloseIcon,
+  HamburgerIcon,
+} from "@chakra-ui/icons";
 import { FaSun } from "react-icons/fa";
 import { IoIosMoon } from "react-icons/io";
 import {
@@ -41,7 +46,12 @@ function getNavItemsSplit(length: number) {
 function ColorModeToggle() {
   const { colorMode, toggleColorMode } = useColorMode();
   return (
-    <Stack divider={<StackDivider />} spacing={5} justify="center" direction="row">
+    <Stack
+      divider={<StackDivider />}
+      spacing={5}
+      justify="center"
+      direction="row"
+    >
       <IconButton
         aria-label="Switch color mode"
         rounded="full"
@@ -67,7 +77,12 @@ function BuyPlutus() {
 
   return (
     <>
-      <Button onClick={() => onOpen()} colorScheme="accent" variant="outline" size="sm">
+      <Button
+        onClick={() => onOpen()}
+        colorScheme="accent"
+        variant="outline"
+        size="sm"
+      >
         Buy Plutus
       </Button>
 
@@ -91,19 +106,40 @@ const MobileNavItem = ({ label, children, href, isExternal }: NavItem) => {
           textDecoration: "none",
         }}
       >
-        <Text fontWeight={600} color={useColorModeValue("gray.600", "gray.200")}>
+        <Text
+          fontWeight={600}
+          color={useColorModeValue("gray.600", "gray.200")}
+        >
           {label}
         </Text>
         {children && (
-          <Icon as={ChevronDownIcon} transition={"all .25s ease-in-out"} transform={isOpen ? "rotate(180deg)" : ""} w={6} h={6} />
+          <Icon
+            as={ChevronDownIcon}
+            transition={"all .25s ease-in-out"}
+            transform={isOpen ? "rotate(180deg)" : ""}
+            w={6}
+            h={6}
+          />
         )}
       </Flex>
 
       <Collapse in={isOpen} animateOpacity style={{ marginTop: "0!important" }}>
-        <Stack mt={2} pl={4} borderLeft={1} borderStyle={"solid"} borderColor={useColorModeValue("gray.200", "gray.700")} align={"start"}>
+        <Stack
+          mt={2}
+          pl={4}
+          borderLeft={1}
+          borderStyle={"solid"}
+          borderColor={useColorModeValue("gray.200", "gray.700")}
+          align={"start"}
+        >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href} isExternal={child.isExternal}>
+              <Link
+                key={child.label}
+                py={2}
+                href={child.href}
+                isExternal={child.isExternal}
+              >
                 {child.label}
               </Link>
             ))}
@@ -113,7 +149,15 @@ const MobileNavItem = ({ label, children, href, isExternal }: NavItem) => {
   );
 };
 
-export const Navigation = ({ logo, tokenPrice, navItems }: { tokenPrice: string; navItems: NavItem[]; logo: string }) => {
+export const Navigation = ({
+  logo,
+  tokenPrice,
+  navItems,
+}: {
+  tokenPrice: string;
+  navItems: NavItem[];
+  logo: string;
+}) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -123,7 +167,9 @@ export const Navigation = ({ logo, tokenPrice, navItems }: { tokenPrice: string;
         <Flex ml={-2} display={{ base: "flex", md: "none" }}>
           <IconButton
             onClick={onToggle}
-            icon={isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />}
+            icon={
+              isOpen ? <CloseIcon w={3} h={3} /> : <HamburgerIcon w={5} h={5} />
+            }
             variant={"ghost"}
             aria-label={"Toggle Navigation"}
           />
@@ -132,87 +178,137 @@ export const Navigation = ({ logo, tokenPrice, navItems }: { tokenPrice: string;
         {/* mobile logo and token price */}
         <Flex flex={1}>
           {/* logo */}
-          <Stack display={{ base: "flex", md: "none" }} align="center" justify="center" direction="row">
+          <Stack
+            display={{ base: "flex", md: "none" }}
+            align="center"
+            justify="center"
+            direction="row"
+          >
             <Image boxSize="40px" src={logo} alt="Logo" />
-            <Heading fontSize={{ base: "3xl", md: "4xl" }} color={useColorModeValue("gray.800", "white")}>
+            <Heading
+              fontSize={{ base: "3xl", md: "4xl" }}
+              color={useColorModeValue("gray.800", "white")}
+            >
               Hermes
             </Heading>
           </Stack>
 
           {/* token price */}
-          <Badge display={{ base: "none", md: "block" }} colorScheme="secondary" fontSize="lg" size="lg" py={2} px={10} rounded="xl">
-            <Skeleton isLoaded={!!tokenPrice}>{displayCurrency(tokenPrice)}</Skeleton>
+          <Badge
+            display={{ base: "none", md: "block" }}
+            colorScheme="secondary"
+            fontSize="lg"
+            size="lg"
+            py={2}
+            px={10}
+            rounded="xl"
+          >
+            <Skeleton isLoaded={!!tokenPrice}>
+              {displayCurrency(tokenPrice)}
+            </Skeleton>
           </Badge>
         </Flex>
 
         {/* desktop navigation */}
-        <Flex flex={6} display={{ base: "none", md: "flex" }} justify="center" align="center">
+        <Flex
+          flex={6}
+          display={{ base: "none", md: "flex" }}
+          justify="center"
+          align="center"
+        >
           <Stack flex={1} justify="flex-end" direction={"row"} spacing={4}>
-            {navItems.slice(0, getNavItemsSplit(navItems.length)).map((navItem: NavItem) => (
-              <Box key={navItem.label}>
-                <Popover trigger="hover" placement="bottom">
-                  <PopoverTrigger>
-                    <Link
-                      p={2}
-                      href={navItem.href ?? ""}
-                      color={useColorModeValue("gray.600", "gray.200")}
-                      isExternal={navItem.isExternal}
-                      _hover={{
-                        textDecoration: "none",
-                        color: useColorModeValue("gray.800", "gray.400"),
-                      }}
-                      {...(navItem.decorate
-                        ? {
-                            color: "secondary.600",
-                            fontWeight: "bold",
-                          }
-                        : {})}
-                    >
-                      {navItem.label}
-                    </Link>
-                  </PopoverTrigger>
+            {navItems
+              .slice(0, getNavItemsSplit(navItems.length))
+              .map((navItem: NavItem) => (
+                <Box key={navItem.label}>
+                  <Popover trigger="hover" placement="bottom">
+                    <PopoverTrigger>
+                      <Link
+                        p={2}
+                        href={navItem.href ?? ""}
+                        color={useColorModeValue("gray.600", "gray.200")}
+                        isExternal={navItem.isExternal}
+                        _hover={{
+                          textDecoration: "none",
+                          color: useColorModeValue("gray.800", "gray.400"),
+                        }}
+                        {...(navItem.decorate
+                          ? {
+                              border: "1px",
+                              rounded: "lg",
+                              bgColor: "primary.500",
+                              fontWeight: "bold",
+                              color: "white"
+                            }
+                          : {})}
+                      >
+                        {navItem.label}
+                      </Link>
+                    </PopoverTrigger>
 
-                  {navItem.children && (
-                    <PopoverContent w="auto" border={0} boxShadow="xl" bg={useColorModeValue("white", "gray.900")} p={4} rounded="xl">
-                      <Stack>
-                        {navItem.children.map((child) => (
-                          <Link
-                            key={child.label}
-                            href={child.href}
-                            isExternal={child.isExternal}
-                            role={"group"}
-                            display={"block"}
-                            p={2}
-                            rounded={"md"}
-                            _hover={{ bg: useColorModeValue("primary.50", "gray.900") }}
-                          >
-                            <Stack direction={"row"} align={"center"}>
-                              <Box>
-                                <Text transition={"all .3s ease"} _groupHover={{ color: "primary.600" }} fontWeight={600} fontSize="sm">
-                                  {child.label}
-                                </Text>
-                                <Text fontSize={"sm"}>{child.subLabel}</Text>
-                              </Box>
-                              <Flex
-                                transition={"all .3s ease"}
-                                transform={"translateX(-10px)"}
-                                opacity={0}
-                                _groupHover={{ opacity: "100%", transform: "translateX(0)" }}
-                                justify={"flex-end"}
-                                align={"center"}
-                                flex={1}
-                              >
-                                <Icon color={"primary.500"} w={5} h={5} as={ChevronRightIcon} />
-                              </Flex>
-                            </Stack>
-                          </Link>
-                        ))}
-                      </Stack>
-                    </PopoverContent>
-                  )}
-                </Popover>
-              </Box>
-            ))}
+                    {navItem.children && (
+                      <PopoverContent
+                        w="auto"
+                        border={0}
+                        boxShadow="xl"
+                        bg={useColorModeValue("white", "gray.900")}
+                        p={4}
+                        rounded="xl"
+                      >
+                        <Stack>
+                          {navItem.children.map((child) => (
+                            <Link
+                              key={child.label}
+                              href={child.href}
+                              isExternal={child.isExternal}
+                              role={"group"}
+                              display={"block"}
+                              p={2}
+                              rounded={"md"}
+                              _hover={{
+                                bg: useColorModeValue("primary.50", "gray.900"),
+                              }}
+                            >
+                              <Stack direction={"row"} align={"center"}>
+                                <Box>
+                                  <Text
+                                    transition={"all .3s ease"}
+                                    _groupHover={{ color: "primary.600" }}
+                                    fontWeight={600}
+                                    fontSize="sm"
+                                  >
+                                    {child.label}
+                                  </Text>
+                                  <Text fontSize={"sm"}>{child.subLabel}</Text>
+                                </Box>
+                                <Flex
+                                  transition={"all .3s ease"}
+                                  transform={"translateX(-10px)"}
+                                  opacity={0}
+                                  _groupHover={{
+                                    opacity: "100%",
+                                    transform: "translateX(0)",
+                                  }}
+                                  justify={"flex-end"}
+                                  align={"center"}
+                                  flex={1}
+                                >
+                                  <Icon
+                                    color={"primary.500"}
+                                    w={5}
+                                    h={5}
+                                    as={ChevronRightIcon}
+                                  />
+                                </Flex>
+                              </Stack>
+                            </Link>
+                          ))}
+                        </Stack>
+                      </PopoverContent>
+                    )}
+                  </Popover>
+                </Box>
+              ))}
           </Stack>
 
           {/* destop logo */}
@@ -224,82 +320,118 @@ export const Navigation = ({ logo, tokenPrice, navItems }: { tokenPrice: string;
 
           {/* second nav items */}
           <Stack flex={1} justify="flex-start" direction={"row"} spacing={4}>
-            {navItems.slice(getNavItemsSplit(navItems.length), navItems.length).map((navItem: NavItem) => (
-              <Box key={navItem.label}>
-                <Popover trigger="hover" placement="bottom">
-                  <PopoverTrigger>
-                    <Link
-                      p={2}
-                      href={navItem.href ?? "#"}
-                      color={useColorModeValue("gray.600", "gray.200")}
-                      isExternal={navItem.isExternal}
-                      _hover={{
-                        textDecoration: "none",
-                        color: useColorModeValue("gray.800", "gray.400"),
-                      }}
-                      {...(navItem.decorate
-                        ? {
-                            color: "secondary.600",
-                            fontWeight: "bold",
-                          }
-                        : {})}
-                    >
-                      {navItem.label}
-                    </Link>
-                  </PopoverTrigger>
+            {navItems
+              .slice(getNavItemsSplit(navItems.length), navItems.length)
+              .map((navItem: NavItem) => (
+                <Box key={navItem.label}>
+                  <Popover trigger="hover" placement="bottom">
+                    <PopoverTrigger>
+                      <Link
+                        p={2}
+                        href={navItem.href ?? "#"}
+                        color={useColorModeValue("gray.600", "gray.200")}
+                        isExternal={navItem.isExternal}
+                        _hover={{
+                          textDecoration: "none",
+                          color: useColorModeValue("gray.800", "gray.400"),
+                        }}
+                        {...(navItem.decorate
+                          ? {
+                              color: "secondary.600",
+                              fontWeight: "bold",
+                            }
+                          : {})}
+                      >
+                        {navItem.label}
+                      </Link>
+                    </PopoverTrigger>
 
-                  {navItem.children && (
-                    <PopoverContent w="auto" border={0} boxShadow="xl" bg={useColorModeValue("white", "gray.900")} p={4} rounded="xl">
-                      <Stack>
-                        {navItem.children.map((child) => (
-                          <Link
-                            key={child.label}
-                            href={child.href}
-                            isExternal={child.isExternal}
-                            role={"group"}
-                            display={"block"}
-                            p={2}
-                            rounded={"md"}
-                            _hover={{ bg: useColorModeValue("primary.50", "gray.900") }}
-                          >
-                            <Stack direction={"row"} align={"center"}>
-                              <Box>
-                                <Text transition={"all .3s ease"} _groupHover={{ color: "primary.600" }} fontWeight={600} fontSize="sm">
-                                  {child.label}
-                                </Text>
-                                <Text fontSize={"sm"}>{child.subLabel}</Text>
-                              </Box>
-                              <Flex
-                                transition={"all .3s ease"}
-                                transform={"translateX(-10px)"}
-                                opacity={0}
-                                _groupHover={{ opacity: "100%", transform: "translateX(0)" }}
-                                justify={"flex-end"}
-                                align={"center"}
-                                flex={1}
-                              >
-                                <Icon color={"primary.500"} w={5} h={5} as={ChevronRightIcon} />
-                              </Flex>
-                            </Stack>
-                          </Link>
-                        ))}
-                      </Stack>
-                    </PopoverContent>
-                  )}
-                </Popover>
-              </Box>
-            ))}
+                    {navItem.children && (
+                      <PopoverContent
+                        w="auto"
+                        border={0}
+                        boxShadow="xl"
+                        bg={useColorModeValue("white", "gray.900")}
+                        p={4}
+                        rounded="xl"
+                      >
+                        <Stack>
+                          {navItem.children.map((child) => (
+                            <Link
+                              key={child.label}
+                              href={child.href}
+                              isExternal={child.isExternal}
+                              role={"group"}
+                              display={"block"}
+                              p={2}
+                              rounded={"md"}
+                              _hover={{
+                                bg: useColorModeValue("primary.50", "gray.900"),
+                              }}
+                            >
+                              <Stack direction={"row"} align={"center"}>
+                                <Box>
+                                  <Text
+                                    transition={"all .3s ease"}
+                                    _groupHover={{ color: "primary.600" }}
+                                    fontWeight={600}
+                                    fontSize="sm"
+                                  >
+                                    {child.label}
+                                  </Text>
+                                  <Text fontSize={"sm"}>{child.subLabel}</Text>
+                                </Box>
+                                <Flex
+                                  transition={"all .3s ease"}
+                                  transform={"translateX(-10px)"}
+                                  opacity={0}
+                                  _groupHover={{
+                                    opacity: "100%",
+                                    transform: "translateX(0)",
+                                  }}
+                                  justify={"flex-end"}
+                                  align={"center"}
+                                  flex={1}
+                                >
+                                  <Icon
+                                    color={"primary.500"}
+                                    w={5}
+                                    h={5}
+                                    as={ChevronRightIcon}
+                                  />
+                                </Flex>
+                              </Stack>
+                            </Link>
+                          ))}
+                        </Stack>
+                      </PopoverContent>
+                    )}
+                  </Popover>
+                </Box>
+              ))}
           </Stack>
         </Flex>
 
         {/* connect wallet */}
-        <Stack ml={{ base: 4, md: 0 }} flex={1} justify={"flex-end"} direction={"column"} spacing={2}>
+        <Stack
+          ml={{ base: 4, md: 0 }}
+          flex={1}
+          justify={"flex-end"}
+          direction={"column"}
+          spacing={2}
+        >
           <Wallet />
           <ColorModeToggle />
         </Stack>
       </Flex>
 
-      <Modal motionPreset="slideInRight" trapFocus={false} size="full" isOpen={isOpen} onClose={onToggle}>
+      <Modal
+        motionPreset="slideInRight"
+        trapFocus={false}
+        size="full"
+        isOpen={isOpen}
+        onClose={onToggle}
+      >
         <ModalOverlay />
 
         <ModalContent px={10} rounded="0" mb="0!important" mt="0!important">
@@ -313,11 +445,23 @@ export const Navigation = ({ logo, tokenPrice, navItems }: { tokenPrice: string;
             </Stack>
 
             {/* token price */}
-            <Badge colorScheme="secondary" fontSize="lg" size="lg" py={2} px={10} rounded="xl">
+            <Badge
+              colorScheme="secondary"
+              fontSize="lg"
+              size="lg"
+              py={2}
+              px={10}
+              rounded="xl"
+            >
               {displayCurrency(tokenPrice)}
             </Badge>
 
-            <Stack w="full" bg={useColorModeValue("white", "gray.700")} p={4} display={{ md: "none" }}>
+            <Stack
+              w="full"
+              bg={useColorModeValue("white", "gray.700")}
+              p={4}
+              display={{ md: "none" }}
+            >
               {navItems.map((navItem) => (
                 <MobileNavItem key={navItem.label} {...navItem} />
               ))}

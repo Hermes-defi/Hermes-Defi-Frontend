@@ -59,9 +59,10 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
   },
 
   {
-    label: "Governance",
-    href: "https://snapshot.org/#/hermesdefi.eth",
-    isExternal: true,
+    label: "Transition",
+    href: "/app/pHermes",
+    decorate: true,
+    isExternal: false,
   },
 
   {
@@ -137,6 +138,11 @@ export const L3_NAV_ITEMS: Array<NavItem> = [
       {
         label: "Wiki",
         href: "https://wiki.hermesdefi.io/",
+        isExternal: true,
+      },
+      {
+        label: "Governance",
+        href: "https://snapshot.org/#/hermesdefi.eth",
         isExternal: true,
       },
       {

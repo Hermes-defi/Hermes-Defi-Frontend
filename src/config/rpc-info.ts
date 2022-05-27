@@ -17,7 +17,7 @@ export const RPC_INFO = {
       symbol: "ONE",
       decimals: 18,
     },
-    rpcUrls: ["https://api.s0.b.hmny.io", "https://api.s1.b.hmny.io", " https://api.s2.b.hmny.io", "https://api.s3.b.hmny.io"],
-    blockExplorerUrls: ["https://explorer.testnet.harmony.one/"],
+    rpcUrls: ["https://api.s0.b.hmny.io", "https://api.s1.b.hmny.io", "https://api.s2.b.hmny.io", "https://api.s3.b.hmny.io"],
+    blockExplorerUrls: ["https://explorer.pops.one/"],
   },
 };
