@@ -114,11 +114,11 @@ const Page: React.FC = () => {
         >
           <Stack>
             <Heading align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="2xl">
-            Farming has ended, earn PLTS in our WONE Bank!
+            PLTS to pHRMS swap is ended!
             </Heading>
 
             <Heading mt={"3"} align="center" color={useColorModeValue("primary.600", "accent.200")} fontSize="xl">
-              Get ready for The Hermes Protocol
+            DEX LAUNCH 31 MAY
             </Heading>
             </Stack>
           </Button>
