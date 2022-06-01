@@ -45,7 +45,8 @@ const PresaleCard = () => {
   const approvePLTSMutation = usePresaleApproveToken();
   const swapPlutus = useSwapPlutus();
   const currentBlock = useCurrentBlockNumber();
-  const active = currentBlock > 27063308 && currentBlock < 27192908;
+  // const active = currentBlock > 27063308 && currentBlock < 27192908;
+  const active = true;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "pink.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -194,11 +195,11 @@ const PresaleBankCard = () => {
   const approvePltsMutation = usePresaleApproveToken();
   const swapBankPlutus = useSwapBankPlutus();
   const currentBlock = useCurrentBlockNumber();
-  const active =
-    currentBlock > 27063308 &&
-    currentBlock < 27192908 &&
-    queryResp.data?.whitelist !== "0";
-  // const active = true;
+  // const active =
+  //   currentBlock > 27063308 &&
+  //   currentBlock < 27192908 &&
+  //   queryResp.data?.whitelist !== "0";
+  const active = true && queryResp.data?.whitelist !== "0";
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "pink.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -351,7 +352,8 @@ const SwapCard = () => {
   const pHermesBalance = useTokenBalance(pHermesContract.address, 18);
   const swapPHermes = useSwapPHermes();
   const currentBlock = useCurrentBlockNumber();
-  const active = currentBlock > 27237008;
+  // const active = currentBlock > 27237008;
+  const active = true;
   const fontButtonColor = active ? "pink.800" : "gray.700";
   const bgButtonColor = active ? "gray.200" : "gray.400";
   const textColor = !active ? "gray.600" : "white";
@@ -573,8 +575,10 @@ const Timeline = () => {
 const Page = () => {
   const currentBlock = useCurrentBlockNumber();
   // const pltsActive = currentBlock < 25330605;
-  const pltsActive = currentBlock > 27063308 && currentBlock < 27192908;
-  const hrmsActive = currentBlock > 27237008;
+  // const pltsActive = currentBlock > 27063308 && currentBlock < 27192908;
+  const pltsActive = true;
+  // const hrmsActive = currentBlock > 27237008;
+  const hrmsActive = true;
   const pltsLogo = pltsActive ? "/plts-logo-on.png" : "/plts-logo-off.png";
   const hrmsLogo = hrmsActive ? "/hrms-logo-on.png" : "/hrms-logo-off.png";
   const queryResp = usePresaleInfo();
