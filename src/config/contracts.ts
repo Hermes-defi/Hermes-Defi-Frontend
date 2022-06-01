@@ -189,7 +189,7 @@ const defaultContracts = {
   //TODO: change address
   hermesToken: {
     address: {
-      1666600000: "0x80C3B9d4938514819b1Bba484295f915059aDac7",
+      1666600000: "0xba4476a302f5bc1dc4053cf79106dc43455904a3",
       1666700000: "0xe490B78C49F18Cf604331487fBBc3d8A90063d4c",
     }[DEFAULT_CHAIN_ID],
     abi: HermesABI,
